@@ -4,7 +4,7 @@ export default {
   nav: {
     home: 'Home',
     accreditation: 'Accreditation',
-    accreditation_system: 'The system',
+    accreditation_system: 'Presentation',
     schools: 'Schools',
     universities: 'Universities',
     higher_ed: 'Higher Education Centers',
@@ -37,7 +37,7 @@ export default {
     eyebrow_official: 'Official accreditation',
     hero_title: 'Igniting Hearts for Greatness.',
     hero_subtitle: 'Alexandre Havard\'s Virtuous Leadership System®, integrated with academic rigor and available to educational institutions worldwide.',
-    cta_know_system: 'Discover the system',
+    cta_know_system: 'Certification',
     cta_contact: 'Contact us',
     stats: [
       { n: '+100,000', label: 'Professionals transformed' },
@@ -328,8 +328,8 @@ export default {
     hero_subtitle: 'The three evaluation tools of the Virtuous Leadership System help identify the temperament, character and personal mission of each participant. Here you will find the first of them.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Temperament Test',      text: 'Discover your dominant temperament, your secondary temperament and the challenge-virtue that will lead you to a more coherent leadership. 22 to 30 questions, ~5 minutes.', cta: 'Take the test' },
-      { available: false,                            label: 'Test 02', title: 'Character Test',        text: 'Assessment of progress in the cardinal and specific virtues of the leader. Coming soon.' },
-      { available: false,                            label: 'Test 03', title: 'Personal Mission Test', text: 'Identification of the professional mission from one\'s own history, talents and vocation. Coming soon.' },
+      { available: false,                            label: 'Test 02', title: 'Character Test',     text: 'Assessment of progress in the cardinal and specific virtues of the leader. Coming soon.' },
+      { available: false,                            label: 'Test 03', title: 'Integration Test',   text: 'Inner integration versus rationalism, voluntarism and sentimentalism. Coming soon.' },
     ],
   },
 
@@ -360,8 +360,8 @@ export default {
     },
     question: {
       progress: 'Question {n} of {total}',
-      yes: 'YES',
-      no: 'NO',
+      yes: 'TRUE',
+      no: 'FALSE',
       back: '← Back',
     },
     transition: {

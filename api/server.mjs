@@ -70,26 +70,39 @@ const server = http.createServer(async (req, res) => {
               .end(JSON.stringify({ error: 'Missing required fields' }));
   }
 
+  // Fecha del test en formato YYYY-MM-DD (lo que entiende Brevo para campos DATE).
+  // Usamos consentTimestamp si viene, si no la fecha de hoy.
+  const fechaTest = (c.consentTimestamp && /^\d{4}-\d{2}-\d{2}/.test(c.consentTimestamp))
+    ? c.consentTimestamp.slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
   // Cuerpo para Brevo. Los nombres de atributos van EN MAYÚSCULAS por convención.
-  // Si en tu cuenta no existen aún, Brevo los crea automáticamente la primera vez.
+  // Asegúrate de que estos atributos existen en tu cuenta de Brevo
+  // (Contacts → Settings → Contact attributes) con los tipos:
+  //   FIRSTNAME                    (TEXT — viene de fábrica en Brevo)
+  //   BIRTHYEAR                    (NUMBER)
+  //   SEX                          (TEXT)
+  //   TEMP1                        (TEXT) — temperamento primario (COL/MEL/SAN/FLE)
+  //   TEMP2                        (TEXT) — secundario (COL/MEL/SAN/FLE/"")
+  //   IDIOMA                       (TEXT) — idioma del test (es/en/fr)
+  //   ACEPTACION_POLITICAS         (BOOLEAN o NUMBER) — siempre 1
+  //   FECHA_TEST_TEMPERAMENTO      (DATE) — formato YYYY-MM-DD
+  //   PERFIL                       (TEXT) — nombre humano del perfil (opcional)
   const brevoBody = {
     email: c.email.toLowerCase().trim(),
     attributes: {
-      FIRSTNAME:           c.name,
-      BIRTHYEAR:           c.birthYear,
-      SEX:                 c.sex,
-      TBP_PROFILE_KEY:     r.profileKey,
-      TBP_PROFILE_NAME:    r.profileName,
-      TBP_PROFILE_LABEL:   r.profileLabel,
-      TBP_PRIMARIO:        r.primario,
-      TBP_PRIMARIO_NAME:   r.primarioName,
-      TBP_CHALLENGE:       r.challenge,
-      TBP_IS_PURE:         r.isPure ? 'true' : 'false',
-      TBP_LANG:            c.language || 'es',
-      TBP_CONSENT_AT:      c.consentTimestamp,
+      FIRSTNAME:               c.name,
+      BIRTHYEAR:               c.birthYear,
+      SEX:                     c.sex,
+      TEMP1:                   r.primario || '',
+      TEMP2:                   r.secundario || '',
+      IDIOMA:                  c.language || 'es',
+      ACEPTACION_POLITICAS:    c.consent ? 1 : 0,
+      FECHA_TEST_TEMPERAMENTO: fechaTest,
+      PERFIL:                  r.profileName || '',
     },
     listIds: [BREVO_LIST_ID],
-    updateEnabled: true, // si ya existe, actualiza atributos
+    updateEnabled: true, // si el contacto ya existe, actualiza sus atributos
   };
 
   try {

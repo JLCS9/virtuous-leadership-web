@@ -5,7 +5,7 @@ export default {
   nav: {
     home: 'Home',
     accreditation: 'Acreditación',
-    accreditation_system: 'El sistema',
+    accreditation_system: 'Presentación',
     schools: 'Colegios',
     universities: 'Universidades',
     higher_ed: 'Centros de Educación Superior',
@@ -38,7 +38,7 @@ export default {
     eyebrow_official: 'Acreditación oficial',
     hero_title: 'Igniting Hearts for Greatness.',
     hero_subtitle: 'El Sistema Liderazgo Virtuoso® de Alexandre Havard, integrado con el rigor académico y disponible para instituciones educativas de todo el mundo.',
-    cta_know_system: 'Conoce el sistema',
+    cta_know_system: 'Acreditación',
     cta_contact: 'Contacta',
     stats: [
       { n: '+100.000', label: 'Profesionales transformados' },
@@ -329,8 +329,8 @@ export default {
     hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y la misión personal de cada participante. Aquí encontrarás la primera de ellas.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',       text: 'Descubre tu temperamento dominante, tu temperamento secundario y la virtud-desafío que te llevará a un liderazgo más coherente. 22 a 30 preguntas, ~5 minutos.', cta: 'Hacer el test' },
-      { available: false,                            label: 'Test 02', title: 'Test del Carácter',          text: 'Evaluación del progreso en las virtudes fundamentales y específicas del líder. Disponible próximamente.' },
-      { available: false,                            label: 'Test 03', title: 'Test de Misión Personal',    text: 'Identificación de la misión profesional desde la propia historia, talentos y vocación. Disponible próximamente.' },
+      { available: false,                            label: 'Test 02', title: 'Test de Carácter',           text: 'Evaluación del progreso en las virtudes fundamentales y específicas del líder. Disponible próximamente.' },
+      { available: false,                            label: 'Test 03', title: 'Test de Integración',         text: 'Integración interior frente al racionalismo, voluntarismo y sentimentalismo. Disponible próximamente.' },
     ],
   },
 
@@ -362,8 +362,8 @@ export default {
     },
     question: {
       progress: 'Pregunta {n} de {total}',
-      yes: 'SÍ',
-      no: 'NO',
+      yes: 'VERDADERO',
+      no: 'FALSO',
       back: '← Anterior',
     },
     transition: {

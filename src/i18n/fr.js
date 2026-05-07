@@ -4,7 +4,7 @@ export default {
   nav: {
     home: 'Accueil',
     accreditation: 'Accréditation',
-    accreditation_system: 'Le système',
+    accreditation_system: 'Présentation',
     schools: 'Écoles',
     universities: 'Universités',
     higher_ed: 'Centres d\'enseignement supérieur',
@@ -37,7 +37,7 @@ export default {
     eyebrow_official: 'Accréditation officielle',
     hero_title: 'Igniting Hearts for Greatness.',
     hero_subtitle: 'Le Système Leadership Vertueux® d\'Alexandre Havard, intégré à la rigueur académique et disponible pour les institutions éducatives du monde entier.',
-    cta_know_system: 'Découvrir le système',
+    cta_know_system: 'Certification',
     cta_contact: 'Contactez-nous',
     stats: [
       { n: '+100 000', label: 'Professionnels transformés' },
@@ -328,8 +328,8 @@ export default {
     hero_subtitle: 'Les trois outils d\'évaluation du Système Leadership Vertueux aident à identifier le tempérament, le caractère et la mission personnelle de chaque participant. Tu trouveras ici le premier d\'entre eux.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de tempérament',           text: 'Découvre ton tempérament dominant, ton tempérament secondaire et la vertu-défi qui te mènera à un leadership plus cohérent. 22 à 30 questions, ~5 minutes.', cta: 'Faire le test' },
-      { available: false,                            label: 'Test 02', title: 'Test du caractère',             text: 'Évaluation des progrès dans les vertus cardinales et spécifiques du leader. Bientôt disponible.' },
-      { available: false,                            label: 'Test 03', title: 'Test de mission personnelle',   text: 'Identification de la mission professionnelle à partir de sa propre histoire, de ses talents et de sa vocation. Bientôt disponible.' },
+      { available: false,                            label: 'Test 02', title: 'Test du caractère',     text: 'Évaluation des progrès dans les vertus cardinales et spécifiques du leader. Bientôt disponible.' },
+      { available: false,                            label: 'Test 03', title: 'Test d\'intégration',   text: 'Intégration intérieure face au rationalisme, au volontarisme et au sentimentalisme. Bientôt disponible.' },
     ],
   },
 
@@ -360,8 +360,8 @@ export default {
     },
     question: {
       progress: 'Question {n} sur {total}',
-      yes: 'OUI',
-      no: 'NON',
+      yes: 'VRAI',
+      no: 'FAUX',
       back: '← Précédent',
     },
     transition: {
