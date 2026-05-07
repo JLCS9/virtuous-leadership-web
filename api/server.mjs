@@ -96,7 +96,7 @@ const server = http.createServer(async (req, res) => {
       SEX:                     c.sex,
       TEMP1:                   r.primario || '',
       TEMP2:                   r.secundario || '',
-      IDIOMA:                  c.language || 'es',
+      IDIOMA:                  String(c.language || 'es').toUpperCase(),
       ACEPTACION_POLITICAS:    c.consent ? 1 : 0,
       FECHA_TEST_TEMPERAMENTO: fechaTest,
       PERFIL:                  r.profileName || '',

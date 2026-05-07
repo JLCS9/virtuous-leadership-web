@@ -253,13 +253,14 @@ const styles = {
     gap: 16,
     justifyContent: 'center',
     marginTop: 24,
+    flexWrap: 'wrap',
   },
   yesNoBtn: {
     fontFamily: fontSerif,
-    fontSize: 22,
+    fontSize: 'clamp(18px, 3.8vw, 22px)',
     fontWeight: 600,
     minWidth: 140,
-    padding: '18px 28px',
+    padding: '18px 24px',
     background: PAPER,
     color: NAVY,
     border: `1.5px solid ${NAVY}`,
@@ -307,7 +308,7 @@ function Welcome({ onStart }) {
 function Question({ progress, total, item, onAnswer, onBack, canBack }) {
   const { t } = useT();
   return (
-    <div style={styles.card}>
+    <div style={styles.card} className="vl-test-card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <span style={styles.progress}>{t('test.question.progress', { n: progress, total })}</span>
         <button
@@ -325,7 +326,7 @@ function Question({ progress, total, item, onAnswer, onBack, canBack }) {
 
       <div style={styles.questionText}>{t('test.items.' + item.id)}</div>
 
-      <div style={styles.yesNoRow}>
+      <div style={styles.yesNoRow} className="vl-yesno-row">
         <button
           style={styles.yesNoBtn}
           onMouseOver={e => { e.currentTarget.style.background = NAVY; e.currentTarget.style.color = PAPER; }}
@@ -987,6 +988,10 @@ export default function TestTBP() {
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
         * { box-sizing: border-box; }
         button:focus-visible { outline: 2px solid ${GOLD}; outline-offset: 2px; }
+        @media (max-width: 480px) {
+          .vl-test-card { padding: 28px 20px !important; }
+          .vl-yesno-row > button { flex: 1 1 100%; min-width: 0 !important; }
+        }
       `}</style>
       {body}
     </div>

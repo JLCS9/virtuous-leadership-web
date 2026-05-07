@@ -45,7 +45,7 @@ export default function Home() {
         }} className="hero-grid">
           <div>
             <div style={styles.eyebrow}>{t('home.eyebrow_official')}</div>
-            <h1 style={{
+            <h1 className="hero-title" style={{
               ...styles.h1,
               fontFamily: FONT_SERIF,
               fontSize: 'clamp(28px, 5.4vw, 60px)',
@@ -62,16 +62,22 @@ export default function Home() {
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
             <div style={{
               position: 'absolute',
-              width: 360, height: 360, borderRadius: '50%',
+              width: 'min(360px, 80vw)', height: 'min(360px, 80vw)', borderRadius: '50%',
               background: 'radial-gradient(circle, rgba(197,165,90,0.18) 0%, transparent 65%)',
               filter: 'blur(8px)',
             }} />
-            <Seal size={300} />
+            <div className="home-hero-seal" style={{ width: 'min(300px, 65vw)' }}>
+              <Seal size={300} />
+            </div>
           </div>
         </div>
         <style>{`
+          .home-hero-seal img { width: 100% !important; height: auto !important; display: block; }
           @media (min-width: 820px) {
             .hero-grid { grid-template-columns: 1.2fr 1fr !important; gap: 72px !important; padding: 96px 24px 112px !important; }
+          }
+          @media (max-width: 520px) {
+            .hero-title { white-space: normal !important; font-size: clamp(28px, 9vw, 40px) !important; }
           }
         `}</style>
       </section>
