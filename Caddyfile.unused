@@ -1,0 +1,42 @@
+# Reverse proxy + HTTPS automático con Let's Encrypt.
+# Caddy obtiene el certificado al arrancar, lo renueva solo, y comprime
+# todo lo que sirve. Cero configuración adicional.
+
+# ─────────── virtuousleadership.com ───────────
+virtuousleadership.com, www.virtuousleadership.com {
+	encode zstd gzip
+
+	# /api/* va al brevo-proxy (Node)
+	handle /api/* {
+		reverse_proxy api:3001
+	}
+
+	# Cualquier otra ruta va al nginx con el bundle estático
+	handle {
+		reverse_proxy web:80
+	}
+
+	log {
+		output file /data/access.log
+		format console
+	}
+}
+
+# Redirección www → apex (opcional pero estándar SEO)
+www.virtuousleadership.com {
+	redir https://virtuousleadership.com{uri} permanent
+}
+
+# ─────────── focuson.education (WordPress existente) ───────────
+# Mantenemos el dominio actual funcionando con HTTPS gestionado por Caddy.
+# El contenedor wordpress-estable está expuesto en host:8080, así que lo
+# alcanzamos vía host.docker.internal:8080.
+focuson.education, www.focuson.education {
+	encode zstd gzip
+	reverse_proxy host.docker.internal:8080 {
+		header_up Host {host}
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-For {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+}

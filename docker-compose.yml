@@ -1,0 +1,35 @@
+# Stack del sitio Virtuous Leadership.
+# 2 contenedores: web (nginx con el bundle Vite) y api (brevo-proxy).
+# El reverse proxy + HTTPS los hace el nginx del HOST, no este compose.
+#
+# Variables esperadas en un fichero .env junto a este compose:
+#   BREVO_API_KEY=xkeysib-...
+#   BREVO_LIST_ID=94
+#
+# Puertos: bindeamos a 127.0.0.1 para que sólo el nginx del host pueda
+# alcanzarlos. Externamente cerrados.
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    image: vl-web:latest
+    container_name: vl-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    image: vl-api:latest
+    container_name: vl-api
+    restart: unless-stopped
+    environment:
+      BREVO_API_KEY: ${BREVO_API_KEY}
+      BREVO_LIST_ID: ${BREVO_LIST_ID}
+      PORT: 3001
+    ports:
+      - "127.0.0.1:3001:3001"

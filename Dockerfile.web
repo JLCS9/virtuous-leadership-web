@@ -1,0 +1,17 @@
+# Build stage — compila el frontend con Vite
+FROM node:20-alpine AS build
+WORKDIR /app
+
+# Instala deps con caché óptimo (sólo se reinstala si cambia package*.json)
+COPY package.json package-lock.json* ./
+RUN npm ci
+
+# Copia el resto y compila
+COPY . .
+RUN npm run build
+
+# Serve stage — sirve el dist/ con nginx-alpine (~25 MB)
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
