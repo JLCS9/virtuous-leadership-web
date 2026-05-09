@@ -1,0 +1,42 @@
+# gymbro.ai stack — 2 contenedores: api (Node + Baileys + Claude + cron)
+# y web (nginx con el bundle Vite). El nginx del HOST hace de reverse-proxy
+# y termina TLS para el dominio nuevo.
+#
+# Variables esperadas en un .env junto a este compose: ver .env.example.
+# Bindeamos a 127.0.0.1 para que sólo el nginx del host alcance los servicios.
+
+services:
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: gymbro-api:latest
+    container_name: gymbro-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      ADMIN_USER: ${ADMIN_USER}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH:-}
+      JWT_SECRET: ${JWT_SECRET}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      CLAUDE_MODEL: ${CLAUDE_MODEL:-claude-haiku-4-5}
+      TIMEZONE: ${TIMEZONE:-Europe/Madrid}
+      AUTOSTART_BOT: ${AUTOSTART_BOT:-false}
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "127.0.0.1:3002:3002"
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: gymbro-web:latest
+    container_name: gymbro-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "127.0.0.1:8082:80"
