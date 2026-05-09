@@ -9,6 +9,7 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
+import classImg from '../assets/class.jpeg';
 const PAGE_SEO = {
   es: { title: 'Acreditación oficial en Liderazgo Virtuoso', description: 'Sello internacional firmado por Alexandre Havard. Building character en la cultura de tu institución educativa: programas para colegios, universidades y centros superiores.' },
   en: { title: 'Official Virtuous Leadership Certification',  description: 'International seal signed by Alexandre Havard. Building character in your institution\'s culture: programs for schools, universities and higher education centers.' },
@@ -59,6 +60,22 @@ export default function Acreditacion() {
           ))}
         </div>
       </Section>
+
+      {/* Imagen full-width entre diferenciadores y selector */}
+      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
+        <img
+          src={classImg}
+          alt=""
+          loading="lazy"
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            maxHeight: 460,
+            objectFit: 'cover',
+          }}
+        />
+      </section>
 
       {/* Selector */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
