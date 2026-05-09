@@ -20,9 +20,6 @@ export default function AcreditacionEducacionSuperior() {
     <>
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          <Link to="/acreditacion" style={{ fontFamily: FONT_SANS, fontSize: 13, color: MUTED, textDecoration: 'none', display: 'inline-block', marginBottom: 24 }}>
-            {t('common.back_to_accreditation')}
-          </Link>
           <div style={styles.eyebrow}>{t('edsup.eyebrow')}</div>
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 760, margin: '24px auto 0' }}>{t('edsup.hero_subtitle')}</p>

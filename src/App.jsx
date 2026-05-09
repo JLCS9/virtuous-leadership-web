@@ -23,14 +23,17 @@ export default function App() {
           element={
             <Layout>
               <Routes>
-                <Route path="/"                                element={<Home />} />
-                <Route path="/acreditacion"                    element={<Acreditacion />} />
-                <Route path="/acreditacion/colegios"           element={<AcreditacionColegios />} />
+                <Route path="/"                       element={<Home />} />
+                <Route path="/acreditacion"           element={<Acreditacion />} />
+                <Route path="/acreditacion/colegios"  element={<AcreditacionColegios />} />
+                <Route path="/universidades"          element={<AcreditacionUniversidades />} />
+                <Route path="/educacion-superior"     element={<AcreditacionEducacionSuperior />} />
+                {/* redirecciones desde rutas antiguas */}
                 <Route path="/acreditacion/universidades"      element={<AcreditacionUniversidades />} />
                 <Route path="/acreditacion/educacion-superior" element={<AcreditacionEducacionSuperior />} />
-                <Route path="/tests"                           element={<Tests />} />
-                <Route path="/contacto"                        element={<Contacto />} />
-                <Route path="*"                                element={<NotFound />} />
+                <Route path="/tests"                  element={<Tests />} />
+                <Route path="/contacto"               element={<Contacto />} />
+                <Route path="*"                       element={<NotFound />} />
               </Routes>
             </Layout>
           }

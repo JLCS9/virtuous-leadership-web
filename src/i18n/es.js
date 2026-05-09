@@ -89,13 +89,13 @@ export default {
         text: 'Profesores, tutores, dirección y familias.',
       },
       {
-        to: '/acreditacion/universidades',
+        to: '/universidades',
         eyebrow: '',
         title: 'Universidades',
         text: 'Personal, profesores, alumnos de máster y alumni.',
       },
       {
-        to: '/acreditacion/educacion-superior',
+        to: '/educacion-superior',
         eyebrow: '',
         title: 'Formación Superior',
         text: 'Escuelas técnicas, institutos profesionales y centros de FP.',
@@ -132,8 +132,8 @@ export default {
     selector_subtitle: 'Cada itinerario adapta el rigor del modelo Liderazgo Virtuoso al perfil específico de la institución',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Colegios',                          sub: 'Educación primaria, secundaria y bachillerato', text: 'Profesores, tutores, dirección y familias.', cta: 'Ver programa para colegios' },
-      { to: '/acreditacion/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',                       text: 'Personal, profesores, alumnos de máster y alumni.', cta: 'Ver programa para universidades' },
-      { to: '/acreditacion/educacion-superior', label: 'Centros de Educación Superior',     sub: 'Educación profesional y técnica',               text: 'Business schools, escuelas técnicas, institutos profesionales y centros de FP.', cta: 'Ver programa para centros superiores' },
+      { to: '/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',                       text: 'Personal, profesores, alumnos de máster y alumni.', cta: 'Ver programa para universidades' },
+      { to: '/educacion-superior', label: 'Centros de Educación Superior',     sub: 'Educación profesional y técnica',               text: 'Business schools, escuelas técnicas, institutos profesionales y centros de FP.', cta: 'Ver programa para centros superiores' },
     ],
     alex_eyebrow: 'Sobre Alexandre Havard',
     alex_title: 'El fundador del Sistema',

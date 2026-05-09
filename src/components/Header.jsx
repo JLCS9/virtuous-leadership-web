@@ -27,9 +27,9 @@ export default function Header() {
     {
       label: t('nav.programs'),
       children: [
-        { to: '/acreditacion/universidades',      label: t('nav.universities') },
-        { to: '/acreditacion/colegios',           label: t('nav.schools') },
-        { to: '/acreditacion/educacion-superior', label: t('nav.higher_ed') },
+        { to: '/acreditacion/colegios', label: t('nav.schools') },
+        { to: '/universidades',         label: t('nav.universities') },
+        { to: '/educacion-superior',    label: t('nav.higher_ed') },
       ],
     },
     { to: '/acreditacion/colegios', label: t('nav.accreditation') },

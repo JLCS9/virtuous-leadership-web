@@ -88,13 +88,13 @@ export default {
         text: 'Enseignants, tuteurs, direction et familles.',
       },
       {
-        to: '/acreditacion/universidades',
+        to: '/universidades',
         eyebrow: '',
         title: 'Universités',
         text: 'Personnel, enseignants, étudiants en master et anciens élèves.',
       },
       {
-        to: '/acreditacion/educacion-superior',
+        to: '/educacion-superior',
         eyebrow: '',
         title: 'Formation Supérieure',
         text: 'Écoles techniques, instituts professionnels et centres de FP.',
@@ -131,8 +131,8 @@ export default {
     selector_subtitle: 'Chaque parcours adapte la rigueur du modèle Leadership Vertueux au profil spécifique de l\'institution',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Écoles',                                 sub: 'Enseignement primaire, secondaire et lycée', text: 'Enseignants, tuteurs, direction et familles.', cta: 'Voir le programme pour les écoles' },
-      { to: '/acreditacion/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',                 text: 'Personnel, enseignants, étudiants en master et anciens élèves.', cta: 'Voir le programme pour les universités' },
-      { to: '/acreditacion/educacion-superior', label: 'Centres d\'enseignement supérieur',      sub: 'Enseignement professionnel et technique',    text: 'Écoles de commerce, écoles techniques, instituts professionnels et centres de FP.', cta: 'Voir le programme pour les centres supérieurs' },
+      { to: '/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',                 text: 'Personnel, enseignants, étudiants en master et anciens élèves.', cta: 'Voir le programme pour les universités' },
+      { to: '/educacion-superior', label: 'Centres d\'enseignement supérieur',      sub: 'Enseignement professionnel et technique',    text: 'Écoles de commerce, écoles techniques, instituts professionnels et centres de FP.', cta: 'Voir le programme pour les centres supérieurs' },
     ],
     alex_eyebrow: 'À propos d\'Alexandre Havard',
     alex_title: 'Le fondateur du Système',

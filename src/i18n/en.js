@@ -88,13 +88,13 @@ export default {
         text: 'Teachers, tutors, leadership and families.',
       },
       {
-        to: '/acreditacion/universidades',
+        to: '/universidades',
         eyebrow: '',
         title: 'Universities',
         text: 'Staff, faculty, master\'s students and alumni.',
       },
       {
-        to: '/acreditacion/educacion-superior',
+        to: '/educacion-superior',
         eyebrow: '',
         title: 'Higher Education',
         text: 'Technical schools, professional institutes and vocational centers.',
@@ -131,8 +131,8 @@ export default {
     selector_subtitle: 'Each program adapts the rigor of the Virtuous Leadership model to the specific profile of the institution',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Schools',                       sub: 'Primary, secondary and high school education', text: 'Teachers, tutors, leadership and families.', cta: 'See program for schools' },
-      { to: '/acreditacion/universidades',      label: 'Universities',                  sub: 'University education',                         text: 'Staff, faculty, master\'s students and alumni.', cta: 'See program for universities' },
-      { to: '/acreditacion/educacion-superior', label: 'Higher Education Centers',      sub: 'Professional and technical education',         text: 'Business schools, technical schools, professional institutes and vocational centers.', cta: 'See program for higher ed centers' },
+      { to: '/universidades',      label: 'Universities',                  sub: 'University education',                         text: 'Staff, faculty, master\'s students and alumni.', cta: 'See program for universities' },
+      { to: '/educacion-superior', label: 'Higher Education Centers',      sub: 'Professional and technical education',         text: 'Business schools, technical schools, professional institutes and vocational centers.', cta: 'See program for higher ed centers' },
     ],
     alex_eyebrow: 'About Alexandre Havard',
     alex_title: 'The founder of the System',
