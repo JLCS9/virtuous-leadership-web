@@ -9,8 +9,13 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
-import alexImg from '../assets/alex.png';
+import alexFallback from '../assets/alex.png';
 import ttImg from '../assets/tt.png';
+
+// Foto de Alex — mira primero en /alex-perfil.png (carpeta public/), si no
+// existe cae al asset alex.png. Para sustituirla, basta con dejar el archivo
+// en public/alex-perfil.png con cualquier extensión image (cambia el src).
+const ALEX_PRIMARY = '/alex-perfil.png';
 
 const HOME_SEO = {
   es: {
@@ -66,7 +71,9 @@ export default function Home() {
           display: 'grid', gridTemplateColumns: '1fr', gap: 48, alignItems: 'center',
         }} className="hero-grid">
           <div>
-            <div style={styles.eyebrow}>{t('home.eyebrow_official')}</div>
+            <div style={{ ...styles.eyebrow, fontSize: 15, letterSpacing: '0.16em', marginBottom: 16 }}>
+              {t('home.eyebrow_official')}
+            </div>
             <h1 className="hero-title" style={{
               ...styles.h1,
               fontFamily: FONT_SERIF,
@@ -209,15 +216,23 @@ export default function Home() {
               boxShadow: '0 16px 40px rgba(27,42,74,0.10)',
               background: BEIGE,
             }}>
-              <img src={alexImg} alt="Alexandre Havard"
-                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+              <img
+                src={ALEX_PRIMARY}
+                alt="Alexandre Havard"
+                onError={(e) => { if (e.currentTarget.src !== alexFallback) e.currentTarget.src = alexFallback; }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
             </div>
           </div>
           <div>
             <div style={styles.eyebrow}>{t('home.alex_eyebrow')}</div>
             <h2 style={styles.h2}>{t('home.alex_title')}</h2>
             <p style={{ ...styles.paraLarge, marginTop: 16 }}>{t('home.alex_subtitle')}</p>
-            <p style={{ ...styles.para, fontSize: 16 }}>{t('home.alex_p1')}</p>
+            <p style={{ ...styles.para, fontSize: 16 }}>
+              {t('home.alex_p1_pre')}
+              <em>{t('home.alex_p1_book')}</em>
+              {t('home.alex_p1_post')}
+            </p>
             <p style={{ ...styles.para, fontSize: 16 }}>{t('home.alex_p2')}</p>
             <div style={{ marginTop: 16 }}>
               <Link to="/acreditacion#alex" style={{
