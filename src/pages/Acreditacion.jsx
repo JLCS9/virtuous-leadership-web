@@ -9,8 +9,7 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
-import alexFallback from '../assets/alex.png';
-const ALEX_PRIMARY = '/alex-perfil.png';
+import alexImg from '../assets/alex-perfil.jpeg';
 
 const PAGE_SEO = {
   es: { title: 'Acreditación oficial en Liderazgo Virtuoso', description: 'Sello internacional firmado por Alexandre Havard. Building character en la cultura de tu institución educativa: programas para colegios, universidades y centros superiores.' },
@@ -107,12 +106,8 @@ export default function Acreditacion() {
               boxShadow: '0 16px 40px rgba(27,42,74,0.10)',
               background: BEIGE,
             }}>
-              <img
-                src={ALEX_PRIMARY}
-                alt="Alexandre Havard"
-                onError={(e) => { if (e.currentTarget.src !== alexFallback) e.currentTarget.src = alexFallback; }}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+              <img src={alexImg} alt="Alexandre Havard"
+                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           </div>
           <div>

@@ -9,13 +9,8 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
-import alexFallback from '../assets/alex.png';
+import alexImg from '../assets/alex-perfil.jpeg';
 import ttImg from '../assets/tt.png';
-
-// Foto de Alex — mira primero en /alex-perfil.png (carpeta public/), si no
-// existe cae al asset alex.png. Para sustituirla, basta con dejar el archivo
-// en public/alex-perfil.png con cualquier extensión image (cambia el src).
-const ALEX_PRIMARY = '/alex-perfil.png';
 
 const HOME_SEO = {
   es: {
@@ -216,12 +211,8 @@ export default function Home() {
               boxShadow: '0 16px 40px rgba(27,42,74,0.10)',
               background: BEIGE,
             }}>
-              <img
-                src={ALEX_PRIMARY}
-                alt="Alexandre Havard"
-                onError={(e) => { if (e.currentTarget.src !== alexFallback) e.currentTarget.src = alexFallback; }}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+              <img src={alexImg} alt="Alexandre Havard"
+                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           </div>
           <div>
