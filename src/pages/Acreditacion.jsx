@@ -9,8 +9,6 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
-import alexImg from '../assets/alex-perfil.jpeg';
-
 const PAGE_SEO = {
   es: { title: 'Acreditación oficial en Liderazgo Virtuoso', description: 'Sello internacional firmado por Alexandre Havard. Building character en la cultura de tu institución educativa: programas para colegios, universidades y centros superiores.' },
   en: { title: 'Official Virtuous Leadership Certification',  description: 'International seal signed by Alexandre Havard. Building character in your institution\'s culture: programs for schools, universities and higher education centers.' },
@@ -21,7 +19,6 @@ export default function Acreditacion() {
   const { t, lang } = useT();
   const diff_items = t('acreditacion.diff_items');
   const audiences  = t('acreditacion.audiences');
-  const alex_kv    = t('acreditacion.alex_kv');
   const heroTitle  = t('acreditacion.hero_title');
   const seo = PAGE_SEO[lang] || PAGE_SEO.es;
 
@@ -93,43 +90,6 @@ export default function Acreditacion() {
         </div>
       </Section>
 
-      {/* Sobre Alex */}
-      <Section background={PAPER} paddingY={88}>
-        <div id="alex" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 40, alignItems: 'center', scrollMarginTop: 80 }} className="alex-grid">
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <div style={{
-              width: 'min(360px, 90%)',
-              aspectRatio: '4 / 5',
-              borderRadius: 2,
-              overflow: 'hidden',
-              border: `1px solid ${LINE}`,
-              boxShadow: '0 16px 40px rgba(27,42,74,0.10)',
-              background: BEIGE,
-            }}>
-              <img src={alexImg} alt="Alexandre Havard"
-                   style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-            </div>
-          </div>
-          <div>
-            <div style={styles.eyebrow}>{t('acreditacion.alex_eyebrow')}</div>
-            <h2 style={styles.h2}>{t('acreditacion.alex_title')}</h2>
-            <p style={{ ...styles.paraLarge, marginTop: 16 }}>{t('acreditacion.alex_subtitle')}</p>
-            <p style={{ ...styles.para, fontSize: 16 }}>{t('acreditacion.alex_p1')}</p>
-            <p style={{ ...styles.para, fontSize: 16 }}>{t('acreditacion.alex_p2')}</p>
-
-            <div style={{
-              marginTop: 28, padding: '24px 26px', background: BEIGE,
-              border: `1px solid ${LINE}`, borderLeft: `3px solid ${GOLD}`,
-            }}>
-              {alex_kv.map((kv, i) => <KV key={i} label={kv.label} value={kv.value} />)}
-            </div>
-          </div>
-        </div>
-        <style>{`
-          @media (min-width: 820px) { .alex-grid { grid-template-columns: 1fr 1.4fr !important; gap: 56px !important; } }
-        `}</style>
-      </Section>
-
       {/* CTA contacto */}
       <Section background={BEIGE} paddingY={72}>
         <div style={{ maxWidth: 720, margin: '0 auto', textAlign: 'center' }}>
@@ -146,13 +106,3 @@ export default function Acreditacion() {
   );
 }
 
-function KV({ label, value }) {
-  return (
-    <div style={{ padding: '10px 0', borderBottom: `1px solid ${LINE}` }}>
-      <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600, marginBottom: 4 }}>
-        {label}
-      </div>
-      <div style={{ ...styles.para, fontSize: 14, margin: 0 }}>{value}</div>
-    </div>
-  );
-}

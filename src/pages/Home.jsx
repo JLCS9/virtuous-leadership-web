@@ -219,21 +219,13 @@ export default function Home() {
             <div style={styles.eyebrow}>{t('home.alex_eyebrow')}</div>
             <h2 style={styles.h2}>{t('home.alex_title')}</h2>
             <p style={{ ...styles.paraLarge, marginTop: 16 }}>{t('home.alex_subtitle')}</p>
+            <p style={{ ...styles.para, fontSize: 16 }}>{t('home.alex_p0')}</p>
             <p style={{ ...styles.para, fontSize: 16 }}>
               {t('home.alex_p1_pre')}
               <em>{t('home.alex_p1_book')}</em>
               {t('home.alex_p1_post')}
             </p>
             <p style={{ ...styles.para, fontSize: 16 }}>{t('home.alex_p2')}</p>
-            <div style={{ marginTop: 16 }}>
-              <Link to="/acreditacion#alex" style={{
-                fontFamily: FONT_SANS, fontSize: 14, color: NAVY, fontWeight: 600,
-                letterSpacing: '0.06em', textTransform: 'uppercase', textDecoration: 'none',
-                borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
-              }}>
-                {t('home.alex_link')}
-              </Link>
-            </div>
           </div>
         </div>
         <style>{`
