@@ -90,7 +90,7 @@ export default {
         to: '/acreditacion/universidades',
         eyebrow: 'Educación universitaria',
         title: 'Universidades',
-        text: 'Programa híbrido para personal, profesores, estudiantes de máster y alumni. Online + dos encuentros presenciales + cierre magistral con Alexandre Havard.',
+        text: 'Programa híbrido para personal, profesores, estudiantes de máster y alumni.',
       },
       {
         to: '/acreditacion/educacion-superior',
@@ -130,7 +130,7 @@ export default {
     selector_subtitle: 'Cada itinerario adapta el rigor del modelo Havard al perfil específico de la institución.',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Colegios',                          sub: 'Educación primaria y secundaria',     text: 'Profesores, tutores, equipos pastorales, dirección y familias en un proceso integrado de transformación cultural del centro.', cta: 'Ver programa para colegios' },
-      { to: '/acreditacion/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',             text: 'Programa híbrido con dos encuentros presenciales y cierre magistral con Alexandre Havard. Para personal, profesores, máster y alumni.', cta: 'Ver programa para universidades' },
+      { to: '/acreditacion/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',             text: 'Para personal, profesores, máster y alumni.', cta: 'Ver programa para universidades' },
       { to: '/acreditacion/educacion-superior', label: 'Centros de Educación Superior',     sub: 'Educación profesional y técnica',     text: 'Business schools, escuelas técnicas, institutos profesionales y centros de FP. Misma metodología, adaptada al contexto profesional.', cta: 'Ver programa para centros superiores' },
     ],
     alex_eyebrow: 'Sobre Alexandre Havard',

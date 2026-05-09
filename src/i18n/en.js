@@ -89,7 +89,7 @@ export default {
         to: '/acreditacion/universidades',
         eyebrow: 'University education',
         title: 'Universities',
-        text: 'Hybrid program for staff, faculty, master\'s students and alumni. Online + two in-person sessions + masterclass closing with Alexandre Havard.',
+        text: 'Hybrid program for staff, faculty, master\'s students and alumni.',
       },
       {
         to: '/acreditacion/educacion-superior',
@@ -129,7 +129,7 @@ export default {
     selector_subtitle: 'Each itinerary adapts the rigor of the Havard model to the specific profile of the institution.',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Schools',                       sub: 'Primary and secondary education',     text: 'Teachers, tutors, pastoral teams, leadership and families in an integrated process of cultural transformation.', cta: 'See program for schools' },
-      { to: '/acreditacion/universidades',      label: 'Universities',                  sub: 'University education',                text: 'Hybrid program with two in-person sessions and masterclass closing with Alexandre Havard. For staff, faculty, master\'s and alumni.', cta: 'See program for universities' },
+      { to: '/acreditacion/universidades',      label: 'Universities',                  sub: 'University education',                text: 'For staff, faculty, master\'s and alumni.', cta: 'See program for universities' },
       { to: '/acreditacion/educacion-superior', label: 'Higher Education Centers',      sub: 'Professional and technical education', text: 'Business schools, technical schools, professional institutes and vocational centers. Same methodology, adapted to the professional context.', cta: 'See program for higher ed centers' },
     ],
     alex_eyebrow: 'About Alexandre Havard',

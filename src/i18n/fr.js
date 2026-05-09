@@ -89,7 +89,7 @@ export default {
         to: '/acreditacion/universidades',
         eyebrow: 'Enseignement universitaire',
         title: 'Universités',
-        text: 'Programme hybride pour le personnel, les enseignants, les étudiants en master et les anciens élèves. En ligne + deux rencontres en présentiel + clôture magistrale avec Alexandre Havard.',
+        text: 'Programme hybride pour le personnel, les enseignants, les étudiants en master et les anciens élèves.',
       },
       {
         to: '/acreditacion/educacion-superior',
@@ -129,7 +129,7 @@ export default {
     selector_subtitle: 'Chaque parcours adapte la rigueur du modèle Havard au profil spécifique de l\'institution.',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Écoles',                                 sub: 'Enseignement primaire et secondaire',     text: 'Enseignants, tuteurs, équipes pastorales, direction et familles dans un processus intégré de transformation culturelle du centre.', cta: 'Voir le programme pour les écoles' },
-      { to: '/acreditacion/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',              text: 'Programme hybride avec deux rencontres en présentiel et une clôture magistrale avec Alexandre Havard. Pour le personnel, les enseignants, les masters et les anciens élèves.', cta: 'Voir le programme pour les universités' },
+      { to: '/acreditacion/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',              text: 'Pour le personnel, les enseignants, les masters et les anciens élèves.', cta: 'Voir le programme pour les universités' },
       { to: '/acreditacion/educacion-superior', label: 'Centres d\'enseignement supérieur',      sub: 'Enseignement professionnel et technique', text: 'Écoles de commerce, écoles techniques, instituts professionnels et centres de FP. Même méthodologie, adaptée au contexte professionnel.', cta: 'Voir le programme pour les centres supérieurs' },
     ],
     alex_eyebrow: 'À propos d\'Alexandre Havard',
