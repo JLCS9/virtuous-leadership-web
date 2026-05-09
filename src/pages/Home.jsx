@@ -209,7 +209,8 @@ export default function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           {audiences.map((a, i) => (
             <Link key={i} to={a.to} style={{
-              display: 'block', padding: '36px 30px',
+              display: 'flex', flexDirection: 'column',
+              padding: '36px 30px',
               background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, borderRadius: 2,
               textDecoration: 'none', transition: 'all 200ms ease',
               borderLeft: `3px solid ${GOLD}`,
@@ -217,11 +218,13 @@ export default function Home() {
               onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderLeftColor = GOLD_SOFT; e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)'; }}
               onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderLeftColor = GOLD; e.currentTarget.style.boxShadow = 'none'; }}
             >
-              <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600 }}>
-                {a.eyebrow}
-              </div>
-              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 26, marginTop: 10, marginBottom: 16 }}>{a.title}</h3>
-              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, lineHeight: 1.65, margin: 0 }}>{a.text}</p>
+              {a.eyebrow && (
+                <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600, marginBottom: 8 }}>
+                  {a.eyebrow}
+                </div>
+              )}
+              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 26, marginTop: 0, marginBottom: 16 }}>{a.title}</h3>
+              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, lineHeight: 1.65, margin: 0, flex: 1 }}>{a.text}</p>
               <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 14, color: GOLD, fontWeight: 600, letterSpacing: '0.04em' }}>
                 {t('home.audiences_cta')}
               </div>
