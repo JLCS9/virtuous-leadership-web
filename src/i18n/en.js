@@ -115,13 +115,13 @@ export default {
   acreditacion: {
     eyebrow: 'Accreditation',
     hero_title: 'Official accreditation\nin Virtuous Leadership',
-    hero_subtitle: 'An international seal that recognizes educational institutions which have implemented the Virtuous Leadership System® in their institutional culture, signed by Alexandre Havard.',
-    diff_eyebrow: 'Differentiators',
+    hero_subtitle: 'An international seal that recognizes educational institutions which have implemented the Virtuous Leadership System® in their institutional culture.',
+    diff_eyebrow: '',
     diff_title: 'What makes this accreditation unique?',
     diff_items: [
-      { title: 'Unique content',         text: 'Alexandre Havard\'s Virtuous Leadership model, integrated with academic rigor.' },
+      { title: 'Unique content',         text: 'Alexandre Havard\'s Virtuous Leadership model, practical content with academic rigor.' },
       { title: 'Real closeness',         text: 'Courses delivered directly by their author — no filters, no distance.' },
-      { title: 'Institutional seal',     text: 'An official accreditation signed by Alexandre Havard that distinguishes the center as a formator of character.' },
+      { title: 'Institutional seal',     text: 'An official certification in virtuous leadership.' },
       { title: 'The whole community',    text: 'Staff, faculty, students and, in the case of schools, also the families.' },
     ],
     selector_eyebrow: 'Choose your institution',

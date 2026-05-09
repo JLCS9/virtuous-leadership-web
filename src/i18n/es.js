@@ -116,13 +116,13 @@ export default {
   acreditacion: {
     eyebrow: 'Acreditación',
     hero_title: 'Acreditación oficial\nen Liderazgo Virtuoso',
-    hero_subtitle: 'Un sello internacional que reconoce a las instituciones educativas que han implementado el Sistema Liderazgo Virtuoso® en su cultura institucional, firmado por Alexandre Havard.',
-    diff_eyebrow: 'Diferenciadores',
+    hero_subtitle: 'Un sello internacional que reconoce a las instituciones educativas que han implementado el Sistema Liderazgo Virtuoso® en su cultura institucional.',
+    diff_eyebrow: '',
     diff_title: '¿Qué hace única esta acreditación?',
     diff_items: [
-      { title: 'Contenido único',     text: 'El modelo de Liderazgo Virtuoso de Alexandre Havard, integrado con el rigor académico.' },
+      { title: 'Contenido único',     text: 'El modelo de Liderazgo Virtuoso de Alexandre Havard, contenido práctico con rigor académico.' },
       { title: 'Cercanía real',       text: 'Cursos impartidos directamente por su autor — sin filtros, sin distancia.' },
-      { title: 'Sello institucional', text: 'Una acreditación oficial firmada por Alexandre Havard que distingue al centro como formador del carácter.' },
+      { title: 'Sello institucional', text: 'Una acreditación oficial en liderazgo virtuoso.' },
       { title: 'Toda la comunidad',   text: 'Personal, profesores, estudiantes y, en el caso de los colegios, también las familias.' },
     ],
     selector_eyebrow: 'Selecciona tu institución',

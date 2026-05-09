@@ -41,7 +41,9 @@ export default function Acreditacion() {
       {/* Diferenciadores */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('acreditacion.diff_eyebrow')}</div>
+          {t('acreditacion.diff_eyebrow') && (
+            <div style={styles.eyebrow}>{t('acreditacion.diff_eyebrow')}</div>
+          )}
           <h2 style={styles.h2}>{t('acreditacion.diff_title')}</h2>
         </div>
 

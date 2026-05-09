@@ -115,13 +115,13 @@ export default {
   acreditacion: {
     eyebrow: 'Accréditation',
     hero_title: 'Accréditation officielle\nen Leadership Vertueux',
-    hero_subtitle: 'Un sceau international qui distingue les institutions éducatives ayant intégré le Système Leadership Vertueux® dans leur culture institutionnelle, signé par Alexandre Havard.',
-    diff_eyebrow: 'Différenciateurs',
+    hero_subtitle: 'Un sceau international qui distingue les institutions éducatives ayant intégré le Système Leadership Vertueux® dans leur culture institutionnelle.',
+    diff_eyebrow: '',
     diff_title: 'Qu\'est-ce qui rend cette accréditation unique ?',
     diff_items: [
-      { title: 'Contenu unique',           text: 'Le modèle de Leadership Vertueux d\'Alexandre Havard, intégré à la rigueur académique.' },
+      { title: 'Contenu unique',           text: 'Le modèle de Leadership Vertueux d\'Alexandre Havard, contenu pratique avec rigueur académique.' },
       { title: 'Proximité réelle',         text: 'Cours dispensés directement par leur auteur — sans filtres, sans distance.' },
-      { title: 'Sceau institutionnel',     text: 'Une accréditation officielle signée par Alexandre Havard qui distingue le centre comme formateur du caractère.' },
+      { title: 'Sceau institutionnel',     text: 'Une certification officielle en leadership vertueux.' },
       { title: 'Toute la communauté',      text: 'Personnel, enseignants, étudiants et, dans le cas des écoles, également les familles.' },
     ],
     selector_eyebrow: 'Choisis ton institution',
