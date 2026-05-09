@@ -18,7 +18,7 @@ export default function Footer() {
             <Seal size={56} />
             <div>
               <div style={{ fontFamily: FONT_SERIF, fontWeight: 700, fontSize: 18, color: PAPER, letterSpacing: '0.04em' }}>
-                Virtuous Leadership<sup style={{ fontSize: '0.5em', color: GOLD, marginLeft: 2, top: '-0.6em', position: 'relative' }}>®</sup>
+                Virtuous Leadership<sup style={{ fontSize: '0.55em', verticalAlign: 'super', marginLeft: 1 }}>®</sup>
               </div>
               <div style={{ fontFamily: FONT_SERIF, fontSize: 13, fontStyle: 'italic', color: GOLD, marginTop: 4 }}>
                 {t('footer.tagline')}
