@@ -6,14 +6,23 @@ import {
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
+import SEO from '../components/SEO';
 import ttImg from '../assets/tt.png';
 
+const TESTS_SEO = {
+  es: { title: 'Tests de autoconocimiento', description: 'Test de temperamento gratis online basado en la teoría de Alexandre Havard. Building character a través del autoconocimiento.' },
+  en: { title: 'Self-knowledge tests',       description: 'Free online temperament test based on Alexandre Havard\'s theory. Building character through self-knowledge.' },
+  fr: { title: 'Tests de connaissance de soi', description: 'Test de tempérament gratuit en ligne basé sur la théorie d\'Alexandre Havard. Building character par la connaissance de soi.' },
+};
+
 export default function Tests() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const cards = t('tests.cards');
+  const seo = TESTS_SEO[lang] || TESTS_SEO.es;
 
   return (
     <>
+      <SEO title={seo.title} description={seo.description} path="/tests" />
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
           <div style={styles.eyebrow}>{t('tests.eyebrow')}</div>

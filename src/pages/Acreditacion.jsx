@@ -8,17 +8,26 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
+import SEO from '../components/SEO';
 import alexImg from '../assets/alex.png';
 
+const PAGE_SEO = {
+  es: { title: 'Acreditación oficial en Liderazgo Virtuoso', description: 'Sello internacional firmado por Alexandre Havard. Building character en la cultura de tu institución educativa: programas para colegios, universidades y centros superiores.' },
+  en: { title: 'Official Virtuous Leadership Certification',  description: 'International seal signed by Alexandre Havard. Building character in your institution\'s culture: programs for schools, universities and higher education centers.' },
+  fr: { title: 'Accréditation officielle en Leadership Vertueux', description: 'Sceau international signé par Alexandre Havard. Building character dans la culture de ton institution éducative.' },
+};
+
 export default function Acreditacion() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const diff_items = t('acreditacion.diff_items');
   const audiences  = t('acreditacion.audiences');
   const alex_kv    = t('acreditacion.alex_kv');
   const heroTitle  = t('acreditacion.hero_title');
+  const seo = PAGE_SEO[lang] || PAGE_SEO.es;
 
   return (
     <>
+      <SEO title={seo.title} description={seo.description} path="/acreditacion" />
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '72px 24px', textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>

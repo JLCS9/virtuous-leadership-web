@@ -34,9 +34,9 @@ export default {
   },
 
   home: {
-    eyebrow_official: 'Accréditation officielle',
-    hero_title: 'Igniting Hearts for Greatness.',
-    hero_subtitle: 'Le Système Leadership Vertueux® d\'Alexandre Havard, intégré à la rigueur académique et disponible pour les institutions éducatives du monde entier.',
+    eyebrow_official: 'Leadership Vertueux® pour les institutions éducatives',
+    hero_title: 'Igniting Hearts for Greatness',
+    hero_subtitle: '',
     cta_know_system: 'Certification',
     cta_contact: 'Contactez-nous',
     stats: [
@@ -46,20 +46,20 @@ export default {
       { n: '4',        label: 'Langues' },
     ],
     system_eyebrow: 'Le système',
-    system_title: 'Qu\'est-ce que le Leadership Vertueux ?',
-    system_quote: '« Grandir en faisant grandir les autres. »',
+    system_title: 'Grandir en faisant grandir les autres.',
+    system_quote: '',
     pillars: {
       magnanimity: {
         badge: 'Magnanimité',
         sub: 'Grandeur',
-        title: 'Le leader magnanime',
-        text: 'L\'élan intérieur qui nous pousse à rêver grand et à agir avec un but. Il a confiance dans sa capacité à influer, transformer et laisser une empreinte.',
+        title: '',
+        text: 'L\'élan intérieur qui nous pousse à rêver grand et à agir avec un but. Il a confiance dans sa capacité à inspirer et laisser une empreinte.',
       },
       humility: {
         badge: 'Humilité',
         sub: 'Service',
-        title: 'Le leader humble',
-        text: 'L\'attitude de celui qui dirige par la proximité, l\'écoute et le don. Il n\'impose pas : il inspire, accompagne et permet aux autres de grandir.',
+        title: '',
+        text: 'L\'attitude de celui qui dirige par la proximité, l\'écoute et le don. Il n\'impose pas : il accompagne et donne du pouvoir.',
       },
     },
     pasos_eyebrow: 'Processus',

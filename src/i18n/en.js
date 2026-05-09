@@ -34,9 +34,9 @@ export default {
   },
 
   home: {
-    eyebrow_official: 'Official accreditation',
-    hero_title: 'Igniting Hearts for Greatness.',
-    hero_subtitle: 'Alexandre Havard\'s Virtuous Leadership System®, integrated with academic rigor and available to educational institutions worldwide.',
+    eyebrow_official: 'Virtuous Leadership® for educational institutions',
+    hero_title: 'Igniting Hearts for Greatness',
+    hero_subtitle: '',
     cta_know_system: 'Certification',
     cta_contact: 'Contact us',
     stats: [
@@ -46,20 +46,20 @@ export default {
       { n: '4',        label: 'Languages' },
     ],
     system_eyebrow: 'The system',
-    system_title: 'What is Virtuous Leadership?',
-    system_quote: '"Growing while helping others grow."',
+    system_title: 'Growing while helping others grow.',
+    system_quote: '',
     pillars: {
       magnanimity: {
         badge: 'Magnanimity',
         sub: 'Greatness',
-        title: 'The magnanimous leader',
-        text: 'The inner drive that leads us to dream big and act with purpose. Trusts in their capacity to influence, transform and leave a mark.',
+        title: '',
+        text: 'The inner drive that leads us to dream big and act with purpose. Trusts in their capacity to inspire and leave a mark.',
       },
       humility: {
         badge: 'Humility',
         sub: 'Service',
-        title: 'The humble leader',
-        text: 'The attitude of one who leads through closeness, listening and dedication. Does not impose: inspires, accompanies and empowers others to grow.',
+        title: '',
+        text: 'The attitude of one who leads through closeness, listening and dedication. Does not impose: accompanies and empowers.',
       },
     },
     pasos_eyebrow: 'Process',

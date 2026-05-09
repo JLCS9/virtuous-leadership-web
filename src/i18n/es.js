@@ -35,9 +35,9 @@ export default {
   },
 
   home: {
-    eyebrow_official: 'Acreditación oficial',
-    hero_title: 'Igniting Hearts for Greatness.',
-    hero_subtitle: 'El Sistema Liderazgo Virtuoso® de Alexandre Havard, integrado con el rigor académico y disponible para instituciones educativas de todo el mundo.',
+    eyebrow_official: 'Liderazgo Virtuoso® para instituciones educativas',
+    hero_title: 'Igniting Hearts for Greatness',
+    hero_subtitle: '',
     cta_know_system: 'Acreditación',
     cta_contact: 'Contacta',
     stats: [
@@ -47,20 +47,20 @@ export default {
       { n: '4',        label: 'Idiomas' },
     ],
     system_eyebrow: 'El sistema',
-    system_title: '¿Qué es el Liderazgo Virtuoso?',
-    system_quote: '«Crecer haciendo crecer a los demás.»',
+    system_title: 'Crecer haciendo crecer a los demás.',
+    system_quote: '',
     pillars: {
       magnanimity: {
         badge: 'Magnanimidad',
         sub: 'Grandeza',
-        title: 'El líder magnánimo',
-        text: 'El impulso interior que nos lleva a soñar en grande y actuar con propósito. Confía en su capacidad de influir, transformar y dejar huella.',
+        title: '',
+        text: 'El impulso interior que nos lleva a soñar en grande y actuar con propósito. Confía en su capacidad de inspirar y dejar huella.',
       },
       humility: {
         badge: 'Humildad',
         sub: 'Servicio',
-        title: 'El líder humilde',
-        text: 'La actitud de quien lidera desde la cercanía, la escucha y la entrega. No impone: inspira, acompaña y capacita a otros para crecer.',
+        title: '',
+        text: 'La actitud de quien lidera desde la cercanía, la escucha y la entrega. No impone: acompaña y empodera.',
       },
     },
     pasos_eyebrow: 'Proceso',

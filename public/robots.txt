@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# No indexar el endpoint del backend ni el flujo intermedio del test
+Disallow: /api/
+
+Sitemap: https://virtuousleadership.com/sitemap.xml

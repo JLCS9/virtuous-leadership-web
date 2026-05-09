@@ -8,19 +8,41 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import Seal from '../components/Seal';
+import SEO from '../components/SEO';
 import alexImg from '../assets/alex.png';
 import ttImg from '../assets/tt.png';
 
+const HOME_SEO = {
+  es: {
+    title: 'Virtuous Leadership - Official Certification',
+    description: 'Virtuous Leadership: Building character a través del sistema de certificación oficial de Alexandre Havard. Test de temperamento gratis online y programas para colegios, universidades y centros superiores.',
+  },
+  en: {
+    title: 'Virtuous Leadership - Official Certification',
+    description: 'Virtuous Leadership: Building character through Alexandre Havard\'s official certification system. Free online temperament test and programs for schools, universities and higher education centers.',
+  },
+  fr: {
+    title: 'Virtuous Leadership - Official Certification',
+    description: 'Virtuous Leadership: Building character à travers le système de certification officiel d\'Alexandre Havard. Test de tempérament gratuit en ligne et programmes pour écoles, universités et centres supérieurs.',
+  },
+};
+
 export default function Home() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const stats     = t('home.stats');
   const pasos     = t('home.pasos');
   const audiences = t('home.audiences');
   const pillarMag = t('home.pillars.magnanimity');
   const pillarHum = t('home.pillars.humility');
+  const seo = HOME_SEO[lang] || HOME_SEO.es;
 
   return (
     <>
+      <SEO
+        title={seo.title}
+        description={seo.description}
+        path="/"
+      />
       {/* Hero */}
       <section style={{
         position: 'relative',
@@ -53,11 +75,6 @@ export default function Home() {
             }}>
               {t('home.hero_title')}
             </h1>
-            <p style={styles.paraLarge}>{t('home.hero_subtitle')}</p>
-            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginTop: 8 }}>
-              <CTA to="/acreditacion" variant="primary">{t('home.cta_know_system')}</CTA>
-              <CTA href={`mailto:${t('common.contact_email')}`} variant="secondary">{t('home.cta_contact')}</CTA>
-            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
             <div style={{
@@ -111,12 +128,11 @@ export default function Home() {
         `}</style>
       </section>
 
-      {/* ¿Qué es? */}
+      {/* El sistema */}
       <Section background={BEIGE} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 56px' }}>
           <div style={styles.eyebrow}>{t('home.system_eyebrow')}</div>
           <h2 style={styles.h2}>{t('home.system_title')}</h2>
-          <p style={styles.paraLarge}>{t('home.system_quote')}</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32 }}>
           <Pillar {...pillarMag} color={GOLD_DEEP} />
@@ -248,21 +264,22 @@ export default function Home() {
   );
 }
 
-function Pillar({ badge, sub, title, text, color }) {
+function Pillar({ badge, sub, text, color }) {
   return (
     <div style={{
       padding: '40px 36px',
       background: PAPER, border: `1px solid ${LINE}`, borderRadius: 2,
       borderTop: `4px solid ${color}`,
     }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 18 }}>
-        <span style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
+      <h3 style={{ marginBottom: 18, lineHeight: 1.1 }}>
+        <span style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 700, color, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
           {badge}
         </span>
-        <span style={{ fontFamily: FONT_SERIF, fontSize: 17, color: MUTED, fontStyle: 'italic' }}>· {sub}</span>
-      </div>
-      <h3 style={{ ...styles.h3, fontSize: 26, marginBottom: 14 }}>{title}</h3>
-      <p style={{ ...styles.para, fontSize: 16, margin: 0 }}>{text}</p>
+        <span style={{ fontFamily: FONT_SERIF, fontSize: 22, color: MUTED, fontStyle: 'italic', marginLeft: 10, fontWeight: 400 }}>
+          ·&nbsp;{sub}
+        </span>
+      </h3>
+      <p style={{ ...styles.para, fontSize: 17, margin: 0, lineHeight: 1.6 }}>{text}</p>
     </div>
   );
 }
