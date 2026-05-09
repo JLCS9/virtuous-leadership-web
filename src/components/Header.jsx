@@ -24,17 +24,16 @@ export default function Header() {
   useEffect(() => { setOpen(false); setSubmenuOpen(false); }, [location.pathname]);
 
   const NAV = [
-    { to: '/', label: t('nav.home'), exact: true },
     {
-      label: t('nav.accreditation'),
+      label: t('nav.programs'),
       children: [
-        { to: '/acreditacion',                    label: t('nav.accreditation_system') },
-        { to: '/acreditacion/colegios',           label: t('nav.schools') },
         { to: '/acreditacion/universidades',      label: t('nav.universities') },
+        { to: '/acreditacion/colegios',           label: t('nav.schools') },
         { to: '/acreditacion/educacion-superior', label: t('nav.higher_ed') },
       ],
     },
-    { to: '/tests', label: t('nav.tests') },
+    { to: '/acreditacion/colegios', label: t('nav.accreditation') },
+    { to: '/tests',                  label: t('nav.tests') },
   ];
 
   return (

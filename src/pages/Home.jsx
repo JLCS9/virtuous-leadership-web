@@ -12,6 +12,7 @@ import SEO from '../components/SEO';
 import alexImg from '../assets/alex-perfil.jpeg';
 import ttImg from '../assets/tt.png';
 import genteImg from '../assets/gente.jpeg';
+import classImg from '../assets/class.jpeg';
 
 const HOME_SEO = {
   es: {
@@ -181,6 +182,22 @@ export default function Home() {
           ))}
         </div>
       </Section>
+
+      {/* Imagen 'class' full-width justo antes del bloque audiencias */}
+      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
+        <img
+          src={classImg}
+          alt=""
+          loading="lazy"
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            maxHeight: 460,
+            objectFit: 'cover',
+          }}
+        />
+      </section>
 
       {/* Audiencias */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>

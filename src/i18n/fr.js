@@ -3,11 +3,13 @@
 export default {
   nav: {
     home: 'Accueil',
-    accreditation: 'Accréditation',
+    programs: 'Programmes',
+    accreditation: 'Certification',
     accreditation_system: 'Présentation',
     schools: 'Écoles',
     universities: 'Universités',
-    higher_ed: 'Centres d\'enseignement supérieur',
+    higher_ed: 'Formation Supérieure',
+    higher_ed_long: 'Centres d\'enseignement supérieur',
     tests: 'Tests de connaissance de soi',
     contact: 'Contact',
   },

@@ -4,11 +4,13 @@
 export default {
   nav: {
     home: 'Home',
+    programs: 'Programas',
     accreditation: 'Acreditación',
     accreditation_system: 'Presentación',
     schools: 'Colegios',
     universities: 'Universidades',
-    higher_ed: 'Centros de Educación Superior',
+    higher_ed: 'Formación Superior',
+    higher_ed_long: 'Centros de Educación Superior',
     tests: 'Tests de autoconocimiento',
     contact: 'Contacto',
   },

@@ -32,11 +32,10 @@ export default function Footer() {
 
         <div>
           <h4 style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, margin: '0 0 14px 0' }}>
-            {t('footer.accreditation_heading')}
+            {t('nav.programs')}
           </h4>
-          <FootLink to="/acreditacion">{t('nav.accreditation_system')}</FootLink>
-          <FootLink to="/acreditacion/colegios">{t('nav.schools')}</FootLink>
           <FootLink to="/acreditacion/universidades">{t('nav.universities')}</FootLink>
+          <FootLink to="/acreditacion/colegios">{t('nav.schools')}</FootLink>
           <FootLink to="/acreditacion/educacion-superior">{t('nav.higher_ed')}</FootLink>
         </div>
 
