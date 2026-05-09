@@ -77,7 +77,7 @@ export default {
     ],
     audiences_eyebrow: 'Para quién',
     audiences_title: 'Todo tipo de instituciones educativas',
-    audiences_subtitle: 'Adaptamos el programa al contexto y al perfil de cada institución',
+    audiences_subtitle: 'Cada itinerario adapta el rigor del modelo Liderazgo Virtuoso al perfil específico de la institución',
     audiences_cta: 'Conocer programa →',
     audiences: [
       {
@@ -127,7 +127,7 @@ export default {
     ],
     selector_eyebrow: 'Selecciona tu institución',
     selector_title: 'Para todo tipo de instituciones educativas',
-    selector_subtitle: 'Cada itinerario adapta el rigor del modelo Havard al perfil específico de la institución.',
+    selector_subtitle: 'Cada itinerario adapta el rigor del modelo Liderazgo Virtuoso al perfil específico de la institución',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Colegios',                          sub: 'Educación primaria y secundaria',     text: 'Profesores, tutores, equipos pastorales, dirección y familias en un proceso integrado de transformación cultural del centro.', cta: 'Ver programa para colegios' },
       { to: '/acreditacion/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',             text: 'Para personal, profesores, máster y alumni.', cta: 'Ver programa para universidades' },

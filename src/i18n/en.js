@@ -76,7 +76,7 @@ export default {
     ],
     audiences_eyebrow: 'For whom',
     audiences_title: 'All kinds of educational institutions',
-    audiences_subtitle: 'We tailor the program to the context and profile of each institution',
+    audiences_subtitle: 'Each program adapts the rigor of the Virtuous Leadership model to the specific profile of the institution',
     audiences_cta: 'See program →',
     audiences: [
       {
@@ -126,7 +126,7 @@ export default {
     ],
     selector_eyebrow: 'Choose your institution',
     selector_title: 'For all kinds of educational institutions',
-    selector_subtitle: 'Each itinerary adapts the rigor of the Havard model to the specific profile of the institution.',
+    selector_subtitle: 'Each program adapts the rigor of the Virtuous Leadership model to the specific profile of the institution',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Schools',                       sub: 'Primary and secondary education',     text: 'Teachers, tutors, pastoral teams, leadership and families in an integrated process of cultural transformation.', cta: 'See program for schools' },
       { to: '/acreditacion/universidades',      label: 'Universities',                  sub: 'University education',                text: 'For staff, faculty, master\'s and alumni.', cta: 'See program for universities' },

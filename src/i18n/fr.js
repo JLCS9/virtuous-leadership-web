@@ -76,7 +76,7 @@ export default {
     ],
     audiences_eyebrow: 'Pour qui',
     audiences_title: 'Tout type d\'institutions éducatives',
-    audiences_subtitle: 'Nous adaptons le programme au contexte et au profil de chaque institution',
+    audiences_subtitle: 'Chaque parcours adapte la rigueur du modèle Leadership Vertueux au profil spécifique de l\'institution',
     audiences_cta: 'Voir le programme →',
     audiences: [
       {
@@ -126,7 +126,7 @@ export default {
     ],
     selector_eyebrow: 'Choisis ton institution',
     selector_title: 'Pour tout type d\'institutions éducatives',
-    selector_subtitle: 'Chaque parcours adapte la rigueur du modèle Havard au profil spécifique de l\'institution.',
+    selector_subtitle: 'Chaque parcours adapte la rigueur du modèle Leadership Vertueux au profil spécifique de l\'institution',
     audiences: [
       { to: '/acreditacion/colegios',           label: 'Écoles',                                 sub: 'Enseignement primaire et secondaire',     text: 'Enseignants, tuteurs, équipes pastorales, direction et familles dans un processus intégré de transformation culturelle du centre.', cta: 'Voir le programme pour les écoles' },
       { to: '/acreditacion/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',              text: 'Pour le personnel, les enseignants, les masters et les anciens élèves.', cta: 'Voir le programme pour les universités' },
