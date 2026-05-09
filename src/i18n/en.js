@@ -584,6 +584,3 @@ export default {
     FLE: { name: 'Phlegmatic',   focus: 'peace',    archetype: 'the mediator' },
   },
 };
-iator' },
-  },
-};

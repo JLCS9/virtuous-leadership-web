@@ -592,6 +592,3 @@ export default {
     FLE: { name: 'Flemático',   focus: 'la paz',       archetype: 'el mediador' },
   },
 };
-or' },
-  },
-};

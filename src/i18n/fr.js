@@ -584,6 +584,3 @@ export default {
     FLE: { name: 'Flegmatique',   focus: 'la paix',       archetype: 'le médiateur' },
   },
 };
-eur' },
-  },
-};
