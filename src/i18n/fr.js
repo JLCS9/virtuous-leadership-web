@@ -46,7 +46,7 @@ export default {
       { n: '4',        label: 'Langues' },
     ],
     system_eyebrow: 'Le système',
-    system_title: 'Grandir en faisant grandir les autres.',
+    system_title: 'Grandir en faisant grandir les autres',
     system_quote: '',
     pillars: {
       magnanimity: {
@@ -66,22 +66,22 @@ export default {
     pasos_title: 'Les quatre étapes du Leadership Vertueux',
     pasos: [
       { n: '01', title: 'Connais-toi',
-        text: 'Découvre ton tempérament biologique pour comprendre comment tu diriges, comment tu communiques et ce qui te pousse ou te freine.' },
+        text: 'Découvre ton tempérament biologique pour comprendre tes inclinations naturelles innées.' },
       { n: '02', title: 'Reconnais ta vertu-défi',
-        text: 'Identifie la vertu qui, si tu la fortifies, fera de toi un meilleur professionnel, éducateur ou leader dans ton contexte.' },
+        text: 'Identifie la vertu qui, si tu la fortifies, fera de toi une meilleure personne et un meilleur professionnel.' },
       { n: '03', title: 'Entraîne ton caractère',
-        text: 'Vertus cardinales — prudence dans la décision, force devant le conflit, maîtrise de soi et justice.' },
+        text: 'Développe les vertus cardinales — prudence, force, maîtrise de soi et justice.' },
       { n: '04', title: 'Dirige avec un but',
-        text: 'Vertus spécifiques du leader : magnanimité pour inspirer et humilité au service des autres.' },
+        text: 'Pratique les vertus spécifiques du leadership : magnanimité pour inspirer et humilité pour servir.' },
     ],
     audiences_eyebrow: 'Pour qui',
     audiences_title: 'Tout type d\'institutions éducatives',
-    audiences_subtitle: 'Nous adaptons l\'accréditation au contexte et au profil de chaque institution éducative.',
+    audiences_subtitle: 'Nous adaptons le programme au contexte et au profil de chaque institution.',
     audiences_cta: 'Voir le programme →',
     audiences: [
       {
         to: '/acreditacion/colegios',
-        eyebrow: 'Enseignement primaire et secondaire',
+        eyebrow: 'Enseignement primaire, secondaire et lycée',
         title: 'Écoles',
         text: 'Pour toute la communauté éducative : enseignants, tuteurs, équipes pastorales, direction et familles. Un processus intégré pour transformer la culture institutionnelle de l\'intérieur.',
       },
@@ -580,5 +580,8 @@ export default {
     MEL: { name: 'Mélancolique',  focus: 'les idées',     archetype: 'le rêveur' },
     SAN: { name: 'Sanguin',       focus: 'les personnes', archetype: 'le communicateur' },
     FLE: { name: 'Flegmatique',   focus: 'la paix',       archetype: 'le médiateur' },
+  },
+};
+eur' },
   },
 };

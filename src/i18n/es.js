@@ -47,7 +47,7 @@ export default {
       { n: '4',        label: 'Idiomas' },
     ],
     system_eyebrow: 'El sistema',
-    system_title: 'Crecer haciendo crecer a los demás.',
+    system_title: 'Crecer haciendo crecer a los demás',
     system_quote: '',
     pillars: {
       magnanimity: {
@@ -67,22 +67,22 @@ export default {
     pasos_title: 'Cuatro pasos del Liderazgo Virtuoso',
     pasos: [
       { n: '01', title: 'Conócete',
-        text: 'Descubre tu temperamento biológico para entender cómo lideras, cómo te comunicas y qué te impulsa o te frena.' },
+        text: 'Descubre tu temperamento biológico para entender tus inclinaciones naturales innatas.' },
       { n: '02', title: 'Reconoce tu virtud-desafío',
-        text: 'Identifica la virtud que, si la fortaleces, te hará mejor profesional, educador o líder en tu contexto.' },
+        text: 'Identifica la virtud que, si la fortaleces, te hará mejor persona y mejor profesional.' },
       { n: '03', title: 'Entrena tu carácter',
-        text: 'Virtudes fundamentales — prudencia al decidir, fortaleza ante el conflicto, dominio propio y justicia.' },
+        text: 'Desarrolla virtudes fundamentales — prudencia, fortaleza, dominio propio y justicia.' },
       { n: '04', title: 'Lidera con propósito',
-        text: 'Virtudes específicas del líder: magnanimidad para inspirar y humildad al servicio de los demás.' },
+        text: 'Practica las virtudes específicas del liderazgo: magnanimidad para inspirar y humildad para servir.' },
     ],
     audiences_eyebrow: 'Para quién',
     audiences_title: 'Todo tipo de instituciones educativas',
-    audiences_subtitle: 'Adaptamos la acreditación al contexto y al perfil de cada institución educativa.',
+    audiences_subtitle: 'Adaptamos el programa al contexto y al perfil de cada institución.',
     audiences_cta: 'Conocer programa →',
     audiences: [
       {
         to: '/acreditacion/colegios',
-        eyebrow: 'Educación primaria y secundaria',
+        eyebrow: 'Educación primaria, secundaria y bachillerato',
         title: 'Colegios',
         text: 'Para toda la comunidad educativa: profesores, tutores, equipos pastorales, dirección y familias. Un proceso integrado para transformar la cultura institucional desde dentro.',
       },
@@ -588,5 +588,8 @@ export default {
     MEL: { name: 'Melancólico', focus: 'las ideas',    archetype: 'el soñador' },
     SAN: { name: 'Sanguíneo',   focus: 'las personas', archetype: 'el comunicador' },
     FLE: { name: 'Flemático',   focus: 'la paz',       archetype: 'el mediador' },
+  },
+};
+or' },
   },
 };

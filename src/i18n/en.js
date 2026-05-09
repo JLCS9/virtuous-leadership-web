@@ -46,7 +46,7 @@ export default {
       { n: '4',        label: 'Languages' },
     ],
     system_eyebrow: 'The system',
-    system_title: 'Growing while helping others grow.',
+    system_title: 'Growing while helping others grow',
     system_quote: '',
     pillars: {
       magnanimity: {
@@ -66,22 +66,22 @@ export default {
     pasos_title: 'Four steps of Virtuous Leadership',
     pasos: [
       { n: '01', title: 'Know yourself',
-        text: 'Discover your biological temperament to understand how you lead, how you communicate and what drives or holds you back.' },
+        text: 'Discover your biological temperament to understand your innate natural inclinations.' },
       { n: '02', title: 'Recognize your challenge-virtue',
-        text: 'Identify the virtue which, if strengthened, will make you a better professional, educator or leader in your context.' },
+        text: 'Identify the virtue which, if strengthened, will make you a better person and a better professional.' },
       { n: '03', title: 'Train your character',
-        text: 'Cardinal virtues — prudence in deciding, fortitude in conflict, self-control and justice.' },
+        text: 'Develop the cardinal virtues — prudence, fortitude, self-control and justice.' },
       { n: '04', title: 'Lead with purpose',
-        text: 'The leader\'s specific virtues: magnanimity to inspire and humility to serve others.' },
+        text: 'Practice the leader\'s specific virtues: magnanimity to inspire and humility to serve.' },
     ],
     audiences_eyebrow: 'For whom',
     audiences_title: 'All kinds of educational institutions',
-    audiences_subtitle: 'We tailor the accreditation to the context and profile of each educational institution.',
+    audiences_subtitle: 'We tailor the program to the context and profile of each institution.',
     audiences_cta: 'See program →',
     audiences: [
       {
         to: '/acreditacion/colegios',
-        eyebrow: 'Primary and secondary education',
+        eyebrow: 'Primary, secondary and high school education',
         title: 'Schools',
         text: 'For the entire educational community: teachers, tutors, pastoral teams, leadership and families. An integrated process to transform institutional culture from within.',
       },
@@ -580,5 +580,8 @@ export default {
     MEL: { name: 'Melancholic',  focus: 'ideas',    archetype: 'the dreamer' },
     SAN: { name: 'Sanguine',     focus: 'people',   archetype: 'the communicator' },
     FLE: { name: 'Phlegmatic',   focus: 'peace',    archetype: 'the mediator' },
+  },
+};
+iator' },
   },
 };
