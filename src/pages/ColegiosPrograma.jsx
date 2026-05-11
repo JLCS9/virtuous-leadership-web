@@ -94,8 +94,12 @@ export default function ColegiosPrograma() {
       {/* Destinatarios — fondo navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 16px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('destinatarios_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{k('destinatarios_title')}</h2>
+          {k('destinatarios_eyebrow') && (
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('destinatarios_eyebrow')}</div>
+          )}
+          {k('destinatarios_title') && (
+            <h2 style={{ ...styles.h2, color: PAPER }}>{k('destinatarios_title')}</h2>
+          )}
           {k('destinatarios_subtitle') && (
             <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{k('destinatarios_subtitle')}</p>
           )}
@@ -131,8 +135,10 @@ export default function ColegiosPrograma() {
       {/* Proximos pasos */}
       <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('proceso_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{k('proceso_title')}</h2>
+          {k('proceso_eyebrow') && (
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('proceso_eyebrow')}</div>
+          )}
+          <h2 style={{ ...styles.h2, color: PAPER, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{k('proceso_title')}</h2>
         </div>
         <ol style={{ maxWidth: 720, margin: '0 auto', padding: 0, listStyle: 'none' }}>
           {proceso.map((p, i) => (

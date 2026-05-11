@@ -86,7 +86,7 @@ export default {
         to: '/colegios',
         eyebrow: '',
         title: 'Schools',
-        text: 'Teachers, tutors, leadership and families.',
+        text: 'Leadership, tutors, teachers and families.',
       },
       {
         to: '/universidades',
@@ -131,7 +131,7 @@ export default {
     selector_title: 'For all kinds of educational institutions',
     selector_subtitle: 'Each program adapts the rigor of the Virtuous Leadership model to the specific profile of the institution',
     audiences: [
-      { to: '/acreditacion/colegios',           label: 'Schools',                       sub: 'Primary, secondary and high school education', text: 'Teachers, tutors, leadership and families.', cta: 'See program for schools' },
+      { to: '/acreditacion/colegios',           label: 'Schools',                       sub: 'Primary, secondary and high school education', text: 'Leadership, tutors, teachers and families.', cta: 'See program for schools' },
       { to: '/universidades',      label: 'Universities',                  sub: 'University education',                         text: 'Staff, faculty, master\'s students and alumni.', cta: 'See program for universities' },
       { to: '/educacion-superior', label: 'Higher Education Centers',      sub: 'Professional and technical education',         text: 'Business schools, technical schools, professional institutes and vocational centers.', cta: 'See program for higher ed centers' },
     ],
@@ -213,12 +213,12 @@ export default {
       { text: 'For the first time we have a common framework — temperament, character, virtues — that teachers, tutors and families can talk about without misunderstandings.',                                                                 author: 'Ana L.',      role: 'Pastoral coordinator' },
       { text: 'I have gained patience. I have understood why the same gesture from me works with some children and blocks others — and, above all, which virtue I have to work on myself.',                                                      author: 'David S.',    role: 'Primary school teacher' },
     ],
-    proceso_eyebrow: 'Next steps',
-    proceso_title: 'How to start the process',
+    proceso_eyebrow: '',
+    proceso_title: 'Next steps',
     proceso: [
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
       { n: '02', text: 'Design of an implementation plan adapted to the reality of the center.' },
-      { n: '03', text: 'Launch of licenses for faculty and training for families.' },
+      { n: '03', text: 'Launch of licenses and implementation guides.' },
       { n: '04', text: 'Official accreditation of the school.' },
     ],
   },
@@ -266,7 +266,7 @@ export default {
       { title: 'Education of the heart',       text: 'Love, pain, beauty and freedom as engines of virtuous leadership.' },
     ],
     destinatarios_eyebrow: 'Target audience',
-    destinatarios_title: 'For the entire educational community',
+    destinatarios_title: '',
     destinatarios_subtitle: '',
     destinatarios: [
       { n: '01', title: 'Leadership teams',     text: '' },
@@ -284,8 +284,8 @@ export default {
       { text: 'For the first time we have a common framework — temperament, character, virtues — that teachers, tutors and families can talk about without misunderstandings.',                                                                 author: 'Ana L.',      role: 'Pastoral coordinator' },
       { text: 'I have gained patience. I have understood why the same gesture from me works with some children and blocks others — and, above all, which virtue I have to work on myself.',                                                      author: 'David S.',    role: 'Primary school teacher' },
     ],
-    proceso_eyebrow: 'Next steps',
-    proceso_title: 'How to start the process',
+    proceso_eyebrow: '',
+    proceso_title: 'Next steps',
     proceso: [
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
       { n: '02', text: 'Launch of licenses.' },

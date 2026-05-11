@@ -86,7 +86,7 @@ export default {
         to: '/colegios',
         eyebrow: '',
         title: 'Écoles',
-        text: 'Enseignants, tuteurs, direction et familles.',
+        text: 'Direction, tuteurs, enseignants et familles.',
       },
       {
         to: '/universidades',
@@ -131,7 +131,7 @@ export default {
     selector_title: 'Pour tout type d\'institutions éducatives',
     selector_subtitle: 'Chaque parcours adapte la rigueur du modèle Leadership Vertueux au profil spécifique de l\'institution',
     audiences: [
-      { to: '/acreditacion/colegios',           label: 'Écoles',                                 sub: 'Enseignement primaire, secondaire et lycée', text: 'Enseignants, tuteurs, direction et familles.', cta: 'Voir le programme pour les écoles' },
+      { to: '/acreditacion/colegios',           label: 'Écoles',                                 sub: 'Enseignement primaire, secondaire et lycée', text: 'Direction, tuteurs, enseignants et familles.', cta: 'Voir le programme pour les écoles' },
       { to: '/universidades',      label: 'Universités',                            sub: 'Enseignement universitaire',                 text: 'Personnel, enseignants, étudiants en master et anciens élèves.', cta: 'Voir le programme pour les universités' },
       { to: '/educacion-superior', label: 'Centres d\'enseignement supérieur',      sub: 'Enseignement professionnel et technique',    text: 'Écoles de commerce, écoles techniques, instituts professionnels et centres de FP.', cta: 'Voir le programme pour les centres supérieurs' },
     ],
@@ -213,12 +213,12 @@ export default {
       { text: 'Pour la première fois, nous avons un cadre commun — tempérament, caractère, vertus — dont peuvent parler enseignants, tuteurs et familles sans malentendus.',                                                                                                    author: 'Ana L.',      role: 'Coordinatrice pastorale' },
       { text: 'J\'ai gagné en patience. J\'ai compris pourquoi un même geste de ma part fonctionne avec certains enfants et bloque les autres — et surtout, quelle vertu il me revient de travailler.',                                                                          author: 'David S.',    role: 'Professeur de primaire' },
     ],
-    proceso_eyebrow: 'Prochaines étapes',
-    proceso_title: 'Comment commencer le processus',
+    proceso_eyebrow: '',
+    proceso_title: 'Prochaines étapes',
     proceso: [
       { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter le programme et répondre aux questions.' },
       { n: '02', text: 'Conception d\'un plan de mise en œuvre adapté à la réalité du centre.' },
-      { n: '03', text: 'Lancement des licences pour les enseignants et formation des familles.' },
+      { n: '03', text: 'Lancement des licences et des guides de mise en œuvre.' },
       { n: '04', text: 'Accréditation officielle de l\'école.' },
     ],
   },
@@ -266,7 +266,7 @@ export default {
       { title: 'Éducation du cœur',            text: 'Amour, douleur, beauté et liberté comme moteurs du leadership vertueux.' },
     ],
     destinatarios_eyebrow: 'Destinataires',
-    destinatarios_title: 'Pour toute la communauté éducative',
+    destinatarios_title: '',
     destinatarios_subtitle: '',
     destinatarios: [
       { n: '01', title: 'Équipes de direction',     text: '' },
@@ -284,8 +284,8 @@ export default {
       { text: 'Pour la première fois, nous avons un cadre commun — tempérament, caractère, vertus — dont peuvent parler enseignants, tuteurs et familles sans malentendus.',                                                                                                    author: 'Ana L.',      role: 'Coordinatrice pastorale' },
       { text: 'J\'ai gagné en patience. J\'ai compris pourquoi un même geste de ma part fonctionne avec certains enfants et bloque les autres — et surtout, quelle vertu il me revient de travailler.',                                                                          author: 'David S.',    role: 'Professeur de primaire' },
     ],
-    proceso_eyebrow: 'Prochaines étapes',
-    proceso_title: 'Comment commencer le processus',
+    proceso_eyebrow: '',
+    proceso_title: 'Prochaines étapes',
     proceso: [
       { n: '01', text: "Réunion initiale avec l'équipe de direction pour présenter le programme et répondre aux questions." },
       { n: '02', text: 'Lancement des licences.' },

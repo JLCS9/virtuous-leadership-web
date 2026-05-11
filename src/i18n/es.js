@@ -87,7 +87,7 @@ export default {
         to: '/colegios',
         eyebrow: '',
         title: 'Colegios',
-        text: 'Profesores, tutores, dirección y familias.',
+        text: 'Dirección, tutores, profesores y familias.',
       },
       {
         to: '/universidades',
@@ -132,7 +132,7 @@ export default {
     selector_title: 'Para todo tipo de instituciones educativas',
     selector_subtitle: 'Cada itinerario adapta el rigor del modelo Liderazgo Virtuoso al perfil específico de la institución',
     audiences: [
-      { to: '/acreditacion/colegios',           label: 'Colegios',                          sub: 'Educación primaria, secundaria y bachillerato', text: 'Profesores, tutores, dirección y familias.', cta: 'Ver programa para colegios' },
+      { to: '/acreditacion/colegios',           label: 'Colegios',                          sub: 'Educación primaria, secundaria y bachillerato', text: 'Dirección, tutores, profesores y familias.', cta: 'Ver programa para colegios' },
       { to: '/universidades',      label: 'Universidades',                     sub: 'Educación universitaria',                       text: 'Personal, profesores, alumnos de máster y alumni.', cta: 'Ver programa para universidades' },
       { to: '/educacion-superior', label: 'Centros de Educación Superior',     sub: 'Educación profesional y técnica',               text: 'Business schools, escuelas técnicas, institutos profesionales y centros de FP.', cta: 'Ver programa para centros superiores' },
     ],
@@ -214,12 +214,12 @@ export default {
       { text: 'Por primera vez tenemos un marco común — temperamento, carácter, virtudes — del que pueden hablar profesores, tutores y familias sin malentendidos.',                                                          author: 'Ana L.',      role: 'Coordinadora pastoral' },
       { text: 'He ganado en paciencia. He entendido por qué un mismo gesto mío funciona con unos niños y bloquea a otros — y, sobre todo, qué virtud me toca trabajar a mí.',                                                  author: 'David S.',    role: 'Profesor de primaria' },
     ],
-    proceso_eyebrow: 'Próximos pasos',
-    proceso_title: 'Cómo empezar el proceso',
+    proceso_eyebrow: '',
+    proceso_title: 'Próximos pasos',
     proceso: [
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
       { n: '02', text: 'Diseño del plan de implantación adaptado a la realidad del centro.' },
-      { n: '03', text: 'Lanzamiento de las licencias para el profesorado y formación a las familias.' },
+      { n: '03', text: 'Lanzamiento de las licencias y guías de implantación.' },
       { n: '04', text: 'Acreditación oficial del colegio.' },
     ],
   },
@@ -269,7 +269,7 @@ export default {
       { title: 'Educación del corazón',         text: 'Amor, dolor, belleza y libertad como motores del liderazgo virtuoso.' },
     ],
     destinatarios_eyebrow: 'Destinatarios',
-    destinatarios_title: 'Para toda la comunidad educativa',
+    destinatarios_title: '',
     destinatarios_subtitle: '',
     destinatarios: [
       { n: '01', title: 'Equipos de dirección',  text: '' },
@@ -287,8 +287,8 @@ export default {
       { text: 'Por primera vez tenemos un marco común — temperamento, carácter, virtudes — del que pueden hablar profesores, tutores y familias sin malentendidos.',                                                          author: 'Ana L.',      role: 'Coordinadora pastoral' },
       { text: 'He ganado en paciencia. He entendido por qué un mismo gesto mío funciona con unos niños y bloquea a otros — y, sobre todo, qué virtud me toca trabajar a mí.',                                                  author: 'David S.',    role: 'Profesor de primaria' },
     ],
-    proceso_eyebrow: 'Próximos pasos',
-    proceso_title: 'Cómo empezar el proceso',
+    proceso_eyebrow: '',
+    proceso_title: 'Próximos pasos',
     proceso: [
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
       { n: '02', text: 'Lanzamiento de las licencias.' },
