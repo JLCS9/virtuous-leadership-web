@@ -8,6 +8,7 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import universidadImg from '../assets/universidad.jpg';
+import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();
@@ -26,7 +27,7 @@ export default function AcreditacionUniversidades() {
             <div style={styles.eyebrow}>{t('universidades.eyebrow')}</div>
           )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
-          <p style={{ ...styles.paraLarge, maxWidth: 760, margin: '24px auto 0' }}>
+          <p style={{ ...styles.paraLarge, maxWidth: 760, margin: '24px auto 0', whiteSpace: 'pre-line' }}>
             {t('universidades.hero_subtitle')}
           </p>
         </div>
@@ -129,6 +130,19 @@ export default function AcreditacionUniversidades() {
           ))}
         </div>
       </Section>
+
+      {/* Banner fondo-alex entre Participantes y Conceptos */}
+      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
+        <img src={fondoAlexImg} alt=""
+             loading="lazy"
+             style={{
+               width: '100%',
+               aspectRatio: '10 / 3',
+               objectFit: 'cover',
+               objectPosition: 'center top',
+               display: 'block',
+             }} />
+      </section>
 
       {/* Conceptos */}
       <Section background={PAPER} paddingY={88}>
