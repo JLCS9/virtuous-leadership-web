@@ -13,11 +13,12 @@
 import {
   NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, LINE,
-  FONT_SERIF, styles,
+  FONT_SERIF, FONT_SANS, styles,
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
+import { LocalLink } from '../i18n';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
@@ -26,6 +27,7 @@ export default function ColegiosPrograma() {
   const k = (key) => t(`colegios_prog.${key}`);
   const modalidad     = k('modalidad');
   const conceptos     = k('conceptos');
+  const entregables   = k('entregables');
   const destinatarios = k('destinatarios');
   const testimonios   = k('testimonios');
   const proceso       = k('proceso');
@@ -86,6 +88,44 @@ export default function ColegiosPrograma() {
             }}>
               <h3 style={{ ...styles.h3, fontSize: 20, marginBottom: 8 }}>{c.title}</h3>
               <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Que incluye la acreditacion — fondo beige (con cross-link al detalle) */}
+      <Section background={BEIGE} paddingY={88}>
+        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
+          {k('entregables_eyebrow') && (
+            <div style={styles.eyebrow}>{k('entregables_eyebrow')}</div>
+          )}
+          <h2 style={styles.h2}>{k('entregables_title')}</h2>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, maxWidth: 820, margin: '0 auto' }}>
+          {entregables.map((e, i) => (
+            <div key={i} style={{
+              display: 'grid', gridTemplateColumns: '60px 1fr', gap: 20,
+              padding: '20px 24px',
+              background: PAPER,
+              border: `1px solid ${LINE}`,
+              alignItems: 'center',
+            }}>
+              <div style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: GOLD_DEEP }}>0{i + 1}</div>
+              <div>
+                <div style={{ ...styles.para, fontSize: 15, margin: 0 }}>{e}</div>
+                {/* CTA solo en el item 01: cross-link a /acreditacion/colegios */}
+                {i === 0 && k('entregables_cta_label') && k('entregables_cta_to') && (
+                  <LocalLink to={k('entregables_cta_to')} style={{
+                    display: 'inline-block', marginTop: 10,
+                    fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
+                    letterSpacing: '0.04em', color: NAVY,
+                    textDecoration: 'none',
+                    borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
+                  }}>
+                    {k('entregables_cta_label')}
+                  </LocalLink>
+                )}
+              </div>
             </div>
           ))}
         </div>

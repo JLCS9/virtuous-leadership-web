@@ -223,6 +223,9 @@ export default {
   },
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
+  // colegios_prog: la rama i18n de /colegios (Programas). Tiene su propia
+  // copia editable y un cross-link al detalle de la acreditacion via
+  // entregables_cta_*.
   colegios_prog: {
     eyebrow: 'Programa · Colegios',
     hero_title: 'Programa para colegios',
@@ -246,6 +249,8 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'Qué incluye la acreditación',
+    entregables_cta_label: 'Ver la acreditación →',
+    entregables_cta_to: '/acreditacion/colegios',
     entregables: [
       'Licencias de acceso a los cursos oficiales de Alexandre Havard para todo el profesorado participante.',
       'Guía de implantación que permite al colegio desplegar el sistema de forma autónoma, incluida la formación a las familias.',

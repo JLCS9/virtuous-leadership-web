@@ -47,47 +47,223 @@
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/es/tests/temperamento</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <loc>https://virtuousleadership.com/es/acreditacion</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
     <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/en/tests/temperamento</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <loc>https://virtuousleadership.com/en/certification</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
     <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/fr/tests/temperamento</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <loc>https://virtuousleadership.com/fr/accreditation</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
     <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/ru/tests/temperamento</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests/temperamento"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <loc>https://virtuousleadership.com/ru/akkreditatsiya</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
     <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/es/acreditacion/colegios</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/en/certification/schools</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/fr/accreditation/ecoles</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/ru/akkreditatsiya/shkoly</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/certification/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/accreditation/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/akkreditatsiya/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/es/colegios</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/en/schools</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/fr/ecoles</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/ru/shkoly</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/schools"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/ecoles"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/shkoly"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/es/universidades</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universities"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universites"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universitety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/en/universities</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universities"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universites"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universitety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/fr/universites</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universities"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universites"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universitety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/ru/universitety</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universities"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universites"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universitety"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/es/educacion-superior</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/higher-education"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/enseignement-superieur"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/vysshee-obrazovanie"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/en/higher-education</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/higher-education"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/enseignement-superieur"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/vysshee-obrazovanie"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/fr/enseignement-superieur</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/higher-education"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/enseignement-superieur"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/vysshee-obrazovanie"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://virtuousleadership.com/ru/vysshee-obrazovanie</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/higher-education"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/enseignement-superieur"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/vysshee-obrazovanie"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
@@ -95,7 +271,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -106,7 +282,7 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
@@ -117,282 +293,106 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/ru/tests</loc>
+    <loc>https://virtuousleadership.com/ru/testy</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests"/>
     <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/tests"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/es/acreditacion</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
+    <loc>https://virtuousleadership.com/es/tests/temperamento</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy/temperament"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/en/acreditacion</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
+    <loc>https://virtuousleadership.com/en/tests/temperament</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy/temperament"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/fr/acreditacion</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
+    <loc>https://virtuousleadership.com/fr/tests/temperament</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy/temperament"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/ru/acreditacion</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion"/>
+    <loc>https://virtuousleadership.com/ru/testy/temperament</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/tests/temperamento"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/tests/temperament"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/testy/temperament"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/tests/temperamento"/>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/es/acreditacion/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/en/acreditacion/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/fr/acreditacion/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/ru/acreditacion/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/acreditacion/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/acreditacion/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/es/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/en/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/fr/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/ru/colegios</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/colegios"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/colegios"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/colegios"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/colegios"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/colegios"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/es/universidades</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universidades"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universidades"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universidades"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/en/universidades</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universidades"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universidades"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universidades"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/fr/universidades</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universidades"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universidades"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universidades"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/ru/universidades</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/universidades"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/universidades"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/universidades"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/universidades"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/universidades"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/es/educacion-superior</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/en/educacion-superior</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/fr/educacion-superior</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://virtuousleadership.com/ru/educacion-superior</loc>
-    <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/educacion-superior"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/educacion-superior"/>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>1.0</priority>
   </url>
 
   <url>
     <loc>https://virtuousleadership.com/es/contacto</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/contacto"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contacto"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contacto"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/contacto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/kontakty"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/contacto"/>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/en/contacto</loc>
+    <loc>https://virtuousleadership.com/en/contact</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/contacto"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contacto"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contacto"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/contacto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/kontakty"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/contacto"/>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/fr/contacto</loc>
+    <loc>https://virtuousleadership.com/fr/contact</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/contacto"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contacto"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contacto"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/contacto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/kontakty"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/contacto"/>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <url>
-    <loc>https://virtuousleadership.com/ru/contacto</loc>
+    <loc>https://virtuousleadership.com/ru/kontakty</loc>
     <xhtml:link rel="alternate" hreflang="es" href="https://virtuousleadership.com/es/contacto"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contacto"/>
-    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contacto"/>
-    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/contacto"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://virtuousleadership.com/en/contact"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://virtuousleadership.com/fr/contact"/>
+    <xhtml:link rel="alternate" hreflang="ru" href="https://virtuousleadership.com/ru/kontakty"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://virtuousleadership.com/es/contacto"/>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>

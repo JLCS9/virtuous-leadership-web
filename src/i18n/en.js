@@ -245,6 +245,8 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'What the accreditation includes',
+    entregables_cta_label: 'See the certification →',
+    entregables_cta_to: '/acreditacion/colegios',
     entregables: [
       'Access licenses to Alexandre Havard\'s official courses for all participating faculty.',
       'Implementation guide that allows the school to deploy the system autonomously, including family training.',
