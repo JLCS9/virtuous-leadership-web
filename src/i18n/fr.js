@@ -293,9 +293,9 @@ export default {
   },
 
   universidades: {
-    eyebrow: 'Programme · Universités',
-    hero_title: 'Leadership Vertueux\npour les universités',
-    hero_subtitle: 'Ce n\'est pas un programme de plus. C\'est une rencontre avec l\'essentiel. Le modèle d\'Alexandre Havard intégré à la rigueur académique, dispensé directement par son auteur.',
+    eyebrow: '',
+    hero_title: 'Leadership Vertueux\ndans les universités',
+    hero_subtitle: "Le modèle d'Alexandre Havard intégré à la rigueur académique, dispensé directement par son auteur.",
     diff_eyebrow: 'Sa portée mondiale n\'est pas un hasard',
     diff_title: 'La preuve de sa solidité',
     diff_items: [

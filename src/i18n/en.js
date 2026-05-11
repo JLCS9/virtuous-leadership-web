@@ -293,9 +293,9 @@ export default {
   },
 
   universidades: {
-    eyebrow: 'Program · Universities',
-    hero_title: 'Virtuous Leadership\nfor universities',
-    hero_subtitle: 'It is not one more program. It is an encounter with the essential. The Alexandre Havard model integrated with academic rigor, taught directly by its author.',
+    eyebrow: '',
+    hero_title: 'Virtuous Leadership\nat universities',
+    hero_subtitle: 'The Alexandre Havard model integrated with academic rigor, taught directly by its author.',
     diff_eyebrow: 'Its global reach is no coincidence',
     diff_title: 'Proof of its solidity',
     diff_items: [

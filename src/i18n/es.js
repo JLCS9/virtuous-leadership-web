@@ -296,9 +296,9 @@ export default {
   },
 
   universidades: {
-    eyebrow: 'Programa · Universidades',
-    hero_title: 'Liderazgo Virtuoso\npara universidades',
-    hero_subtitle: 'No es un programa más. Es un encuentro con lo esencial. El modelo de Alexandre Havard integrado con el rigor académico, impartido directamente por su autor.',
+    eyebrow: '',
+    hero_title: 'Liderazgo Virtuoso\nen universidades',
+    hero_subtitle: 'El modelo de Alexandre Havard integrado con el rigor académico, impartido directamente por su autor.',
     diff_eyebrow: 'Su alcance global no es casualidad',
     diff_title: 'La prueba de su solidez',
     diff_items: [

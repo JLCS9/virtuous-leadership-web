@@ -7,6 +7,7 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
+import universidadImg from '../assets/universidad.jpg';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();
@@ -21,11 +22,25 @@ export default function AcreditacionUniversidades() {
     <>
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          <div style={styles.eyebrow}>{t('universidades.eyebrow')}</div>
+          {t('universidades.eyebrow') && (
+            <div style={styles.eyebrow}>{t('universidades.eyebrow')}</div>
+          )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 760, margin: '24px auto 0' }}>
             {t('universidades.hero_subtitle')}
           </p>
+        </div>
+        {/* Foto full-width tras el bloque hero (aspect-ratio banner) */}
+        <div style={{ width: '100%', lineHeight: 0 }}>
+          <img src={universidadImg} alt=""
+               loading="lazy"
+               style={{
+                 width: '100%',
+                 aspectRatio: '10 / 4',
+                 objectFit: 'cover',
+                 objectPosition: 'center',
+                 display: 'block',
+               }} />
         </div>
       </section>
 
