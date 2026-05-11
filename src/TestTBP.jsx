@@ -1,8 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { useT } from './i18n';
 import ttImg from './assets/tt.png';
-import crecerImg from './assets/crecer.png';
-import bundleImg from './assets/budle.jpg';
+// Imagenes por idioma para los CTAs del final del test:
+import crecerEs  from './assets/crecer-es.jpg';
+import crecerEn  from './assets/crecer-en.png';
+import crecerFr  from './assets/crecer-fr.png';
+import crecerRu  from './assets/crecer-rus.png';
+import budleEs   from './assets/budle-es.jpg';
+import budleEn   from './assets/budle-en.jpg';
+import budleFr   from './assets/budle-fr.jpg';
+import budleRu   from './assets/budle-rus.png';
+const CRECER = { es: crecerEs, en: crecerEn, fr: crecerFr, ru: crecerRu };
+const BUDLE  = { es: budleEs,  en: budleEn,  fr: budleFr,  ru: budleRu };
 
 const NAVY = '#1B2A4A';
 const NAVY_SOFT = '#2A3B5F';
@@ -276,7 +285,7 @@ function Welcome({ onStart }) {
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('test.welcome.eyebrow')}</div>
-      <h1 style={styles.h1}>{t('test.welcome.title')}</h1>
+      {t('test.welcome.title') && <h1 style={styles.h1}>{t('test.welcome.title')}</h1>}
       <p style={{ ...styles.para, fontFamily: fontSerif, fontSize: 18, color: NAVY_SOFT, fontStyle: 'italic' }}>
         {t('test.welcome.byline')}
       </p>
@@ -451,10 +460,12 @@ function CTACard({ image, buttonLabel, href }) {
 }
 
 function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const profile = t(`result.profiles.${profileKey}`);
   const tempInfo = t(`temperaments.${primario}`);
   const isPure = !profileKey.includes('-');
+  const crecerImg = CRECER[lang] || CRECER.es;
+  const bundleImg = BUDLE[lang]  || BUDLE.es;
 
   return (
     <div style={styles.resultCard}>

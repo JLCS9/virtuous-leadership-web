@@ -8,35 +8,59 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
+import selloImg    from '../assets/sello.jpeg';
+import colegiosImg from '../assets/colegios.jpeg';
 
-export default function AcreditacionColegios() {
+/**
+ * Renderiza la pagina de Colegios usando el namespace i18n indicado en `ns`.
+ * Por defecto usa 'colegios' (pagina /acreditacion/colegios). Para /colegios
+ * (Programas) se pasa ns="colegios_prog" — los textos viven en una rama i18n
+ * separada para poder editarlos de forma independiente.
+ */
+export default function AcreditacionColegios({ ns = 'colegios' } = {}) {
   const { t } = useT();
-  const objetivos     = t('colegios.objetivos');
-  const modalidad     = t('colegios.modalidad');
-  const entregables   = t('colegios.entregables');
-  const conceptos     = t('colegios.conceptos');
-  const destinatarios = t('colegios.destinatarios');
-  const testimonios   = t('colegios.testimonios');
-  const proceso       = t('colegios.proceso');
-  const heroTitle     = t('colegios.hero_title');
+  const k = (key) => t(`${ns}.${key}`);
+  const objetivos     = k('objetivos');
+  const modalidad     = k('modalidad');
+  const entregables   = k('entregables');
+  const conceptos     = k('conceptos');
+  const destinatarios = k('destinatarios');
+  const testimonios   = k('testimonios');
+  const proceso       = k('proceso');
+  const heroTitle     = k('hero_title');
 
   return (
     <>
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          <div style={styles.eyebrow}>{t('colegios.eyebrow')}</div>
+          {k('eyebrow') && (
+            <div style={styles.eyebrow}>{k('eyebrow')}</div>
+          )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0' }}>
-            {t('colegios.hero_subtitle')}
+            {k('hero_subtitle')}
           </p>
+          {/* Sello, justo debajo del texto del hero */}
+          <div style={{ marginTop: 32, display: 'flex', justifyContent: 'center' }}>
+            <img src={selloImg} alt="Sello Liderazgo Virtuoso"
+                 style={{ width: 'min(160px, 40vw)', height: 'auto', display: 'block' }} />
+          </div>
+        </div>
+        {/* Imagen colegios, centrada (no full-width) tras el bloque hero */}
+        <div style={{ maxWidth: 1080, margin: '0 auto', padding: '0 24px 56px' }}>
+          <img src={colegiosImg} alt=""
+               loading="lazy"
+               style={{ width: '100%', maxHeight: 460, objectFit: 'cover', display: 'block' }} />
         </div>
       </section>
 
       {/* Objetivos */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('colegios.objetivos_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('colegios.objetivos_title')}</h2>
+          {k('objetivos_eyebrow') && (
+            <div style={styles.eyebrow}>{k('objetivos_eyebrow')}</div>
+          )}
+          <h2 style={{ ...styles.h2, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{k('objetivos_title')}</h2>
         </div>
         <div className="grid-2x2" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
           {objetivos.map((o, i) => (
@@ -53,8 +77,8 @@ export default function AcreditacionColegios() {
       {/* Modalidad — fondo navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('colegios.modalidad_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('colegios.modalidad_title')}</h2>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('modalidad_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('modalidad_title')}</h2>
         </div>
         <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
           {modalidad.map((m, i) => (
@@ -68,8 +92,10 @@ export default function AcreditacionColegios() {
       {/* Entregables */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('colegios.entregables_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('colegios.entregables_title')}</h2>
+          {k('entregables_eyebrow') && (
+            <div style={styles.eyebrow}>{k('entregables_eyebrow')}</div>
+          )}
+          <h2 style={styles.h2}>{k('entregables_title')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12, maxWidth: 820, margin: '0 auto' }}>
           {entregables.map((e, i) => (
@@ -87,8 +113,8 @@ export default function AcreditacionColegios() {
       {/* Cuerpo doctrinal */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('colegios.conceptos_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('colegios.conceptos_title')}</h2>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('conceptos_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('conceptos_title')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
           {conceptos.map((c, i) => (
@@ -106,9 +132,9 @@ export default function AcreditacionColegios() {
       {/* Destinatarios */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 16px' }}>
-          <div style={styles.eyebrow}>{t('colegios.destinatarios_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('colegios.destinatarios_title')}</h2>
-          <p style={styles.paraLarge}>{t('colegios.destinatarios_subtitle')}</p>
+          <div style={styles.eyebrow}>{k('destinatarios_eyebrow')}</div>
+          <h2 style={styles.h2}>{k('destinatarios_title')}</h2>
+          <p style={styles.paraLarge}>{k('destinatarios_subtitle')}</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginTop: 32 }}>
           {destinatarios.map((d, i) => (
@@ -127,8 +153,8 @@ export default function AcreditacionColegios() {
       {/* Testimonios */}
       <Section background={PAPER} paddingY={72}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={styles.eyebrow}>{t('colegios.testimonios_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('colegios.testimonios_title')}</h2>
+          <div style={styles.eyebrow}>{k('testimonios_eyebrow')}</div>
+          <h2 style={styles.h2}>{k('testimonios_title')}</h2>
         </div>
         <TestimoniosCarousel items={testimonios} />
       </Section>
@@ -136,8 +162,8 @@ export default function AcreditacionColegios() {
       {/* Próximos pasos */}
       <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('colegios.proceso_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('colegios.proceso_title')}</h2>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('proceso_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('proceso_title')}</h2>
         </div>
         <ol style={{ maxWidth: 720, margin: '0 auto', padding: 0, listStyle: 'none' }}>
           {proceso.map((p, i) => (

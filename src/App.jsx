@@ -3,6 +3,7 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Acreditacion from './pages/Acreditacion';
 import AcreditacionColegios from './pages/AcreditacionColegios';
+import ColegiosPrograma from './pages/ColegiosPrograma';
 import AcreditacionUniversidades from './pages/AcreditacionUniversidades';
 import AcreditacionEducacionSuperior from './pages/AcreditacionEducacionSuperior';
 import Tests from './pages/Tests';
@@ -26,6 +27,7 @@ export default function App() {
                 <Route path="/"                       element={<Home />} />
                 <Route path="/acreditacion"           element={<Acreditacion />} />
                 <Route path="/acreditacion/colegios"  element={<AcreditacionColegios />} />
+                <Route path="/colegios"               element={<ColegiosPrograma />} />
                 <Route path="/universidades"          element={<AcreditacionUniversidades />} />
                 <Route path="/educacion-superior"     element={<AcreditacionEducacionSuperior />} />
                 {/* redirecciones desde rutas antiguas */}

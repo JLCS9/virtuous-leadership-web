@@ -4,7 +4,7 @@ import { styles, hover } from '../theme';
 
 // Botón / link con dos variantes: primary y secondary.
 // `to` = ruta interna; si no existe, renderiza <a href>.
-export default function CTA({ to, href, variant = 'primary', children, style }) {
+export default function CTA({ to, href, variant = 'primary', children, style, target, rel }) {
   const base = variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary;
   const handlers = variant === 'primary' ? hover.primary : hover.secondary;
   const props = {
@@ -14,6 +14,19 @@ export default function CTA({ to, href, variant = 'primary', children, style }) 
   };
 
   if (to)   return <Link to={to} {...props}>{children}</Link>;
-  if (href) return <a href={href} {...props}>{children}</a>;
+  if (href) {
+    // Si es externo (http(s)://) abrir en nueva pestaña con seguridad por defecto.
+    const isExternal = /^https?:\/\//i.test(href);
+    return (
+      <a
+        href={href}
+        target={target ?? (isExternal ? '_blank' : undefined)}
+        rel={rel ?? (isExternal ? 'noopener noreferrer' : undefined)}
+        {...props}
+      >
+        {children}
+      </a>
+    );
+  }
   return <button {...props}>{children}</button>;
 }

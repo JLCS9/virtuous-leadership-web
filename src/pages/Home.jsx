@@ -79,6 +79,11 @@ export default function Home() {
             }}>
               {t('home.hero_title')}
             </h1>
+            <div style={{ marginTop: 28 }}>
+              <CTA href="https://alexhavard.com" variant="secondary">
+                {t('home.hero_more_cta')}
+              </CTA>
+            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
             <div style={{
@@ -310,9 +315,11 @@ function Pillar({ badge, sub, text, color }) {
         <span style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 700, color, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
           {badge}
         </span>
-        <span style={{ fontFamily: FONT_SERIF, fontSize: 22, color: MUTED, fontStyle: 'italic', marginLeft: 10, fontWeight: 400 }}>
-          ·&nbsp;{sub}
-        </span>
+        {sub && (
+          <span style={{ fontFamily: FONT_SERIF, fontSize: 22, color: MUTED, fontStyle: 'italic', marginLeft: 10, fontWeight: 400 }}>
+            ·&nbsp;{sub}
+          </span>
+        )}
       </h3>
       <p style={{ ...styles.para, fontSize: 17, margin: 0, lineHeight: 1.6 }}>{text}</p>
     </div>
