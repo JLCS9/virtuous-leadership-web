@@ -295,7 +295,7 @@ export default {
   universidades: {
     eyebrow: '',
     hero_title: 'VIRTUOUS LEADERSHIP\nAT UNIVERSITIES',
-    hero_subtitle: 'The Alexandre Havard model integrated with academic rigor,\ntaught directly by its author.',
+    hero_subtitle: 'The Alexandre Havard model integrated with academic rigor and a practical approach,\ntaught directly by its author.',
     diff_eyebrow: 'Its global reach is no coincidence',
     diff_title: 'Proof of its solidity',
     diff_items: [
@@ -332,7 +332,7 @@ export default {
       { title: 'Alumni',             text: 'Former students who want to deepen their mission and personal development.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'KEY CONCEPTS',
+    conceptos_title: 'Key concepts',
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Deepening inner integration and overcoming the imbalances that paralyze it: rationalism, voluntarism and sentimentalism.' },
@@ -350,9 +350,9 @@ export default {
   },
 
   edsup: {
-    eyebrow: 'Program · Higher Education Centers',
-    hero_title: 'Virtuous Leadership\nfor higher education centers',
-    hero_subtitle: 'The Havard methodology adapted to the professional context: business schools, technical schools, professional institutes and higher vocational training centers.',
+    eyebrow: '',
+    hero_title: 'VIRTUOUS LEADERSHIP\nFOR VOCATIONAL TRAINING',
+    hero_subtitle: 'The Havard methodology adapted to the professional context.',
     tipos_eyebrow: 'Type of centers',
     tipos_title: 'For every higher-education training center',
     tipos_subtitle: 'Wherever technical excellence meets the formation of the person, this program fits.',
@@ -376,7 +376,6 @@ export default {
     formato: [
       { label: 'Online',     title: 'Courses at your pace',         text: 'Alexandre Havard\'s 7 official courses, 6 practical workbooks and 3 evaluation tools. Access to the Virtuous Leadership platform.' },
       { label: 'In-person',  title: 'Application sessions',         text: 'In-person meetings to integrate content with the specific professional context of the center, moderated by a designated faculty member.' },
-      { label: 'Closing',    title: 'Encounter with the author',    text: 'Final session with Alexandre Havard as the culmination of the process. In-person dialogue with the creator of the system.' },
     ],
     cert_label: 'Official certification',
     cert_text: 'Official center certificate signed jointly with Alexandre Havard upon completion of the itinerary.',

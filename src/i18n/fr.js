@@ -295,7 +295,7 @@ export default {
   universidades: {
     eyebrow: '',
     hero_title: 'LEADERSHIP VERTUEUX\nDANS LES UNIVERSITÉS',
-    hero_subtitle: "Le modèle d'Alexandre Havard intégré à la rigueur académique,\ndispensé directement par son auteur.",
+    hero_subtitle: "Le modèle d'Alexandre Havard intégré à la rigueur académique et à une approche pratique,\ndispensé directement par son auteur.",
     diff_eyebrow: 'Sa portée mondiale n\'est pas un hasard',
     diff_title: 'La preuve de sa solidité',
     diff_items: [
@@ -331,7 +331,7 @@ export default {
       { title: 'Anciens élèves',    text: 'Anciens élèves qui veulent approfondir leur mission et leur développement personnel.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'CONCEPTS CLÉS',
+    conceptos_title: 'Concepts clés',
     conceptos: [
       { title: 'Tempérament et caractère',     text: 'Comprendre sa propre structure biologique et spirituelle et son influence sur le processus de croissance personnelle.' },
       { title: 'Cœur, intellect et volonté',   text: 'Approfondir l\'intégration intérieure et les déséquilibres qui la paralysent : rationalisme, volontarisme et sentimentalisme.' },
@@ -349,9 +349,9 @@ export default {
   },
 
   edsup: {
-    eyebrow: 'Programme · Centres d\'enseignement supérieur',
-    hero_title: 'Leadership Vertueux\npour les centres d\'enseignement supérieur',
-    hero_subtitle: 'La méthodologie Havard adaptée au contexte professionnel : écoles de commerce, écoles techniques, instituts professionnels et centres de formation professionnelle supérieure.',
+    eyebrow: ''enseignement supérieur',
+    hero_title: 'LEADERSHIP VERTUEUX\nPOUR LA FORMATION PROFESSIONNELLE'enseignement supérieur',
+    hero_subtitle: 'La méthodologie Havard adaptée au contexte professionnel.',
     tipos_eyebrow: 'Type de centres',
     tipos_title: 'Pour tout centre de formation supérieure',
     tipos_subtitle: 'Là où l\'excellence technique rencontre la formation de la personne, ce programme s\'inscrit.',
@@ -375,7 +375,6 @@ export default {
     formato: [
       { label: 'En ligne',     title: 'Cours à ton rythme',          text: 'Les 7 cours officiels d\'Alexandre Havard, 6 cahiers pratiques et 3 outils d\'évaluation. Accès à la plateforme Leadership Vertueux.' },
       { label: 'Présentiel',   title: 'Sessions d\'application',     text: 'Rencontres en présentiel pour intégrer les contenus au contexte professionnel spécifique du centre, modérées par un enseignant désigné.' },
-      { label: 'Clôture',      title: 'Rencontre avec l\'auteur',    text: 'Session finale avec Alexandre Havard comme aboutissement du processus. Dialogue en présentiel avec le créateur du système.' },
     ],
     cert_label: 'Certification officielle',
     cert_text: 'Certificat officiel du centre signé conjointement avec Alexandre Havard à l\'issue du parcours.',
@@ -389,7 +388,7 @@ export default {
     ],
     diff_eyebrow: 'Université ou centre supérieur ?',
     diff_title: 'Quel est ton programme ?',
-    diff_text_1: 'Si ton institution est une université — avec licences, masters et doctorats — le programme spécifique est celui des universités. Cette page est pensée pour tous les autres centres d\'enseignement supérieur : écoles de commerce, écoles techniques, instituts professionnels et centres de FP.',
+    diff_text_1: 'Si ton institution est une université — avec licences, masters et doctorats — le programme spécifique est celui des universités. Cette page est pensée pour tous les autres centres d\'enseignement supérieur .',
     diff_text_2: 'La méthodologie est la même. Ce qui change, ce sont les accents du programme et les profils des participants.',
     diff_link: 'universités',
     cta_title: 'Lançons le programme dans ton centre',

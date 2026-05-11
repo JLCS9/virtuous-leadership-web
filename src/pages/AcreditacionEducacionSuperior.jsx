@@ -7,10 +7,11 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
+import fondoAlexImg from '../assets/fondo-alex.jpeg';
+import classImg from '../assets/class.jpeg';
 
 export default function AcreditacionEducacionSuperior() {
   const { t } = useT();
-  const tipos        = t('edsup.tipos');
   const objetivos    = t('edsup.objetivos');
   const formato      = t('edsup.formato');
   const participantes = t('edsup.participantes');
@@ -20,31 +21,25 @@ export default function AcreditacionEducacionSuperior() {
     <>
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          <div style={styles.eyebrow}>{t('edsup.eyebrow')}</div>
+          {t('edsup.eyebrow') && (
+            <div style={styles.eyebrow}>{t('edsup.eyebrow')}</div>
+          )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 760, margin: '24px auto 0' }}>{t('edsup.hero_subtitle')}</p>
         </div>
+        {/* Foto 1 full-width tras el hero */}
+        <div style={{ width: '100%', lineHeight: 0 }}>
+          <img src={fondoAlexImg} alt=""
+               loading="lazy"
+               style={{
+                 width: '100%',
+                 aspectRatio: '10 / 3',
+                 objectFit: 'cover',
+                 objectPosition: 'center top',
+                 display: 'block',
+               }} />
+        </div>
       </section>
-
-      {/* Tipos */}
-      <Section background={PAPER} paddingY={88}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('edsup.tipos_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('edsup.tipos_title')}</h2>
-          <p style={{ ...styles.para, fontSize: 17, marginTop: 16 }}>{t('edsup.tipos_subtitle')}</p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
-          {tipos.map((t2, i) => (
-            <div key={i} style={{
-              padding: '24px 26px', background: BEIGE,
-              border: `1px solid ${LINE}`, borderLeft: `3px solid ${GOLD}`,
-            }}>
-              <h3 style={{ ...styles.h3, fontSize: 20, marginBottom: 8 }}>{t2.title}</h3>
-              <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{t2.text}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
 
       {/* Objetivos navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
@@ -83,18 +78,27 @@ export default function AcreditacionEducacionSuperior() {
           ))}
         </div>
 
-        <div style={{ marginTop: 40, padding: '24px 28px', background: BEIGE, borderLeft: `3px solid ${GOLD}` }}>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600 }}>
-            {t('edsup.cert_label')}
-          </div>
-          <p style={{ ...styles.para, marginTop: 8, marginBottom: 0, fontSize: 16 }}>{t('edsup.cert_text')}</p>
-        </div>
       </Section>
+
+      {/* Foto 2 full-width antes de Participantes */}
+      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
+        <img src={classImg} alt=""
+             loading="lazy"
+             style={{
+               width: '100%',
+               aspectRatio: '10 / 3',
+               objectFit: 'cover',
+               objectPosition: 'center',
+               display: 'block',
+             }} />
+      </section>
 
       {/* Participantes */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('edsup.participantes_eyebrow')}</div>
+          {t('edsup.participantes_eyebrow') && (
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('edsup.participantes_eyebrow')}</div>
+          )}
           <h2 style={{ ...styles.h2, color: PAPER }}>{t('edsup.participantes_title')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18 }}>
@@ -117,7 +121,7 @@ export default function AcreditacionEducacionSuperior() {
           <h2 style={{ ...styles.h2, fontSize: 28 }}>{t('edsup.diff_title')}</h2>
           <p style={{ ...styles.para, marginTop: 16, fontSize: 17 }}>
             {t('edsup.diff_text_1').split(t('edsup.diff_link'))[0]}
-            <Link to="/acreditacion/universidades" style={{ color: NAVY, fontWeight: 600 }}>
+            <Link to="/universidades" style={{ color: NAVY, fontWeight: 600 }}>
               {t('edsup.diff_link')}
             </Link>
             {t('edsup.diff_text_1').split(t('edsup.diff_link'))[1] || ''}

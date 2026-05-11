@@ -298,7 +298,7 @@ export default {
   universidades: {
     eyebrow: '',
     hero_title: 'LIDERAZGO VIRTUOSO\nEN UNIVERSIDADES',
-    hero_subtitle: 'El modelo de Alexandre Havard integrado con el rigor académico,\nimpartido directamente por su autor.',
+    hero_subtitle: 'El modelo de Alexandre Havard integrado con rigor académico y enfoque práctico,\nimpartido directamente por su autor.',
     diff_eyebrow: 'Su alcance global no es casualidad',
     diff_title: 'La prueba de su solidez',
     diff_items: [
@@ -334,7 +334,7 @@ export default {
       { title: 'Alumni',                text: 'Antiguos alumnos que quieren profundizar en su misión y desarrollo personal.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'CONCEPTOS CLAVE',
+    conceptos_title: 'Conceptos clave',
     conceptos: [
       { title: 'Temperamento y carácter',       text: 'Comprender la propia estructura biológica y espiritual, y su influencia en el proceso de crecimiento personal.' },
       { title: 'Corazón, intelecto y voluntad', text: 'Profundizar en la integración interior y en los desequilibrios que la paralizan: racionalismo, voluntarismo y sentimentalismo.' },
@@ -352,9 +352,9 @@ export default {
   },
 
   edsup: {
-    eyebrow: 'Programa · Centros de Educación Superior',
-    hero_title: 'Liderazgo Virtuoso\npara centros de educación superior',
-    hero_subtitle: 'La metodología Havard adaptada al contexto profesional: business schools, escuelas técnicas, institutos profesionales y centros de FP de grado superior.',
+    eyebrow: '',
+    hero_title: 'LIDERAZGO VIRTUOSO\nPARA FORMACIÓN PROFESIONAL',
+    hero_subtitle: 'La metodología Havard adaptada al contexto profesional.',
     tipos_eyebrow: 'Tipo de centros',
     tipos_title: 'Para todo centro de formación superior',
     tipos_subtitle: 'Donde la excelencia técnica se cruza con la formación de la persona, este programa encaja.',
@@ -378,7 +378,6 @@ export default {
     formato: [
       { label: 'Online',     title: 'Cursos a tu ritmo',         text: '7 cursos oficiales de Alexandre Havard, 6 cuadernos prácticos y 3 herramientas de evaluación. Acceso a la plataforma de Liderazgo Virtuoso.' },
       { label: 'Presencial', title: 'Sesiones de aplicación',    text: 'Encuentros presenciales para integrar los contenidos al contexto profesional específico del centro, moderados por un profesor designado.' },
-      { label: 'Cierre',     title: 'Encuentro con el autor',    text: 'Sesión final con Alexandre Havard como culminación del proceso. Diálogo presencial con el creador del sistema.' },
     ],
     cert_label: 'Certificación oficial',
     cert_text: 'Certificado oficial del centro firmado conjuntamente con Alexandre Havard al completar el itinerario.',
@@ -392,7 +391,7 @@ export default {
     ],
     diff_eyebrow: '¿Universidad o centro superior?',
     diff_title: '¿Cuál es tu programa?',
-    diff_text_1: 'Si tu institución es una universidad — con grados, másteres y doctorados — el programa específico es el de universidades. Esta página está pensada para todos los demás centros de educación superior: business schools, escuelas técnicas, institutos profesionales y centros de FP.',
+    diff_text_1: 'Si tu institución es una universidad — con grados, másteres y doctorados — el programa específico es el de universidades. Esta página está pensada para todos los demás centros de educación superior.',
     diff_text_2: 'La metodología es la misma. Lo que cambia son los acentos del programa y los perfiles de los participantes.',
     diff_link: 'universidades',
     cta_title: 'Pongamos en marcha el programa en tu centro',
