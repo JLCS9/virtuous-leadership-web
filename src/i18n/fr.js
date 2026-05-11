@@ -287,7 +287,7 @@ export default {
     proceso_eyebrow: 'Prochaines étapes',
     proceso_title: 'Comment commencer le processus',
     proceso: [
-      { n: '01', text: 'Réunion initiale avec l'équipe de direction pour présenter le programme et répondre aux questions.' },
+      { n: '01', text: "Réunion initiale avec l'équipe de direction pour présenter le programme et répondre aux questions." },
       { n: '02', text: 'Lancement des licences.' },
     ],
   },
