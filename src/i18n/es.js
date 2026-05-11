@@ -174,6 +174,8 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'Qué incluye la acreditación',
+    entregables_cta_label: 'Ver el programa →',
+    entregables_cta_to: '/colegios',
     entregables: [
       'Licencias de acceso a los cursos oficiales de Alexandre Havard para todo el profesorado participante.',
       'Guía de implantación que permite al colegio desplegar el sistema de forma autónoma, incluida la formación a las familias.',
@@ -249,8 +251,6 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'Qué incluye la acreditación',
-    entregables_cta_label: 'Ver la acreditación →',
-    entregables_cta_to: '/acreditacion/colegios',
     entregables: [
       'Licencias de acceso a los cursos oficiales de Alexandre Havard para todo el profesorado participante.',
       'Guía de implantación que permite al colegio desplegar el sistema de forma autónoma, incluida la formación a las familias.',

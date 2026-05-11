@@ -173,6 +173,8 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'Ce qu\'inclut l\'accréditation',
+    entregables_cta_label: 'Voir le programme →',
+    entregables_cta_to: '/colegios',
     entregables: [
       'Licences d\'accès aux cours officiels d\'Alexandre Havard pour tous les enseignants participants.',
       'Guide de mise en œuvre permettant à l\'école de déployer le système de manière autonome, y compris la formation des familles.',
@@ -245,8 +247,6 @@ export default {
     ],
     entregables_eyebrow: '',
     entregables_title: 'Ce qu\'inclut l\'accréditation',
-    entregables_cta_label: 'Voir la certification →',
-    entregables_cta_to: '/acreditacion/colegios',
     entregables: [
       'Licences d\'accès aux cours officiels d\'Alexandre Havard pour tous les enseignants participants.',
       'Guide de mise en œuvre permettant à l\'école de déployer le système de manière autonome, y compris la formation des familles.',

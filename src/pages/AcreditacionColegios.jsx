@@ -119,9 +119,24 @@ export default function AcreditacionColegios() {
             <div key={i} style={{
               display: 'grid', gridTemplateColumns: '60px 1fr', gap: 20,
               padding: '20px 24px', background: BEIGE, border: `1px solid ${LINE}`,
+              alignItems: 'center',
             }}>
               <div style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: GOLD_DEEP }}>0{i + 1}</div>
-              <div style={{ ...styles.para, fontSize: 15, margin: 0, alignSelf: 'center' }}>{e}</div>
+              <div>
+                <div style={{ ...styles.para, fontSize: 15, margin: 0 }}>{e}</div>
+                {/* CTA solo en item 01: cross-link a la pagina Programa */}
+                {i === 0 && k('entregables_cta_label') && k('entregables_cta_to') && (
+                  <LocalLink to={k('entregables_cta_to')} style={{
+                    display: 'inline-block', marginTop: 10,
+                    fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
+                    letterSpacing: '0.04em', color: NAVY,
+                    textDecoration: 'none',
+                    borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
+                  }}>
+                    {k('entregables_cta_label')}
+                  </LocalLink>
+                )}
+              </div>
             </div>
           ))}
         </div>
