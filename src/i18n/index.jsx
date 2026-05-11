@@ -2,13 +2,15 @@ import { createContext, useContext, useState, useEffect, useMemo } from 'react';
 import es from './es';
 import en from './en';
 import fr from './fr';
+import ru from './ru';
 
-const DICTS = { es, en, fr };
+const DICTS = { es, en, fr, ru };
 
 export const LANGS = [
   { code: 'es', label: 'Español',  flag: '🇪🇸' },
   { code: 'en', label: 'English',  flag: '🇬🇧' },
   { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'ru', label: 'Русский',  flag: '🇷🇺' },
 ];
 
 const STORAGE_KEY = 'vl-lang';
