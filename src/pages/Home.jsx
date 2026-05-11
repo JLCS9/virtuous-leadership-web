@@ -74,8 +74,9 @@ export default function Home() {
             <h1 className="hero-title" style={{
               ...styles.h1,
               fontFamily: FONT_SERIF,
-              fontSize: 'clamp(28px, 5.4vw, 60px)',
-              whiteSpace: 'nowrap',
+              fontSize: 'clamp(28px, 4.6vw, 52px)',
+              letterSpacing: '0.01em',
+              lineHeight: 1.1,
             }}>
               {t('home.hero_title')}
             </h1>
@@ -98,7 +99,7 @@ export default function Home() {
             .hero-grid { grid-template-columns: 1.2fr 1fr !important; gap: 72px !important; padding: 96px 24px 112px !important; }
           }
           @media (max-width: 520px) {
-            .hero-title { white-space: normal !important; font-size: clamp(28px, 9vw, 40px) !important; }
+            .hero-title { font-size: clamp(26px, 8vw, 36px) !important; }
           }
         `}</style>
       </section>
