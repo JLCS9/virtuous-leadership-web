@@ -12,7 +12,6 @@ import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();
-  const diff_items   = t('universidades.diff_items');
   const objetivos    = t('universidades.objetivos');
   const formato      = t('universidades.formato');
   const participantes = t('universidades.participantes');
@@ -44,25 +43,6 @@ export default function AcreditacionUniversidades() {
                }} />
         </div>
       </section>
-
-      {/* Diferenciadores */}
-      <Section background={PAPER} paddingY={88}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('universidades.diff_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('universidades.diff_title')}</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
-          {diff_items.map((d, i) => (
-            <div key={i} style={{ padding: '24px 24px', background: BEIGE, border: `1px solid ${LINE}`, borderTop: `3px solid ${GOLD}` }}>
-              <h3 style={{ ...styles.h3, fontSize: 22, marginBottom: 10 }}>{d.title}</h3>
-              <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{d.text}</p>
-            </div>
-          ))}
-        </div>
-        <div style={{ textAlign: 'center', marginTop: 48, fontFamily: FONT_SERIF, fontStyle: 'italic', fontSize: 18, color: MUTED }}>
-          {t('universidades.diff_footer')}
-        </div>
-      </Section>
 
       {/* Objetivos navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
@@ -147,8 +127,10 @@ export default function AcreditacionUniversidades() {
       {/* Conceptos */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={styles.eyebrow}>{t('universidades.conceptos_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('universidades.conceptos_title')}</h2>
+          {t('universidades.conceptos_eyebrow') && (
+            <div style={styles.eyebrow}>{t('universidades.conceptos_eyebrow')}</div>
+          )}
+          <h2 style={{ ...styles.h2, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{t('universidades.conceptos_title')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
           {conceptos.map((c, i) => (

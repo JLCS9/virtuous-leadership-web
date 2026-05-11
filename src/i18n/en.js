@@ -152,7 +152,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'Accreditation for schools',
+    hero_title: 'ACCREDITATION FOR SCHOOLS',
     hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
@@ -226,7 +226,7 @@ export default {
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'Program for schools',
+    hero_title: 'PROGRAM FOR SCHOOLS',
     hero_subtitle: 'Leadership teams, tutors and teachers.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
@@ -331,8 +331,8 @@ export default {
       { title: 'Master\'s students', text: 'Those seeking inner clarity and real tools to lead with purpose.' },
       { title: 'Alumni',             text: 'Former students who want to deepen their mission and personal development.' },
     ],
-    conceptos_eyebrow: 'Key concepts',
-    conceptos_title: 'What you will work on',
+    conceptos_eyebrow: '',
+    conceptos_title: 'KEY CONCEPTS',
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Deepening inner integration and overcoming the imbalances that paralyze it: rationalism, voluntarism and sentimentalism.' },

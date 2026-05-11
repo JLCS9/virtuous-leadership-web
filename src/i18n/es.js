@@ -153,7 +153,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'Acreditación para colegios',
+    hero_title: 'ACREDITACIÓN PARA COLEGIOS',
     hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
@@ -230,7 +230,7 @@ export default {
   // entregables_cta_*.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'Programa para colegios',
+    hero_title: 'PROGRAMA PARA COLEGIOS',
     hero_subtitle: 'Equipos directivos, tutores y profesores.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
@@ -333,8 +333,8 @@ export default {
       { title: 'Estudiantes de máster', text: 'Quienes buscan claridad interior y herramientas reales para liderar con propósito.' },
       { title: 'Alumni',                text: 'Antiguos alumnos que quieren profundizar en su misión y desarrollo personal.' },
     ],
-    conceptos_eyebrow: 'Conceptos clave',
-    conceptos_title: 'Lo que vas a trabajar',
+    conceptos_eyebrow: '',
+    conceptos_title: 'CONCEPTOS CLAVE',
     conceptos: [
       { title: 'Temperamento y carácter',       text: 'Comprender la propia estructura biológica y espiritual, y su influencia en el proceso de crecimiento personal.' },
       { title: 'Corazón, intelecto y voluntad', text: 'Profundizar en la integración interior y en los desequilibrios que la paralizan: racionalismo, voluntarismo y sentimentalismo.' },

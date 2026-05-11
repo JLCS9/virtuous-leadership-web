@@ -152,7 +152,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'Аккредитация для школ',
+    hero_title: 'АККРЕДИТАЦИЯ ДЛЯ ШКОЛ',
     hero_subtitle: 'Интеграция Нравственного лидерства в культуру школы\nчерез команды руководства, тьюторов, учителей и семьи.',
     objetivos_eyebrow: '',
     objetivos_title: 'Цели',
@@ -226,7 +226,7 @@ export default {
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'Программа для школ',
+    hero_title: 'ПРОГРАММА ДЛЯ ШКОЛ',
     hero_subtitle: 'Команды руководства, тьюторы и учителя.',
     objetivos_eyebrow: '',
     objetivos_title: 'Цели',
@@ -330,8 +330,8 @@ export default {
       { title: 'Магистранты',           text: 'Те, кто ищет внутреннюю ясность и реальные инструменты, чтобы вести с целью.' },
       { title: 'Выпускники',            text: 'Бывшие студенты, которые хотят углубить свою миссию и личностное развитие.' },
     ],
-    conceptos_eyebrow: 'Ключевые понятия',
-    conceptos_title: 'Над чем ты будешь работать',
+    conceptos_eyebrow: '',
+    conceptos_title: 'КЛЮЧЕВЫЕ ПОНЯТИЯ',
     conceptos: [
       { title: 'Темперамент и характер',         text: 'Понять собственную биологическую и духовную структуру и её влияние на процесс личностного роста.' },
       { title: 'Сердце, разум и воля',           text: 'Углубиться во внутреннюю целостность и в дисбалансы, которые её парализуют: рационализм, волюнтаризм и сентиментализм.' },

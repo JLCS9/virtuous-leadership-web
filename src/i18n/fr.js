@@ -152,7 +152,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'Accréditation pour les écoles',
+    hero_title: 'ACCRÉDITATION POUR LES ÉCOLES',
     hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
@@ -226,7 +226,7 @@ export default {
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'Programme pour les écoles',
+    hero_title: 'PROGRAMME POUR LES ÉCOLES',
     hero_subtitle: 'Équipes de direction, tuteurs et enseignants.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
@@ -330,8 +330,8 @@ export default {
       { title: 'Étudiants en master', text: 'Ceux qui cherchent une clarté intérieure et de vrais outils pour diriger avec un but.' },
       { title: 'Anciens élèves',    text: 'Anciens élèves qui veulent approfondir leur mission et leur développement personnel.' },
     ],
-    conceptos_eyebrow: 'Concepts clés',
-    conceptos_title: 'Ce que tu vas travailler',
+    conceptos_eyebrow: '',
+    conceptos_title: 'CONCEPTS CLÉS',
     conceptos: [
       { title: 'Tempérament et caractère',     text: 'Comprendre sa propre structure biologique et spirituelle et son influence sur le processus de croissance personnelle.' },
       { title: 'Cœur, intellect et volonté',   text: 'Approfondir l\'intégration intérieure et les déséquilibres qui la paralysent : rationalisme, volontarisme et sentimentalisme.' },
