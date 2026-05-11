@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LocalLink as Link } from '../i18n';
 import {
   NAVY, NAVY_DEEP, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,

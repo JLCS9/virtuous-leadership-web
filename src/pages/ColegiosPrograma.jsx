@@ -110,8 +110,10 @@ export default function ColegiosPrograma() {
               textAlign: 'center',
             }}>
               <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: GOLD }}>{d.n}</div>
-              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 8, marginBottom: 6 }}>{d.title}</h3>
-              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{d.text}</p>
+              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 8, marginBottom: d.text ? 6 : 0 }}>{d.title}</h3>
+              {d.text && (
+                <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{d.text}</p>
+              )}
             </div>
           ))}
         </div>

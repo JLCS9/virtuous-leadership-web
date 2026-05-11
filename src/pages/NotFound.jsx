@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { LocalLink as Link } from '../i18n';
 import { NAVY, GOLD, BEIGE, PAPER, MUTED, FONT_SERIF, FONT_SANS, styles } from '../theme';
 import { useT } from '../i18n';
 

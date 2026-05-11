@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
 import { NAVY, NAVY_SOFT, NAVY_DEEP, GOLD, GOLD_SOFT, GOLD_DEEP, PAPER, BEIGE, LINE, MUTED, FONT_SERIF, FONT_SANS, MAX_WIDTH } from '../theme';
-import { useT } from '../i18n';
+import { useT, useLocalPath } from '../i18n';
 import LangSwitcher from './LangSwitcher';
 import logoUrl from '../assets/logo-1.png';
 
 function Brand() {
+  const lp = useLocalPath();
   return (
-    <Link to="/" aria-label="Virtuous Leadership"
+    <Link to={lp('/')} aria-label="Virtuous Leadership"
           style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
       <img src={logoUrl} alt="Virtuous Leadership" width="52" height="52"
            style={{ display: 'block', borderRadius: '50%' }} />
@@ -17,6 +18,7 @@ function Brand() {
 
 export default function Header() {
   const { t } = useT();
+  const lp = useLocalPath();
   const [open, setOpen] = useState(false);
   const [submenuOpen, setSubmenuOpen] = useState(false);
   const location = useLocation();
@@ -57,7 +59,7 @@ export default function Header() {
           ) : (
             <NavLink
               key={i}
-              to={item.to}
+              to={lp(item.to)}
               end={item.exact}
               style={({ isActive }) => ({
                 fontFamily: FONT_SANS, fontSize: 14,
@@ -78,7 +80,7 @@ export default function Header() {
           ))}
 
           <Link
-            to="/contacto"
+            to={lp('/contacto')}
             style={{
               marginLeft: 12, fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600,
               letterSpacing: '0.06em', textTransform: 'uppercase',
@@ -135,7 +137,7 @@ export default function Header() {
               {submenuOpen && item.children.map((c, j) => (
                 <NavLink
                   key={j}
-                  to={c.to}
+                  to={lp(c.to)}
                   style={({ isActive }) => ({
                     display: 'block', padding: '12px 36px',
                     fontFamily: FONT_SANS, fontSize: 14,
@@ -151,7 +153,7 @@ export default function Header() {
           ) : (
             <NavLink
               key={i}
-              to={item.to}
+              to={lp(item.to)}
               end={item.exact}
               style={({ isActive }) => ({
                 display: 'block', padding: '14px 24px',
@@ -165,7 +167,7 @@ export default function Header() {
             </NavLink>
           ))}
           <Link
-            to="/contacto"
+            to={lp('/contacto')}
             style={{
               display: 'block', padding: '16px 24px', fontFamily: FONT_SANS, fontSize: 16,
               color: NAVY, background: GOLD, textDecoration: 'none', textAlign: 'center',
@@ -191,7 +193,11 @@ export default function Header() {
 function Submenu({ item }) {
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const someActive = item.children.some(c => location.pathname.startsWith(c.to) && c.to !== '/');
+  const lp = useLocalPath();
+  const someActive = item.children.some(c => {
+    const full = lp(c.to);
+    return location.pathname.startsWith(full) && c.to !== '/';
+  });
 
   return (
     <div
@@ -228,7 +234,7 @@ function Submenu({ item }) {
           {item.children.map((c, j) => (
             <NavLink
               key={j}
-              to={c.to}
+              to={lp(c.to)}
               style={({ isActive }) => ({
                 display: 'block', padding: '10px 14px',
                 fontFamily: FONT_SANS, fontSize: 14,

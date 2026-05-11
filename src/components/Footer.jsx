@@ -1,6 +1,5 @@
-import { Link } from 'react-router-dom';
 import { NAVY, GOLD, PAPER, BEIGE, LINE, MUTED, FONT_SERIF, FONT_SANS, MAX_WIDTH } from '../theme';
-import { useT } from '../i18n';
+import { useT, LocalLink } from '../i18n';
 import Seal from './Seal';
 
 export default function Footer() {
@@ -76,7 +75,7 @@ export default function Footer() {
 
 function FootLink({ to, children }) {
   return (
-    <Link
+    <LocalLink
       to={to}
       style={{
         display: 'block',
@@ -87,6 +86,6 @@ function FootLink({ to, children }) {
       onMouseOut={e => e.currentTarget.style.color = '#D9DEE8'}
     >
       {children}
-    </Link>
+    </LocalLink>
   );
 }
