@@ -61,28 +61,33 @@ export default function AcreditacionColegios() {
                loading="lazy"
                style={{
                  width: '100%',
-                 aspectRatio: '10 / 3',
+                 aspectRatio: '10 / 4',
                  objectFit: 'cover',
-                 objectPosition: 'center 30%',
+                 objectPosition: 'center top',
                  display: 'block',
                }} />
         </div>
       </section>
 
-      {/* Objetivos */}
-      <Section background={PAPER} paddingY={88}>
+      {/* Objetivos — fondo navy */}
+      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
           {k('objetivos_eyebrow') && (
-            <div style={styles.eyebrow}>{k('objetivos_eyebrow')}</div>
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('objetivos_eyebrow')}</div>
           )}
-          <h2 style={{ ...styles.h2, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{k('objetivos_title')}</h2>
+          <h2 style={{ ...styles.h2, color: PAPER, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{k('objetivos_title')}</h2>
         </div>
         <div className="grid-2x2" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
           {objetivos.map((o, i) => (
-            <div key={i} style={{ padding: '28px 26px', background: BEIGE, border: `1px solid ${LINE}` }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 32, fontWeight: 700, color: GOLD_DEEP, lineHeight: 1 }}>{o.n}</div>
-              <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 12, marginBottom: 10 }}>{o.title}</h3>
-              <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{o.text}</p>
+            <div key={i} style={{
+              padding: '28px 26px',
+              background: NAVY_DEEP,
+              border: `1px solid ${NAVY_SOFT}`,
+              borderTop: `3px solid ${GOLD}`,
+            }}>
+              <div style={{ fontFamily: FONT_SERIF, fontSize: 32, fontWeight: 700, color: GOLD, lineHeight: 1 }}>{o.n}</div>
+              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 12, marginBottom: 10 }}>{o.title}</h3>
+              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{o.text}</p>
             </div>
           ))}
         </div>
@@ -110,24 +115,27 @@ export default function AcreditacionColegios() {
         </div>
       </Section>
 
-      {/* Destinatarios */}
-      <Section background={PAPER} paddingY={88}>
+      {/* Destinatarios — fondo navy */}
+      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 16px' }}>
-          <div style={styles.eyebrow}>{k('destinatarios_eyebrow')}</div>
-          <h2 style={styles.h2}>{k('destinatarios_title')}</h2>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('destinatarios_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('destinatarios_title')}</h2>
           {k('destinatarios_subtitle') && (
-            <p style={styles.paraLarge}>{k('destinatarios_subtitle')}</p>
+            <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{k('destinatarios_subtitle')}</p>
           )}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginTop: 32 }}>
           {destinatarios.map((d, i) => (
             <div key={i} style={{
-              padding: '24px 22px', background: BEIGE, border: `1px solid ${LINE}`,
-              borderTop: `3px solid ${GOLD}`, textAlign: 'center',
+              padding: '24px 22px',
+              background: NAVY_DEEP,
+              border: `1px solid ${NAVY_SOFT}`,
+              borderTop: `3px solid ${GOLD}`,
+              textAlign: 'center',
             }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: GOLD_DEEP }}>{d.n}</div>
-              <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 8, marginBottom: 6 }}>{d.title}</h3>
-              <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{d.text}</p>
+              <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: GOLD }}>{d.n}</div>
+              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 8, marginBottom: 6 }}>{d.title}</h3>
+              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{d.text}</p>
             </div>
           ))}
         </div>
