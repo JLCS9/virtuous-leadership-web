@@ -225,9 +225,9 @@ export default {
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
-    eyebrow: 'Program · Schools',
+    eyebrow: '',
     hero_title: 'Program for schools',
-    hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
+    hero_subtitle: 'Leadership teams, tutors and teachers.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
@@ -272,7 +272,6 @@ export default {
       { n: '01', title: 'Leadership teams',     text: '' },
       { n: '02', title: 'Tutors and counselors', text: '' },
       { n: '03', title: 'Teachers',              text: '' },
-      { n: '04', title: 'Families',              text: '' },
     ],
     testimonios_eyebrow: 'Centers that already trust',
     testimonios_title: 'What those who have completed the program tell us',
@@ -289,9 +288,7 @@ export default {
     proceso_title: 'How to start the process',
     proceso: [
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
-      { n: '02', text: 'Design of an implementation plan adapted to the reality of the center.' },
-      { n: '03', text: 'Launch of licenses for faculty and training for families.' },
-      { n: '04', text: 'Official accreditation of the school.' },
+      { n: '02', text: 'Launch of licenses.' },
     ],
   },
 

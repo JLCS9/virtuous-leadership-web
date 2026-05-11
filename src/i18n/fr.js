@@ -62,7 +62,7 @@ export default {
         badge: 'Humilité',
         sub: '',
         title: '',
-        text: "L'attitude de celui qui l'écoute, l'accompagne et lui donne du pouvoir.",
+        text: "L'attitude de celui qui écoute, accompagne et donne du pouvoir.",
       },
     },
     pasos_eyebrow: 'Processus',
@@ -225,9 +225,9 @@ export default {
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
-    eyebrow: 'Programme · Écoles',
+    eyebrow: '',
     hero_title: 'Programme pour les écoles',
-    hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
+    hero_subtitle: 'Équipes de direction, tuteurs et enseignants.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [
@@ -272,7 +272,6 @@ export default {
       { n: '01', title: 'Équipes de direction',     text: '' },
       { n: '02', title: "Tuteurs et orienteurs",    text: '' },
       { n: '03', title: 'Enseignants',              text: '' },
-      { n: '04', title: 'Familles',                 text: '' },
     ],
     testimonios_eyebrow: 'Centres qui nous font déjà confiance',
     testimonios_title: 'Ce que racontent ceux qui ont déjà terminé le programme',
@@ -288,10 +287,8 @@ export default {
     proceso_eyebrow: 'Prochaines étapes',
     proceso_title: 'Comment commencer le processus',
     proceso: [
-      { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter le programme et répondre aux questions.' },
-      { n: '02', text: 'Conception d\'un plan de mise en œuvre adapté à la réalité du centre.' },
-      { n: '03', text: 'Lancement des licences pour les enseignants et formation des familles.' },
-      { n: '04', text: 'Accréditation officielle de l\'école.' },
+      { n: '01', text: 'Réunion initiale avec l'équipe de direction pour présenter le programme et répondre aux questions.' },
+      { n: '02', text: 'Lancement des licences.' },
     ],
   },
 

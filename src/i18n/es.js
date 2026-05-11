@@ -63,7 +63,7 @@ export default {
         badge: 'Humildad',
         sub: '',
         title: '',
-        text: 'La actitud de quien la escucha, acompaña y empodera.',
+        text: 'La actitud de quien escucha, acompaña y empodera.',
       },
     },
     pasos_eyebrow: 'Proceso',
@@ -229,16 +229,15 @@ export default {
   // copia editable y un cross-link al detalle de la acreditacion via
   // entregables_cta_*.
   colegios_prog: {
-    eyebrow: 'Programa · Colegios',
+    eyebrow: '',
     hero_title: 'Programa para colegios',
-    hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
+    hero_subtitle: 'Equipos directivos, tutores y profesores.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
     objetivos: [
       { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.', cta: 'Ver programa →', cta_to: '/colegios' },
       { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente',      text: 'basado en el carácter (virtudes) y una misión personal clara.' },
       { n: '03', title: 'Alcanzar un autoconocimiento profundo',                 text: 'para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.' },
-      { n: '04', title: 'Clarificar la misión personal del educador',            text: 'como fuente de sentido, criterio para decidir y motor de un liderazgo con propósito.' },
     ],
     modalidad_eyebrow: 'Modalidad',
     modalidad_title: 'Formación 100% online y autogestionable',
@@ -276,7 +275,6 @@ export default {
       { n: '01', title: 'Equipos de dirección',  text: '' },
       { n: '02', title: 'Tutores y orientadores', text: '' },
       { n: '03', title: 'Profesores',             text: '' },
-      { n: '04', title: 'Familias',               text: '' },
     ],
     testimonios_eyebrow: 'Centros que ya confían',
     testimonios_title: 'Lo que cuentan quienes ya han completado el programa',
@@ -293,9 +291,7 @@ export default {
     proceso_title: 'Cómo empezar el proceso',
     proceso: [
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
-      { n: '02', text: 'Diseño del plan de implantación adaptado a la realidad del centro.' },
-      { n: '03', text: 'Lanzamiento de las licencias para el profesorado y formación a las familias.' },
-      { n: '04', text: 'Acreditación oficial del colegio.' },
+      { n: '02', text: 'Lanzamiento de las licencias.' },
     ],
   },
 
