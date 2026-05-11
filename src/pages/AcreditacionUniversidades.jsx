@@ -66,8 +66,10 @@ export default function AcreditacionUniversidades() {
       {/* Objetivos navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.objetivos_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.objetivos_title')}</h2>
+          {t('universidades.objetivos_eyebrow') && (
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.objetivos_eyebrow')}</div>
+          )}
+          <h2 style={{ ...styles.h2, color: PAPER, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{t('universidades.objetivos_title')}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
           {objetivos.map((o, i) => (
@@ -104,21 +106,15 @@ export default function AcreditacionUniversidades() {
           ))}
         </div>
 
-        <div style={{ marginTop: 40, padding: '24px 28px', background: BEIGE, borderLeft: `3px solid ${GOLD}` }}>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600 }}>
-            {t('universidades.cert_label')}
-          </div>
-          <p style={{ ...styles.para, marginTop: 8, marginBottom: 0, fontSize: 16 }}>
-            {t('universidades.cert_text')}
-          </p>
-        </div>
       </Section>
 
       {/* Participantes */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.participantes_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.participantes_title')}</h2>
+          {t('universidades.participantes_eyebrow') && (
+            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.participantes_eyebrow')}</div>
+          )}
+          <h2 style={{ ...styles.h2, color: PAPER, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{t('universidades.participantes_title')}</h2>
           <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('universidades.participantes_subtitle')}</p>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 18 }}>
