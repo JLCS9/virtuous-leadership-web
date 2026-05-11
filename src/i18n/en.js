@@ -56,7 +56,7 @@ export default {
         badge: 'Magnanimity',
         sub: '',
         title: '',
-        text: 'The inner drive that leads us to dream big and act with purpose. Trusts in their capacity to inspire and leave a mark.',
+        text: 'The attitude of one who dreams big and acts with purpose.',
       },
       humility: {
         badge: 'Humility',
@@ -70,7 +70,7 @@ export default {
     pasos: [
       { n: '01', title: 'Know yourself',
         text: 'Discover your biological temperament to understand your innate natural inclinations.' },
-      { n: '02', title: 'Recognize your challenge-virtue',
+      { n: '02', title: 'Discover your challenge-virtue',
         text: 'Identify the virtue which, if strengthened, will make you a better person and a better professional.' },
       { n: '03', title: 'Train your character',
         text: 'Develop the cardinal virtues — prudence, fortitude, self-control and justice.' },
@@ -83,7 +83,7 @@ export default {
     audiences_cta: 'See program →',
     audiences: [
       {
-        to: '/acreditacion/colegios',
+        to: '/colegios',
         eyebrow: '',
         title: 'Schools',
         text: 'Teachers, tutors, leadership and families.',

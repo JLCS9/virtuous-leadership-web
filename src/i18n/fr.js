@@ -56,7 +56,7 @@ export default {
         badge: 'Magnanimité',
         sub: '',
         title: '',
-        text: 'L\'élan intérieur qui nous pousse à rêver grand et à agir avec un but. Il a confiance dans sa capacité à inspirer et laisser une empreinte.',
+        text: "L'attitude de celui qui rêve grand et agit avec un but.",
       },
       humility: {
         badge: 'Humilité',
@@ -70,7 +70,7 @@ export default {
     pasos: [
       { n: '01', title: 'Connais-toi',
         text: 'Découvre ton tempérament biologique pour comprendre tes inclinations naturelles innées.' },
-      { n: '02', title: 'Reconnais ta vertu-défi',
+      { n: '02', title: 'Découvre ta vertu-défi',
         text: 'Identifie la vertu qui, si tu la fortifies, fera de toi une meilleure personne et un meilleur professionnel.' },
       { n: '03', title: 'Entraîne ton caractère',
         text: 'Développe les vertus cardinales — prudence, force, maîtrise de soi et justice.' },
@@ -83,7 +83,7 @@ export default {
     audiences_cta: 'Voir le programme →',
     audiences: [
       {
-        to: '/acreditacion/colegios',
+        to: '/colegios',
         eyebrow: '',
         title: 'Écoles',
         text: 'Enseignants, tuteurs, direction et familles.',

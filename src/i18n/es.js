@@ -57,7 +57,7 @@ export default {
         badge: 'Magnanimidad',
         sub: '',
         title: '',
-        text: 'El impulso interior que nos lleva a soñar en grande y actuar con propósito. Confía en su capacidad de inspirar y dejar huella.',
+        text: 'La actitud del que sueña en grande y actúa con propósito.',
       },
       humility: {
         badge: 'Humildad',
@@ -71,7 +71,7 @@ export default {
     pasos: [
       { n: '01', title: 'Conócete',
         text: 'Descubre tu temperamento biológico para entender tus inclinaciones naturales innatas.' },
-      { n: '02', title: 'Reconoce tu virtud-desafío',
+      { n: '02', title: 'Descubre tu virtud-desafío',
         text: 'Identifica la virtud que, si la fortaleces, te hará mejor persona y mejor profesional.' },
       { n: '03', title: 'Entrena tu carácter',
         text: 'Desarrolla virtudes fundamentales — prudencia, fortaleza, dominio propio y justicia.' },
@@ -84,7 +84,7 @@ export default {
     audiences_cta: 'Conocer programa →',
     audiences: [
       {
-        to: '/acreditacion/colegios',
+        to: '/colegios',
         eyebrow: '',
         title: 'Colegios',
         text: 'Profesores, tutores, dirección y familias.',
