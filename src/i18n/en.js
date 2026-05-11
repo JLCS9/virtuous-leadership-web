@@ -31,7 +31,7 @@ export default {
     back_to_accreditation: '← Back to Accreditation',
     request_meeting: 'Request initial meeting',
     coming_soon: 'Coming soon',
-    contact_email: 'certification@virtuousleadership.com',
+    contact_email: 'admin@virtuousleadership.com',
     write_email: 'Write an email',
   },
 
@@ -153,12 +153,12 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'Accreditation for schools',
-    hero_subtitle: 'An integration of Virtuous Leadership into the school culture through teachers, tutors, leadership teams and families.',
+    hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
-      { n: '01', title: 'Integrate Virtuous Leadership into the school culture', text: 'through teachers and families trained in the same virtues.' },
-      { n: '02', title: 'Forge a solid and coherent educational leadership',     text: 'based on character, (virtues) and a clear personal mission.' },
+      { n: '01', title: 'Integrate Virtuous Leadership into the school culture', text: 'through teachers and families trained in the same virtues.', cta: 'See program →', cta_to: '/colegios' },
+      { n: '02', title: 'Forge a solid and coherent educational leadership',     text: 'based on character (virtues) and a clear personal mission.' },
       { n: '03', title: 'Achieve deep self-knowledge',                            text: 'to integrate ambition and service, personal coherence and unity of life in the classroom.' },
       { n: '04', title: 'Clarify the educator\'s personal mission',               text: 'as a source of meaning, criterion for deciding and engine of purposeful leadership.' },
     ],
@@ -217,7 +217,7 @@ export default {
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
       { n: '02', text: 'Design of an implementation plan adapted to the reality of the center.' },
       { n: '03', text: 'Launch of licenses for faculty and training for families.' },
-      { n: '04', text: 'Official accreditation of the school signed by Alexandre Havard.' },
+      { n: '04', text: 'Official accreditation of the school.' },
     ],
   },
 
@@ -225,12 +225,12 @@ export default {
   colegios_prog: {
     eyebrow: 'Program · Schools',
     hero_title: 'Program for schools',
-    hero_subtitle: 'An integration of Virtuous Leadership into the school culture through teachers, tutors, leadership teams and families.',
+    hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
-      { n: '01', title: 'Integrate Virtuous Leadership into the school culture', text: 'through teachers and families trained in the same virtues.' },
-      { n: '02', title: 'Forge a solid and coherent educational leadership',     text: 'based on character, (virtues) and a clear personal mission.' },
+      { n: '01', title: 'Integrate Virtuous Leadership into the school culture', text: 'through teachers and families trained in the same virtues.', cta: 'See program →', cta_to: '/colegios' },
+      { n: '02', title: 'Forge a solid and coherent educational leadership',     text: 'based on character (virtues) and a clear personal mission.' },
       { n: '03', title: 'Achieve deep self-knowledge',                            text: 'to integrate ambition and service, personal coherence and unity of life in the classroom.' },
       { n: '04', title: 'Clarify the educator\'s personal mission',               text: 'as a source of meaning, criterion for deciding and engine of purposeful leadership.' },
     ],
@@ -289,7 +289,7 @@ export default {
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
       { n: '02', text: 'Design of an implementation plan adapted to the reality of the center.' },
       { n: '03', text: 'Launch of licenses for faculty and training for families.' },
-      { n: '04', text: 'Official accreditation of the school signed by Alexandre Havard.' },
+      { n: '04', text: 'Official accreditation of the school.' },
     ],
   },
 

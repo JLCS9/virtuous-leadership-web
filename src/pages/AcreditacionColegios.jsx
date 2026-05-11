@@ -16,7 +16,7 @@ import {
   PAPER, BEIGE, INK, MUTED, LINE,
   FONT_SERIF, FONT_SANS, styles,
 } from '../theme';
-import { useT } from '../i18n';
+import { useT, LocalLink } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import selloImg     from '../assets/sello.png';
@@ -41,7 +41,7 @@ export default function AcreditacionColegios() {
             <div style={styles.eyebrow}>{k('eyebrow')}</div>
           )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
-          <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0' }}>
+          <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0', whiteSpace: 'pre-line' }}>
             {k('hero_subtitle')}
           </p>
           {/* Sello, justo debajo del texto del hero */}
@@ -84,10 +84,22 @@ export default function AcreditacionColegios() {
               background: NAVY_DEEP,
               border: `1px solid ${NAVY_SOFT}`,
               borderTop: `3px solid ${GOLD}`,
+              display: 'flex', flexDirection: 'column',
             }}>
               <div style={{ fontFamily: FONT_SERIF, fontSize: 32, fontWeight: 700, color: GOLD, lineHeight: 1 }}>{o.n}</div>
               <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 12, marginBottom: 10 }}>{o.title}</h3>
-              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{o.text}</p>
+              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0, flex: 1 }}>{o.text}</p>
+              {o.cta && o.cta_to && (
+                <LocalLink to={o.cta_to} style={{
+                  marginTop: 18,
+                  fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
+                  letterSpacing: '0.04em', color: GOLD,
+                  textDecoration: 'none', alignSelf: 'flex-start',
+                  borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
+                }}>
+                  {o.cta}
+                </LocalLink>
+              )}
             </div>
           ))}
         </div>

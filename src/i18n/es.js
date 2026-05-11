@@ -32,7 +32,7 @@ export default {
     back_to_accreditation: '← Volver a Acreditación',
     request_meeting: 'Solicitar reunión inicial',
     coming_soon: 'Próximamente',
-    contact_email: 'certification@virtuousleadership.com',
+    contact_email: 'admin@virtuousleadership.com',
     write_email: 'Escribir un email',
   },
 
@@ -154,12 +154,12 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'Acreditación para colegios',
-    hero_subtitle: 'Un proceso de integración de Liderazgo Virtuoso en la cultura del colegio a través de profesores, tutores, equipos directivos y familias.',
+    hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
     objetivos: [
-      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.' },
-      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente',      text: 'basado en el carácter, las (virtudes) y una misión personal clara.' },
+      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.', cta: 'Ver programa →', cta_to: '/colegios' },
+      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente',      text: 'basado en el carácter (virtudes) y una misión personal clara.' },
       { n: '03', title: 'Alcanzar un autoconocimiento profundo',                 text: 'para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.' },
       { n: '04', title: 'Clarificar la misión personal del educador',            text: 'como fuente de sentido, criterio para decidir y motor de un liderazgo con propósito.' },
     ],
@@ -218,7 +218,7 @@ export default {
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
       { n: '02', text: 'Diseño del plan de implantación adaptado a la realidad del centro.' },
       { n: '03', text: 'Lanzamiento de las licencias para el profesorado y formación a las familias.' },
-      { n: '04', text: 'Acreditación oficial del colegio firmada por Alexandre Havard.' },
+      { n: '04', text: 'Acreditación oficial del colegio.' },
     ],
   },
 
@@ -226,14 +226,14 @@ export default {
   colegios_prog: {
     eyebrow: 'Programa · Colegios',
     hero_title: 'Programa para colegios',
-    hero_subtitle: 'Un proceso de integración de Liderazgo Virtuoso en la cultura del colegio a través de profesores, tutores, equipos directivos y familias.',
+    hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
     objetivos: [
-      { n: '01', title: 'Forjar un liderazgo educativo sólido y coherente', text: 'basado en el carácter, las (virtudes) y una misión personal clara.' },
-      { n: '02', title: 'Alcanzar un autoconocimiento profundo',            text: 'para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.' },
-      { n: '03', title: 'Clarificar la misión personal del educador',       text: 'como fuente de sentido, criterio para decidir y motor de un liderazgo con propósito.' },
-      { n: '04', title: 'Transformar la cultura institucional del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.' },
+      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.', cta: 'Ver programa →', cta_to: '/colegios' },
+      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente',      text: 'basado en el carácter (virtudes) y una misión personal clara.' },
+      { n: '03', title: 'Alcanzar un autoconocimiento profundo',                 text: 'para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.' },
+      { n: '04', title: 'Clarificar la misión personal del educador',            text: 'como fuente de sentido, criterio para decidir y motor de un liderazgo con propósito.' },
     ],
     modalidad_eyebrow: 'Modalidad',
     modalidad_title: 'Formación 100% online y autogestionable',
@@ -290,7 +290,7 @@ export default {
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
       { n: '02', text: 'Diseño del plan de implantación adaptado a la realidad del centro.' },
       { n: '03', text: 'Lanzamiento de las licencias para el profesorado y formación a las familias.' },
-      { n: '04', text: 'Acreditación oficial del colegio firmada por Alexandre Havard.' },
+      { n: '04', text: 'Acreditación oficial del colegio.' },
     ],
   },
 

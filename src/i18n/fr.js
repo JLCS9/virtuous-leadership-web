@@ -31,7 +31,7 @@ export default {
     back_to_accreditation: '← Retour à l\'Accréditation',
     request_meeting: 'Demander une réunion initiale',
     coming_soon: 'Bientôt disponible',
-    contact_email: 'certification@virtuousleadership.com',
+    contact_email: 'admin@virtuousleadership.com',
     write_email: 'Écrire un e-mail',
   },
 
@@ -153,12 +153,12 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'Accréditation pour les écoles',
-    hero_subtitle: "Un processus d'intégration du Leadership Vertueux dans la culture de l'école à travers les enseignants, les tuteurs, les équipes de direction et les familles.",
+    hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [
-      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école", text: 'à travers des enseignants et des familles formés aux mêmes vertus.' },
-      { n: '02', title: 'Forger un leadership éducatif solide et cohérent',           text: 'fondé sur le caractère, les (vertus) et une mission personnelle claire.' },
+      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école", text: 'à travers des enseignants et des familles formés aux mêmes vertus.', cta: 'Voir le programme →', cta_to: '/colegios' },
+      { n: '02', title: 'Forger un leadership éducatif solide et cohérent',           text: 'fondé sur le caractère (vertus) et une mission personnelle claire.' },
       { n: '03', title: 'Atteindre une connaissance profonde de soi',                 text: 'pour intégrer ambition et service, cohérence personnelle et unité de vie en classe.' },
       { n: '04', title: 'Clarifier la mission personnelle de l\'éducateur',           text: 'comme source de sens, critère de décision et moteur d\'un leadership avec un but.' },
     ],
@@ -217,7 +217,7 @@ export default {
       { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter le programme et répondre aux questions.' },
       { n: '02', text: 'Conception d\'un plan de mise en œuvre adapté à la réalité du centre.' },
       { n: '03', text: 'Lancement des licences pour les enseignants et formation des familles.' },
-      { n: '04', text: 'Accréditation officielle de l\'école signée par Alexandre Havard.' },
+      { n: '04', text: 'Accréditation officielle de l\'école.' },
     ],
   },
 
@@ -225,12 +225,12 @@ export default {
   colegios_prog: {
     eyebrow: 'Programme · Écoles',
     hero_title: 'Programme pour les écoles',
-    hero_subtitle: "Un processus d'intégration du Leadership Vertueux dans la culture de l'école à travers les enseignants, les tuteurs, les équipes de direction et les familles.",
+    hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [
-      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école", text: 'à travers des enseignants et des familles formés aux mêmes vertus.' },
-      { n: '02', title: 'Forger un leadership éducatif solide et cohérent',           text: 'fondé sur le caractère, les (vertus) et une mission personnelle claire.' },
+      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école", text: 'à travers des enseignants et des familles formés aux mêmes vertus.', cta: 'Voir le programme →', cta_to: '/colegios' },
+      { n: '02', title: 'Forger un leadership éducatif solide et cohérent',           text: 'fondé sur le caractère (vertus) et une mission personnelle claire.' },
       { n: '03', title: 'Atteindre une connaissance profonde de soi',                 text: 'pour intégrer ambition et service, cohérence personnelle et unité de vie en classe.' },
       { n: '04', title: 'Clarifier la mission personnelle de l\'éducateur',           text: 'comme source de sens, critère de décision et moteur d\'un leadership avec un but.' },
     ],
@@ -289,7 +289,7 @@ export default {
       { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter le programme et répondre aux questions.' },
       { n: '02', text: 'Conception d\'un plan de mise en œuvre adapté à la réalité du centre.' },
       { n: '03', text: 'Lancement des licences pour les enseignants et formation des familles.' },
-      { n: '04', text: 'Accréditation officielle de l\'école signée par Alexandre Havard.' },
+      { n: '04', text: 'Accréditation officielle de l\'école.' },
     ],
   },
 

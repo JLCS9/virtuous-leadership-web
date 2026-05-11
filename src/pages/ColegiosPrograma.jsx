@@ -40,7 +40,7 @@ export default function ColegiosPrograma() {
             <div style={styles.eyebrow}>{k('eyebrow')}</div>
           )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
-          <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0' }}>
+          <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0', whiteSpace: 'pre-line' }}>
             {k('hero_subtitle')}
           </p>
         </div>
