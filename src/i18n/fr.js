@@ -314,7 +314,7 @@ export default {
     ],
     modalidad_eyebrow: 'Modalité',
     modalidad_title: 'Format hybride — le meilleur des deux mondes',
-    modalidad_subtitle: 'En ligne auto-géré + présentiel pour intégrer les contenus au contexte institutionnel.'auteur.',
+    modalidad_subtitle: 'En ligne auto-géré + présentiel pour intégrer les contenus au contexte institutionnel.',
     formato: [
       { label: 'Base conceptuelle',         sublabel: 'Asynchrone',                  title: 'En ligne à ton rythme',                 text: 'Accès aux 7 cours en ligne d\'Alexandre Havard, aux 6 cahiers pratiques et aux 3 outils d\'évaluation développés par l\'auteur.' },
       { label: 'Application au contexte',   sublabel: 'Rencontres en présentiel',  title: 'Sessions modérées',                     text: 'Deux rencontres en présentiel pour intégrer les contenus et les appliquer au contexte spécifique de l\'institution, modérées par un enseignant choisi par celle-ci.' },
