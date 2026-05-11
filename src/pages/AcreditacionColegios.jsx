@@ -19,7 +19,7 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
-import selloImg     from '../assets/sello.jpeg';
+import selloImg     from '../assets/sello.png';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
 export default function AcreditacionColegios() {
@@ -50,11 +50,22 @@ export default function AcreditacionColegios() {
                  style={{ width: 'min(160px, 40vw)', height: 'auto', display: 'block' }} />
           </div>
         </div>
-        {/* Imagen fondo-alex, full-width, altura limitada para que no se haga vertical */}
+        {/* Imagen fondo-alex, full-width.
+            La foto original es 1600x785 (≈2:1). Para que no recorte la cara de
+            Alex pero siga siendo un banner horizontal, fijamos un aspect ratio
+            de banner amplio (10/3) y biasamos la cara hacia arriba con
+            objectPosition. Asi el alto queda ~360px en pantallas de 1200px y
+            la cara queda visible. */}
         <div style={{ width: '100%', lineHeight: 0 }}>
           <img src={fondoAlexImg} alt=""
                loading="lazy"
-               style={{ width: '100%', height: 'auto', maxHeight: 280, objectFit: 'cover', display: 'block' }} />
+               style={{
+                 width: '100%',
+                 aspectRatio: '10 / 3',
+                 objectFit: 'cover',
+                 objectPosition: 'center 30%',
+                 display: 'block',
+               }} />
         </div>
       </section>
 

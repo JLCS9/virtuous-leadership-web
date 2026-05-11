@@ -79,11 +79,6 @@ export default function Home() {
             }}>
               {t('home.hero_title')}
             </h1>
-            <div style={{ marginTop: 28 }}>
-              <CTA href="https://alexhavard.com" variant="secondary">
-                {t('home.hero_more_cta')}
-              </CTA>
-            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
             <div style={{
@@ -268,6 +263,12 @@ export default function Home() {
               {t('home.alex_p1_post')}
             </p>
             <p style={{ ...styles.para, fontSize: 16 }}>{t('home.alex_p2')}</p>
+            <div style={{ marginTop: 24 }}>
+              <CTA href="https://alexhavard.com" variant="primary"
+                   style={{ background: GOLD, color: NAVY, borderColor: GOLD }}>
+                alexhavard.com
+              </CTA>
+            </div>
           </div>
         </div>
         <style>{`
