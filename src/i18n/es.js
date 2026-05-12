@@ -297,7 +297,7 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'LIDERAZGO VIRTUOSO PARA UNIVERSIDADES Y ESCUELAS DE NEGOCIOS.',
+    hero_title: 'LIDERAZGO VIRTUOSO PARA UNIVERSIDADES Y ESCUELAS DE NEGOCIOS',
     hero_subtitle: 'Para personal, profesores, estudiantes de máster y alumni.',
     diff_eyebrow: 'Su alcance global no es casualidad',
     diff_title: 'La prueba de su solidez',

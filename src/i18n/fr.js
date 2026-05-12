@@ -294,7 +294,7 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'LEADERSHIP VERTUEUX POUR UNIVERSITÉS ET ÉCOLES DE COMMERCE.',
+    hero_title: 'LEADERSHIP VERTUEUX POUR UNIVERSITÉS ET ÉCOLES DE COMMERCE',
     hero_subtitle: 'Pour le personnel, les enseignants, les étudiants en master et les anciens élèves.',
     diff_eyebrow: 'Sa portée mondiale n\'est pas un hasard',
     diff_title: 'La preuve de sa solidité',

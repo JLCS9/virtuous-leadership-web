@@ -44,20 +44,6 @@ export default function AcreditacionUniversidades() {
         </div>
       </section>
 
-      {/* Modalidad — fondo navy, mismo estilo que /colegios (FactRow filas) */}
-      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.modalidad_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.modalidad_title')}</h2>
-        </div>
-        <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
-          {modalidad.map((m, i) => (
-            <FactRow key={i} dark
-                     label={m.label} value={m.value} detail={m.detail}
-                     last={i === modalidad.length - 1} />
-          ))}
-        </div>
-      </Section>
 
       {/* Contenido (era 'Conceptos clave') */}
       <Section background={PAPER} paddingY={88}>
@@ -76,6 +62,21 @@ export default function AcreditacionUniversidades() {
               <h3 style={{ ...styles.h3, fontSize: 20, marginBottom: 8 }}>{c.title}</h3>
               <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{c.text}</p>
             </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* Modalidad — fondo navy, mismo estilo que /colegios (FactRow filas) */}
+      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
+        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.modalidad_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.modalidad_title')}</h2>
+        </div>
+        <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
+          {modalidad.map((m, i) => (
+            <FactRow key={i} dark
+                     label={m.label} value={m.value} detail={m.detail}
+                     last={i === modalidad.length - 1} />
           ))}
         </div>
       </Section>

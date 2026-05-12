@@ -294,7 +294,7 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'VIRTUOUS LEADERSHIP FOR UNIVERSITIES AND BUSINESS SCHOOLS.',
+    hero_title: 'VIRTUOUS LEADERSHIP FOR UNIVERSITIES AND BUSINESS SCHOOLS',
     hero_subtitle: "For staff, faculty, master's students and alumni.",
     diff_eyebrow: 'Its global reach is no coincidence',
     diff_title: 'Proof of its solidity',
