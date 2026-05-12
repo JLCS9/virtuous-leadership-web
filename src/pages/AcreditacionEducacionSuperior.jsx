@@ -9,6 +9,7 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 import classImg from '../assets/class.jpeg';
+import PasosBlock from '../components/PasosBlock';
 
 export default function AcreditacionEducacionSuperior() {
   const { t } = useT();
@@ -131,6 +132,9 @@ export default function AcreditacionEducacionSuperior() {
           </p>
         </div>
       </Section>
+
+      {/* Cuatro pasos del Liderazgo Virtuoso (compartido) */}
+      <PasosBlock />
 
       {/* CTA */}
       <Section background={NAVY} paddingY={64} style={{ color: PAPER }}>

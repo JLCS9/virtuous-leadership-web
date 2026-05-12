@@ -18,6 +18,7 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
+import PasosBlock from '../components/PasosBlock';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
@@ -131,6 +132,9 @@ export default function ColegiosPrograma() {
         </div>
         <TestimoniosCarousel items={testimonios} />
       </Section>
+
+      {/* Cuatro pasos del Liderazgo Virtuoso (compartido con Universidades, Edsup y Home antiguo) */}
+      <PasosBlock />
 
       {/* Proximos pasos */}
       <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>

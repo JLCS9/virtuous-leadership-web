@@ -43,7 +43,7 @@ export default {
     cta_know_system: 'Certification',
     cta_contact: 'Contact us',
     stats: [
-      { n: '+150',     label: 'Schools and universities' },
+      { n: '+150',     label: 'Schools and Universities' },
       { n: '+30',      label: 'Countries' },
       { n: '7',        label: 'Official courses' },
       { n: '4',        label: 'Languages' },

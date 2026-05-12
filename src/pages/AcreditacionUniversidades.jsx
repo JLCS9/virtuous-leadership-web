@@ -9,6 +9,7 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import universidadImg from '../assets/universidad.jpg';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
+import PasosBlock from '../components/PasosBlock';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();
@@ -155,6 +156,9 @@ export default function AcreditacionUniversidades() {
           </p>
         </div>
       </Section>
+
+      {/* Cuatro pasos del Liderazgo Virtuoso (compartido) */}
+      <PasosBlock />
 
       {/* CTA final */}
       <Section background={NAVY} paddingY={64} style={{ color: PAPER }}>

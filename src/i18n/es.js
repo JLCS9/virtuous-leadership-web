@@ -44,7 +44,7 @@ export default {
     cta_know_system: 'Acreditación',
     cta_contact: 'Contacta',
     stats: [
-      { n: '+150',     label: 'Escuelas y universidades' },
+      { n: '+150',     label: 'Colegios y Universidades' },
       { n: '+30',      label: 'Países' },
       { n: '7',        label: 'Cursos oficiales' },
       { n: '4',        label: 'Idiomas' },

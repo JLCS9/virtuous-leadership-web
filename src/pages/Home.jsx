@@ -12,7 +12,7 @@ import SEO from '../components/SEO';
 import alexImg from '../assets/alex-perfil.jpeg';
 import ttImg from '../assets/tt.png';
 import genteImg from '../assets/gente.jpeg';
-import classImg from '../assets/class.jpeg';
+import universidadImg from '../assets/universidad.jpg';
 
 const HOME_SEO = {
   es: {
@@ -32,7 +32,6 @@ const HOME_SEO = {
 export default function Home() {
   const { t, lang } = useT();
   const stats     = t('home.stats');
-  const pasos     = t('home.pasos');
   const audiences = t('home.audiences');
   const seo = HOME_SEO[lang] || HOME_SEO.es;
 
@@ -110,13 +109,8 @@ export default function Home() {
         `}</style>
       </section>
 
-      {/* Audiencias */}
+      {/* Audiencias — solo las 3 cards, sin titulo ni subtitulo */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('home.audiences_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('home.audiences_title')}</h2>
-          <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('home.audiences_subtitle')}</p>
-        </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
           {audiences.map((a, i) => (
             <Link key={i} to={a.to} style={{
@@ -190,33 +184,10 @@ export default function Home() {
       </section>
 
 
-      {/* 4 pasos */}
-      <Section background={PAPER} paddingY={88}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 56px' }}>
-          <div style={styles.eyebrow}>{t('home.pasos_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('home.pasos_title')}</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 24 }}>
-          {pasos.map((p, i) => (
-            <div key={i} style={{
-              padding: '32px 28px', background: BEIGE,
-              border: `1px solid ${LINE}`, borderRadius: 2,
-              borderTop: `3px solid ${GOLD}`,
-            }}>
-              <div style={{ fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 13, letterSpacing: '0.16em', color: GOLD_DEEP, fontWeight: 700 }}>
-                {p.n}
-              </div>
-              <h3 style={{ ...styles.h3, fontSize: 24, marginTop: 12, marginBottom: 14 }}>{p.title}</h3>
-              <p style={{ ...styles.para, fontSize: 15, lineHeight: 1.65, margin: 0 }}>{p.text}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* Imagen 'class' full-width justo antes del bloque audiencias */}
+      {/* 2a imagen full-width (universidad.jpg) */}
       <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
         <img
-          src={classImg}
+          src={universidadImg}
           alt=""
           loading="lazy"
           style={{
