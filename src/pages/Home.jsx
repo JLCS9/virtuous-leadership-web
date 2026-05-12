@@ -12,7 +12,6 @@ import SEO from '../components/SEO';
 import alexImg from '../assets/alex-perfil.jpeg';
 import ttImg from '../assets/tt.png';
 import genteImg from '../assets/gente.jpeg';
-import universidadImg from '../assets/universidad.jpg';
 
 const HOME_SEO = {
   es: {
@@ -183,22 +182,6 @@ export default function Home() {
         `}</style>
       </section>
 
-
-      {/* 2a imagen full-width (universidad.jpg) */}
-      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
-        <img
-          src={universidadImg}
-          alt=""
-          loading="lazy"
-          style={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            maxHeight: 460,
-            objectFit: 'cover',
-          }}
-        />
-      </section>
 
 
       {/* Sobre Alexandre Havard */}

@@ -7,7 +7,7 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
-import universidadImg from '../assets/universidad.jpg';
+import classImg from '../assets/class.jpeg';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 import PasosBlock from '../components/PasosBlock';
 
@@ -33,7 +33,7 @@ export default function AcreditacionUniversidades() {
         </div>
         {/* Foto full-width tras el bloque hero (aspect-ratio banner) */}
         <div style={{ width: '100%', lineHeight: 0 }}>
-          <img src={universidadImg} alt=""
+          <img src={classImg} alt=""
                loading="lazy"
                style={{
                  width: '100%',
