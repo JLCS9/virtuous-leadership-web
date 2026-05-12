@@ -152,7 +152,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'ACCRÉDITATION POUR LES ÉCOLES',
+    hero_title: 'LEADERSHIP VERTUEUX POUR LES ÉCOLES',
     hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
@@ -226,7 +226,7 @@ export default {
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'PROGRAMME POUR LES ÉCOLES',
+    hero_title: 'LEADERSHIP VERTUEUX POUR LES ÉCOLES',
     hero_subtitle: 'Équipes de direction, tuteurs, orienteurs et enseignants.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
@@ -294,8 +294,8 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'LEADERSHIP VERTUEUX\nDANS LES UNIVERSITÉS',
-    hero_subtitle: "Le modèle d'Alexandre Havard intégré à la rigueur académique et à une approche pratique,\ndispensé directement par son auteur.",
+    hero_title: 'LEADERSHIP VERTUEUX POUR UNIVERSITÉS ET ÉCOLES DE COMMERCE.',
+    hero_subtitle: 'Pour le personnel, les enseignants, les étudiants en master et les anciens élèves.',
     diff_eyebrow: 'Sa portée mondiale n\'est pas un hasard',
     diff_title: 'La preuve de sa solidité',
     diff_items: [
@@ -313,7 +313,15 @@ export default {
       { title: 'Clarifier ta mission personnelle',         text: 'Comme source de sens, critère de décision et moteur d\'un leadership avec un but.' },
     ],
     modalidad_eyebrow: 'Modalité',
-    modalidad_title: 'Format hybride — le meilleur des deux mondes',
+    modalidad_title: 'En ligne auto-géré + présentiel pour intégrer les contenus au contexte institutionnel.',
+    modalidad: [
+      { label: 'Rythme', value: 'À ton propre rythme', detail: 'Sans séances programmées, sans horaires rigides.' },
+      { label: 'Contenu', value: '7 cours officiels', detail: 'Publiés sur alexhavard.com.' },
+      { label: 'Matériel', value: '6 cahiers pratiques', detail: 'Travail personnel + 3 tests de connaissance de soi.' },
+      { label: 'Évaluation', value: '+42 questionnaires', detail: 'Et certificat officiel à la fin.' },
+      { label: 'Langues', value: '4 langues', detail: 'Espagnol, français, anglais et russe.' },
+      { label: 'Application au contexte', value: 'Rencontres en présentiel', detail: "Rencontres en présentiel pour intégrer les contenus et les appliquer au contexte spécifique de l'institution, modérées par un enseignant choisi par elle." },
+    ],
     modalidad_subtitle: 'En ligne auto-géré + présentiel pour intégrer les contenus au contexte institutionnel.',
     formato: [
       { label: 'Base conceptuelle',         sublabel: 'Asynchrone',                  title: 'En ligne à ton rythme',                 text: 'Accès aux 7 cours en ligne d\'Alexandre Havard, aux 6 cahiers pratiques et aux 3 outils d\'évaluation développés par l\'auteur.' },
@@ -331,7 +339,7 @@ export default {
       { title: 'Anciens élèves',    text: 'Anciens élèves qui veulent approfondir leur mission et leur développement personnel.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'Concepts clés',
+    conceptos_title: 'Contenu',
     conceptos: [
       { title: 'Tempérament et caractère',     text: 'Comprendre sa propre structure biologique et spirituelle et son influence sur le processus de croissance personnelle.' },
       { title: 'Cœur, intellect et volonté',   text: 'Approfondir l\'intégration intérieure et les déséquilibres qui la paralysent : rationalisme, volontarisme et sentimentalisme.' },

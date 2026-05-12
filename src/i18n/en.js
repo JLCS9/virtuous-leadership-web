@@ -152,7 +152,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'ACCREDITATION FOR SCHOOLS',
+    hero_title: 'VIRTUOUS LEADERSHIP FOR SCHOOLS',
     hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
@@ -226,7 +226,7 @@ export default {
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'PROGRAM FOR SCHOOLS',
+    hero_title: 'VIRTUOUS LEADERSHIP FOR SCHOOLS',
     hero_subtitle: 'Leadership teams, tutors, counselors and teachers.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
@@ -294,8 +294,8 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'VIRTUOUS LEADERSHIP\nAT UNIVERSITIES',
-    hero_subtitle: 'The Alexandre Havard model integrated with academic rigor and a practical approach,\ntaught directly by its author.',
+    hero_title: 'VIRTUOUS LEADERSHIP FOR UNIVERSITIES AND BUSINESS SCHOOLS.',
+    hero_subtitle: "For staff, faculty, master's students and alumni.",
     diff_eyebrow: 'Its global reach is no coincidence',
     diff_title: 'Proof of its solidity',
     diff_items: [
@@ -313,7 +313,15 @@ export default {
       { title: 'Clarify your personal mission',         text: 'Criterion for deciding and engine of purposeful leadership.' },
     ],
     modalidad_eyebrow: 'Format',
-    modalidad_title: 'Hybrid format — the best of both worlds',
+    modalidad_title: 'Self-paced online + in-person sessions to integrate content into the institutional context.',
+    modalidad: [
+      { label: 'Pace', value: 'At your own pace', detail: 'No scheduled sessions, no rigid timetables.' },
+      { label: 'Content', value: '7 official courses', detail: 'Published on alexhavard.com.' },
+      { label: 'Materials', value: '6 practical workbooks', detail: 'Personal work + 3 self-knowledge tests.' },
+      { label: 'Assessment', value: '+42 questionnaires', detail: 'And official certificate upon completion.' },
+      { label: 'Languages', value: '4 languages', detail: 'Spanish, French, English and Russian.' },
+      { label: 'Application to context', value: 'In-person sessions', detail: 'In-person sessions to integrate content and apply it to the specific institutional context, moderated by a faculty member chosen by the institution.' },
+    ],
     modalidad_subtitle: 'Self-paced online + in-person sessions to integrate content into the institutional context.',
     formato: [
       { label: 'Conceptual base',           sublabel: 'Asynchronous',                title: 'Online at your pace',                  text: 'Access to Alexandre Havard\'s 7 online courses, 6 practical workbooks and 3 evaluation tools developed by the author.' },
@@ -332,7 +340,7 @@ export default {
       { title: 'Alumni',             text: 'Former students who want to deepen their mission and personal development.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'Key concepts',
+    conceptos_title: 'Content',
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Deepening inner integration and overcoming the imbalances that paralyze it: rationalism, voluntarism and sentimentalism.' },

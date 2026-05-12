@@ -153,7 +153,7 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'ACREDITACIÓN PARA COLEGIOS',
+    hero_title: 'LIDERAZGO VIRTUOSO PARA COLEGIOS',
     hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
@@ -230,7 +230,7 @@ export default {
   // entregables_cta_*.
   colegios_prog: {
     eyebrow: '',
-    hero_title: 'PROGRAMA PARA COLEGIOS',
+    hero_title: 'LIDERAZGO VIRTUOSO PARA COLEGIOS',
     hero_subtitle: 'Equipos directivos, tutores, orientadores y profesores.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
@@ -297,8 +297,8 @@ export default {
 
   universidades: {
     eyebrow: '',
-    hero_title: 'LIDERAZGO VIRTUOSO\nEN UNIVERSIDADES',
-    hero_subtitle: 'El modelo de Alexandre Havard integrado con rigor académico y enfoque práctico,\nimpartido directamente por su autor.',
+    hero_title: 'LIDERAZGO VIRTUOSO PARA UNIVERSIDADES Y ESCUELAS DE NEGOCIOS.',
+    hero_subtitle: 'Para personal, profesores, estudiantes de máster y alumni.',
     diff_eyebrow: 'Su alcance global no es casualidad',
     diff_title: 'La prueba de su solidez',
     diff_items: [
@@ -316,7 +316,15 @@ export default {
       { title: 'Clarificar tu misión personal',         text: 'Criterio para decidir y motor de un liderazgo con propósito.' },
     ],
     modalidad_eyebrow: 'Modalidad',
-    modalidad_title: 'Formato híbrido — lo mejor de dos mundos',
+    modalidad_title: 'Online autogestionable + presencialidad para integrar contenidos al contexto institucional.',
+    modalidad: [
+      { label: 'Ritmo', value: 'A tu propio ritmo', detail: 'Sin sesiones programadas, sin horarios rígidos.' },
+      { label: 'Contenido', value: '7 cursos oficiales', detail: 'Publicados en alexhavard.com.' },
+      { label: 'Materiales', value: '6 cuadernos prácticos', detail: 'Trabajo personal + 3 tests de autoconocimiento.' },
+      { label: 'Evaluación', value: '+42 cuestionarios', detail: 'Y certificado oficial al finalizar.' },
+      { label: 'Idiomas', value: '4 idiomas', detail: 'Español, francés, inglés y ruso.' },
+      { label: 'Aplicación al contexto', value: 'Encuentros presenciales', detail: 'Encuentros presenciales para integrar contenidos y aplicarlos al contexto específico de la institución, moderados por un profesor elegido por ella.' },
+    ],
     modalidad_subtitle: 'Online autogestionable + presencialidad para integrar contenidos al contexto institucional.',
     formato: [
       { label: 'Base conceptual',           sublabel: 'Asincrónica',                title: 'Online a tu ritmo',              text: 'Acceso a los 7 cursos online de Alexandre Havard, a los 6 cuadernos prácticos y a las 3 herramientas de evaluación desarrolladas por el autor.' },
@@ -334,7 +342,7 @@ export default {
       { title: 'Alumni',                text: 'Antiguos alumnos que quieren profundizar en su misión y desarrollo personal.' },
     ],
     conceptos_eyebrow: '',
-    conceptos_title: 'Conceptos clave',
+    conceptos_title: 'Contenido',
     conceptos: [
       { title: 'Temperamento y carácter',       text: 'Comprender la propia estructura biológica y espiritual, y su influencia en el proceso de crecimiento personal.' },
       { title: 'Corazón, intelecto y voluntad', text: 'Profundizar en la integración interior y en los desequilibrios que la paralizan: racionalismo, voluntarismo y sentimentalismo.' },
