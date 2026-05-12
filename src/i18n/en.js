@@ -360,7 +360,7 @@ export default {
   edsup: {
     eyebrow: '',
     hero_title: 'VIRTUOUS LEADERSHIP\nFOR VOCATIONAL TRAINING',
-    hero_subtitle: 'The Havard methodology adapted to the professional context.',
+    hero_subtitle: 'Leadership teams, faculty, students and alumni.',
     tipos_eyebrow: 'Type of centers',
     tipos_title: 'For every higher-education training center',
     tipos_subtitle: 'Wherever technical excellence meets the formation of the person, this program fits.',

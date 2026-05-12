@@ -359,7 +359,7 @@ export default {
   edsup: {
     eyebrow: '',
     hero_title: 'LEADERSHIP VERTUEUX\nPOUR LA FORMATION PROFESSIONNELLE',
-    hero_subtitle: 'La méthodologie Havard adaptée au contexte professionnel.',
+    hero_subtitle: 'Équipes de direction, enseignants, étudiants et anciens élèves.',
     tipos_eyebrow: 'Type de centres',
     tipos_title: 'Pour tout centre de formation supérieure',
     tipos_subtitle: 'Là où l\'excellence technique rencontre la formation de la personne, ce programme s\'inscrit.',
