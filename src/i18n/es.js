@@ -231,7 +231,7 @@ export default {
   colegios_prog: {
     eyebrow: '',
     hero_title: 'PROGRAMA PARA COLEGIOS',
-    hero_subtitle: 'Equipos directivos, tutores y profesores.',
+    hero_subtitle: 'Equipos directivos, tutores, orientadores y profesores.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
     objetivos: [
@@ -243,7 +243,7 @@ export default {
     modalidad_title: 'Formación 100% online y autogestionable',
     modalidad: [
       { label: 'Ritmo',      value: 'A tu propio ritmo',     detail: 'Sin sesiones programadas, sin horarios rígidos.' },
-      { label: 'Contenido',  value: '7 cursos oficiales',    detail: 'Publicados en alexhavard.com — única vía oficial de formación del profesorado.' },
+      { label: 'Contenido',  value: '7 cursos oficiales',    detail: 'Publicados en alexhavard.com.' },
       { label: 'Materiales', value: '6 cuadernos prácticos', detail: 'Trabajo personal + 3 tests de autoconocimiento.' },
       { label: 'Evaluación', value: '+42 cuestionarios',     detail: 'Y certificado oficial al finalizar.' },
       { label: 'Idiomas',    value: '4 idiomas',             detail: 'Español, francés, inglés y ruso.' },
@@ -258,7 +258,7 @@ export default {
       'Sello de Colegio Acreditado en Liderazgo Virtuoso.',
     ],
     conceptos_eyebrow: 'El cuerpo doctrinal',
-    conceptos_title: 'Conceptos clave del programa',
+    conceptos_title: 'Contenido',
     conceptos: [
       { title: 'Temperamento y carácter',       text: 'Comprender la propia estructura biológica y espiritual y su influencia en el crecimiento personal.' },
       { title: 'Corazón, intelecto y voluntad', text: 'Integración interior frente a racionalismo, voluntarismo y sentimentalismo.' },

@@ -227,7 +227,7 @@ export default {
   colegios_prog: {
     eyebrow: '',
     hero_title: 'PROGRAMME POUR LES ÉCOLES',
-    hero_subtitle: 'Équipes de direction, tuteurs et enseignants.',
+    hero_subtitle: 'Équipes de direction, tuteurs, orienteurs et enseignants.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [
@@ -240,7 +240,7 @@ export default {
     modalidad_title: 'Formation 100 % en ligne et auto-gérée',
     modalidad: [
       { label: 'Rythme',       value: 'À ton propre rythme',          detail: 'Sans séances programmées, sans horaires rigides.' },
-      { label: 'Contenu',      value: '7 cours officiels',            detail: 'Publiés sur alexhavard.com — seul canal officiel de formation des enseignants.' },
+      { label: 'Contenu',      value: '7 cours officiels',            detail: 'Publiés sur alexhavard.com.' },
       { label: 'Matériel',     value: '6 cahiers pratiques',          detail: 'Travail personnel + 3 tests de connaissance de soi.' },
       { label: 'Évaluation',   value: '+42 questionnaires',           detail: 'Et certificat officiel à l\'issue.' },
       { label: 'Langues',      value: '4 langues',                    detail: 'Espagnol, français, anglais et russe.' },
@@ -255,7 +255,7 @@ export default {
       'Sceau d\'École Accréditée en Leadership Vertueux.',
     ],
     conceptos_eyebrow: 'Le corps doctrinal',
-    conceptos_title: 'Concepts clés du programme',
+    conceptos_title: 'Contenu',
     conceptos: [
       { title: 'Tempérament et caractère',     text: 'Comprendre sa propre structure biologique et spirituelle et son influence sur la croissance personnelle.' },
       { title: 'Cœur, intellect et volonté',   text: 'Intégration intérieure face au rationalisme, au volontarisme et au sentimentalisme.' },

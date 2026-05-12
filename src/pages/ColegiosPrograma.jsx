@@ -18,7 +18,6 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
-import PasosBlock from '../components/PasosBlock';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
 import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
@@ -27,7 +26,6 @@ export default function ColegiosPrograma() {
   const k = (key) => t(`colegios_prog.${key}`);
   const modalidad     = k('modalidad');
   const conceptos     = k('conceptos');
-  const destinatarios = k('destinatarios');
   const testimonios   = k('testimonios');
   const proceso       = k('proceso');
   const heroTitle     = k('hero_title');
@@ -59,20 +57,6 @@ export default function ColegiosPrograma() {
         </div>
       </section>
 
-      {/* Modalidad — fondo navy */}
-      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('modalidad_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{k('modalidad_title')}</h2>
-        </div>
-        <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
-          {modalidad.map((m, i) => (
-            <FactRow key={i} dark
-                     label={m.label} value={m.value} detail={m.detail}
-                     last={i === modalidad.length - 1} />
-          ))}
-        </div>
-      </Section>
 
       {/* Conceptos clave — fondo claro, sin eyebrow */}
       <Section background={PAPER} paddingY={88}>
@@ -92,37 +76,21 @@ export default function ColegiosPrograma() {
         </div>
       </Section>
 
-      {/* Destinatarios — fondo navy */}
+      {/* Modalidad — fondo navy */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 16px' }}>
-          {k('destinatarios_eyebrow') && (
-            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('destinatarios_eyebrow')}</div>
-          )}
-          {k('destinatarios_title') && (
-            <h2 style={{ ...styles.h2, color: PAPER }}>{k('destinatarios_title')}</h2>
-          )}
-          {k('destinatarios_subtitle') && (
-            <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{k('destinatarios_subtitle')}</p>
-          )}
+        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('modalidad_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('modalidad_title')}</h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16, marginTop: 32 }}>
-          {destinatarios.map((d, i) => (
-            <div key={i} style={{
-              padding: '24px 22px',
-              background: NAVY_DEEP,
-              border: `1px solid ${NAVY_SOFT}`,
-              borderTop: `3px solid ${GOLD}`,
-              textAlign: 'center',
-            }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: GOLD }}>{d.n}</div>
-              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 8, marginBottom: d.text ? 6 : 0 }}>{d.title}</h3>
-              {d.text && (
-                <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{d.text}</p>
-              )}
-            </div>
+        <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
+          {modalidad.map((m, i) => (
+            <FactRow key={i} dark
+                     label={m.label} value={m.value} detail={m.detail}
+                     last={i === modalidad.length - 1} />
           ))}
         </div>
       </Section>
+
 
       {/* Testimonios */}
       <Section background={PAPER} paddingY={72}>
@@ -132,9 +100,6 @@ export default function ColegiosPrograma() {
         </div>
         <TestimoniosCarousel items={testimonios} />
       </Section>
-
-      {/* Cuatro pasos del Liderazgo Virtuoso (compartido con Universidades, Edsup y Home antiguo) */}
-      <PasosBlock />
 
       {/* Proximos pasos */}
       <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>

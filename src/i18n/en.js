@@ -227,7 +227,7 @@ export default {
   colegios_prog: {
     eyebrow: '',
     hero_title: 'PROGRAM FOR SCHOOLS',
-    hero_subtitle: 'Leadership teams, tutors and teachers.',
+    hero_subtitle: 'Leadership teams, tutors, counselors and teachers.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
@@ -240,7 +240,7 @@ export default {
     modalidad_title: '100% online and self-paced training',
     modalidad: [
       { label: 'Pace',         value: 'At your own pace',          detail: 'No scheduled sessions, no rigid timetables.' },
-      { label: 'Content',      value: '7 official courses',        detail: 'Published on alexhavard.com — the only official channel for faculty training.' },
+      { label: 'Content',      value: '7 official courses',        detail: 'Published on alexhavard.com.' },
       { label: 'Materials',    value: '6 practical workbooks',     detail: 'Personal work + 3 self-knowledge tests.' },
       { label: 'Assessment',   value: '+42 questionnaires',        detail: 'And official certificate upon completion.' },
       { label: 'Languages',    value: '4 languages',               detail: 'Spanish, French, English and Russian.' },
@@ -255,7 +255,7 @@ export default {
       'Seal of School Accredited in Virtuous Leadership.',
     ],
     conceptos_eyebrow: 'The doctrinal body',
-    conceptos_title: 'Key concepts of the program',
+    conceptos_title: 'Content',
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Inner integration versus rationalism, voluntarism and sentimentalism.' },
