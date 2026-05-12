@@ -9,7 +9,6 @@ import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { FactRow } from './AcreditacionColegios';
 import classImg from '../assets/class.jpeg';
-import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();
@@ -59,19 +58,6 @@ export default function AcreditacionUniversidades() {
           ))}
         </div>
       </Section>
-
-      {/* Banner fondo-alex */}
-      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
-        <img src={fondoAlexImg} alt=""
-             loading="lazy"
-             style={{
-               width: '100%',
-               aspectRatio: '10 / 3',
-               objectFit: 'cover',
-               objectPosition: 'center top',
-               display: 'block',
-             }} />
-      </section>
 
       {/* Contenido (era 'Conceptos clave') */}
       <Section background={PAPER} paddingY={88}>
