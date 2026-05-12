@@ -5,6 +5,10 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { I18nProvider } from './i18n'
+import { initAnalytics } from './lib/analytics'
+
+// Inicializa Google Analytics. No-op si VITE_GA_ID no esta definido.
+initAnalytics();
 
 // El orden importa:
 //   - HelmetProvider gestiona <head> a nivel raiz.

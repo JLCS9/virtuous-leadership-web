@@ -10,6 +10,7 @@ import Tests from './pages/Tests';
 import TestTemperamento from './pages/TestTemperamento';
 import Contacto from './pages/Contacto';
 import NotFound from './pages/NotFound';
+import PageTracker from './components/PageTracker';
 import { SUPPORTED_LANGS, detectInitialLang, ROUTES, NO_LAYOUT_PAGES } from './i18n';
 
 // Mapeo pageId -> componente. Si añades una pagina aqui, añade tambien su
@@ -45,7 +46,9 @@ function LegacyRedirect() {
 // El resto de paginas comparten el mismo Layout.
 export default function App() {
   return (
-    <Routes>
+    <>
+      <PageTracker />
+      <Routes>
       {/* Test temperamento sin Layout — uno por idioma */}
       {SUPPORTED_LANGS.flatMap(lang =>
         Array.from(NO_LAYOUT_PAGES).map(pageId => {
@@ -81,5 +84,6 @@ export default function App() {
           -> redirigir conservando el path original. */}
       <Route path="*" element={<LegacyRedirect />} />
     </Routes>
+    </>
   );
 }

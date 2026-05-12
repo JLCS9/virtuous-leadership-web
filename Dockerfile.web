@@ -8,6 +8,13 @@ RUN npm ci
 
 # Copia el resto y compila
 COPY . .
+
+# Variables de entorno que Vite incrusta en el bundle. Pueden venir como
+# ARG en el build (docker build --build-arg VITE_GA_ID=G-XXXX ...) o,
+# por defecto, desde .env.production que está en el repo.
+ARG VITE_GA_ID
+ENV VITE_GA_ID=${VITE_GA_ID}
+
 RUN npm run build
 
 # Serve stage — sirve el dist/ con nginx-alpine (~25 MB)
