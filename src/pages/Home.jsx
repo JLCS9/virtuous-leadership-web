@@ -34,8 +34,6 @@ export default function Home() {
   const stats     = t('home.stats');
   const pasos     = t('home.pasos');
   const audiences = t('home.audiences');
-  const pillarMag = t('home.pillars.magnanimity');
-  const pillarHum = t('home.pillars.humility');
   const seo = HOME_SEO[lang] || HOME_SEO.es;
 
   return (
@@ -80,6 +78,14 @@ export default function Home() {
             }}>
               {t('home.hero_title')}
             </h1>
+            <p style={{
+              fontFamily: FONT_SERIF, fontStyle: 'italic',
+              fontSize: 'clamp(18px, 2.2vw, 24px)',
+              color: GOLD_DEEP, marginTop: 16, marginBottom: 0,
+              lineHeight: 1.4,
+            }}>
+              {t('home.system_title')}
+            </p>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
             <div style={{
@@ -102,6 +108,56 @@ export default function Home() {
             .hero-title { font-size: clamp(26px, 8vw, 36px) !important; }
           }
         `}</style>
+      </section>
+
+      {/* Audiencias */}
+      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
+        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('home.audiences_eyebrow')}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{t('home.audiences_title')}</h2>
+          <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('home.audiences_subtitle')}</p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
+          {audiences.map((a, i) => (
+            <Link key={i} to={a.to} style={{
+              display: 'flex', flexDirection: 'column',
+              padding: '36px 30px',
+              background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, borderRadius: 2,
+              textDecoration: 'none', transition: 'all 200ms ease',
+              borderLeft: `3px solid ${GOLD}`,
+            }}
+              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderLeftColor = GOLD_SOFT; e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)'; }}
+              onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderLeftColor = GOLD; e.currentTarget.style.boxShadow = 'none'; }}
+            >
+              {a.eyebrow && (
+                <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600, marginBottom: 8 }}>
+                  {a.eyebrow}
+                </div>
+              )}
+              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 26, marginTop: 0, marginBottom: 16 }}>{a.title}</h3>
+              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, lineHeight: 1.65, margin: 0, flex: 1 }}>{a.text}</p>
+              <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 14, color: GOLD, fontWeight: 600, letterSpacing: '0.04em' }}>
+                {t('home.audiences_cta')}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </Section>
+
+      {/* Imagen 'gente' a ancho completo */}
+      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
+        <img
+          src={genteImg}
+          alt=""
+          loading="lazy"
+          style={{
+            width: '100%',
+            height: 'auto',
+            display: 'block',
+            maxHeight: 460,
+            objectFit: 'cover',
+          }}
+        />
       </section>
 
       {/* Stats */}
@@ -133,33 +189,6 @@ export default function Home() {
         `}</style>
       </section>
 
-      {/* El sistema */}
-      <Section background={BEIGE} paddingY={88}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 56px' }}>
-          <div style={styles.eyebrow}>{t('home.system_eyebrow')}</div>
-          <h2 style={styles.h2}>{t('home.system_title')}</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 32 }}>
-          <Pillar {...pillarMag} color={GOLD_DEEP} />
-          <Pillar {...pillarHum} color={NAVY} />
-        </div>
-      </Section>
-
-      {/* Imagen 'gente' a ancho completo, entre los pilares y los pasos */}
-      <section aria-hidden="true" style={{ display: 'block', lineHeight: 0 }}>
-        <img
-          src={genteImg}
-          alt=""
-          loading="lazy"
-          style={{
-            width: '100%',
-            height: 'auto',
-            display: 'block',
-            maxHeight: 460,
-            objectFit: 'cover',
-          }}
-        />
-      </section>
 
       {/* 4 pasos */}
       <Section background={PAPER} paddingY={88}>
@@ -200,39 +229,6 @@ export default function Home() {
         />
       </section>
 
-      {/* Audiencias */}
-      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('home.audiences_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{t('home.audiences_title')}</h2>
-          <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('home.audiences_subtitle')}</p>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          {audiences.map((a, i) => (
-            <Link key={i} to={a.to} style={{
-              display: 'flex', flexDirection: 'column',
-              padding: '36px 30px',
-              background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, borderRadius: 2,
-              textDecoration: 'none', transition: 'all 200ms ease',
-              borderLeft: `3px solid ${GOLD}`,
-            }}
-              onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderLeftColor = GOLD_SOFT; e.currentTarget.style.boxShadow = '0 12px 24px rgba(0,0,0,0.2)'; }}
-              onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderLeftColor = GOLD; e.currentTarget.style.boxShadow = 'none'; }}
-            >
-              {a.eyebrow && (
-                <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600, marginBottom: 8 }}>
-                  {a.eyebrow}
-                </div>
-              )}
-              <h3 style={{ ...styles.h3, color: PAPER, fontSize: 26, marginTop: 0, marginBottom: 16 }}>{a.title}</h3>
-              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, lineHeight: 1.65, margin: 0, flex: 1 }}>{a.text}</p>
-              <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 14, color: GOLD, fontWeight: 600, letterSpacing: '0.04em' }}>
-                {t('home.audiences_cta')}
-              </div>
-            </Link>
-          ))}
-        </div>
-      </Section>
 
       {/* Sobre Alexandre Havard */}
       <Section background={PAPER} paddingY={88}>
@@ -306,24 +302,3 @@ export default function Home() {
   );
 }
 
-function Pillar({ badge, sub, text, color }) {
-  return (
-    <div style={{
-      padding: '40px 36px',
-      background: PAPER, border: `1px solid ${LINE}`, borderRadius: 2,
-      borderTop: `4px solid ${color}`,
-    }}>
-      <h3 style={{ marginBottom: 18, lineHeight: 1.1 }}>
-        <span style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 700, color, letterSpacing: '0.02em', textTransform: 'uppercase' }}>
-          {badge}
-        </span>
-        {sub && (
-          <span style={{ fontFamily: FONT_SERIF, fontSize: 22, color: MUTED, fontStyle: 'italic', marginLeft: 10, fontWeight: 400 }}>
-            ·&nbsp;{sub}
-          </span>
-        )}
-      </h3>
-      <p style={{ ...styles.para, fontSize: 17, margin: 0, lineHeight: 1.6 }}>{text}</p>
-    </div>
-  );
-}
