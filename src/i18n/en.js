@@ -313,7 +313,7 @@ export default {
       { title: 'Clarify your personal mission',         text: 'Criterion for deciding and engine of purposeful leadership.' },
     ],
     modalidad_eyebrow: 'Format',
-    modalidad_title: 'Self-paced online + in-person sessions to integrate content into the institutional context.',
+    modalidad_title: 'Self-paced online + in-person sessions',
     modalidad: [
       { label: 'Pace', value: 'At your own pace', detail: 'No scheduled sessions, no rigid timetables.' },
       { label: 'Content', value: '7 official courses', detail: 'Published on alexhavard.com.' },

@@ -316,7 +316,7 @@ export default {
       { title: 'Clarificar tu misión personal',         text: 'Criterio para decidir y motor de un liderazgo con propósito.' },
     ],
     modalidad_eyebrow: 'Modalidad',
-    modalidad_title: 'Online autogestionable + presencialidad para integrar contenidos al contexto institucional.',
+    modalidad_title: 'Online autogestionable + presencialidad',
     modalidad: [
       { label: 'Ritmo', value: 'A tu propio ritmo', detail: 'Sin sesiones programadas, sin horarios rígidos.' },
       { label: 'Contenido', value: '7 cursos oficiales', detail: 'Publicados en alexhavard.com.' },

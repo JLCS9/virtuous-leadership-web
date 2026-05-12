@@ -313,7 +313,7 @@ export default {
       { title: 'Clarifier ta mission personnelle',         text: 'Comme source de sens, critère de décision et moteur d\'un leadership avec un but.' },
     ],
     modalidad_eyebrow: 'Modalité',
-    modalidad_title: 'En ligne auto-géré + présentiel pour intégrer les contenus au contexte institutionnel.',
+    modalidad_title: 'En ligne auto-géré + présentiel',
     modalidad: [
       { label: 'Rythme', value: 'À ton propre rythme', detail: 'Sans séances programmées, sans horaires rigides.' },
       { label: 'Contenu', value: '7 cours officiels', detail: 'Publiés sur alexhavard.com.' },
