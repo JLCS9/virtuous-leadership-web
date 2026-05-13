@@ -201,17 +201,8 @@ export default {
       { n: '03', title: 'Enseignants',              text: '' },
       { n: '04', title: 'Familles',                 text: '' },
     ],
-    testimonios_eyebrow: 'Centres qui nous font déjà confiance',
-    testimonios_title: 'Ce que racontent ceux qui ont déjà terminé le programme',
-    testimonios: [
-      { text: 'Nous avons décidé d\'implanter le Leadership Vertueux parce que nous voulions que le caractère cesse d\'être un slogan pour devenir une manière de regarder l\'élève. Trois mois plus tard, les conversations en salle des profs sont déjà différentes.', author: 'Manuel A.',   role: 'Directeur' },
-      { text: 'Cette formation a été un avant et un après. Pas seulement dans ma manière d\'enseigner, mais dans la façon dont je me vois moi-même.',                                                                                                                            author: 'Maru H.',     role: 'Enseignante' },
-      { text: 'Le Leadership Vertueux m\'a permis de découvrir que diriger ne consiste pas seulement à prendre des décisions : c\'est grandir pour faire grandir les autres.',                                                                                                  author: 'Sonsoles R.', role: 'Conseillère et enseignante' },
-      { text: 'Ce qui a le plus changé en moi, c\'est ma manière de parler aux élèves : je ne cherche plus à corriger des comportements, je cherche à comprendre quelle vertu ils sont en train d\'apprendre à entraîner.',                                                     author: 'Carmen B.',   role: 'Tutrice de secondaire' },
-      { text: 'En tant que parent, voir que l\'école applique le même langage des vertus que celui que nous travaillons à la maison ferme un cercle que nous cherchions depuis des années.',                                                                                    author: 'Javier M.',   role: 'Parent d\'élèves' },
-      { text: 'Pour la première fois, nous avons un cadre commun — tempérament, caractère, vertus — dont peuvent parler enseignants, tuteurs et familles sans malentendus.',                                                                                                    author: 'Ana L.',      role: 'Coordinatrice pastorale' },
-      { text: 'J\'ai gagné en patience. J\'ai compris pourquoi un même geste de ma part fonctionne avec certains enfants et bloque les autres — et surtout, quelle vertu il me revient de travailler.',                                                                          author: 'David S.',    role: 'Professeur de primaire' },
-    ],
+    // Bloc de témoignages retiré de /acreditacion/colegios à la demande du
+    // client. Les clés équivalentes restent dans `colegios_prog` pour /colegios.
     proceso_eyebrow: '',
     proceso_title: 'Prochaines étapes',
     proceso: [

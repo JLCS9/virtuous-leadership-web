@@ -28,7 +28,6 @@ export default function AcreditacionColegios() {
   const objetivos     = k('objetivos');
   const entregables   = k('entregables');
   const destinatarios = k('destinatarios');
-  const testimonios   = k('testimonios');
   const proceso       = k('proceso');
   const heroTitle     = k('hero_title');
 
@@ -173,14 +172,9 @@ export default function AcreditacionColegios() {
         </div>
       </Section>
 
-      {/* Testimonios */}
-      <Section background={PAPER} paddingY={72}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={styles.eyebrow}>{k('testimonios_eyebrow')}</div>
-          <h2 style={styles.h2}>{k('testimonios_title')}</h2>
-        </div>
-        <TestimoniosCarousel items={testimonios} />
-      </Section>
+      {/* El bloque de testimonios ("Centros que ya confian") se retiro por
+          peticion del cliente. El componente TestimoniosCarousel se sigue
+          exportando porque lo usa ColegiosPrograma para /colegios. */}
 
       {/* Proximos pasos */}
       <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>

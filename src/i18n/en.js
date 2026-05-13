@@ -201,17 +201,8 @@ export default {
       { n: '03', title: 'Teachers',              text: '' },
       { n: '04', title: 'Families',              text: '' },
     ],
-    testimonios_eyebrow: 'Centers that already trust',
-    testimonios_title: 'What those who have completed the program tell us',
-    testimonios: [
-      { text: 'We decided to implement Virtuous Leadership because we wanted character to stop being a slogan and become a way of looking at the student. Three months later, the conversations in the staff room are already different.', author: 'Manuel A.',   role: 'Headmaster' },
-      { text: 'This training has been a before and after. Not only in my way of teaching, but in how I see myself as a person.',                                                                                                                 author: 'Maru H.',     role: 'Teacher' },
-      { text: 'Virtuous Leadership has allowed me to discover that leading is not just making decisions: it is growing in order to help others grow.',                                                                                          author: 'Sonsoles R.', role: 'Counselor and teacher' },
-      { text: 'What has changed me the most is the way I speak with students: I no longer seek to correct behaviors, I seek to understand which virtue they are learning to train.',                                                            author: 'Carmen B.',   role: 'Secondary school tutor' },
-      { text: 'As a parent, seeing that the school applies the same language of virtues we work on at home closes a circle we had been seeking for years.',                                                                                     author: 'Javier M.',   role: 'Parent' },
-      { text: 'For the first time we have a common framework — temperament, character, virtues — that teachers, tutors and families can talk about without misunderstandings.',                                                                 author: 'Ana L.',      role: 'Pastoral coordinator' },
-      { text: 'I have gained patience. I have understood why the same gesture from me works with some children and blocks others — and, above all, which virtue I have to work on myself.',                                                      author: 'David S.',    role: 'Primary school teacher' },
-    ],
+    // Testimonials block removed from /acreditacion/colegios at client's
+    // request. Keys still live in `colegios_prog` for /colegios.
     proceso_eyebrow: '',
     proceso_title: 'Next steps',
     proceso: [

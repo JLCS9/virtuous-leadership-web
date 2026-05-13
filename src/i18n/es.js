@@ -205,17 +205,10 @@ export default {
       { n: '03', title: 'Profesores',             text: '' },
       { n: '04', title: 'Familias',               text: '' },
     ],
-    testimonios_eyebrow: 'Centros que ya confían',
-    testimonios_title: 'Lo que cuentan quienes ya han completado el programa',
-    testimonios: [
-      { text: 'Decidimos implantar Liderazgo Virtuoso porque queríamos que el carácter no fuera un eslogan, sino una manera de mirar al alumno. Tres meses después, las conversaciones del claustro ya son distintas.', author: 'Manuel A.',   role: 'Director' },
-      { text: 'Esta formación ha sido un antes y un después. No solo en mi manera de enseñar, sino en cómo me veo a mí misma como persona.',                                                                                  author: 'Maru H.',     role: 'Docente' },
-      { text: 'Liderazgo Virtuoso me ha permitido descubrir que liderar no es solo tomar decisiones: es crecer para hacer crecer a los demás.',                                                                               author: 'Sonsoles R.', role: 'Orientadora y docente' },
-      { text: 'Lo que más me ha cambiado es el modo de hablar con los alumnos: ya no busco corregir conductas, busco comprender qué virtud están aprendiendo a entrenar.',                                                    author: 'Carmen B.',   role: 'Tutora de secundaria' },
-      { text: 'Como padre, ver que el colegio aplica el mismo lenguaje de virtudes que tratamos en casa cierra un círculo que llevábamos años buscando.',                                                                     author: 'Javier M.',   role: 'Padre de alumnos' },
-      { text: 'Por primera vez tenemos un marco común — temperamento, carácter, virtudes — del que pueden hablar profesores, tutores y familias sin malentendidos.',                                                          author: 'Ana L.',      role: 'Coordinadora pastoral' },
-      { text: 'He ganado en paciencia. He entendido por qué un mismo gesto mío funciona con unos niños y bloquea a otros — y, sobre todo, qué virtud me toca trabajar a mí.',                                                  author: 'David S.',    role: 'Profesor de primaria' },
-    ],
+    // El bloque de testimonios (testimonios_eyebrow / testimonios_title /
+    // testimonios) se retiro por peticion del cliente para /acreditacion/
+    // colegios. La copia equivalente sigue viva en `colegios_prog` (la
+    // pagina /colegios) donde si se renderiza.
     proceso_eyebrow: '',
     proceso_title: 'Próximos pasos',
     proceso: [
