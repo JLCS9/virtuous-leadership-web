@@ -113,10 +113,13 @@ export default function ColegiosPrograma() {
       </Section>
 
 
-      {/* Testimonios */}
+      {/* Testimonios. El eyebrow se omite si esta vacio para evitar dejar
+          espacio vertical de un <div> sin texto (ej. version EN). */}
       <Section background={PAPER} paddingY={72}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={styles.eyebrow}>{k('testimonios_eyebrow')}</div>
+          {k('testimonios_eyebrow') && (
+            <div style={styles.eyebrow}>{k('testimonios_eyebrow')}</div>
+          )}
           <h2 style={styles.h2}>{k('testimonios_title')}</h2>
         </div>
         <TestimoniosCarousel items={testimonios} />
