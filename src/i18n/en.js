@@ -49,7 +49,7 @@ export default {
       { n: '4',        label: 'Languages' },
     ],
     system_eyebrow: 'The system',
-    system_title: 'Achieving greatness by bringing it greatness in others',
+    system_title: 'Achieving greatness by bringing out the greatness in others',
     system_quote: '',
     pillars: {
       magnanimity: {
