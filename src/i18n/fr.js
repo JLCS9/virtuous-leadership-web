@@ -291,7 +291,7 @@ export default {
       { n: '02', text: 'Lancement des licences.' },
     ],
     cta_title: 'Tu veux apporter le programme à ton école ?',
-    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte, les profils des participants et les objectifs de l\'institution.',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte et les profils des participants.',
   },
 
   universidades: {
@@ -355,7 +355,7 @@ export default {
     flexibilidad_title: 'Flexibilité institutionnelle',
     flexibilidad_text: 'Le programme conserve la rigueur et les contenus du modèle original d\'alexhavard.com, mais son ordre peut être adapté pour suivre la logique pédagogique de chaque institution.',
     cta_title: 'Tu veux apporter le programme à ton université ?',
-    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte, les profils des participants et les objectifs de l\'institution.',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte et les profils des participants.',
   },
 
   edsup: {
@@ -402,7 +402,7 @@ export default {
     diff_text_2: 'La méthodologie est la même. Ce qui change, ce sont les accents du programme et les profils des participants.',
     diff_link: 'universités',
     cta_title: 'Lançons le programme dans ton centre',
-    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte, les profils des participants et les objectifs de l\'institution.',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte et les profils des participants.',
   },
 
   tests: {

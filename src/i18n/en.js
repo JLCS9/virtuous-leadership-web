@@ -291,7 +291,7 @@ export default {
       { n: '02', text: 'Launch of licenses.' },
     ],
     cta_title: 'Want to bring the program to your school?',
-    cta_text: 'We start with an initial conversation to understand the context, the participant profiles and the institution\'s objectives.',
+    cta_text: 'We start with an initial conversation to understand the context and the participant profiles.',
   },
 
   universidades: {
@@ -356,7 +356,7 @@ export default {
     flexibilidad_title: 'Institutional flexibility',
     flexibilidad_text: 'The program maintains the rigor and content of the original alexhavard.com model, but its order can be adapted to follow the pedagogical logic of each institution.',
     cta_title: 'Want to bring the program to your university?',
-    cta_text: 'We start with an initial conversation to understand the context, the participant profiles and the institution\'s objectives.',
+    cta_text: 'We start with an initial conversation to understand the context and the participant profiles.',
   },
 
   edsup: {
@@ -403,7 +403,7 @@ export default {
     diff_text_2: 'The methodology is the same. What changes are the program emphases and the participant profiles.',
     diff_link: 'universities',
     cta_title: 'Let\'s launch the program in your center',
-    cta_text: 'We start with an initial conversation to understand the context, the participant profiles and the institution\'s objectives.',
+    cta_text: 'We start with an initial conversation to understand the context and the participant profiles.',
   },
 
   tests: {
