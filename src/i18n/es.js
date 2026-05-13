@@ -104,7 +104,7 @@ export default {
     ],
     alex_eyebrow: 'El fundador',
     alex_title: 'Alexandre Havard',
-    alex_subtitle: 'Autor francés, creador del Sistema Liderazgo Virtuoso.',
+    alex_subtitle: 'Autor francés, creador del Sistema Liderazgo Virtuoso®.',
     alex_p0: 'Cursó estudios de Derecho en la Universidad René Descartes (París) y ejerció la abogacía en diversos países europeos.',
     alex_p1_pre:  'Forma a los altos directivos de compañías internacionales en los 7 continentes. Enseña en el MIT-Skoltech de Moscú y ha presentado su modelo en las Academias de Guerra de los Estados Unidos. Su primer libro, ',
     alex_p1_book: 'Liderazgo Virtuoso',
@@ -271,7 +271,7 @@ export default {
       { n: '02', title: 'Tutores y orientadores', text: '' },
       { n: '03', title: 'Profesores',             text: '' },
     ],
-    testimonios_eyebrow: 'Centros que ya confían',
+    testimonios_eyebrow: '',
     testimonios_title: 'Lo que cuentan quienes ya han completado el programa',
     testimonios: [
       { text: 'Decidimos implantar Liderazgo Virtuoso porque queríamos que el carácter no fuera un eslogan, sino una manera de mirar al alumno. Tres meses después, las conversaciones del claustro ya son distintas.', author: 'Manuel A.',   role: 'Director' },
@@ -320,7 +320,7 @@ export default {
     modalidad: [
       { label: 'Ritmo', value: 'A tu propio ritmo', detail: 'Sin sesiones programadas, sin horarios rígidos.' },
       { label: 'Contenido', value: '7 cursos oficiales', detail: 'Publicados en alexhavard.com.' },
-      { label: 'Materiales', value: '6 cuadernos prácticos', detail: '3 tests de autoconocimiento.' },
+      { label: 'Materiales', value: '6 cuadernos prácticos', detail: '+ 3 tests de autoconocimiento.' },
       { label: 'Evaluación', value: '42 cuestionarios', detail: '+ Certificado oficial al finalizar.' },
       { label: 'Idiomas', value: '4 idiomas', detail: 'Español, francés, inglés y ruso.' },
       { label: 'Aplicación al contexto', value: 'Encuentros presenciales', detail: 'Encuentros presenciales para integrar contenidos y aplicarlos al contexto específico de la institución, moderados por un profesor elegido por ella.' },
@@ -411,9 +411,13 @@ export default {
     hero_title: 'Empieza por conocerte.',
     hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y posibles tendencias hacia tipos de racionalismo, voluntarismo y sentimentalismo.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',       text: 'Descubre tu temperamento dominante, tu temperamento secundario y la virtud-desafío que tienes que practicar. 22 a 30 preguntas, ~5 minutos.', cta: 'Hacer el test' },
-      { available: false,                            label: 'Test 02', title: 'Test de Carácter',           text: 'Evaluación del progreso en las virtudes fundamentales y específicas del líder. Disponible próximamente.' },
-      { available: false,                            label: 'Test 03', title: 'Test de Integración',         text: 'Integración interior frente al racionalismo, voluntarismo y sentimentalismo. Disponible próximamente.' },
+      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',
+        text: 'Esta prueba revela tus predisposiciones biológicas innatas: cómo tiendes a reaccionar de forma natural.\nLos cuatro temperamentos son: colérico, melancólico, sanguíneo y flemático.',
+        cta: 'Hacer el test' },
+      { available: false, label: 'Test 02', title: 'Test de Carácter',
+        text: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.\nLas seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.' },
+      { available: false, label: 'Test 03', title: 'Chequeo Espiritual',
+        text: 'Esta prueba te ayudará a identificar y corregir posibles tendencias hacia las siguientes 8 enfermedades espirituales:\nracionalismo, voluntarismo religioso, voluntarismo machista, voluntarismo ideológico, voluntarismo conformista, sentimentalismo voluptuoso, sentimentalismo demente, sentimentalismo cobarde.' },
     ],
   },
 

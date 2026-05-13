@@ -103,7 +103,7 @@ export default {
     ],
     alex_eyebrow: 'Le fondateur',
     alex_title: 'Alexandre Havard',
-    alex_subtitle: 'Auteur français, créateur du Système Leadership Vertueux.',
+    alex_subtitle: 'Auteur français, créateur du Système Leadership Vertueux®.',
     alex_p0: 'Il a étudié le droit à l\'Université René Descartes (Paris) et exercé en tant qu\'avocat dans plusieurs pays européens.',
     alex_p1_pre:  'Il forme les hauts dirigeants d\'entreprises internationales sur les 7 continents. Il enseigne au MIT-Skoltech de Moscou et a présenté son modèle aux Académies de guerre des États-Unis. Son premier livre, ',
     alex_p1_book: 'Leadership Vertueux',
@@ -263,7 +263,7 @@ export default {
       { n: '02', title: "Tuteurs et orienteurs",    text: '' },
       { n: '03', title: 'Enseignants',              text: '' },
     ],
-    testimonios_eyebrow: 'Centres qui nous font déjà confiance',
+    testimonios_eyebrow: '',
     testimonios_title: 'Ce que racontent ceux qui ont déjà terminé le programme',
     testimonios: [
       { text: 'Nous avons décidé d\'implanter le Leadership Vertueux parce que nous voulions que le caractère cesse d\'être un slogan pour devenir une manière de regarder l\'élève. Trois mois plus tard, les conversations en salle des profs sont déjà différentes.', author: 'Manuel A.',   role: 'Directeur' },
@@ -309,7 +309,7 @@ export default {
     modalidad: [
       { label: 'Rythme', value: 'À ton propre rythme', detail: 'Sans séances programmées, sans horaires rigides.' },
       { label: 'Contenu', value: '7 cours officiels', detail: 'Publiés sur alexhavard.com.' },
-      { label: 'Matériel', value: '6 cahiers pratiques', detail: '3 tests de connaissance de soi.' },
+      { label: 'Matériel', value: '6 cahiers pratiques', detail: '+ 3 tests de connaissance de soi.' },
       { label: 'Évaluation', value: '42 questionnaires', detail: '+ Certificat officiel à la fin.' },
       { label: 'Langues', value: '4 langues', detail: 'Espagnol, français, anglais et russe.' },
       { label: 'Application au contexte', value: 'Rencontres en présentiel', detail: "Rencontres en présentiel pour intégrer les contenus et les appliquer au contexte spécifique de l'institution, modérées par un enseignant choisi par elle." },
@@ -400,9 +400,13 @@ export default {
     hero_title: 'Commence par te connaître.',
     hero_subtitle: 'Les trois outils d\'évaluation du Système Leadership Vertueux aident à identifier le tempérament, le caractère et les éventuelles tendances vers des formes de rationalisme, de volontarisme et de sentimentalisme.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de tempérament',           text: 'Découvre ton tempérament dominant, ton tempérament secondaire et la vertu-défi que tu dois pratiquer. 22 à 30 questions, ~5 minutes.', cta: 'Faire le test' },
-      { available: false,                            label: 'Test 02', title: 'Test du caractère',     text: 'Évaluation des progrès dans les vertus cardinales et spécifiques du leader. Bientôt disponible.' },
-      { available: false,                            label: 'Test 03', title: 'Test d\'intégration',   text: 'Intégration intérieure face au rationalisme, au volontarisme et au sentimentalisme. Bientôt disponible.' },
+      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de tempérament',
+        text: 'Ce test révèle vos prédispositions biologiques innées – votre manière naturelle de réagir.\nLes quatre tempéraments sont : colérique, mélancolique, sanguin et flegmatique.',
+        cta: 'Faire le test' },
+      { available: false, label: 'Test 02', title: 'Test de caractère',
+        text: 'Ce test mesure votre progression dans les vertus, ces habitudes spirituelles forgées par l\'effort.\nLes six vertus clés sont : prudence, courage, maîtrise de soi, justice, magnanimité et humilité.' },
+      { available: false, label: 'Test 03', title: 'Check-up spirituel',
+        text: 'Ce test vous aidera à détecter et corriger d\'éventuelles inclinations aux 8 maladies spirituelles suivantes :\nrationalisme, volontarisme religieux, volontarisme machiste, volontarisme idéologique, volontarisme conformiste, sentimentalisme voluptueux, sentimentalisme dément, sentimentalisme lâche.' },
     ],
   },
 

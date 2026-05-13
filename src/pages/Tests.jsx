@@ -82,7 +82,11 @@ function TestCard({ available, to, label, title, text, cta, image, comingSoon })
           {!available && <span style={{ marginLeft: 8, color: MUTED }}>· {comingSoon}</span>}
         </div>
         <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 10, marginBottom: 12 }}>{title}</h3>
-        <p style={{ ...styles.para, margin: 0, fontSize: 15, flex: 1 }}>{text}</p>
+        {/* whiteSpace: pre-line para que los \n del i18n se rendericen como
+            saltos visibles dentro de la tarjeta (las descripciones tienen
+            una primera linea de definicion y una segunda con la enumeracion
+            de items). */}
+        <p style={{ ...styles.para, margin: 0, fontSize: 15, flex: 1, whiteSpace: 'pre-line' }}>{text}</p>
         {available && cta && (
           <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 13, color: NAVY, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
             {cta} →
