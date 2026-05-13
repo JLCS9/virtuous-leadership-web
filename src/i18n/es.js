@@ -367,7 +367,7 @@ export default {
   edsup: {
     eyebrow: '',
     hero_title: 'LIDERAZGO VIRTUOSO\nPARA FORMACIÓN PROFESIONAL',
-    hero_subtitle: 'Equipos directivo, profesorado, estudiantes y alumni.',
+    hero_subtitle: 'Equipos directivos, profesorado, estudiantes y alumni.',
     tipos_eyebrow: 'Tipo de centros',
     tipos_title: 'Para todo centro de formación superior',
     tipos_subtitle: 'Donde la excelencia técnica se cruza con la formación de la persona, este programa encaja.',
