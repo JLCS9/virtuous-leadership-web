@@ -1,11 +1,16 @@
 // Pagina /colegios — version "Programa".
 // Estructura especifica de Programas:
-//   Hero (eyebrow + h1 + subtitle + foto colegios full-width corta) — SIN sello
-//   Modalidad (FactRow * N)
-//   Conceptos clave del programa
-//   Destinatarios (sincronizado con la pagina de Acreditacion)
+//   Hero (eyebrow + h1 + subtitle + foto class.jpeg full-width corta) — SIN sello
+//   Contenido (reusa universidades.conceptos — 7 tarjetas)
+//   Modalidad (reusa universidades.modalidad — FactRow * N)
 //   Testimonios (carousel)
 //   Proximos pasos
+//
+// Hero foto, Modalidad y Contenido se mantienen en sync con /universidades y
+// /educacion-superior leyendo de la rama 'universidades' del i18n; las 3
+// paginas de programa muestran exactamente lo mismo en esos bloques. Los
+// textos especificos de colegios (hero, testimonios, proceso) siguen en
+// colegios_prog.
 //
 // Las secciones Objetivos y "Que incluye la acreditacion" NO se muestran aqui
 // — viven en la pagina /acreditacion/colegios. Si en algun momento se quiere
@@ -19,16 +24,24 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
-import fondoAlexImg from '../assets/fondo-alex.jpeg';
+import classImg from '../assets/class.jpeg';
 
 export default function ColegiosPrograma() {
   const { t } = useT();
   const k = (key) => t(`colegios_prog.${key}`);
-  const modalidad     = k('modalidad');
-  const conceptos     = k('conceptos');
-  const testimonios   = k('testimonios');
-  const proceso       = k('proceso');
-  const heroTitle     = k('hero_title');
+  // El cuadro de Modalidad y el bloque "Contenido" (conceptos) se reusan tal
+  // cual desde la rama 'universidades' del i18n, asi /colegios, /universidades
+  // y /educacion-superior muestran exactamente la misma tabla y las mismas 7
+  // tarjetas, sin riesgo de divergir.
+  const modalidad         = t('universidades.modalidad');
+  const modalidadEyebrow  = t('universidades.modalidad_eyebrow');
+  const modalidadTitle    = t('universidades.modalidad_title');
+  const conceptos         = t('universidades.conceptos');
+  const conceptosEyebrow  = t('universidades.conceptos_eyebrow');
+  const conceptosTitle    = t('universidades.conceptos_title');
+  const testimonios       = k('testimonios');
+  const proceso           = k('proceso');
+  const heroTitle         = k('hero_title');
 
   return (
     <>
@@ -43,31 +56,37 @@ export default function ColegiosPrograma() {
             {k('hero_subtitle')}
           </p>
         </div>
-        {/* Imagen fondo-alex, misma que en /acreditacion/colegios */}
+        {/* Misma foto que /universidades y /educacion-superior (class.jpeg) */}
         <div style={{ width: '100%', lineHeight: 0 }}>
-          <img src={fondoAlexImg} alt=""
+          <img src={classImg} alt=""
                loading="lazy"
                style={{
                  width: '100%',
                  aspectRatio: '10 / 4',
                  objectFit: 'cover',
-                 objectPosition: 'center top',
+                 objectPosition: 'center',
                  display: 'block',
                }} />
         </div>
       </section>
 
 
-      {/* Conceptos clave — fondo claro, sin eyebrow */}
+      {/* Contenido — bloque clonado de /universidades (eyebrow + 7 tarjetas
+          con borde superior dorado). Las descripciones viven en
+          universidades.conceptos para mantener las 3 paginas de programa en
+          sync. */}
       <Section background={PAPER} paddingY={88}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 48px' }}>
-          <h2 style={styles.h2}>{k('conceptos_title')}</h2>
+          {conceptosEyebrow && (
+            <div style={styles.eyebrow}>{conceptosEyebrow}</div>
+          )}
+          <h2 style={{ ...styles.h2, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{conceptosTitle}</h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
           {conceptos.map((c, i) => (
             <div key={i} style={{
               padding: '24px 26px', background: BEIGE,
-              border: `1px solid ${LINE}`, borderLeft: `3px solid ${GOLD}`,
+              border: `1px solid ${LINE}`, borderTop: `3px solid ${GOLD}`,
             }}>
               <h3 style={{ ...styles.h3, fontSize: 20, marginBottom: 8 }}>{c.title}</h3>
               <p style={{ ...styles.para, fontSize: 15, margin: 0 }}>{c.text}</p>
@@ -76,11 +95,12 @@ export default function ColegiosPrograma() {
         </div>
       </Section>
 
-      {/* Modalidad — fondo navy */}
+      {/* Modalidad — fondo navy. Reusa universidades.modalidad para que el
+          cuadro sea identico al de /universidades. */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('modalidad_eyebrow')}</div>
-          <h2 style={{ ...styles.h2, color: PAPER }}>{k('modalidad_title')}</h2>
+          <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{modalidadEyebrow}</div>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{modalidadTitle}</h2>
         </div>
         <div style={{ background: NAVY_DEEP, border: `1px solid ${NAVY_SOFT}`, maxWidth: 820, margin: '0 auto' }}>
           {modalidad.map((m, i) => (
