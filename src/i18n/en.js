@@ -206,7 +206,7 @@ export default {
     proceso_eyebrow: '',
     proceso_title: 'Next steps',
     proceso: [
-      { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
+      { n: '01', text: 'Initial meeting with the leadership team to present the accreditation and answer questions.' },
       { n: '02', text: 'Design of an implementation plan adapted to the reality of the center.' },
       { n: '03', text: 'Launch of licenses and implementation guides.' },
       { n: '04', text: 'Official accreditation of the school.' },

@@ -212,7 +212,7 @@ export default {
     proceso_eyebrow: '',
     proceso_title: 'Próximos pasos',
     proceso: [
-      { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
+      { n: '01', text: 'Reunión inicial con el equipo directivo para presentar la acreditación y resolver dudas.' },
       { n: '02', text: 'Diseño del plan de implantación adaptado a la realidad del centro.' },
       { n: '03', text: 'Lanzamiento de las licencias y guías de implantación.' },
       { n: '04', text: 'Acreditación oficial del colegio.' },

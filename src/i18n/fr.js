@@ -206,7 +206,7 @@ export default {
     proceso_eyebrow: '',
     proceso_title: 'Prochaines étapes',
     proceso: [
-      { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter le programme et répondre aux questions.' },
+      { n: '01', text: 'Réunion initiale avec l\'équipe de direction pour présenter l\'accréditation et répondre aux questions.' },
       { n: '02', text: 'Conception d\'un plan de mise en œuvre adapté à la réalité du centre.' },
       { n: '03', text: 'Lancement des licences et des guides de mise en œuvre.' },
       { n: '04', text: 'Accréditation officielle de l\'école.' },
