@@ -409,9 +409,9 @@ export default {
   tests: {
     eyebrow: 'Tests de autoconocimiento',
     hero_title: 'Empieza por conocerte.',
-    hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y la misión personal de cada participante. Aquí encontrarás la primera de ellas.',
+    hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y posibles tendencias hacia tipos de racionalismo, voluntarismo y sentimentalismo.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',       text: 'Descubre tu temperamento dominante, tu temperamento secundario y la virtud-desafío que te llevará a un liderazgo más coherente. 22 a 30 preguntas, ~5 minutos.', cta: 'Hacer el test' },
+      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',       text: 'Descubre tu temperamento dominante, tu temperamento secundario y la virtud-desafío que tienes que practicar. 22 a 30 preguntas, ~5 minutos.', cta: 'Hacer el test' },
       { available: false,                            label: 'Test 02', title: 'Test de Carácter',           text: 'Evaluación del progreso en las virtudes fundamentales y específicas del líder. Disponible próximamente.' },
       { available: false,                            label: 'Test 03', title: 'Test de Integración',         text: 'Integración interior frente al racionalismo, voluntarismo y sentimentalismo. Disponible próximamente.' },
     ],

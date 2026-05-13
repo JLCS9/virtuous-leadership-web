@@ -399,9 +399,9 @@ export default {
   tests: {
     eyebrow: 'Self-knowledge tests',
     hero_title: 'Start by knowing yourself.',
-    hero_subtitle: 'The three evaluation tools of the Virtuous Leadership System help identify the temperament, character and personal mission of each participant. Here you will find the first of them.',
+    hero_subtitle: 'The three evaluation tools of the Virtuous Leadership System help identify temperament, character and possible tendencies toward types of rationalism, voluntarism and sentimentalism.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Temperament Test',      text: 'Discover your dominant temperament, your secondary temperament and the challenge-virtue that will lead you to a more coherent leadership. 22 to 30 questions, ~5 minutes.', cta: 'Take the test' },
+      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Temperament Test',      text: 'Discover your dominant temperament, your secondary temperament and the challenge-virtue you need to practice. 22 to 30 questions, ~5 minutes.', cta: 'Take the test' },
       { available: false,                            label: 'Test 02', title: 'Character Test',     text: 'Assessment of progress in the cardinal and specific virtues of the leader. Coming soon.' },
       { available: false,                            label: 'Test 03', title: 'Integration Test',   text: 'Inner integration versus rationalism, voluntarism and sentimentalism. Coming soon.' },
     ],
