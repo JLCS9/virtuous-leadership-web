@@ -12,10 +12,16 @@ COPY . .
 # Variables de entorno que Vite incrusta en el bundle. Pueden venir como
 # ARG en el build (docker build --build-arg VITE_GA_ID=G-XXXX ...) o,
 # por defecto, desde .env.production que está en el repo.
-ARG VITE_GA_ID
-ENV VITE_GA_ID=${VITE_GA_ID}
-
-RUN npm run build
+#
+# Solo exportamos VITE_GA_ID al entorno del build si el ARG vino con valor.
+# Si lo dejaramos como ENV vacio, Vite lo prioriza sobre .env.production y
+# acabariamos con GA desactivado aunque la variable este definida ahi.
+ARG VITE_GA_ID=""
+RUN if [ -n "$VITE_GA_ID" ]; then \
+      export VITE_GA_ID && npm run build; \
+    else \
+      npm run build; \
+    fi
 
 # Serve stage — sirve el dist/ con nginx-alpine (~25 MB)
 FROM nginx:alpine
