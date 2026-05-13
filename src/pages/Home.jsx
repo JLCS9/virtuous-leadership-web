@@ -11,6 +11,7 @@ import Seal from '../components/Seal';
 import SEO from '../components/SEO';
 import alexImg from '../assets/alex-perfil.jpeg';
 import ttImg from '../assets/tt.png';
+import ttImgEn from '../assets/tt-en.png';
 import genteImg from '../assets/gente.jpeg';
 
 const HOME_SEO = {
@@ -242,7 +243,11 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <img src={ttImg} alt={t('home.test_title')}
+            {/* La version en ingles del mockup del Test de Temperamento usa
+                un asset propio (tt-en.png); el resto de idiomas comparte
+                tt.png. Si en el futuro se localiza a fr/ru, anadir el
+                asset correspondiente y extender este map. */}
+            <img src={lang === 'en' ? ttImgEn : ttImg} alt={t('home.test_title')}
                  style={{ width: '100%', maxWidth: 360, height: 'auto', display: 'block', borderRadius: 2 }} />
           </div>
         </div>
