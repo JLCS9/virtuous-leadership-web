@@ -1,6 +1,18 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <!-- Google tag (gtag.js) — tag estatico para que GA Verify lo detecte.
+         send_page_view: false porque PageTracker (React Router) envia un
+         page_view por cada cambio de ruta dentro de la SPA. Asi evitamos
+         doble-conteo y al mismo tiempo Google encuentra el tag en el HTML. -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HM6K1685L2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HM6K1685L2', { send_page_view: false });
+    </script>
+
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#1B2A4A" />
