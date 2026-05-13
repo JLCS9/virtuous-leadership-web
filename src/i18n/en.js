@@ -402,7 +402,7 @@ export default {
     diff_text_1: 'If your institution is a university — with degrees, master\'s and doctorates — the specific program is the one for universities. This page is intended for all other higher-education centers: business schools, technical schools, professional institutes and vocational training centers.',
     diff_text_2: 'The methodology is the same. What changes are the program emphases and the participant profiles.',
     diff_link: 'universities',
-    cta_title: 'Let\'s launch the program in your center',
+    cta_title: 'Want to bring the program to your center?',
     cta_text: 'We start with an initial conversation to understand the context and the participant profiles.',
   },
 

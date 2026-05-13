@@ -66,8 +66,13 @@ export default function AcreditacionUniversidades() {
         </div>
       </Section>
 
-      {/* Modalidad — fondo navy, mismo estilo que /colegios (FactRow filas) */}
-      <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
+      {/* Modalidad — fondo navy, mismo estilo que /colegios (FactRow filas).
+          paddingBottom reducido (44 vs 88 del top) para acercar la CTA
+          final: el hueco total entre el cuadro y "¿Quieres llevar..." pasa
+          de 88+64=152px a 44+32=76px (la mitad). Como ambas secciones
+          comparten fondo NAVY, no se nota la costura. Mismo recorte que en
+          AcreditacionEducacionSuperior. */}
+      <Section background={NAVY} paddingY={88} style={{ color: PAPER, paddingBottom: 44 }}>
         <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
           <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{t('universidades.modalidad_eyebrow')}</div>
           <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.modalidad_title')}</h2>
@@ -81,8 +86,9 @@ export default function AcreditacionUniversidades() {
         </div>
       </Section>
 
-      {/* CTA final */}
-      <Section background={NAVY} paddingY={64} style={{ color: PAPER }}>
+      {/* CTA final — paddingTop reducido (32 vs 64) para cerrar el hueco
+          con la Modalidad. */}
+      <Section background={NAVY} paddingY={64} style={{ color: PAPER, paddingTop: 32 }}>
         <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}>
           <h2 style={{ ...styles.h2, color: PAPER }}>{t('universidades.cta_title')}</h2>
           <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('universidades.cta_text')}</p>

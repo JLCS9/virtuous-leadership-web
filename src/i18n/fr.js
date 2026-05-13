@@ -401,7 +401,7 @@ export default {
     diff_text_1: 'Si ton institution est une université — avec licences, masters et doctorats — le programme spécifique est celui des universités. Cette page est pensée pour tous les autres centres d\'enseignement supérieur .',
     diff_text_2: 'La méthodologie est la même. Ce qui change, ce sont les accents du programme et les profils des participants.',
     diff_link: 'universités',
-    cta_title: 'Lançons le programme dans ton centre',
+    cta_title: 'Tu veux apporter le programme à ton centre ?',
     cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte et les profils des participants.',
   },
 

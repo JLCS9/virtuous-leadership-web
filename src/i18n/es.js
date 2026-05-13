@@ -407,7 +407,7 @@ export default {
     diff_text_1: 'Si tu institución es una universidad — con grados, másteres y doctorados — el programa específico es el de universidades. Esta página está pensada para todos los demás centros de educación superior.',
     diff_text_2: 'La metodología es la misma. Lo que cambia son los acentos del programa y los perfiles de los participantes.',
     diff_link: 'universidades',
-    cta_title: 'Pongamos en marcha el programa en tu centro',
+    cta_title: '¿Quieres llevar el programa a tu centro?',
     cta_text: 'Empezamos con una conversación inicial para entender el contexto y los perfiles de participantes.',
   },
 
