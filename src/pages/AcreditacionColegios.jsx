@@ -88,10 +88,13 @@ export default function AcreditacionColegios() {
             }}>
               <div style={{ fontFamily: FONT_SERIF, fontSize: 32, fontWeight: 700, color: GOLD, lineHeight: 1 }}>{o.n}</div>
               <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 12, marginBottom: 10 }}>{o.title}</h3>
-              <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0, flex: 1 }}>{o.text}</p>
+              {o.text && (
+                <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0, flex: 1 }}>{o.text}</p>
+              )}
               {o.cta && o.cta_to && (
                 <LocalLink to={o.cta_to} style={{
-                  marginTop: 18,
+                  marginTop: o.text ? 18 : 'auto',
+                  paddingTop: o.text ? 0 : 18,
                   fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
                   letterSpacing: '0.04em', color: GOLD,
                   textDecoration: 'none', alignSelf: 'flex-start',

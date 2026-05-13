@@ -153,15 +153,18 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'LIDERAZGO VIRTUOSO PARA COLEGIOS',
+    hero_title: 'ACREDITACIÓN PARA COLEGIOS',
     hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
+    // Cada objetivo lleva todo el contenido en `title`; `text` se deja vacio
+    // para que el JSX no renderice una segunda linea. Estructura que pidio
+    // el cliente: un solo parrafo largo por tarjeta.
     objetivos: [
-      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio', text: 'a través de profesores y familias formados en las mismas virtudes.', cta: 'Ver programa →', cta_to: '/colegios' },
-      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente',      text: 'basado en el carácter (virtudes) y una misión personal clara.' },
-      { n: '03', title: 'Alcanzar un autoconocimiento profundo',                 text: 'para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.' },
-      { n: '04', title: 'Clarificar la misión personal del educador',            text: 'como fuente de sentido, criterio para decidir y motor de un liderazgo con propósito.' },
+      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio a través de profesores y familias formados en las mismas virtudes.', text: '', cta: 'Ver programa →', cta_to: '/colegios' },
+      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente basado en el carácter (virtudes) y una misión personal clara.',           text: '' },
+      { n: '03', title: 'Alcanzar un autoconocimiento profundo para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.', text: '' },
+      { n: '04', title: 'Clarificar la misión personal del educador como criterio para decidir y motor de un liderazgo con propósito.',             text: '' },
     ],
     modalidad_eyebrow: 'Modalidad',
     modalidad_title: 'Formación 100% online y autogestionable',
@@ -177,10 +180,9 @@ export default {
     entregables_cta_label: 'Ver el programa →',
     entregables_cta_to: '/colegios',
     entregables: [
-      'Licencias de acceso a los cursos oficiales de Alexandre Havard para todo el profesorado participante.',
+      'Licencias de acceso a los 7 cursos de Alexandre Havard para toda la comunidad educativa.',
       'Guía de implantación que permite al colegio desplegar el sistema de forma autónoma, incluida la formación a las familias.',
-      'Acceso a la plataforma de Liderazgo Virtuoso.',
-      'Test de temperamento específico para la valoración de los hijos por parte de las familias.',
+      'Test específico para la valoración del temperamento de los hijos por parte de las familias.',
       'Sello de Colegio Acreditado en Liderazgo Virtuoso.',
     ],
     conceptos_eyebrow: 'El cuerpo doctrinal',

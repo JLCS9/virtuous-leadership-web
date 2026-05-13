@@ -152,15 +152,15 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'VIRTUOUS LEADERSHIP FOR SCHOOLS',
+    hero_title: 'ACCREDITATION FOR SCHOOLS',
     hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
-      { n: '01', title: 'Integrate Virtuous Leadership into the school culture', text: 'through teachers and families trained in the same virtues.', cta: 'See program →', cta_to: '/colegios' },
-      { n: '02', title: 'Forge a solid and coherent educational leadership',     text: 'based on character (virtues) and a clear personal mission.' },
-      { n: '03', title: 'Achieve deep self-knowledge',                            text: 'to integrate ambition and service, personal coherence and unity of life in the classroom.' },
-      { n: '04', title: 'Clarify the educator\'s personal mission',               text: 'as a source of meaning, criterion for deciding and engine of purposeful leadership.' },
+      { n: '01', title: 'Integrate Virtuous Leadership into the school culture through teachers and families trained in the same virtues.', text: '', cta: 'See program →', cta_to: '/colegios' },
+      { n: '02', title: 'Forge a solid and coherent educational leadership based on character (virtues) and a clear personal mission.',     text: '' },
+      { n: '03', title: 'Achieve deep self-knowledge to integrate ambition and service, personal coherence and unity of life in the classroom.', text: '' },
+      { n: '04', title: 'Clarify the educator\'s personal mission as a criterion for deciding and engine of purposeful leadership.',       text: '' },
     ],
     modalidad_eyebrow: 'Format',
     modalidad_title: '100% online and self-paced training',
@@ -176,10 +176,9 @@ export default {
     entregables_cta_label: 'See the program →',
     entregables_cta_to: '/colegios',
     entregables: [
-      'Access licenses to Alexandre Havard\'s official courses for all participating faculty.',
+      'Access licenses to Alexandre Havard\'s 7 courses for the entire educational community.',
       'Implementation guide that allows the school to deploy the system autonomously, including family training.',
-      'Access to the Virtuous Leadership platform.',
-      'Specific temperament test for the assessment of children by their families.',
+      'Specific test for the assessment of children\'s temperament by their families.',
       'Seal of School Accredited in Virtuous Leadership.',
     ],
     conceptos_eyebrow: 'The doctrinal body',

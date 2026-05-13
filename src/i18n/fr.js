@@ -152,15 +152,15 @@ export default {
 
   colegios: {
     eyebrow: '',
-    hero_title: 'LEADERSHIP VERTUEUX POUR LES ÉCOLES',
+    hero_title: 'ACCRÉDITATION POUR LES ÉCOLES',
     hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [
-      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école", text: 'à travers des enseignants et des familles formés aux mêmes vertus.', cta: 'Voir le programme →', cta_to: '/colegios' },
-      { n: '02', title: 'Forger un leadership éducatif solide et cohérent',           text: 'fondé sur le caractère (vertus) et une mission personnelle claire.' },
-      { n: '03', title: 'Atteindre une connaissance profonde de soi',                 text: 'pour intégrer ambition et service, cohérence personnelle et unité de vie en classe.' },
-      { n: '04', title: 'Clarifier la mission personnelle de l\'éducateur',           text: 'comme source de sens, critère de décision et moteur d\'un leadership avec un but.' },
+      { n: '01', title: "Intégrer le Leadership Vertueux dans la culture de l'école à travers des enseignants et des familles formés aux mêmes vertus.", text: '', cta: 'Voir le programme →', cta_to: '/colegios' },
+      { n: '02', title: 'Forger un leadership éducatif solide et cohérent fondé sur le caractère (vertus) et une mission personnelle claire.',          text: '' },
+      { n: '03', title: 'Atteindre une connaissance profonde de soi pour intégrer ambition et service, cohérence personnelle et unité de vie en classe.', text: '' },
+      { n: '04', title: 'Clarifier la mission personnelle de l\'éducateur comme critère de décision et moteur d\'un leadership avec un but.',          text: '' },
     ],
     modalidad_eyebrow: 'Modalité',
     modalidad_title: 'Formation 100 % en ligne et auto-gérée',
@@ -176,10 +176,9 @@ export default {
     entregables_cta_label: 'Voir le programme →',
     entregables_cta_to: '/colegios',
     entregables: [
-      'Licences d\'accès aux cours officiels d\'Alexandre Havard pour tous les enseignants participants.',
+      'Licences d\'accès aux 7 cours d\'Alexandre Havard pour toute la communauté éducative.',
       'Guide de mise en œuvre permettant à l\'école de déployer le système de manière autonome, y compris la formation des familles.',
-      'Accès à la plateforme Leadership Vertueux.',
-      'Test de tempérament spécifique pour l\'évaluation des enfants par les familles.',
+      'Test spécifique pour l\'évaluation du tempérament des enfants par les familles.',
       'Sceau d\'École Accréditée en Leadership Vertueux.',
     ],
     conceptos_eyebrow: 'Le corps doctrinal',
