@@ -290,6 +290,8 @@ export default {
       { n: '01', text: "Réunion initiale avec l'équipe de direction pour présenter le programme et répondre aux questions." },
       { n: '02', text: 'Lancement des licences.' },
     ],
+    cta_title: 'Tu veux apporter le programme à ton école ?',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte, les profils des participants et les objectifs de l\'institution.',
   },
 
   universidades: {
@@ -400,7 +402,7 @@ export default {
     diff_text_2: 'La méthodologie est la même. Ce qui change, ce sont les accents du programme et les profils des participants.',
     diff_link: 'universités',
     cta_title: 'Lançons le programme dans ton centre',
-    cta_text: 'Une conversation initiale nous permet de comprendre le contexte, les profils des participants et de concevoir un parcours adapté.',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte, les profils des participants et les objectifs de l\'institution.',
   },
 
   tests: {

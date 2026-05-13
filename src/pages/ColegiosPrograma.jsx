@@ -4,21 +4,23 @@
 //   Contenido (reusa universidades.conceptos — 7 tarjetas)
 //   Modalidad (reusa universidades.modalidad — FactRow * N)
 //   Testimonios (carousel)
-//   Proximos pasos
+//   CTA final (cta_title + cta_text + boton, mismo layout que /universidades
+//   y /educacion-superior; copia propia en colegios_prog)
 //
 // Hero foto, Modalidad y Contenido se mantienen en sync con /universidades y
 // /educacion-superior leyendo de la rama 'universidades' del i18n; las 3
 // paginas de programa muestran exactamente lo mismo en esos bloques. Los
-// textos especificos de colegios (hero, testimonios, proceso) siguen en
-// colegios_prog.
+// textos especificos de colegios (hero, testimonios, CTA final) siguen en
+// colegios_prog. La lista numerada "Proximos pasos" se retiro: las claves
+// proceso_* siguen en i18n por si se quiere reactivar.
 //
 // Las secciones Objetivos y "Que incluye la acreditacion" NO se muestran aqui
 // — viven en la pagina /acreditacion/colegios. Si en algun momento se quiere
 // añadirlas aqui, copiar los bloques desde AcreditacionColegios.jsx.
 import {
-  NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT, GOLD_DEEP,
+  NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT,
   PAPER, BEIGE, LINE,
-  FONT_SERIF, styles,
+  styles,
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
@@ -40,7 +42,6 @@ export default function ColegiosPrograma() {
   const conceptosEyebrow  = t('universidades.conceptos_eyebrow');
   const conceptosTitle    = t('universidades.conceptos_title');
   const testimonios       = k('testimonios');
-  const proceso           = k('proceso');
   const heroTitle         = k('hero_title');
 
   return (
@@ -121,31 +122,20 @@ export default function ColegiosPrograma() {
         <TestimoniosCarousel items={testimonios} />
       </Section>
 
-      {/* Proximos pasos */}
-      <Section background={NAVY} paddingY={80} style={{ color: PAPER }}>
-        <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 32px' }}>
-          {k('proceso_eyebrow') && (
-            <div style={{ ...styles.eyebrow, color: GOLD_SOFT }}>{k('proceso_eyebrow')}</div>
-          )}
-          <h2 style={{ ...styles.h2, color: PAPER, fontSize: 'clamp(34px, 4.6vw, 52px)' }}>{k('proceso_title')}</h2>
-        </div>
-        <ol style={{ maxWidth: 720, margin: '0 auto', padding: 0, listStyle: 'none' }}>
-          {proceso.map((p, i) => (
-            <li key={i} style={{
-              display: 'grid', gridTemplateColumns: '60px 1fr', gap: 24,
-              padding: '20px 0',
-              borderBottom: i < proceso.length - 1 ? `1px solid ${NAVY_SOFT}` : 'none',
-            }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: GOLD }}>{p.n}</div>
-              <div style={{ ...styles.para, color: '#D9DEE8', fontSize: 16, margin: 0, alignSelf: 'center' }}>{p.text}</div>
-            </li>
-          ))}
-        </ol>
-        <div style={{ textAlign: 'center', marginTop: 40 }}>
-          <CTA href={`mailto:${t('common.contact_email')}`} variant="primary"
-               style={{ background: GOLD, color: NAVY, borderColor: GOLD }}>
-            {t('common.request_meeting')}
-          </CTA>
+      {/* CTA final — clon del bloque de /universidades y /educacion-superior:
+          title + subtitulo + boton. Sustituye al antiguo "Proximos pasos"
+          (lista numerada) para que las 3 paginas de programa cierren
+          identico, cambiando solo la copia. */}
+      <Section background={NAVY} paddingY={64} style={{ color: PAPER }}>
+        <div style={{ textAlign: 'center', maxWidth: 640, margin: '0 auto' }}>
+          <h2 style={{ ...styles.h2, color: PAPER }}>{k('cta_title')}</h2>
+          <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{k('cta_text')}</p>
+          <div style={{ marginTop: 24 }}>
+            <CTA href={`mailto:${t('common.contact_email')}`} variant="primary"
+                 style={{ background: GOLD, color: NAVY, borderColor: GOLD }}>
+              {t('common.request_meeting')}
+            </CTA>
+          </div>
         </div>
       </Section>
     </>

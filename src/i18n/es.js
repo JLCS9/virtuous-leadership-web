@@ -287,12 +287,17 @@ export default {
       { text: 'Por primera vez tenemos un marco común — temperamento, carácter, virtudes — del que pueden hablar profesores, tutores y familias sin malentendidos.',                                                          author: 'Ana L.',      role: 'Coordinadora pastoral' },
       { text: 'He ganado en paciencia. He entendido por qué un mismo gesto mío funciona con unos niños y bloquea a otros — y, sobre todo, qué virtud me toca trabajar a mí.',                                                  author: 'David S.',    role: 'Profesor de primaria' },
     ],
+    // proceso_* sigue aqui por si en el futuro se vuelve a renderizar el
+    // bloque "Proximos pasos". Hoy ColegiosPrograma cierra con un CTA
+    // (cta_title + cta_text) clonado de /universidades.
     proceso_eyebrow: '',
     proceso_title: 'Próximos pasos',
     proceso: [
       { n: '01', text: 'Reunión inicial con el equipo directivo para presentar el programa y resolver dudas.' },
       { n: '02', text: 'Lanzamiento de las licencias.' },
     ],
+    cta_title: '¿Quieres llevar el programa a tu colegio?',
+    cta_text: 'Empezamos con una conversación inicial para entender el contexto, los perfiles de participantes y los objetivos de la institución.',
   },
 
   universidades: {
@@ -403,7 +408,7 @@ export default {
     diff_text_2: 'La metodología es la misma. Lo que cambia son los acentos del programa y los perfiles de los participantes.',
     diff_link: 'universidades',
     cta_title: 'Pongamos en marcha el programa en tu centro',
-    cta_text: 'Una conversación inicial nos permite entender el contexto, los perfiles de los participantes y diseñar un itinerario adaptado.',
+    cta_text: 'Empezamos con una conversación inicial para entender el contexto, los perfiles de participantes y los objetivos de la institución.',
   },
 
   tests: {

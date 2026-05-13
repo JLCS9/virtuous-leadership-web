@@ -290,6 +290,8 @@ export default {
       { n: '01', text: 'Initial meeting with the leadership team to present the program and answer questions.' },
       { n: '02', text: 'Launch of licenses.' },
     ],
+    cta_title: 'Want to bring the program to your school?',
+    cta_text: 'We start with an initial conversation to understand the context, the participant profiles and the institution\'s objectives.',
   },
 
   universidades: {
@@ -401,7 +403,7 @@ export default {
     diff_text_2: 'The methodology is the same. What changes are the program emphases and the participant profiles.',
     diff_link: 'universities',
     cta_title: 'Let\'s launch the program in your center',
-    cta_text: 'An initial conversation allows us to understand the context, the participant profiles and design an adapted itinerary.',
+    cta_text: 'We start with an initial conversation to understand the context, the participant profiles and the institution\'s objectives.',
   },
 
   tests: {
