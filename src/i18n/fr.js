@@ -153,7 +153,7 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'ACCRÉDITATION POUR LES ÉCOLES',
-    hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école\nà travers les équipes de direction, les tuteurs, les enseignants et les familles.",
+    hero_subtitle: "Intégration du Leadership Vertueux dans la culture de l'école à travers les équipes de direction, les tuteurs, les enseignants et les familles.",
     objetivos_eyebrow: '',
     objetivos_title: 'Objectifs',
     objetivos: [

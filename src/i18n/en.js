@@ -153,7 +153,7 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'ACCREDITATION FOR SCHOOLS',
-    hero_subtitle: 'Integration of Virtuous Leadership into the school culture\nthrough leadership teams, tutors, teachers and families.',
+    hero_subtitle: 'Integration of Virtuous Leadership into the school culture through leadership teams, tutors, teachers and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [

@@ -154,7 +154,7 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'ACREDITACIÓN PARA COLEGIOS',
-    hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio\na través de equipos directivos, tutores, profesores y familias.',
+    hero_subtitle: 'Integración de Liderazgo Virtuoso en la cultura del colegio a través de equipos directivos, tutores, profesores y familias.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objetivos',
     // Cada objetivo lleva todo el contenido en `title`; `text` se deja vacio
