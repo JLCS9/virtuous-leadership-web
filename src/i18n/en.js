@@ -513,7 +513,7 @@ export default {
     },
     sex_options: { mujer: 'Woman', hombre: 'Man' },
     consent: 'Yes, send me my results by email and subscribe me to the monthly newsletter: one email a month with content about temperament and personal development. No spam, unsubscribe with one click whenever you want.',
-    privacy: 'By subscribing you accept our <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">privacy policy</a>.',
+    privacy: 'By subscribing you accept our <a href="/en/privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a>.',
     errors: {
       name: 'Enter your name.',
       email: 'Invalid email.',

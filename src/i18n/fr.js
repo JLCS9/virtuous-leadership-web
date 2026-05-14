@@ -512,7 +512,7 @@ export default {
     },
     sex_options: { mujer: 'Femme', hombre: 'Homme' },
     consent: 'Oui, envoyez-moi mes résultats par e-mail et abonnez-moi à la lettre mensuelle : un e-mail par mois avec du contenu sur le tempérament et le développement personnel. Zéro spam, désinscription en un clic à tout moment.',
-    privacy: 'En t\'abonnant, tu acceptes notre <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.',
+    privacy: 'En t\'abonnant, tu acceptes notre <a href="/fr/politique-de-confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.',
     errors: {
       name: 'Indique ton prénom.',
       email: 'E-mail invalide.',

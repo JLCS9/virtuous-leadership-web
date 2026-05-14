@@ -63,9 +63,10 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // de X-Forwarded-For (cliente original), si no, X-Real-IP, si no, la IP
 // del socket. Filtramos IPs privadas/loopback que no son geolocalizables.
 //
-// Usamos ipwho.is (gratis, 10k/mes, sin API key, HTTPS). Si la API falla
-// o tarda más de 1.5s, abortamos y seguimos sin geolocalización — nunca
-// rompemos el submit por un fallo de geolocalización.
+// Usamos ipapi.co (gratis, 1000/día, sin API key, HTTPS). Más estable
+// para uso server-side que ipwho.is, que devuelve 403 desde algunos VPS.
+// Si la API falla o tarda más de 1.5s, abortamos y seguimos sin
+// geolocalización — nunca rompemos el submit por un fallo de geolocalización.
 
 function clientIp(req) {
   const xff = req.headers['x-forwarded-for'];
@@ -97,17 +98,28 @@ async function lookupGeo(ip) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 1500);
   try {
-    const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+    const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`, {
       signal: controller.signal,
-      headers: { 'accept': 'application/json' },
+      headers: {
+        'accept': 'application/json',
+        // ipapi.co requiere un User-Agent identificable; sin él suele devolver 403.
+        'user-agent': 'virtuousleadership.com/1.0 (geo lookup for analytics)',
+      },
     });
     clearTimeout(timer);
     if (!res.ok) return { ok: false, reason: `http_${res.status}` };
     const data = await res.json();
-    if (!data || data.success === false) {
-      return { ok: false, reason: data?.message || 'lookup_failed' };
+    if (!data || data.error === true) {
+      return { ok: false, reason: data?.reason || 'lookup_failed' };
     }
-    return { ok: true, city: data.city || '', country: data.country || '', region: data.region || '' };
+    // ipapi.co usa `country_name` (nombre largo) y `country` (código ISO-2).
+    // Para CIUDAD/PAIS preferimos `city` y `country_name`.
+    return {
+      ok: true,
+      city:    data.city || '',
+      country: data.country_name || data.country || '',
+      region:  data.region || '',
+    };
   } catch (e) {
     clearTimeout(timer);
     return { ok: false, reason: String(e.name === 'AbortError' ? 'timeout' : e.message) };

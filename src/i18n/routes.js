@@ -24,9 +24,9 @@ export const ROUTES = {
   // tienen el slug undefined, así no se generan rutas en App.jsx (la pagina
   // queda inaccesible en EN/FR/RU hasta que se traduzca).
   test_temperamento_ninos: { es: 'tests/temperamento-infantil' },
-  // Paginas legales — solo ES por ahora; menu oculto, solo bandera de idioma.
-  politica_privacidad:   { es: 'politica-de-privacidad' },
-  cookies:               { es: 'cookies' },
+  // Paginas legales — disponibles en 4 idiomas; menu oculto, solo bandera de idioma.
+  politica_privacidad:   { es: 'politica-de-privacidad',  en: 'privacy-policy',         fr: 'politique-de-confidentialite', ru: 'politika-konfidentsialnosti' },
+  cookies:               { es: 'cookies',                  en: 'cookies',                fr: 'cookies',                       ru: 'cookies' },
   contacto:              { es: 'contacto',               en: 'contact',                 fr: 'contact',                  ru: 'kontakty' },
 };
 

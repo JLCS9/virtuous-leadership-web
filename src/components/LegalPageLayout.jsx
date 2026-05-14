@@ -8,7 +8,7 @@ import { PAPER, BEIGE, NAVY, NAVY_SOFT, GOLD, LINE, MUTED, INK, FONT_SERIF, FONT
 
 const READ_MAX_WIDTH = 780; // ancho cómodo para texto largo
 
-export default function LegalPageLayout({ eyebrow, title, lastUpdated, children }) {
+export default function LegalPageLayout({ eyebrow, title, lastUpdated, lastUpdatedLabel = 'Última actualización', children }) {
   const lp = useLocalPath();
   return (
     <div style={{ minHeight: '100vh', background: PAPER, color: INK, fontFamily: FONT_SANS }}>
@@ -42,7 +42,7 @@ export default function LegalPageLayout({ eyebrow, title, lastUpdated, children 
         )}
         {lastUpdated && (
           <div style={{ fontSize: 13, color: MUTED, marginTop: 12, fontStyle: 'italic' }}>
-            Última actualización: {lastUpdated}
+            {lastUpdatedLabel}: {lastUpdated}
           </div>
         )}
         <div style={{ marginTop: 32 }}>{children}</div>
@@ -72,13 +72,14 @@ export function H3({ children }) {
   );
 }
 
-export function P({ children }) {
-  return (
-    <p style={{
-      fontFamily: FONT_SANS, fontSize: 16, lineHeight: 1.7, color: INK,
-      margin: '12px 0',
-    }}>{children}</p>
-  );
+export function P({ children, html }) {
+  const style = {
+    fontFamily: FONT_SANS, fontSize: 16, lineHeight: 1.7, color: INK,
+    margin: '12px 0',
+  };
+  return html
+    ? <p style={style} dangerouslySetInnerHTML={{ __html: html }} />
+    : <p style={style}>{children}</p>;
 }
 
 export function UL({ children }) {
