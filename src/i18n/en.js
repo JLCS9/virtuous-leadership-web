@@ -160,7 +160,7 @@ export default {
       { n: '01', title: 'Integrate Virtuous Leadership into the school culture through directors, teachers and families trained in the same virtues.', text: '', cta: 'See program →', cta_to: '/colegios' },
       { n: '02', title: 'Forge a solid and coherent educational leadership based on character (virtues) and a clear personal mission.',     text: '' },
       { n: '03', title: 'Achieve deep self-knowledge, personal coherence and unity of life in the classroom.', text: '' },
-      { n: '04', title: 'Clarify the educator\'s personal mission as a decision-making criteria for deciding and engine of purposeful leadership.',       text: '' },
+      { n: '04', title: 'Clarify the educator\'s personal mission as a decision-making criterion and engine of purposeful leadership.',                    text: '' },
     ],
     modalidad_eyebrow: 'Format',
     modalidad_title: '100% online and self-paced training',
