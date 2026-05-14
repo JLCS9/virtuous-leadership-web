@@ -57,6 +57,63 @@ function sendJson(res, status, obj) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// ────────────── Geolocalización IP → país/ciudad ──────────────
+//
+// nginx del host pasa X-Real-IP y X-Forwarded-For. Cogemos el primero
+// de X-Forwarded-For (cliente original), si no, X-Real-IP, si no, la IP
+// del socket. Filtramos IPs privadas/loopback que no son geolocalizables.
+//
+// Usamos ipwho.is (gratis, 10k/mes, sin API key, HTTPS). Si la API falla
+// o tarda más de 1.5s, abortamos y seguimos sin geolocalización — nunca
+// rompemos el submit por un fallo de geolocalización.
+
+function clientIp(req) {
+  const xff = req.headers['x-forwarded-for'];
+  if (typeof xff === 'string' && xff.length > 0) {
+    return xff.split(',')[0].trim();
+  }
+  const xri = req.headers['x-real-ip'];
+  if (typeof xri === 'string' && xri.length > 0) return xri.trim();
+  return req.socket?.remoteAddress || null;
+}
+
+function isPrivateIp(ip) {
+  if (!ip || typeof ip !== 'string') return true;
+  // IPv6 loopback / IPv4-mapped loopback
+  if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('::ffff:127.')) return true;
+  // IPv4 privados
+  if (/^10\./.test(ip)) return true;
+  if (/^192\.168\./.test(ip)) return true;
+  if (/^172\.(1[6-9]|2\d|3[01])\./.test(ip)) return true;
+  // IPv6 link-local y unique-local
+  if (/^fe80:/i.test(ip) || /^fc00:/i.test(ip) || /^fd[0-9a-f]{2}:/i.test(ip)) return true;
+  return false;
+}
+
+async function lookupGeo(ip) {
+  if (isPrivateIp(ip)) {
+    return { ok: false, reason: 'private_or_loopback' };
+  }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 1500);
+  try {
+    const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+      signal: controller.signal,
+      headers: { 'accept': 'application/json' },
+    });
+    clearTimeout(timer);
+    if (!res.ok) return { ok: false, reason: `http_${res.status}` };
+    const data = await res.json();
+    if (!data || data.success === false) {
+      return { ok: false, reason: data?.message || 'lookup_failed' };
+    }
+    return { ok: true, city: data.city || '', country: data.country || '', region: data.region || '' };
+  } catch (e) {
+    clearTimeout(timer);
+    return { ok: false, reason: String(e.name === 'AbortError' ? 'timeout' : e.message) };
+  }
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // HANDLER — Test de ADULTOS (sin cambios respecto a la versión previa).
 // Toda la lógica vive aquí dentro para que el handler de niños no la pueda
@@ -85,11 +142,22 @@ async function handleSubmitAdult(req, res) {
   const SEXO_MAP = { mujer: 'Female', hombre: 'Male' };
   const sexoBrevo = SEXO_MAP[String(c.sex || '').toLowerCase().trim()];
 
+  // Geolocalización IP → PAIS/CIUDAD para enriquecer el contacto en Brevo.
+  // Fire-and-forget tolerante a fallos: si la API se cae o tarda, seguimos sin geo.
+  const ip = clientIp(req);
+  const geo = await lookupGeo(ip);
+  if (geo.ok) {
+    console.log(`[geo] ip=${ip} → city=${geo.city} country=${geo.country}`);
+  } else {
+    console.log(`[geo] ip=${ip} → skipped (${geo.reason})`);
+  }
+
   console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} → mapped sexoBrevo=${JSON.stringify(sexoBrevo)}`);
 
   // Atributos que deben existir en Brevo:
   //   FIRSTNAME, YEAR, SEXO (Multi-choice Female/Male), TEMP1, TEMP2,
-  //   IDIOMA, ACEPTACION_POLITICAS, FECHA_TEST_TEMPERAMENTO, PERFIL.
+  //   IDIOMA, ACEPTACION_POLITICAS, FECHA_TEST_TEMPERAMENTO, PERFIL,
+  //   PAIS (Text), CIUDAD (Text).
   const brevoBody = {
     email: c.email.toLowerCase().trim(),
     attributes: {
@@ -102,6 +170,8 @@ async function handleSubmitAdult(req, res) {
       ACEPTACION_POLITICAS:    c.consent ? 1 : 0,
       FECHA_TEST_TEMPERAMENTO: fechaTest,
       PERFIL:                  r.profileName || '',
+      ...(geo.ok && geo.country ? { PAIS:   geo.country } : {}),
+      ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
     },
     listIds: [BREVO_LIST_ID],
     updateEnabled: true,

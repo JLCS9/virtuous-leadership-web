@@ -528,7 +528,7 @@ export default {
     },
     sex_options: { mujer: 'Mujer', hombre: 'Hombre' },
     consent: 'Sí, envíame mis resultados por email y suscríbeme al boletín mensual: un correo al mes con contenido sobre temperamento y desarrollo personal. Cero spam, baja con un clic cuando quieras.',
-    privacy: 'Al suscribirte aceptas nuestra política de privacidad.',
+    privacy: 'Al suscribirte aceptas nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
     errors: {
       name: 'Introduce tu nombre.',
       email: 'Email no válido.',
@@ -752,7 +752,7 @@ export default {
         Madre: 'Madre',
         Tutor: 'Tutor',
       },
-      consent_html: 'Confirmo que soy padre, madre o tutor legal del menor cuyos datos introduzco, y autorizo a <strong>CSO Digital SL</strong> al tratamiento de los datos del menor y los míos con la finalidad de calcular y mostrar el resultado del test. Puedo ejercer mis derechos de acceso, rectificación o supresión escribiendo a <a href="mailto:privacidad@csodigital.tech">privacidad@csodigital.tech</a>.',
+      consent_html: 'Confirmo que soy padre, madre o tutor legal del menor cuyos datos introduzco, y autorizo a <strong>CSO Digital SL</strong> al tratamiento de los datos del menor y los míos con la finalidad de calcular y mostrar el resultado del test. Más información en nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
       consent_checkbox: 'He leído y acepto.',
       errors: {
         first_name: 'Introduce tu nombre.',

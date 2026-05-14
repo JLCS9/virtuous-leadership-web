@@ -9,6 +9,8 @@ import AcreditacionEducacionSuperior from './pages/AcreditacionEducacionSuperior
 import Tests from './pages/Tests';
 import TestTemperamento from './pages/TestTemperamento';
 import TestTemperamentoNinos from './pages/TestTemperamentoNinos';
+import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
+import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
@@ -26,6 +28,8 @@ const PAGE_ELEMENTS = {
   tests:                 <Tests />,
   test_temperamento:     <TestTemperamento />,
   test_temperamento_ninos: <TestTemperamentoNinos />,
+  politica_privacidad:   <PoliticaPrivacidad />,
+  cookies:               <Cookies />,
   contacto:              <Contacto />,
 };
 

@@ -798,9 +798,10 @@ function GateForm({ profileKey, primario, decision, onSubmitOk }) {
                  style={{ marginTop: 3, width: 16, height: 16, accentColor: NAVY, cursor: 'pointer', flexShrink: 0 }} />
           <span style={{ fontSize: 14, lineHeight: 1.5, color: INK }}>
             {t('gate.consent')}
-            <span style={{ display: 'block', marginTop: 6, fontSize: 12, color: MUTED }}>
-              {t('gate.privacy')}
-            </span>
+            <span
+              style={{ display: 'block', marginTop: 6, fontSize: 12, color: MUTED }}
+              dangerouslySetInnerHTML={{ __html: t('gate.privacy') }}
+            />
           </span>
         </label>
         {showErr('consent') && <div style={errStyle}>{errors.consent}</div>}
