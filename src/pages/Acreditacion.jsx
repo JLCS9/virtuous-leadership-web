@@ -7,8 +7,8 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
-import Seal from '../components/Seal';
 import SEO from '../components/SEO';
+import selloImg from '../assets/sello.png';
 const PAGE_SEO = {
   es: { title: 'Acreditación oficial en Liderazgo Virtuoso',      description: 'Sello internacional firmado por Alexandre Havard. Programas oficiales para colegios, universidades y centros superiores que quieren integrar el liderazgo virtuoso en su cultura institucional.' },
   en: { title: 'Official Virtuous Leadership Certification',      description: 'International seal signed by Alexandre Havard. Official programs for schools, universities and higher education centers seeking to integrate virtuous leadership into their institutional culture.' },
@@ -29,7 +29,8 @@ export default function Acreditacion() {
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '72px 24px', textAlign: 'center' }}>
           <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-            <Seal size={120} />
+            <img src={selloImg} alt="Sello Liderazgo Virtuoso"
+                 style={{ width: 'min(180px, 40vw)', height: 'auto', display: 'block' }} />
           </div>
           <div style={styles.eyebrow}>{t('acreditacion.eyebrow')}</div>
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line' }}>{heroTitle}</h1>
