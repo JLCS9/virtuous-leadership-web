@@ -17,7 +17,7 @@ export default function TestTemperamentoNinos() {
       <SEO
         title={SEO_DATA.title}
         description={SEO_DATA.description}
-        path="/tests/temperamento-ninos"
+        path="/tests/temperamento-infantil"
       />
       <TestTBPChildren />
     </>

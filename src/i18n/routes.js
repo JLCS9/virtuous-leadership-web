@@ -23,7 +23,7 @@ export const ROUTES = {
   // Test de temperamento para niños — sólo ES de momento. Los demás idiomas
   // tienen el slug undefined, así no se generan rutas en App.jsx (la pagina
   // queda inaccesible en EN/FR/RU hasta que se traduzca).
-  test_temperamento_ninos: { es: 'tests/temperamento-ninos' },
+  test_temperamento_ninos: { es: 'tests/temperamento-infantil' },
   contacto:              { es: 'contacto',               en: 'contact',                 fr: 'contact',                  ru: 'kontakty' },
 };
 

@@ -804,13 +804,15 @@ export default function TestTBPChildren() {
       for (let i = 0; i < tieOrder.length;  i++) allAnswers[tieOrder[i].id] = tieAnswers[i] || null;
       for (let i = 0; i < s2Order.length;   i++) allAnswers[s2Order[i].id]  = next[i] || null;
       setDecision({ ...dec, primario, answers: allAnswers });
-      setPhase(PHASE.RESULT); // RESULT primero (acceso al valor), gate después
+      // Gate del padre OBLIGATORIO antes de mostrar el resultado. Esto:
+      //  (a) garantiza que cada test completado se persiste en la DB,
+      //  (b) protege el valor del informe (no se ve sin dar el consentimiento).
+      setPhase(PHASE.PARENT_GATE);
     }
   }
 
   function backStage2() { if (s2Index > 0) setS2Index(s2Index - 1); }
 
-  function openParentGate() { setPhase(PHASE.PARENT_GATE); }
   function onParentSubmitOk() { setPhase(PHASE.RESULT); }
   function restart() {
     setChild(null);
@@ -834,16 +836,7 @@ export default function TestTBPChildren() {
   } else if (phase === PHASE.PARENT_GATE) {
     body = <ParentGate child={child} decision={decision} schoolToken={schoolToken} onSubmitOk={onParentSubmitOk} />;
   } else if (phase === PHASE.RESULT) {
-    // RESULT muestra el resultado con un CTA al parent_gate si todavía no se ha enviado.
-    body = (
-      <>
-        <ResultScreen child={child} decision={decision} onRestart={restart} />
-        {/* Si todavía no han pasado por el gate, mostramos un banner que invita
-            a registrarse para "guardar/recibir el informe". UX suave; el
-            resultado ya está a la vista. */}
-        <ChildGateNudge onOpen={openParentGate} alreadySubmitted={false} />
-      </>
-    );
+    body = <ResultScreen child={child} decision={decision} onRestart={restart} />;
   }
 
   return (
@@ -854,21 +847,3 @@ export default function TestTBPChildren() {
   );
 }
 
-// Banner CTA bajo el resultado para invitar al gate de padre.
-// (Si en el futuro queremos REQUERIR el gate antes de ver el resultado,
-// basta con cambiar el orden en answerStage2: setPhase(PHASE.PARENT_GATE)
-// y dejar el RESULT después.)
-function ChildGateNudge({ onOpen }) {
-  const { t } = useT();
-  return (
-    <div style={{ maxWidth: 980, margin: '20px auto 0', textAlign: 'center' }}>
-      <button
-        type="button"
-        onClick={onOpen}
-        style={{ ...styles.buttonPrimary, background: NAVY }}
-        onMouseOver={e => (e.currentTarget.style.background = NAVY_SOFT)}
-        onMouseOut={e => (e.currentTarget.style.background = NAVY)}
-      >{t('tbp_children.parent_gate.submit')}</button>
-    </div>
-  );
-}
