@@ -25,10 +25,24 @@ let pool = null;
 export function getPool() {
   if (pool) return pool;
   if (!DATABASE_URL) return null;
+
+  // Supabase exige SSL pero presenta un cert self-signed en su cadena.
+  // En pg 8.13+ `sslmode=require` (en la URL) se trata como `verify-full`
+  // y rechaza la cadena → "self-signed certificate in certificate chain".
+  // Estrategia robusta: stripamos `sslmode` de la URL y forzamos en código
+  // `ssl: { rejectUnauthorized:false }`, que sí encripta sin verificar.
+  let cleanUrl = DATABASE_URL;
+  try {
+    const u = new URL(DATABASE_URL);
+    u.searchParams.delete('sslmode');
+    cleanUrl = u.toString();
+  } catch {
+    // Si la URL no se puede parsear, dejamos el connection string tal cual
+    // y confiamos en el ssl: del Pool — pg intentará igualmente.
+  }
+
   pool = new Pool({
-    connectionString: DATABASE_URL,
-    // Supabase requiere SSL. rejectUnauthorized:false porque el cert de
-    // Supabase no encadena con CAs estándar en algunos entornos Alpine.
+    connectionString: cleanUrl,
     ssl: { rejectUnauthorized: false },
     max: 5,
     idleTimeoutMillis: 30_000,
