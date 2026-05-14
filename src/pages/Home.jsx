@@ -19,10 +19,10 @@ const TT = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 import genteImg from '../assets/gente.jpeg';
 
 const HOME_SEO = {
-  es: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
-  en: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
-  fr: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
-  ru: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
+  es: { title: 'Virtuous Leadership Programs for Education Institutions', description: 'Igniting hearts for greatness.' },
+  en: { title: 'Virtuous Leadership Programs for Education Institutions', description: 'Igniting hearts for greatness.' },
+  fr: { title: 'Virtuous Leadership Programs for Education Institutions', description: 'Igniting hearts for greatness.' },
+  ru: { title: 'Virtuous Leadership Programs for Education Institutions', description: 'Igniting hearts for greatness.' },
 };
 
 export default function Home() {
