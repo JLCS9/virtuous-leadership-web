@@ -76,12 +76,22 @@ const server = http.createServer(async (req, res) => {
     ? c.consentTimestamp.slice(0, 10)
     : new Date().toISOString().slice(0, 10);
 
+  // Map del valor de sexo del frontend (mujer/hombre, fijo en castellano para los 3 idiomas)
+  // a las opciones Multiple-choice definidas en Brevo (Female/Male).
+  // Si llega un valor inesperado, no enviamos el atributo (Brevo rechazaría un valor fuera de la lista).
+  const SEXO_MAP = { mujer: 'Female', hombre: 'Male' };
+  const sexoBrevo = SEXO_MAP[String(c.sex || '').toLowerCase().trim()];
+
+  // Log de diagnóstico: lo que recibimos del form y lo que vamos a mandar a Brevo.
+  // Útil para detectar mismatches entre nombres de atributos o valores Multiple-choice.
+  console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} → mapped sexoBrevo=${JSON.stringify(sexoBrevo)}`);
+
   // Cuerpo para Brevo. Los nombres de atributos van EN MAYÚSCULAS por convención.
   // Asegúrate de que estos atributos existen en tu cuenta de Brevo
   // (Contacts → Settings → Contact attributes) con los tipos:
   //   FIRSTNAME                    (TEXT — viene de fábrica en Brevo)
-  //   BIRTHYEAR                    (NUMBER)
-  //   SEX                          (TEXT)
+  //   YEAR                         (NUMBER) — año de nacimiento
+  //   SEXO                         (MULTIPLE-CHOICE) — opciones en Brevo: "Female" | "Male"
   //   TEMP1                        (TEXT) — temperamento primario (COL/MEL/SAN/FLE)
   //   TEMP2                        (TEXT) — secundario (COL/MEL/SAN/FLE/"")
   //   IDIOMA                       (TEXT) — idioma del test (es/en/fr)
@@ -92,8 +102,8 @@ const server = http.createServer(async (req, res) => {
     email: c.email.toLowerCase().trim(),
     attributes: {
       FIRSTNAME:               c.name,
-      BIRTHYEAR:               c.birthYear,
-      SEX:                     c.sex,
+      YEAR:                    c.birthYear,
+      ...(sexoBrevo ? { SEXO: sexoBrevo } : {}),
       TEMP1:                   r.primario || '',
       TEMP2:                   r.secundario || '',
       IDIOMA:                  String(c.language || 'es').toUpperCase(),
@@ -116,7 +126,8 @@ const server = http.createServer(async (req, res) => {
       body: JSON.stringify(brevoBody),
     });
     const text = await brevoRes.text();
-    console.log(`[brevo] ${brevoRes.status} ${text.slice(0, 200)}`);
+    console.log(`[brevo] attrs sent: ${JSON.stringify(brevoBody.attributes)}`);
+    console.log(`[brevo] ${brevoRes.status} ${text.slice(0, 400)}`);
 
     if (!brevoRes.ok) {
       return res.writeHead(502, { 'Content-Type': 'application/json' })
