@@ -161,7 +161,9 @@ function getSchoolToken() {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const SEX_OPTIONS = ['M', 'F', 'X'];
+// Sólo M/F en el form. La DB sigue aceptando 'X' por compatibilidad
+// (constraint CHECK), pero ya no lo exponemos.
+const SEX_OPTIONS = ['M', 'F'];
 const REL_OPTIONS = ['Padre', 'Madre', 'Tutor'];
 
 // ───────────────────── pantallas ─────────────────────

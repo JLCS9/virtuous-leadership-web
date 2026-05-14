@@ -708,7 +708,6 @@ export default {
       sex_options: {
         M: 'Niño',
         F: 'Niña',
-        X: 'Prefiero no especificar',
       },
       errors: {
         first_name: 'Introduce el nombre del niño/a.',
@@ -723,10 +722,10 @@ export default {
     },
 
     question: {
-      progress: 'Pregunta {{n}} de {{total}}',
+      progress: 'Pregunta {n} de {total}',
       back: '← Atrás',
-      yes: 'Sí',
-      no: 'No',
+      yes: 'Verdadero',
+      no: 'Falso',
     },
 
     transition: {
@@ -753,7 +752,7 @@ export default {
         Madre: 'Madre',
         Tutor: 'Tutor',
       },
-      consent_html: 'Confirmo que soy padre, madre o tutor legal del menor cuyos datos introduzco, y autorizo a <strong>CSO Digital SL</strong> al tratamiento de los datos del menor (nombre, año de nacimiento, sexo, resultados del test) y los míos (nombre, email, relación con el menor) con la finalidad de calcular y mostrar el resultado del test, así como recibir comunicaciones relacionadas. Los datos se conservan durante 24 meses salvo solicitud de borrado. Encargados del tratamiento: Supabase (almacenamiento, UE) y, en su caso, Brevo (comunicaciones, EEE). Puedo ejercer mis derechos de acceso, rectificación, supresión, oposición, portabilidad y limitación escribiendo a <a href="mailto:privacidad@csodigital.tech">privacidad@csodigital.tech</a>.',
+      consent_html: 'Confirmo que soy padre, madre o tutor legal del menor cuyos datos introduzco, y autorizo a <strong>CSO Digital SL</strong> al tratamiento de los datos del menor y los míos con la finalidad de calcular y mostrar el resultado del test. Puedo ejercer mis derechos de acceso, rectificación o supresión escribiendo a <a href="mailto:privacidad@csodigital.tech">privacidad@csodigital.tech</a>.',
       consent_checkbox: 'He leído y acepto.',
       errors: {
         first_name: 'Introduce tu nombre.',
@@ -776,8 +775,8 @@ export default {
       fortaleza: 'Fortaleza',
       debilidad: 'Aspecto a trabajar',
       reto: 'Su reto',
-      havard_quote: '«Educar el carácter no es moldear al niño según un ideal abstracto, sino ayudarle a descubrir y desplegar las virtudes que su temperamento le pide cultivar.»',
-      havard_attribution: 'Inspirado en la teoría del Liderazgo Virtuoso · Alexandre Havard',
+      havard_quote: 'El niño es capaz de desarrollar la magnanimidad desde sus primeros años de vida cuando experimenta su dignidad: cuando se siente querido, respetado, perdonado, orientado, alentado y exigido.',
+      havard_attribution: 'Alexandre Havard',
       cta_eyebrow: 'CONTINÚA APRENDIENDO',
       cta_title: 'Materiales para acompañar el desarrollo de tu hijo/a',
       cta_ebook_button: 'Leer ebook',
