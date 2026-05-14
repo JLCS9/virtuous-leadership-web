@@ -14,7 +14,7 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { FactRow } from './AcreditacionColegios';
-import classImg from '../assets/class.jpeg';
+import fondoAlexImg from '../assets/fondo-alex.jpeg';
 
 export default function AcreditacionEducacionSuperior() {
   const { t } = useT();
@@ -37,15 +37,17 @@ export default function AcreditacionEducacionSuperior() {
             {t('edsup.hero_subtitle')}
           </p>
         </div>
-        {/* Foto full-width tras el hero (igual que /universidades) */}
+        {/* Foto 'fondo-alex' full-width tras el hero. objectPosition='center top'
+            para evitar que el banner recorte la cara de Alex (la foto original
+            es ≈2:1; aquí la mostramos con aspect ratio 10/4 más corto). */}
         <div style={{ width: '100%', lineHeight: 0 }}>
-          <img src={classImg} alt=""
+          <img src={fondoAlexImg} alt=""
                loading="lazy"
                style={{
                  width: '100%',
                  aspectRatio: '10 / 4',
                  objectFit: 'cover',
-                 objectPosition: 'center',
+                 objectPosition: 'center top',
                  display: 'block',
                }} />
         </div>

@@ -1,6 +1,6 @@
 // Pagina /colegios — version "Programa".
 // Estructura especifica de Programas:
-//   Hero (eyebrow + h1 + subtitle + foto class.jpeg full-width corta) — SIN sello
+//   Hero (eyebrow + h1 + subtitle + foto gente.jpeg full-width corta) — SIN sello
 //   Contenido (reusa universidades.conceptos — 7 tarjetas)
 //   Modalidad (reusa universidades.modalidad — FactRow * N)
 //   Testimonios (carousel)
@@ -26,7 +26,7 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
-import classImg from '../assets/class.jpeg';
+import genteImg from '../assets/gente.jpeg';
 
 export default function ColegiosPrograma() {
   const { t } = useT();
@@ -57,9 +57,9 @@ export default function ColegiosPrograma() {
             {k('hero_subtitle')}
           </p>
         </div>
-        {/* Misma foto que /universidades y /educacion-superior (class.jpeg) */}
+        {/* Foto 'gente' full-width tras el hero (específica de colegios) */}
         <div style={{ width: '100%', lineHeight: 0 }}>
-          <img src={classImg} alt=""
+          <img src={genteImg} alt=""
                loading="lazy"
                style={{
                  width: '100%',
