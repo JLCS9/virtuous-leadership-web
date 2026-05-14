@@ -5,6 +5,7 @@
 # Variables esperadas en un fichero .env junto a este compose:
 #   BREVO_API_KEY=xkeysib-...
 #   BREVO_LIST_ID=94
+#   DATABASE_URL=postgresql://postgres:PASSWORD@db.xxx.supabase.co:5432/postgres?sslmode=require
 #
 # Puertos: bindeamos a 127.0.0.1 para que sólo el nginx del host pueda
 # alcanzarlos. Externamente cerrados.
@@ -30,6 +31,7 @@ services:
     environment:
       BREVO_API_KEY: ${BREVO_API_KEY}
       BREVO_LIST_ID: ${BREVO_LIST_ID}
+      DATABASE_URL:  ${DATABASE_URL}
       PORT: 3001
     ports:
       - "127.0.0.1:3001:3001"

@@ -20,11 +20,15 @@ export const ROUTES = {
   edsup:                 { es: 'educacion-superior',     en: 'higher-education',        fr: 'enseignement-superieur',   ru: 'vysshee-obrazovanie' },
   tests:                 { es: 'tests',                  en: 'tests',                   fr: 'tests',                    ru: 'testy' },
   test_temperamento:     { es: 'tests/temperamento',     en: 'tests/temperament',       fr: 'tests/temperament',        ru: 'testy/temperament' },
+  // Test de temperamento para niños — sólo ES de momento. Los demás idiomas
+  // tienen el slug undefined, así no se generan rutas en App.jsx (la pagina
+  // queda inaccesible en EN/FR/RU hasta que se traduzca).
+  test_temperamento_ninos: { es: 'tests/temperamento-ninos' },
   contacto:              { es: 'contacto',               en: 'contact',                 fr: 'contact',                  ru: 'kontakty' },
 };
 
 // Paginas que se renderizan SIN Layout (full-bleed mini-apps).
-export const NO_LAYOUT_PAGES = new Set(['test_temperamento']);
+export const NO_LAYOUT_PAGES = new Set(['test_temperamento', 'test_temperamento_ninos']);
 
 // Reverse map: cualquier slug (de cualquier idioma) -> pageId.
 // Permite que useLocalPath traduzca un path canonico ES (ej. '/colegios')

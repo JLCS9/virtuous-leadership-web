@@ -676,4 +676,217 @@ export default {
     SAN: { name: 'Sanguíneo',   focus: 'las personas', archetype: 'el comunicador' },
     FLE: { name: 'Flemático',   focus: 'la paz',       archetype: 'el mediador' },
   },
+
+  // ──────────── TEST DE NIÑOS — i18n ────────────
+  // Las descripciones de perfil van en 3ª persona (audiencia = padre/madre/tutor).
+  // Usan los placeholders {o/a}, {los/las}, {él/ella} etc. para concordancia
+  // de género; el motor (src/lib/childPersonalize.js → applyGender) los
+  // resuelve en tiempo de render según child.sex.
+  tbp_children: {
+    welcome: {
+      eyebrow: 'Test de temperamento — Niños y adolescentes',
+      title: 'Descubre el temperamento de tu hijo/a',
+      byline: 'Versión infantil del test oficial de Virtuous Leadership',
+      intro: 'Este test te ayuda a entender el temperamento de tu hijo/a (de 6 a 17 años) según la teoría clásica de los cuatro temperamentos: colérico, melancólico, sanguíneo y flemático. Conocer su temperamento te permite acompañarle mejor en su desarrollo personal.',
+      notice: 'Pensado para ser respondido por el padre, la madre o el tutor legal. El test no diagnostica nada; ofrece un mapa orientativo para entender mejor a tu hijo/a.',
+      duration_label: 'Duración',
+      duration_text: 'Unos 5-7 minutos · 22-24 preguntas',
+      button: 'Empezar',
+    },
+
+    child_gate: {
+      eyebrow: 'Antes de empezar',
+      title: 'Datos de tu hijo/a',
+      intro: 'Necesitamos algunos datos para adaptar las preguntas a su edad y para personalizar el resultado.',
+      fields: {
+        first_name: 'Nombre del niño/a',
+        first_name_placeholder: 'Ej. María',
+        birth_year: 'Año de nacimiento',
+        birth_year_placeholder: '2015',
+        sex: 'Sexo',
+      },
+      sex_options: {
+        M: 'Niño',
+        F: 'Niña',
+        X: 'Prefiero no especificar',
+      },
+      errors: {
+        first_name: 'Introduce el nombre del niño/a.',
+        year_required: 'Introduce el año de nacimiento.',
+        year_range: 'Año fuera de rango (máx. {max}).',
+        sex: 'Selecciona una opción.',
+        age_too_young: 'Este test está pensado para niños a partir de 6 años.',
+        age_too_old: 'Para mayores de 17 años, te recomendamos hacer el test de adultos.',
+      },
+      adult_test_link_label: 'Ir al test de adultos →',
+      button: 'Continuar',
+    },
+
+    question: {
+      progress: 'Pregunta {{n}} de {{total}}',
+      back: '← Atrás',
+      yes: 'Sí',
+      no: 'No',
+    },
+
+    transition: {
+      eyebrow: 'A mitad del camino',
+      title_template: 'Veo un perfil ',
+      title_template_suffix: ' en tu hijo/a',
+      text: 'Las siguientes preguntas nos van a permitir afinar el perfil — distinguir entre un perfil puro y los mixtos posibles.',
+      button: 'Continuar',
+    },
+
+    parent_gate: {
+      eyebrow: 'Casi terminado',
+      title: 'Recibe el informe',
+      intro: 'Para mostrarte el resultado completo del test, necesitamos algunos datos tuyos.',
+      fields: {
+        first_name: 'Tu nombre',
+        first_name_placeholder: 'Ej. Ana',
+        email: 'Tu email',
+        email_placeholder: 'tu@correo.com',
+        relation: 'Relación con el niño/a',
+      },
+      relation_options: {
+        Padre: 'Padre',
+        Madre: 'Madre',
+        Tutor: 'Tutor',
+      },
+      consent_html: 'Confirmo que soy padre, madre o tutor legal del menor cuyos datos introduzco, y autorizo a <strong>CSO Digital SL</strong> al tratamiento de los datos del menor (nombre, año de nacimiento, sexo, resultados del test) y los míos (nombre, email, relación con el menor) con la finalidad de calcular y mostrar el resultado del test, así como recibir comunicaciones relacionadas. Los datos se conservan durante 24 meses salvo solicitud de borrado. Encargados del tratamiento: Supabase (almacenamiento, UE) y, en su caso, Brevo (comunicaciones, EEE). Puedo ejercer mis derechos de acceso, rectificación, supresión, oposición, portabilidad y limitación escribiendo a <a href="mailto:privacidad@csodigital.tech">privacidad@csodigital.tech</a>.',
+      consent_checkbox: 'He leído y acepto.',
+      errors: {
+        first_name: 'Introduce tu nombre.',
+        email: 'Introduce un email válido.',
+        relation: 'Selecciona tu relación con el niño/a.',
+        consent: 'Es necesario aceptar el consentimiento para continuar.',
+        submit_failed: 'No hemos podido enviar el formulario. Inténtalo de nuevo en unos minutos.',
+      },
+      submit: 'Ver resultado',
+      submitting: 'Enviando…',
+    },
+
+    result: {
+      eyebrow_prefix: 'El perfil de',
+      challenge_label: 'Reto principal',
+      intensity_label: 'Intensidad del secundario',
+      intensity_marked: 'marcada',
+      intensity_light: 'leve',
+      pure_note: '(perfil puro)',
+      fortaleza: 'Fortaleza',
+      debilidad: 'Aspecto a trabajar',
+      reto: 'Su reto',
+      havard_quote: '«Educar el carácter no es moldear al niño según un ideal abstracto, sino ayudarle a descubrir y desplegar las virtudes que su temperamento le pide cultivar.»',
+      havard_attribution: 'Inspirado en la teoría del Liderazgo Virtuoso · Alexandre Havard',
+      cta_eyebrow: 'CONTINÚA APRENDIENDO',
+      cta_title: 'Materiales para acompañar el desarrollo de tu hijo/a',
+      cta_ebook_button: 'Leer ebook',
+      cta_courses_button: 'Ver cursos',
+      cta_ebook_url: 'https://alexhavard.com/es/producto/crecer-con-tu-temperamento/',
+      cta_courses_url: 'https://alexhavard.com/producto/course-1-7-bundle/',
+      repeat_button: 'Hacer el test otra vez',
+    },
+
+    // Perfiles adaptados a 3ª persona (audiencia = padre/madre/tutor).
+    // Mismos contenidos que en el test de adultos, sólo cambian persona y voz.
+    // {o/a}, {los/las}, {él/ella} se resuelven en render con applyGender.
+    profiles: {
+      'COL': {
+        name: 'EL EJECUTOR',
+        label: 'colérico',
+        challenge: 'Humildad fundamental + fraterna',
+        fortaleza: 'Tiene una gran energía y entusiasmo, busca constantemente la acción y los logros. Destaca en situaciones competitivas y muestra habilidades sólidas de organización y liderazgo.',
+        debilidad: 'Está convencid{o/a} de que su energía es el resultado de su esfuerzo, cuando en realidad es un don de su naturaleza. Se enfoca demasiado en la actividad y los resultados, descuidando su propio desarrollo personal. En el trato con otros, le cuesta respetar los sentimientos de los demás, hacerles crecer, darles responsabilidad y servirles.',
+        reto: 'Tendrá que cultivar la humildad fundamental (el autoconocimiento) y la humildad fraterna (el servicio a los demás).',
+      },
+      'COL-MEL': {
+        name: 'EL EJECUTOR CONTEMPLATIVO',
+        label: 'colérico-melancólico',
+        challenge: 'Humildad fraterna',
+        fortaleza: 'Su naturaleza colérica le impulsa hacia la acción y la obtención de resultados, mientras que su faceta melancólica le aporta una profunda sensibilidad y una mente creativa. La combinación de su temperamento colérico y melancólico le permite abordar las tareas con energía, evitando al mismo tiempo caer en un activismo ciego.',
+        debilidad: 'Como coléric{o/a}, puede tender a servirse de las personas en lugar de servirles. Como melancólic{o/a}, su naturaleza introspectiva puede llevarle a olvidarse de los demás.',
+        reto: 'Como ejecutor contemplativo, se enfrenta al desafío de cultivar sus relaciones. La humildad fraterna se convierte en su reto, instándole a cuidar de los demás y a servirles.',
+      },
+      'COL-SAN': {
+        name: 'EL EJECUTOR AMABLE',
+        label: 'colérico-sanguíneo',
+        challenge: 'Humildad fundamental',
+        fortaleza: 'Su naturaleza colérica le impulsa hacia la acción y el resultado, mientras que su aspecto sanguíneo le dota de una profunda afectividad, amor por las personas y deseo de hacerlas felices. Esta dualidad le permite no sólo ser eficaz en lo que hace, sino también construir buenas relaciones con los demás.',
+        debilidad: 'Su impulsividad colérica podría llevarle al activismo sin rumbo. Su naturaleza sanguínea le lleva a una mayor atención hacia los demás en detrimento de su propio autoconocimiento. Se dedica más a la acción que a su desarrollo personal.',
+        reto: 'Su desafío radica en conocerse mejor a sí mism{o/a}. Su reto es la humildad fundamental, el aspecto de la virtud de la humildad vinculado al conocimiento de uno mismo.',
+      },
+      'MEL': {
+        name: 'EL SOÑADOR',
+        label: 'melancólico',
+        challenge: 'Audacia',
+        fortaleza: 'Tiene una fuerte inclinación hacia la contemplación y posee un espíritu artístico, original y creativo. Le atrae la idea de la perfección y esta búsqueda constante de lo perfecto forma parte fundamental de su forma de ser. Es un gran soñador.',
+        debilidad: 'Tiene miedo a la acción, que inevitablemente revela la limitación de la naturaleza humana. Tiene miedo a la incertidumbre y no le gusta el riesgo.',
+        reto: 'Es un soñador, pero la acción le cuesta. Su reto es la audacia, que es el aspecto activo de la virtud de la fortaleza.',
+      },
+      'MEL-COL': {
+        name: 'EL SOÑADOR EJECUTOR',
+        label: 'melancólico-colérico',
+        challenge: 'Humildad fraterna',
+        fortaleza: 'Su naturaleza melancólica le dota de una profunda sensibilidad y creatividad. Al mismo tiempo, como coléric{o/a}, posee un fuerte deseo de acción y logros. Su temperamento melancólico le permite soñar en grande, mientras que su faceta colérica le impulsa a convertir esos sueños en una misión alcanzable.',
+        debilidad: 'Como melancólic{o/a}, es propens{o/a} al ensimismamiento y a olvidarse fácilmente de los demás. Como coléric{o/a}, tiende a utilizar a los demás en lugar de servirles.',
+        reto: 'Es un contemplativo activo, pero descuida las relaciones con los demás. Su reto es la humildad fraterna, el aspecto de la virtud de la humildad que ayuda a servir a los demás.',
+      },
+      'MEL-FLE': {
+        name: 'EL SOÑADOR PRAGMÁTICO',
+        label: 'melancólico-flemático',
+        challenge: 'Audacia',
+        fortaleza: 'Como melancólic{o/a}, posee una profunda sensibilidad, una mente creativa y busca la perfección, mientras que su temperamento flemático le dota de racionalidad y pragmatismo.',
+        debilidad: 'Como melancólic{o/a}, tiene miedo a la acción, que inevitablemente revela la limitación de la naturaleza humana. Como flemátic{o/a}, no suele tomar la iniciativa por miedo a equivocarse.',
+        reto: 'Es un soñador pragmático, pero tarda en actuar. Su reto es la audacia, que es el aspecto activo de la virtud de la fortaleza.',
+      },
+      'SAN': {
+        name: 'EL COMUNICADOR',
+        label: 'sanguíneo',
+        challenge: 'Resistencia y persistencia',
+        fortaleza: 'Posee una profunda naturaleza relacional: es comunicativ{o/a}, sonriente, amable, cálid{o/a} y afectuos{o/a}. Disfruta riendo, bromeando y divirtiéndose, irradiando alegría de vivir. Destaca por su habilidad para comunicarse.',
+        debilidad: 'Su enfoque exclusivo en el presente puede dificultar la práctica de las virtudes relacionadas con el tiempo, como la resistencia, la perseverancia, la paciencia y la fidelidad. Inicia proyectos, pero muchas veces le cuesta finalizarlos, ya que permanentemente busca novedad y diversión. Es poco constante.',
+        reto: 'Su desafío es la resistencia y la persistencia, que son aspectos pasivos de la virtud de la fortaleza.',
+      },
+      'SAN-COL': {
+        name: 'EL COMUNICADOR ATENTO',
+        label: 'sanguíneo-colérico',
+        challenge: 'Humildad fundamental',
+        fortaleza: 'Como sanguíne{o/a}, es profundamente relacional, ama a las personas y busca hacerlas felices. Al mismo tiempo, su faceta colérica le impulsa hacia la acción y la obtención de resultados. Su temperamento sanguíneo le facilita desarrollar buenas relaciones con las personas, mientras que su temperamento colérico le ayuda a mantener la atención y a realizar eficazmente las tareas.',
+        debilidad: 'Su tendencia sanguínea a conocer a los demás mejor que a sí mism{o/a} puede llevarle a descuidar su propio autoconocimiento. Además, su naturaleza colérica puede conducirle a un activismo ciego.',
+        reto: 'Es un comunicador atento, pero se conoce mal a sí mism{o/a}. Necesita dedicar tiempo a conocerse mejor. Su reto es cultivar la humildad fundamental, que se relaciona con el autoconocimiento.',
+      },
+      'SAN-FLE': {
+        name: 'EL COMUNICADOR RESERVADO',
+        label: 'sanguíneo-flemático',
+        challenge: 'Magnanimidad',
+        fortaleza: 'Como sanguíne{o/a}, es profundamente relacional, ama a las personas y busca hacerlas felices. Por otro lado, su temperamento flemático aporta una perspectiva desapasionada, racional y pragmática. Su naturaleza sanguínea le facilita desarrollar buenas relaciones con los demás, mientras que su faceta flemática aporta coherencia a su forma de ser.',
+        debilidad: 'Su inclinación sanguínea a vivir en el presente puede limitar su visión del futuro, y el miedo flemático a soñar puede restringir su capacidad de imaginar posibilidades más grandes.',
+        reto: 'Es un comunicador reservado, le cuesta soñar a lo grande. La virtud de la magnanimidad, el deseo de grandeza, se convierte en su reto.',
+      },
+      'FLE': {
+        name: 'EL MEDIADOR',
+        label: 'flemático',
+        challenge: 'Magnanimidad',
+        fortaleza: 'Destaca por su serenidad y racionalidad. Aborda la realidad de manera científica, siendo pragmátic{o/a}, realista y precis{o/a}. Su enfoque pragmático le convierte en alguien hábil resolviendo problemas, con los pies firmemente en la tierra. Su deseo de paz le hace ser un buen mediador.',
+        debilidad: 'Busca la seguridad y rara vez va contra corriente.',
+        reto: 'Ama la paz, pero le cuesta soñar. Su reto es la virtud de la magnanimidad, que es la virtud de los soñadores que transforman su sueño en misión.',
+      },
+      'FLE-MEL': {
+        name: 'EL MEDIADOR CONTEMPLATIVO',
+        label: 'flemático-melancólico',
+        challenge: 'Audacia',
+        fortaleza: 'Como flemátic{o/a}, es desapasionad{o/a}, racional y pragmátic{o/a}, mientras que su naturaleza melancólica le dota de profunda sensibilidad, creatividad y deseo de perfección. Su temperamento flemático le ayuda a ser concret{o/a}, realista y precis{o/a}, mientras que el melancólico eleva su corazón y le impulsa a soñar en grande.',
+        debilidad: 'Su temor flemático a la acción, motivado por el miedo a cometer errores, se suma al temor melancólico a la acción, donde irremediablemente se manifiesta la imperfección humana.',
+        reto: 'Su desafío es la audacia, que representa el aspecto activo de la virtud de la fortaleza.',
+      },
+      'FLE-SAN': {
+        name: 'EL MEDIADOR AMABLE',
+        label: 'flemático-sanguíneo',
+        challenge: 'Magnanimidad',
+        fortaleza: 'Como flemátic{o/a}, es desapasionad{o/a}, seren{o/a}, racional y pragmátic{o/a}, lo que proporciona coherencia a su forma de ser, mientras que su naturaleza sanguínea le hace profundamente relacional, amante de la felicidad de los demás y habilidos{o/a} en el desarrollo de relaciones interpersonales.',
+        debilidad: 'Como flemátic{o/a}, puede tener miedo a soñar, y como sanguíne{o/a}, la tendencia a vivir exclusivamente en el presente puede limitar su visión a largo plazo.',
+        reto: 'Su reto consiste en cultivar la magnanimidad, la virtud de la grandeza.',
+      },
+    },
+  },
 };

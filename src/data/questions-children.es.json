@@ -1,0 +1,256 @@
+{
+  "version": "tbp-children-v1",
+  "_notes": {
+    "structure": "Mismo motor que el test de adultos (STAGE1 → TIEBREAKER si empate → STAGE2 según primario).",
+    "sets": "A = 6-11 años · B = 12-17 años. La frontera la decide la edad al inicio del test.",
+    "placeholders": "{él/ella}, {el/la}, {los/las}, {o/a}, {os/as}. Resueltos por el motor según child.sex (M/F/X). X → masculino RAE.",
+    "name_injection": "El motor inyecta el nombre del niño/a en COL1, SAN1, MEL1, FLE1 (1 ítem por bloque temperamental de Stage 1). Configurable en src/lib/childPersonalize.js.",
+    "stage2_adj": "adj=A suma +1 → secundario es STAGE2_MAP[primario].A. adj=B resta 1 → secundario es STAGE2_MAP[primario].B."
+  },
+  "stage1": {
+    "COL": [
+      { "id": "COL1", "tempera": "COL", "personalize": { "A": true, "B": false },
+        "templates": {
+          "A": "En grupos de niños, suele ser {el/la} que toma la iniciativa y organiza el juego o la actividad.",
+          "B": "Cuando un grupo (de amigos, de clase, en casa) se queda parado, tiende a ser quien empuja para que se decida algo."
+        }
+      },
+      { "id": "COL2", "tempera": "COL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando tiene claro lo que hay que hacer, se impacienta visiblemente con compañeros que aún están decidiendo.",
+          "B": "Cuando tiene claro lo que hay que hacer, se impacienta visiblemente con quien todavía lo está debatiendo o dudando."
+        }
+      },
+      { "id": "COL3", "tempera": "COL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando algo le molesta, se le nota en la cara o en el tono antes de que diga nada.",
+          "B": "Cuando algo le molesta, se le nota en la cara, el tono o la postura antes de que diga nada."
+        }
+      },
+      { "id": "COL4", "tempera": "COL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando está en desacuerdo con algo, lo plantea de frente aunque genere fricción, en lugar de callárselo.",
+          "B": "Cuando está en desacuerdo con algo (normas de casa, profesores, amigos), lo plantea de frente aunque genere fricción."
+        }
+      }
+    ],
+    "SAN": [
+      { "id": "SAN1", "tempera": "SAN", "personalize": { "A": true, "B": true },
+        "templates": {
+          "A": "Con niños o adultos que no conoce, suele ser {el/la} primer{o/a} en acercarse y empezar a hablar.",
+          "B": "Con personas que no conoce, suele ser de {los/las} primer{os/as} en romper el hielo y empezar a hablar."
+        }
+      },
+      { "id": "SAN2", "tempera": "SAN", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Después de un disgusto o una decepción, se le pasa rápido y vuelve a su buen ánimo en poco tiempo.",
+          "B": "Tras un conflicto, una decepción o un mal resultado, pasa página rápido y vuelve a su buen ánimo en poco tiempo."
+        }
+      },
+      { "id": "SAN3", "tempera": "SAN", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Ante un plan o una situación nueva, tiende a esperar que salga bien y se queda más con lo bueno que con lo malo.",
+          "B": "Por defecto espera que las cosas le salgan bien y se queda más con lo positivo que con lo negativo."
+        }
+      },
+      { "id": "SAN4", "tempera": "SAN", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando le pasa algo, prefiere contarlo a otros que quedárselo pensando a solas.",
+          "B": "Cuando le pasa algo, prefiere hablarlo con amigos o en casa antes que quedárselo dándole vueltas a solas."
+        }
+      }
+    ],
+    "MEL": [
+      { "id": "MEL1", "tempera": "MEL", "personalize": { "A": true, "B": true },
+        "templates": {
+          "A": "Después de algo que le afecta (una bronca, una discusión, una decepción), se queda callad{o/a} o pensativ{o/a} bastante tiempo.",
+          "B": "Después de una conversación o discusión importante, se queda en sus cosas (callad{o/a}, en su cuarto, distraíd{o/a}) durante horas o días."
+        }
+      },
+      { "id": "MEL2", "tempera": "MEL", "personalize": { "A": false, "B": true },
+        "templates": {
+          "A": "Un comentario o una crítica pequeña pueden seguir afectándole días después.",
+          "B": "Comentarios que para otros adolescentes serían menores, a {él/ella} le pueden afectar varios días."
+        }
+      },
+      { "id": "MEL3", "tempera": "MEL", "personalize": { "A": true, "B": true },
+        "templates": {
+          "A": "Si una tarea no le queda como {él/ella} cree que debería (deberes, dibujo, manualidad), le cuesta darla por terminada.",
+          "B": "Si un trabajo, una nota o algo que ha hecho no le queda como {él/ella} cree que debería, le cuesta soltarlo y seguir adelante."
+        }
+      },
+      { "id": "MEL4", "tempera": "MEL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Prefiere estar con uno o dos amigos cercanos antes que en un grupo grande de niños.",
+          "B": "Prefiere una conversación íntima con una persona cercana antes que estar en una reunión animada con muchas."
+        }
+      }
+    ],
+    "FLE": [
+      { "id": "FLE1", "tempera": "FLE", "personalize": { "A": true, "B": false },
+        "templates": {
+          "A": "En situaciones tensas (peleas, urgencias, discusiones en casa), se mantiene tranquil{o/a} aunque los demás estén alterados.",
+          "B": "En situaciones tensas (discusiones familiares, dramas entre amigos, exámenes), mantiene la calma aunque los demás se alteren."
+        }
+      },
+      { "id": "FLE2", "tempera": "FLE", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Ante una actividad o un grupo nuevo, prefiere observar un rato antes de unirse.",
+          "B": "Antes de comprometerse con algo nuevo (un grupo, una actividad, una pareja), prefiere observar un tiempo cómo evoluciona."
+        }
+      },
+      { "id": "FLE3", "tempera": "FLE", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Si puede conseguir lo que quiere sin entrar en una pelea o discusión, lo hace por ese camino.",
+          "B": "Si puede conseguir lo importante sin entrar en un enfrentamiento, suele elegir esa vía."
+        }
+      },
+      { "id": "FLE4", "tempera": "FLE", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando una rutina o forma de hacer las cosas le funciona, no siente necesidad de cambiarla por probar otra.",
+          "B": "Cuando una rutina o forma de hacer las cosas le funciona, no siente necesidad de cambiarla por probar otra."
+        }
+      }
+    ]
+  },
+  "tiebreaker": {
+    "COL": [
+      { "id": "TCOL1", "tempera": "COL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando otro niño le confronta o le reta, su primer impulso es plantarle cara, no rebajar la tensión.",
+          "B": "Cuando alguien le confronta (un compañero, un hermano, un adulto), su primer impulso es plantarle cara, no rebajar la tensión."
+        }
+      },
+      { "id": "TCOL2", "tempera": "COL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Toma decisiones rápido aunque no tenga toda la información; prefiere actuar a esperar.",
+          "B": "Toma decisiones rápido aunque no tenga toda la información; prefiere actuar a esperar."
+        }
+      }
+    ],
+    "SAN": [
+      { "id": "TSAN1", "tempera": "SAN", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Disfruta especialmente lo nuevo y desconocido, incluso cuando no sabe qué va a pasar.",
+          "B": "Disfruta especialmente lo nuevo y desconocido, incluso cuando no sabe cómo va a salir."
+        }
+      },
+      { "id": "TSAN2", "tempera": "SAN", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Empieza actividades o aficiones con mucho entusiasmo, pero tras unas semanas o meses pierde el interés y quiere cambiar.",
+          "B": "Empieza actividades, hobbies o intereses con mucho entusiasmo, pero le cuesta mantenerlo cuando pasa el efecto novedad."
+        }
+      }
+    ],
+    "MEL": [
+      { "id": "TMEL1", "tempera": "MEL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Cuando algo le afecta de verdad, sólo lo cuenta a una o dos personas concretas en las que confía.",
+          "B": "Cuando algo le toca por dentro, sólo lo habla con una o dos personas concretas que sabe que le van a entender de verdad."
+        }
+      },
+      { "id": "TMEL2", "tempera": "MEL", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Detalles que otros niños ni notarían (un tono brusco, una mirada, un comentario al paso) le siguen afectando bastante después.",
+          "B": "Detalles que otros ni notarían (un tono, una mirada, un comentario al paso) le siguen afectando un buen rato."
+        }
+      }
+    ],
+    "FLE": [
+      { "id": "TFLE1", "tempera": "FLE", "personalize": { "A": true, "B": true },
+        "templates": {
+          "A": "Cuando todos los demás se aceleran (en una urgencia, en un grupo agitado), {él/ella} mantiene su propio ritmo sin contagiarse.",
+          "B": "Cuando todos los demás se aceleran (urgencias, dramas, presión de grupo), {él/ella} mantiene su propio ritmo sin contagiarse."
+        }
+      },
+      { "id": "TFLE2", "tempera": "FLE", "personalize": { "A": false, "B": false },
+        "templates": {
+          "A": "Prefiere seguir con lo que ya conoce a lanzarse a algo nuevo solo por probar.",
+          "B": "Prefiere seguir con lo que ya conoce a lanzarse a algo nuevo sólo por probar."
+        }
+      }
+    ]
+  },
+  "stage2": {
+    "COL": [
+      { "id": "S2_C1", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando algo importante le sale bien, el buen humor le dura mucho tiempo.",
+                       "B": "Cuando algo importante le sale bien, el buen humor le dura mucho tiempo." } },
+      { "id": "S2_C2", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Las preocupaciones rara vez le quitan el sueño o el apetito.",
+                       "B": "Las preocupaciones rara vez le quitan el sueño o el apetito." } },
+      { "id": "S2_C3", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando algo sale mal, lo procesa rápido y pasa página sin demora.",
+                       "B": "Cuando algo sale mal, lo procesa rápido y pasa página sin demora." } },
+      { "id": "S2_C4", "adj": "B", "personalize": { "A": true, "B": false },
+        "templates": { "A": "Después de tomar una decisión importante para {él/ella}, sigue dándole vueltas aunque ya esté hecha.",
+                       "B": "Después de tomar una decisión importante, sigue dándole vueltas aunque ya esté tomada." } },
+      { "id": "S2_C5", "adj": "B", "personalize": { "A": false, "B": true },
+        "templates": { "A": "Hay personas o situaciones que le siguen pesando aunque ya hayan pasado.",
+                       "B": "Hay personas o situaciones que le siguen pesando aunque ya hayan pasado y {él/ella} sepa que no debería." } },
+      { "id": "S2_C6", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Antes de eventos importantes (exámenes, presentaciones, cumpleaños), se le nota tensión o preocupación anticipada.",
+                       "B": "Antes de eventos importantes (exámenes, presentaciones, momentos sociales), se le nota tensión o preocupación anticipada." } }
+    ],
+    "SAN": [
+      { "id": "S2_S1", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando algo le indigna, le cuesta disimularlo aunque sepa que debería.",
+                       "B": "Cuando algo le indigna, le cuesta disimularlo aunque sepa que debería." } },
+      { "id": "S2_S2", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Su intensidad emocional sube y baja bastante en un mismo día.",
+                       "B": "Su intensidad emocional sube y baja bastante en un mismo día." } },
+      { "id": "S2_S3", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando algo le importa de verdad, reacciona con bastante intensidad.",
+                       "B": "Cuando algo le importa de verdad, su reacción suele ser intensa." } },
+      { "id": "S2_S4", "adj": "B", "personalize": { "A": true, "B": true },
+        "templates": { "A": "Cuando hay tensión en un grupo (de hermanos, de amigos), suele ser de {los/las} que mantiene la calma.",
+                       "B": "Cuando hay tensión en un grupo (de amigos, en casa), suele ser de {los/las} que mantiene la calma." } },
+      { "id": "S2_S5", "adj": "B", "personalize": { "A": true, "B": true },
+        "templates": { "A": "Las situaciones nuevas no suelen ponerle nervios{o/a}.",
+                       "B": "Las situaciones nuevas no suelen ponerle nervios{o/a}." } },
+      { "id": "S2_S6", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Su estado de ánimo se mantiene bastante parejo a lo largo del día.",
+                       "B": "Su estado de ánimo se mantiene bastante parejo a lo largo del día." } }
+    ],
+    "MEL": [
+      { "id": "S2_M1", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando tiene claro lo que piensa, lo dice aunque no caiga bien.",
+                       "B": "Cuando tiene claro lo que piensa, lo dice aunque no caiga bien." } },
+      { "id": "S2_M2", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Le cuesta dejar pasar una injusticia sin reaccionar (en clase, con hermanos, con amigos).",
+                       "B": "Le cuesta dejar pasar una injusticia sin reaccionar." } },
+      { "id": "S2_M3", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Si algo le importa, no le cuesta defenderlo delante de otros.",
+                       "B": "Si algo le importa, no le cuesta defenderlo delante de otros." } },
+      { "id": "S2_M4", "adj": "B", "personalize": { "A": true, "B": true },
+        "templates": { "A": "Aunque tenga una opinión muy clara sobre algo, no le genera tensión quedárselo para {él/ella}.",
+                       "B": "Aunque tenga una opinión muy clara, no le genera tensión quedársela para {él/ella}." } },
+      { "id": "S2_M5", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Cuando puede evitar entrar en una discusión, lo hace.",
+                       "B": "Cuando puede evitar entrar en una discusión, lo hace." } },
+      { "id": "S2_M6", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Prefiere observar primero una situación y posicionarse después.",
+                       "B": "Prefiere observar primero la situación y posicionarse después." } }
+    ],
+    "FLE": [
+      { "id": "S2_F1", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Encuentra conversación fácilmente con casi cualquier niño o adulto.",
+                       "B": "Encuentra conversación fácilmente con casi cualquier persona." } },
+      { "id": "S2_F2", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Disfruta los encuentros sociales (cumpleaños, reuniones familiares) aunque sean breves.",
+                       "B": "Disfruta de los encuentros sociales aunque sean breves u ocasionales." } },
+      { "id": "S2_F3", "adj": "A", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Con niños o grupos nuevos, no le cuesta integrarse.",
+                       "B": "Con grupos o gente nueva, no le cuesta integrarse." } },
+      { "id": "S2_F4", "adj": "B", "personalize": { "A": true, "B": false },
+        "templates": { "A": "Después de un día con mucha gente, necesita un rato a solas (en su cuarto, jugando sol{o/a}) para volver a estar a gusto.",
+                       "B": "Necesita bastante tiempo a solas (en su cuarto, sin gente alrededor) para volver a estar a gusto." } },
+      { "id": "S2_F5", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "En reuniones grandes (familiares, fiestas) prefiere quedarse en segundo plano.",
+                       "B": "En reuniones grandes (fiestas, eventos familiares) prefiere quedarse en segundo plano." } },
+      { "id": "S2_F6", "adj": "B", "personalize": { "A": false, "B": false },
+        "templates": { "A": "Las tensiones del entorno (en casa, en el cole) le afectan más de lo que parece a simple vista.",
+                       "B": "Las tensiones del entorno (en casa, en el grupo de amigos, en el cole) le afectan más de lo que parece a simple vista." } }
+    ]
+  }
+}

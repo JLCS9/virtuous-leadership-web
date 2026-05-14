@@ -8,6 +8,7 @@ import AcreditacionUniversidades from './pages/AcreditacionUniversidades';
 import AcreditacionEducacionSuperior from './pages/AcreditacionEducacionSuperior';
 import Tests from './pages/Tests';
 import TestTemperamento from './pages/TestTemperamento';
+import TestTemperamentoNinos from './pages/TestTemperamentoNinos';
 import Contacto from './pages/Contacto';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
@@ -24,6 +25,7 @@ const PAGE_ELEMENTS = {
   edsup:                 <AcreditacionEducacionSuperior />,
   tests:                 <Tests />,
   test_temperamento:     <TestTemperamento />,
+  test_temperamento_ninos: <TestTemperamentoNinos />,
   contacto:              <Contacto />,
 };
 
