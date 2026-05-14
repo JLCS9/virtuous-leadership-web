@@ -10,9 +10,10 @@ import SEO from '../components/SEO';
 import ttImg from '../assets/tt.png';
 
 const TESTS_SEO = {
-  es: { title: 'Tests de autoconocimiento', description: 'Test de temperamento gratis online basado en la teoría de Alexandre Havard. Building character a través del autoconocimiento.' },
-  en: { title: 'Self-knowledge tests',       description: 'Free online temperament test based on Alexandre Havard\'s theory. Building character through self-knowledge.' },
-  fr: { title: 'Tests de connaissance de soi', description: 'Test de tempérament gratuit en ligne basé sur la théorie d\'Alexandre Havard. Building character par la connaissance de soi.' },
+  es: { title: 'Tests de autoconocimiento',   description: 'Test de temperamento gratis online basado en la teoría de Alexandre Havard. Descubre tu temperamento dominante y la virtud que más necesitas cultivar.' },
+  en: { title: 'Self-knowledge tests',         description: 'Free online temperament test based on Alexandre Havard\'s theory. Discover your dominant temperament and the virtue you most need to cultivate.' },
+  fr: { title: 'Tests de connaissance de soi', description: 'Test de tempérament gratuit en ligne basé sur la théorie d\'Alexandre Havard. Découvre ton tempérament dominant et la vertu que tu dois cultiver le plus.' },
+  ru: { title: 'Тесты самопознания',           description: 'Бесплатный онлайн-тест темперамента, основанный на теории Александра Гавара. Узнайте свой доминирующий темперамент и добродетель, которую вам нужно развивать.' },
 };
 
 export default function Tests() {

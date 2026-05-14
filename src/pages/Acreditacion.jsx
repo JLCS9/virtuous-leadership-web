@@ -10,9 +10,10 @@ import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
 const PAGE_SEO = {
-  es: { title: 'Acreditación oficial en Liderazgo Virtuoso', description: 'Sello internacional firmado por Alexandre Havard. Building character en la cultura de tu institución educativa: programas para colegios, universidades y centros superiores.' },
-  en: { title: 'Official Virtuous Leadership Certification',  description: 'International seal signed by Alexandre Havard. Building character in your institution\'s culture: programs for schools, universities and higher education centers.' },
-  fr: { title: 'Accréditation officielle en Leadership Vertueux', description: 'Sceau international signé par Alexandre Havard. Building character dans la culture de ton institution éducative.' },
+  es: { title: 'Acreditación oficial en Liderazgo Virtuoso',      description: 'Sello internacional firmado por Alexandre Havard. Programas oficiales para colegios, universidades y centros superiores que quieren integrar el liderazgo virtuoso en su cultura institucional.' },
+  en: { title: 'Official Virtuous Leadership Certification',      description: 'International seal signed by Alexandre Havard. Official programs for schools, universities and higher education centers seeking to integrate virtuous leadership into their institutional culture.' },
+  fr: { title: 'Accréditation officielle en Leadership Vertueux', description: 'Sceau international signé par Alexandre Havard. Programmes officiels pour écoles, universités et centres d\'enseignement supérieur qui souhaitent intégrer le leadership vertueux dans leur culture institutionnelle.' },
+  ru: { title: 'Официальная аккредитация Virtuous Leadership',    description: 'Международный знак за подписью Александра Гавара. Официальные программы для школ, университетов и центров высшего образования, стремящихся интегрировать виртуозное лидерство в институциональную культуру.' },
 };
 
 export default function Acreditacion() {

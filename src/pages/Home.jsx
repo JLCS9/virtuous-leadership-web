@@ -15,18 +15,10 @@ import ttImgEn from '../assets/tt-en.png';
 import genteImg from '../assets/gente.jpeg';
 
 const HOME_SEO = {
-  es: {
-    title: 'Virtuous Leadership - Official Certification',
-    description: 'Virtuous Leadership: Building character a través del sistema de certificación oficial de Alexandre Havard. Test de temperamento gratis online y programas para colegios, universidades y centros superiores.',
-  },
-  en: {
-    title: 'Virtuous Leadership - Official Certification',
-    description: 'Virtuous Leadership: Building character through Alexandre Havard\'s official certification system. Free online temperament test and programs for schools, universities and higher education centers.',
-  },
-  fr: {
-    title: 'Virtuous Leadership - Official Certification',
-    description: 'Virtuous Leadership: Building character à travers le système de certification officiel d\'Alexandre Havard. Test de tempérament gratuit en ligne et programmes pour écoles, universités et centres supérieurs.',
-  },
+  es: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
+  en: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
+  fr: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
+  ru: { title: 'Virtuous Leadership - Official Certification', description: 'Igniting hearts for greatness.' },
 };
 
 export default function Home() {
