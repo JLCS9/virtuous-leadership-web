@@ -26,6 +26,8 @@ export default {
     copyright_suffix: 'Todos los derechos reservados.',
     havard_credit: 'Sistema Liderazgo Virtuoso® · Alexandre Havard · alexhavard.com',
     tagline: 'Igniting Hearts for Greatness',
+    privacy_link: 'Política de privacidad',
+    cookies_link: 'Cookies',
   },
 
   common: {

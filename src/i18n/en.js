@@ -25,6 +25,8 @@ export default {
     copyright_suffix: 'All rights reserved.',
     havard_credit: 'Virtuous Leadership System® · Alexandre Havard · alexhavard.com',
     tagline: 'Igniting Hearts for Greatness',
+    privacy_link: 'Privacy Policy',
+    cookies_link: 'Cookies',
   },
 
   common: {

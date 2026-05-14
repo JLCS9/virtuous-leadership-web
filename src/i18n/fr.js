@@ -25,6 +25,8 @@ export default {
     copyright_suffix: 'Tous droits réservés.',
     havard_credit: 'Système Leadership Vertueux® · Alexandre Havard · alexhavard.com',
     tagline: 'Igniting Hearts for Greatness',
+    privacy_link: 'Politique de confidentialité',
+    cookies_link: 'Cookies',
   },
 
   common: {

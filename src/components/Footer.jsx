@@ -63,10 +63,16 @@ export default function Footer() {
       <div style={{
         borderTop: '1px solid rgba(255,255,255,0.08)',
         maxWidth: MAX_WIDTH, margin: '0 auto', padding: '20px 24px',
-        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12,
+        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap',
+        gap: 12, alignItems: 'center',
         fontFamily: FONT_SANS, fontSize: 12, color: '#7C8497',
       }}>
         <div>© {new Date().getFullYear()} Virtuous Leadership. {t('footer.copyright_suffix')}</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, alignItems: 'center' }}>
+          <LegalLink to="/politica-de-privacidad">{t('footer.privacy_link')}</LegalLink>
+          <span aria-hidden="true" style={{ color: 'rgba(255,255,255,0.16)' }}>·</span>
+          <LegalLink to="/cookies">{t('footer.cookies_link')}</LegalLink>
+        </div>
         <div>{t('footer.havard_credit')}</div>
       </div>
     </footer>
@@ -84,6 +90,25 @@ function FootLink({ to, children }) {
       }}
       onMouseOver={e => e.currentTarget.style.color = GOLD}
       onMouseOut={e => e.currentTarget.style.color = '#D9DEE8'}
+    >
+      {children}
+    </LocalLink>
+  );
+}
+
+// Estilo más discreto para enlaces legales en la barra inferior — color
+// muted en línea con el copyright. Usa LocalLink para que el slug se
+// traduzca automáticamente al idioma activo.
+function LegalLink({ to, children }) {
+  return (
+    <LocalLink
+      to={to}
+      style={{
+        fontFamily: FONT_SANS, fontSize: 12, color: '#7C8497',
+        textDecoration: 'none',
+      }}
+      onMouseOver={e => e.currentTarget.style.color = GOLD}
+      onMouseOut={e => e.currentTarget.style.color = '#7C8497'}
     >
       {children}
     </LocalLink>

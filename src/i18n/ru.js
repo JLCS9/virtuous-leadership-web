@@ -25,6 +25,8 @@ export default {
     copyright_suffix: 'Все права защищены.',
     havard_credit: 'Liderazgo Virtuoso® · Alexandre Havard · alexhavard.com',
     tagline: 'Igniting Hearts for Greatness',
+    privacy_link: 'Политика конфиденциальности',
+    cookies_link: 'Cookies',
   },
 
   common: {
