@@ -70,7 +70,7 @@ export default {
     pasos: [
       { n: '01', title: 'Know yourself',
         text: 'Discover your biological temperament to understand your innate natural inclinations.' },
-      { n: '02', title: 'Discover your challenge-virtue',
+      { n: '02', title: 'Discover your virtue-challenge',
         text: 'Identify the virtue which, if strengthened, will make you a better person and a better professional.' },
       { n: '03', title: 'Train your character',
         text: 'Develop the cardinal virtues — prudence, fortitude, self-control and justice.' },
@@ -429,9 +429,9 @@ export default {
     welcome: {
       eyebrow: 'Temperament Test',
       title: '',
-      byline: 'Based on Alexandre Havard\'s theory of Virtuous Leadership.',
+      byline: 'Based on Alexandre Havard\'s Virtuous Leadership theory.',
       intro: 'Before you begin: this test does not measure your character, it measures your temperament — that first reaction that appears before thinking. Answer with what comes to you, not with what you think you should answer. The more spontaneous you are, the more accurate the result will be. At the end you will discover your dominant and secondary temperaments.',
-      notice: 'No temperament is better than another. Each one has its greatness and its challenge-virtue.',
+      notice: 'No temperament is better than another. Each one has its greatness and its virtue-challenge.',
       duration_label: '22 to 30 questions',
       duration_text: 'about 5 minutes',
       button: 'Begin',
@@ -504,7 +504,7 @@ export default {
   gate: {
     eyebrow: 'Last step',
     title: 'Receive your results',
-    intro: 'We send you a copy by email and, once a month, practical ideas to better understand your temperament and help you develop your challenge-virtue.',
+    intro: 'We send you a copy by email and, once a month, practical ideas to better understand your temperament and help you develop your virtue-challenge.',
     fields: {
       name: 'Name',
       email: 'Email',
@@ -530,14 +530,14 @@ export default {
   result: {
     subtitle: 'Your profile',
     pure_note: '· pure profile · statistically less frequent',
-    challenge_label: 'Challenge-virtue',
+    challenge_label: 'Virtue-challenge',
     intensity_label: 'Secondary intensity',
     intensity_marked: 'marked',
     intensity_light: 'light',
     fortaleza: 'Strength',
     debilidad: 'Weakness',
     reto: 'Your challenge',
-    havard_quote: 'Temperament is biological: we are born with it and we will die with it. Character is spiritual: we build it through the practice of virtues. Working on your challenge-virtue is the shortest path to excellence.',
+    havard_quote: 'Temperament is biological: we are born with it and we will die with it. Character is spiritual: we build it through the practice of virtues. Working on your virtue-challenge is the shortest path to excellence.',
     havard_attribution: '— Alexandre Havard',
     repeat_button: 'Take the test again',
     cta_eyebrow: 'The next step',
@@ -546,7 +546,7 @@ export default {
     cta_courses_button: 'See the courses',
     cta_ebook_url: 'https://alexhavard.com/producto/growing-with-your-temperament-e-book/',
     cta_courses_url: 'https://alexhavard.com/producto/course-1-7-bundle/',
-    virtues_panel_title: 'The four challenge-virtues',
+    virtues_panel_title: 'The four virtue-challenges',
     virtues: {
       COL: { name: 'Humility',                   detail: 'Fundamental (self-knowledge) and fraternal (service).' },
       MEL: { name: 'Boldness',                   detail: 'The active aspect of the virtue of fortitude.' },
