@@ -1,6 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useT } from './i18n';
-import ttImg from './assets/tt.png';
+// Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
+// el texto traducido en la propia imagen.
+import ttEs from './assets/tt.png';
+import ttEn from './assets/tt-en.png';
+import ttFr from './assets/tt-fr.png';
+import ttRu from './assets/tt-ru.png';
+const TT = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 // Imagenes por idioma para los CTAs del final del test:
 import crecerEs  from './assets/crecer-es.jpg';
 import crecerEn  from './assets/crecer-en.png';
@@ -466,6 +472,7 @@ function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
   const isPure = !profileKey.includes('-');
   const crecerImg = CRECER[lang] || CRECER.es;
   const bundleImg = BUDLE[lang]  || BUDLE.es;
+  const ttImg     = TT[lang]     || TT.es;
 
   return (
     <div style={styles.resultCard}>

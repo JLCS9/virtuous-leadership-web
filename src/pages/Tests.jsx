@@ -7,12 +7,13 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import SEO from '../components/SEO';
-import ttImg from '../assets/tt.png';
-import ttImgEn from '../assets/tt-en.png';
-
-// Mapeo de imagen del test por idioma. Sólo EN tiene versión propia con
-// texto en inglés; el resto cae al diseño base.
-const TT_IMG_BY_LANG = { es: ttImg, en: ttImgEn, fr: ttImg, ru: ttImg };
+// Imagen "tt" del test de temperamento localizada por idioma — texto
+// traducido en la propia imagen. Si falta un idioma, se cae al ES.
+import ttEs from '../assets/tt.png';
+import ttEn from '../assets/tt-en.png';
+import ttFr from '../assets/tt-fr.png';
+import ttRu from '../assets/tt-ru.png';
+const TT_IMG_BY_LANG = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 
 const TESTS_SEO = {
   es: { title: 'Tests de autoconocimiento',   description: 'Test de temperamento gratis online basado en la teoría de Alexandre Havard. Descubre tu temperamento dominante y la virtud que más necesitas cultivar.' },
@@ -25,7 +26,7 @@ export default function Tests() {
   const { t, lang } = useT();
   const cards = t('tests.cards');
   const seo = TESTS_SEO[lang] || TESTS_SEO.es;
-  const ttImage = TT_IMG_BY_LANG[lang] || ttImg;
+  const ttImage = TT_IMG_BY_LANG[lang] || ttEs;
 
   return (
     <>

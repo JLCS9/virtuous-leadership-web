@@ -10,8 +10,12 @@ import CTA from '../components/CTA';
 import Seal from '../components/Seal';
 import SEO from '../components/SEO';
 import alexImg from '../assets/alex-perfil.jpeg';
-import ttImg from '../assets/tt.png';
-import ttImgEn from '../assets/tt-en.png';
+// Imagen "tt" localizada en cada idioma — texto traducido en la propia imagen.
+import ttEs from '../assets/tt.png';
+import ttEn from '../assets/tt-en.png';
+import ttFr from '../assets/tt-fr.png';
+import ttRu from '../assets/tt-ru.png';
+const TT = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 import genteImg from '../assets/gente.jpeg';
 
 const HOME_SEO = {
@@ -235,11 +239,8 @@ export default function Home() {
             </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            {/* La version en ingles del mockup del Test de Temperamento usa
-                un asset propio (tt-en.png); el resto de idiomas comparte
-                tt.png. Si en el futuro se localiza a fr/ru, anadir el
-                asset correspondiente y extender este map. */}
-            <img src={lang === 'en' ? ttImgEn : ttImg} alt={t('home.test_title')}
+            {/* Mockup del Test de Temperamento localizado por idioma (mapa TT). */}
+            <img src={TT[lang] || TT.es} alt={t('home.test_title')}
                  style={{ width: '100%', maxWidth: 360, height: 'auto', display: 'block', borderRadius: 2 }} />
           </div>
         </div>
