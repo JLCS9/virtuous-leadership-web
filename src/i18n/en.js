@@ -533,7 +533,7 @@ export default {
     subtitle: 'Your profile',
     pure_note: '· pure profile · statistically less frequent',
     challenge_label: 'Virtue-challenge',
-    intensity_label: 'Secondary intensity',
+    intensity_label: 'Intensity of the secondary temperament',
     intensity_marked: 'marked',
     intensity_light: 'light',
     fortaleza: 'Strength',

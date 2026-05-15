@@ -549,7 +549,7 @@ export default {
     subtitle: 'Tu perfil',
     pure_note: '· perfil puro · estadísticamente menos frecuente',
     challenge_label: 'Virtud-desafío',
-    intensity_label: 'Intensidad del secundario',
+    intensity_label: 'Intensidad del temperamento secundario',
     intensity_marked: 'marcada',
     intensity_light: 'ligera',
     fortaleza: 'Fortaleza',
@@ -770,7 +770,7 @@ export default {
     result: {
       eyebrow_prefix: 'El perfil de',
       challenge_label: 'Reto principal',
-      intensity_label: 'Intensidad del secundario',
+      intensity_label: 'Intensidad del temperamento secundario',
       intensity_marked: 'marcada',
       intensity_light: 'leve',
       pure_note: '(perfil puro)',

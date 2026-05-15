@@ -532,7 +532,7 @@ export default {
     subtitle: 'Ton profil',
     pure_note: '· profil pur · statistiquement moins fréquent',
     challenge_label: 'Vertu-défi',
-    intensity_label: 'Intensité du secondaire',
+    intensity_label: 'Intensité du tempérament secondaire',
     intensity_marked: 'marquée',
     intensity_light: 'légère',
     fortaleza: 'Force',

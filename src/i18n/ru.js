@@ -538,7 +538,7 @@ export default {
     subtitle: 'Ваш профиль',
     pure_note: '· чистый профиль · статистически менее распространённый',
     challenge_label: 'Сверхзадача-добродетель',
-    intensity_label: 'Интенсивность второстепенного',
+    intensity_label: 'Интенсивность второстепенного темперамента',
     intensity_marked: 'выраженная',
     intensity_light: 'лёгкая',
     fortaleza: 'Сильная сторона',
