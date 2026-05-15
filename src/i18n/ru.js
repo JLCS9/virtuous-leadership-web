@@ -537,7 +537,7 @@ export default {
   result: {
     subtitle: 'Ваш профиль',
     pure_note: '· чистый профиль · статистически менее распространённый',
-    challenge_label: 'Сверхзадача-добродетель',
+    challenge_label: 'Добродетель-сверхзадача',
     intensity_label: 'Интенсивность второстепенного темперамента',
     intensity_marked: 'выраженная',
     intensity_light: 'лёгкая',
@@ -553,7 +553,7 @@ export default {
     cta_courses_button: 'Посмотреть курсы',
     cta_ebook_url: 'https://alexhavard.com/es/producto/crecer-con-tu-temperamento/',
     cta_courses_url: 'https://alexhavard.com/producto/course-1-7-bundle/',
-    virtues_panel_title: 'Четыре сверхзадачи-добродетели',
+    virtues_panel_title: 'Четыре добродетели-сверхзадачи',
     virtues: {
       COL: { name: 'Смирение',                       detail: 'Фундаментальное (самопознание) и братское (служение).' },
       MEL: { name: 'Смелость',                       detail: 'Активный аспект добродетели мужества.' },
