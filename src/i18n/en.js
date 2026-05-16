@@ -120,7 +120,7 @@ export default {
   acreditacion: {
     eyebrow: 'Accreditation',
     hero_title: 'Official accreditation\nin Virtuous Leadership',
-    hero_subtitle: 'An international seal that recognizes educational institutions which have implemented the Virtuous Leadership System® in their institutional culture.',
+    hero_subtitle: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.',
     diff_eyebrow: '',
     diff_title: 'What makes this accreditation unique?',
     diff_items: [
@@ -188,8 +188,8 @@ export default {
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Inner integration versus rationalism, voluntarism and sentimentalism.' },
-      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission. The ideal of greatness — growing and empowering others.' },
-      { title: 'Humility',                     text: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.' },
+      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission.' },
+      { title: 'Humility',                     text: 'The ideal of service — growing and empowering others.' },
       { title: 'Personal mission',             text: 'Specific contribution to the common good from one\'s own history, talents and educational vocation.' },
       { title: 'Cardinal virtues',             text: 'Prudence, fortitude, self-control and justice.' },
       { title: 'Education of the heart',       text: 'Love, pain, beauty and freedom as engines of virtuous leadership.' },
@@ -251,8 +251,8 @@ export default {
     conceptos: [
       { title: 'Temperament and character',    text: 'Understanding one\'s biological and spiritual structure and its influence on personal growth.' },
       { title: 'Heart, intellect and will',    text: 'Inner integration versus rationalism, voluntarism and sentimentalism.' },
-      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission. The ideal of greatness — growing and empowering others.' },
-      { title: 'Humility',                     text: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.' },
+      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission.' },
+      { title: 'Humility',                     text: 'The ideal of service — growing and empowering others.' },
       { title: 'Personal mission',             text: 'Specific contribution to the common good from one\'s own history, talents and educational vocation.' },
       { title: 'Cardinal virtues',             text: 'Prudence, fortitude, self-control and justice.' },
       { title: 'Education of the heart',       text: 'Love, pain, beauty and freedom as engines of virtuous leadership.' },
@@ -339,8 +339,8 @@ export default {
       { title: 'Temperament and character',    text: 'Understanding one\'s own biological structure (temperament) and its influence on personal growth (character).' },
       { title: 'Heart, intellect and will',    text: 'Achieving inner integration and identifying imbalances: rationalism, voluntarism and sentimentalism.' },
       { title: 'Personal mission',             text: 'Discovering your specific contribution to the common good, born from your history and your talents.' },
-      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission. The ideal of greatness — growing and empowering others.' },
-      { title: 'Humility',                     text: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.' },
+      { title: 'Magnanimity',                  text: 'The ideal of greatness — aspiring to human excellence, trusting in its talents, and turning dreams into mission.' },
+      { title: 'Humility',                     text: 'The ideal of service — growing and empowering others.' },
       { title: 'Fundamental virtues',          text: 'Prudence, courage, self-mastery and justice as indispensable supports for inner coherence and stability.' },
       { title: 'Education of the heart',       text: 'Love, pain, beauty and freedom as Virtuous Leadership engines.' },
     ],
