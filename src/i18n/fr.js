@@ -399,7 +399,7 @@ export default {
 
   tests: {
     eyebrow: 'Tests de connaissance de soi',
-    hero_title: 'Commence par te connaître.',
+    hero_title: 'Commence par te connaître',
     hero_subtitle: 'Les trois outils d\'évaluation du Système Leadership Vertueux aident à identifier le tempérament, le caractère et les éventuelles tendances vers des formes de rationalisme, de volontarisme et de sentimentalisme.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de tempérament',

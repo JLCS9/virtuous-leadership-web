@@ -410,7 +410,7 @@ export default {
 
   tests: {
     eyebrow: 'Tests de autoconocimiento',
-    hero_title: 'Empieza por conocerte.',
+    hero_title: 'Empieza por conocerte',
     hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y posibles tendencias hacia tipos de racionalismo, voluntarismo y sentimentalismo.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',

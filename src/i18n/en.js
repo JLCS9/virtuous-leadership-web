@@ -400,8 +400,8 @@ export default {
 
   tests: {
     eyebrow: 'Self-knowledge tests',
-    hero_title: 'Start by knowing yourself.',
-    hero_subtitle: 'The three assessment tests of the Virtuous Leadership System help identify temperament, character and possible tendencies toward types of rationalism, voluntarism and sentimentalism.',
+    hero_title: 'Start by knowing yourself',
+    hero_subtitle: 'The three assessment tests of the Virtuous Leadership System help identify temperament, character, and possible tendencies toward rationalism, voluntarism, and sentimentalism.',
     cards: [
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Temperament Test',
         text: 'This test reveals your innate, biological predispositions—how you’re naturally inclined to react.\nThe four temperaments are: choleric, melancholic, sanguine, and phlegmatic.',
