@@ -120,7 +120,7 @@ export default {
   acreditacion: {
     eyebrow: 'Accreditation',
     hero_title: 'Official accreditation\nin Virtuous Leadership',
-    hero_subtitle: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.',
+    hero_subtitle: 'An international seal that recognizes educational institutions which have implemented the Virtuous Leadership System® in their institutional culture.',
     diff_eyebrow: '',
     diff_title: 'What makes this accreditation unique?',
     diff_items: [
@@ -155,7 +155,7 @@ export default {
   colegios: {
     eyebrow: '',
     hero_title: 'ACCREDITATION FOR SCHOOLS',
-    hero_subtitle: 'Virtuous Leadership Integration into the school culture through directors, tutors, teachers and families.',
+    hero_subtitle: 'Integration of Virtuous Leadership into school culture through directors, tutors, teachers, and families.',
     objetivos_eyebrow: '',
     objetivos_title: 'Objectives',
     objetivos: [
@@ -178,9 +178,9 @@ export default {
     entregables_cta_label: 'See the program →',
     entregables_cta_to: '/colegios',
     entregables: [
-      'Licenses to Alexandre Havard\'s 7 courses for the entire educational community.',
-      'Implementation guide that allows the school to deploy the Virtuous Leadership system autonomously, including family training.',
-      'Specific test for the assessment of children\'s temperament by their families.',
+      'Licenses for Alexandre Havard\'s seven courses for the entire educational community.',
+      'Implementation guide enabling the school to autonomously deploy the Virtuous Leadership system, including family training.',
+      'Specific test for families to assess children\'s temperament.',
       'Virtuous Leadership accreditation seal.',
     ],
     conceptos_eyebrow: 'The doctrinal body',
