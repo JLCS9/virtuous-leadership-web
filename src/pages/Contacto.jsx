@@ -1,4 +1,4 @@
-import { NAVY, GOLD, GOLD_DEEP, PAPER, BEIGE, MUTED, LINE, FONT_SERIF, FONT_SANS, styles } from '../theme';
+import { NAVY, GOLD, GOLD_DEEP, PAPER, BEIGE, LINE, FONT_SERIF, FONT_SANS } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
@@ -11,9 +11,20 @@ export default function Contacto() {
     <>
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 740, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          <div style={styles.eyebrow}>{t('contacto.eyebrow')}</div>
-          <h1 style={styles.h1}>{t('contacto.hero_title')}</h1>
-          <p style={{ ...styles.paraLarge, marginTop: 16 }}>{t('contacto.hero_subtitle')}</p>
+          {/* Sólo eyebrow "CONTACT/CONTACTO/..." un poco más grande.
+              Quitamos hero_title (Hablemos/Let's talk/...) y hero_subtitle
+              (largo explicativo). Las claves i18n se mantienen por si
+              hace falta restaurar la versión anterior. */}
+          <div style={{
+            fontFamily: FONT_SERIF,
+            fontSize: 'clamp(28px, 4.5vw, 44px)',
+            color: NAVY,
+            fontWeight: 600,
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+          }}>
+            {t('contacto.eyebrow')}
+          </div>
         </div>
       </section>
 
@@ -33,9 +44,7 @@ export default function Contacto() {
           }}>
             {email}
           </a>
-          <p style={{ ...styles.para, marginTop: 18, fontSize: 14, color: MUTED }}>
-            {t('contacto.languages_note')}
-          </p>
+          {/* Nota de idiomas ("Disponible en español, francés, ...") quitada. */}
           <div style={{ marginTop: 24 }}>
             <CTA href={`mailto:${email}`} variant="primary">{t('common.write_email')}</CTA>
           </div>
