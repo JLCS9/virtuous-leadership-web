@@ -63,8 +63,13 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // de X-Forwarded-For (cliente original), si no, X-Real-IP, si no, la IP
 // del socket. Filtramos IPs privadas/loopback que no son geolocalizables.
 //
-// Usamos ipapi.co (gratis, 1000/día, sin API key, HTTPS). Más estable
-// para uso server-side que ipwho.is, que devuelve 403 desde algunos VPS.
+// Usamos ip-api.com (gratis, ~45 req/min, sin API key, HTTP only en tier
+// gratuito). HTTP es aceptable aquí porque la llamada es server→server:
+// la IP del usuario ya la tenemos, y la respuesta (país/ciudad) no es
+// dato sensible. Antes usábamos ipapi.co (HTTPS) pero rate-limita
+// agresivamente desde VPSes incluso por debajo de su cuota diaria
+// (429 con uso modesto).
+//
 // Si la API falla o tarda más de 1.5s, abortamos y seguimos sin
 // geolocalización — nunca rompemos el submit por un fallo de geolocalización.
 
@@ -98,27 +103,30 @@ async function lookupGeo(ip) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 1500);
   try {
-    const res = await fetch(`https://ipapi.co/${encodeURIComponent(ip)}/json/`, {
-      signal: controller.signal,
-      headers: {
-        'accept': 'application/json',
-        // ipapi.co requiere un User-Agent identificable; sin él suele devolver 403.
-        'user-agent': 'virtuousleadership.com/1.0 (geo lookup for analytics)',
-      },
-    });
+    // ip-api.com response: { status: 'success', country, countryCode, regionName, city, ... }
+    // En caso de error: { status: 'fail', message: 'reason' }
+    // Pedimos sólo los campos que usamos vía ?fields=...
+    const res = await fetch(
+      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,message,country,city,regionName`,
+      {
+        signal: controller.signal,
+        headers: {
+          'accept':     'application/json',
+          'user-agent': 'virtuousleadership.com/1.0 (geo lookup for analytics)',
+        },
+      }
+    );
     clearTimeout(timer);
     if (!res.ok) return { ok: false, reason: `http_${res.status}` };
     const data = await res.json();
-    if (!data || data.error === true) {
-      return { ok: false, reason: data?.reason || 'lookup_failed' };
+    if (!data || data.status !== 'success') {
+      return { ok: false, reason: data?.message || 'lookup_failed' };
     }
-    // ipapi.co usa `country_name` (nombre largo) y `country` (código ISO-2).
-    // Para CIUDAD/PAIS preferimos `city` y `country_name`.
     return {
       ok: true,
       city:    data.city || '',
-      country: data.country_name || data.country || '',
-      region:  data.region || '',
+      country: data.country || '',
+      region:  data.regionName || '',
     };
   } catch (e) {
     clearTimeout(timer);
