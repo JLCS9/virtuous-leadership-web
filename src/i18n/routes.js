@@ -40,6 +40,7 @@ export const ROUTES = {
 export const NO_LAYOUT_PAGES = new Set([
   'test_temperamento',
   'test_temperamento_ninos',
+  'test_temperamento_gracias',
   'politica_privacidad',
   'cookies',
 ]);
