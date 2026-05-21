@@ -427,6 +427,16 @@ export default {
     button: 'Back to home',
   },
 
+  // Thank-you page after completing the temperament test.
+  test_gracias: {
+    eyebrow: 'Temperament test',
+    title: 'Thank you!',
+    intro: 'We have received your answers.',
+    email_note: 'In a few minutes you\'ll receive an email at the address you provided with the complete result of your test. Please check your spam folder just in case.',
+    cta_home: 'Back to home',
+    cta_other_tests: 'Explore other tests',
+  },
+
   test: {
     welcome: {
       eyebrow: 'Temperament Test',

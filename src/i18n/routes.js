@@ -20,6 +20,10 @@ export const ROUTES = {
   edsup:                 { es: 'educacion-superior',     en: 'higher-education',        fr: 'enseignement-superieur',   ru: 'vysshee-obrazovanie' },
   tests:                 { es: 'tests',                  en: 'tests',                   fr: 'tests',                    ru: 'testy' },
   test_temperamento:     { es: 'tests/temperamento',     en: 'tests/temperament',       fr: 'tests/temperament',        ru: 'testy/temperament' },
+  // Página de agradecimiento tras completar el test de temperamento (adultos).
+  // Pensada para landing post-envío o link directo desde Brevo. Va con Layout
+  // normal (no es NO_LAYOUT) para que el usuario pueda navegar al resto del sitio.
+  test_temperamento_gracias: { es: 'tests/temperamento/gracias', en: 'tests/temperament/thank-you', fr: 'tests/temperament/merci', ru: 'testy/temperament/spasibo' },
   // Test de temperamento para niños — sólo ES de momento. Los demás idiomas
   // tienen el slug undefined, así no se generan rutas en App.jsx (la pagina
   // queda inaccesible en EN/FR/RU hasta que se traduzca).

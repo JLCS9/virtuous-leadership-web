@@ -437,6 +437,16 @@ export default {
     button: 'Volver al inicio',
   },
 
+  // Página de agradecimiento tras completar el test de temperamento.
+  test_gracias: {
+    eyebrow: 'Test de temperamento',
+    title: '¡Gracias!',
+    intro: 'Hemos recibido tus respuestas correctamente.',
+    email_note: 'En unos minutos te llegará un correo a la dirección que nos has facilitado con el resultado completo de tu test. Revisa también la carpeta de spam por si acaso.',
+    cta_home: 'Volver al inicio',
+    cta_other_tests: 'Explorar otros tests',
+  },
+
   // ──────────── TEST DE TEMPERAMENTO ────────────
   test: {
     welcome: {

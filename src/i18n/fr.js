@@ -426,6 +426,16 @@ export default {
     button: 'Retour à l\'accueil',
   },
 
+  // Page de remerciement après avoir complété le test de tempérament.
+  test_gracias: {
+    eyebrow: 'Test de tempérament',
+    title: 'Merci !',
+    intro: 'Nous avons bien reçu vos réponses.',
+    email_note: 'Dans quelques minutes, vous recevrez un e-mail à l\'adresse fournie avec le résultat complet de votre test. Vérifiez également votre dossier spam au cas où.',
+    cta_home: 'Retour à l\'accueil',
+    cta_other_tests: 'Découvrir d\'autres tests',
+  },
+
   test: {
     welcome: {
       eyebrow: 'Test de tempérament',
