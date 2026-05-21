@@ -49,23 +49,18 @@ export default function TestTemperamentoGracias() {
             {t('test_gracias.eyebrow')}
           </div>
 
-          {/* Big title */}
+          {/* Sin h1 "Gracias" por petición. La intro asume el rol de
+              encabezado principal — tamaño un poco mayor para compensar
+              y dar peso visual a la página. */}
           <h1 style={{
-            ...styles.h1,
-            fontSize: 'clamp(40px, 6vw, 64px)',
-            margin: 0,
-          }}>
-            {t('test_gracias.title')}
-          </h1>
-
-          {/* Intro */}
-          <p style={{
-            ...styles.paraLarge,
-            margin: '20px auto 0',
-            maxWidth: 580,
+            ...styles.h2,
+            fontSize: 'clamp(28px, 4.4vw, 44px)',
+            margin: '0 auto',
+            maxWidth: 640,
+            lineHeight: 1.2,
           }}>
             {t('test_gracias.intro')}
-          </p>
+          </h1>
 
           {/* Email note card */}
           <div style={{
