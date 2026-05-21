@@ -163,10 +163,10 @@ export default {
     // para que el JSX no renderice una segunda linea. Estructura que pidio
     // el cliente: un solo parrafo largo por tarjeta.
     objetivos: [
-      { n: '01', title: 'Integrar Liderazgo Virtuoso en la cultura del colegio a través de profesores y familias formados en las mismas virtudes.', text: '', cta: 'Ver programa →', cta_to: '/colegios' },
-      { n: '02', title: 'Forjar un liderazgo educativo sólido y coherente basado en el carácter (virtudes) y una misión personal clara.',           text: '' },
-      { n: '03', title: 'Alcanzar un autoconocimiento profundo para integrar ambición y servicio, coherencia personal y unidad de vida en el aula.', text: '' },
-      { n: '04', title: 'Clarificar la misión personal del educador como criterio para decidir y motor de un liderazgo con propósito.',             text: '' },
+      { n: '01', title: 'Desarrollar un marco compartido de liderazgo virtuoso.',                                                  text: '' },
+      { n: '02', title: 'Fortalecer la corresponsabilidad en la formación del carácter.',                                          text: '' },
+      { n: '03', title: 'Integrar el liderazgo virtuoso en la formación del personal y la participación familiar.',                text: '' },
+      { n: '04', title: 'Evaluar y reconocer el crecimiento en liderazgo virtuoso en toda la comunidad.',                          text: '' },
     ],
     modalidad_eyebrow: 'Modalidad',
     modalidad_title: 'Formación 100% online y autogestionable',
