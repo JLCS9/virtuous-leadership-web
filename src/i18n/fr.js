@@ -4,7 +4,7 @@ export default {
   nav: {
     home: 'Accueil',
     programs: 'Programmes',
-    accreditation: 'Certification',
+    accreditation: 'Accréditation',
     accreditation_system: 'Présentation',
     schools: 'Écoles',
     universities: 'Universités',
