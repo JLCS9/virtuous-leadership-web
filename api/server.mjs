@@ -188,7 +188,10 @@ async function handleSubmitAdult(req, res) {
       YEAR:                    c.birthYear,
       ...(genderBrevo ? { GENDER: genderBrevo } : {}),
       TEMP1:                   r.primario || '',
-      TEMP2:                   r.secundario || '',
+      // Si el perfil es puro (sin secundario), mandamos el primario también
+      // como TEMP2 para que Brevo siempre tenga los dos campos poblados con
+      // un temperamento válido. Útil para segmentaciones que filtran por TEMP2.
+      TEMP2:                   r.secundario || r.primario || '',
       IDIOMA:                  String(c.language || 'es').toUpperCase(),
       ACEPTACION_POLITICAS:    c.consent ? 1 : 0,
       FECHA_TEST_TEMPERAMENTO: fechaTest,
