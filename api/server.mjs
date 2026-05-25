@@ -159,8 +159,11 @@ async function handleSubmitAdult(req, res) {
     ? c.consentTimestamp.slice(0, 10)
     : new Date().toISOString().slice(0, 10);
 
-  const SEXO_MAP = { mujer: 'Female', hombre: 'Male' };
-  const sexoBrevo = SEXO_MAP[String(c.sex || '').toLowerCase().trim()];
+  // Mapeo del valor de sexo del form (mujer/hombre, fijo en español
+  // para los 3 idiomas) al valor que esperamos en Brevo.
+  // En Brevo el atributo es GENDER (tipo Text), valores "Male" o "Female".
+  const GENDER_MAP = { mujer: 'Female', hombre: 'Male' };
+  const genderBrevo = GENDER_MAP[String(c.sex || '').toLowerCase().trim()];
 
   // Geolocalización IP → PAIS/CIUDAD para enriquecer el contacto en Brevo.
   // Fire-and-forget tolerante a fallos: si la API se cae o tarda, seguimos sin geo.
@@ -172,10 +175,10 @@ async function handleSubmitAdult(req, res) {
     console.log(`[geo] ip=${ip} → skipped (${geo.reason})`);
   }
 
-  console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} → mapped sexoBrevo=${JSON.stringify(sexoBrevo)}`);
+  console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} → mapped gender=${JSON.stringify(genderBrevo)}`);
 
   // Atributos que deben existir en Brevo:
-  //   FIRSTNAME, YEAR, SEXO (Multi-choice Female/Male), TEMP1, TEMP2,
+  //   FIRSTNAME, YEAR, GENDER (Text, "Male"|"Female"), TEMP1, TEMP2,
   //   IDIOMA, ACEPTACION_POLITICAS, FECHA_TEST_TEMPERAMENTO, PERFIL,
   //   PAIS (Text), CIUDAD (Text).
   const brevoBody = {
@@ -183,7 +186,7 @@ async function handleSubmitAdult(req, res) {
     attributes: {
       FIRSTNAME:               c.name,
       YEAR:                    c.birthYear,
-      ...(sexoBrevo ? { SEXO: sexoBrevo } : {}),
+      ...(genderBrevo ? { GENDER: genderBrevo } : {}),
       TEMP1:                   r.primario || '',
       TEMP2:                   r.secundario || '',
       IDIOMA:                  String(c.language || 'es').toUpperCase(),
