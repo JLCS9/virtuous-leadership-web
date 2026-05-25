@@ -14,7 +14,7 @@ import SEO from '../components/SEO';
 import {
   NAVY, NAVY_SOFT, GOLD, GOLD_DEEP,
   PAPER, BEIGE, INK, LINE,
-  FONT_SANS, styles,
+  styles,
 } from '../theme';
 
 const PAGE_PATH_FALLBACK = '/tests/temperamento/gracias';
@@ -62,7 +62,7 @@ export default function TestTemperamentoGracias() {
             {t('test_gracias.intro')}
           </h1>
 
-          {/* Email note card */}
+          {/* Email note card — todo centrado */}
           <div style={{
             marginTop: 36,
             padding: '24px 28px',
@@ -70,16 +70,14 @@ export default function TestTemperamentoGracias() {
             border: `1px solid ${LINE}`,
             borderLeft: `3px solid ${GOLD}`,
             borderRadius: 2,
-            textAlign: 'left',
+            textAlign: 'center',
             maxWidth: 580,
             marginLeft: 'auto',
             marginRight: 'auto',
           }}>
             <div style={{
-              fontFamily: FONT_SANS, fontSize: 11,
-              letterSpacing: '0.16em', textTransform: 'uppercase',
-              color: GOLD_DEEP, fontWeight: 600, marginBottom: 10,
-            }}>
+              fontSize: 20, lineHeight: 1, marginBottom: 12,
+            }} aria-hidden="true">
               📧
             </div>
             <p style={{
