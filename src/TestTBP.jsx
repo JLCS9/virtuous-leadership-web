@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { useT } from './i18n';
+import { useNavigate } from 'react-router-dom';
+import { useT, useLocalPath } from './i18n';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
 // el texto traducido en la propia imagen.
 import ttEs from './assets/tt.png';
@@ -854,6 +855,11 @@ const PHASE = { WELCOME: 'welcome', STAGE1: 'stage1', TIE: 'tie', TRANSITION: 't
 
 export default function TestTBP() {
   const [phase, setPhase] = useState(PHASE.WELCOME);
+  // Para redirigir al "thank-you" localizado tras enviar el gate.
+  // useLocalPath traduce la ruta canónica '/tests/temperamento/gracias' al
+  // slug del idioma activo (ej. '/en/tests/temperament/thank-you').
+  const navigate = useNavigate();
+  const lp = useLocalPath();
 
   const [s1Order, setS1Order] = useState([]);
   const [s1Answers, setS1Answers] = useState([]);
@@ -978,7 +984,13 @@ export default function TestTBP() {
     setS2Index(s2Index - 1);
   }
 
-  function onGateOk() { setPhase(PHASE.RESULT); }
+  function onGateOk() {
+    // En lugar de mostrar el resultado in-page (PHASE.RESULT), redirigimos
+    // a la página de agradecimiento. El usuario recibirá los resultados
+    // por email (Brevo automation). ResultScreen queda como dead code pero
+    // se mantiene en el archivo por si se quiere restaurar el comportamiento.
+    navigate(lp('/tests/temperamento/gracias'));
+  }
 
   function restart() {
     setPhase(PHASE.WELCOME);
