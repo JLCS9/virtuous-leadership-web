@@ -5,10 +5,14 @@
 //   POST /api/submit-children   → test de niños, persistido en Supabase (Postgres).
 //
 // Variables de entorno:
-//   BREVO_API_KEY   → API key de Brevo (xkeysib-...)   — requerido (test adulto)
-//   BREVO_LIST_ID   → ID numérico de la lista (adultos) — requerido (test adulto)
-//   DATABASE_URL    → connection string de Supabase     — requerido (test niños)
-//   PORT            → puerto donde escucha (default 3001)
+//   BREVO_API_KEY      → API key de Brevo (xkeysib-...)   — requerido (test adulto)
+//   BREVO_LIST_ID_{ES,EN,FR,RU}
+//                      → ID numérico de la lista por idioma. Cada submit del
+//                        test adulto se envía a la lista del idioma usado.
+//   BREVO_LIST_ID      → fallback opcional si no se ha configurado la lista del
+//                        idioma específico (modo retrocompatible).
+//   DATABASE_URL       → connection string de Supabase    — requerido (test niños)
+//   PORT               → puerto donde escucha (default 3001)
 
 import http from 'http';
 import {
@@ -16,11 +20,24 @@ import {
 } from './db.mjs';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const BREVO_LIST_ID = parseInt(process.env.BREVO_LIST_ID || '0', 10);
+// Listas por idioma. parseInt('') o '0' → 0, lo tratamos como "no configurado".
+const BREVO_LIST_IDS = {
+  es: parseInt(process.env.BREVO_LIST_ID_ES || '0', 10),
+  en: parseInt(process.env.BREVO_LIST_ID_EN || '0', 10),
+  fr: parseInt(process.env.BREVO_LIST_ID_FR || '0', 10),
+  ru: parseInt(process.env.BREVO_LIST_ID_RU || '0', 10),
+};
+const BREVO_LIST_ID_FALLBACK = parseInt(process.env.BREVO_LIST_ID || '0', 10);
 const PORT          = parseInt(process.env.PORT || '3001', 10);
 
 if (!BREVO_API_KEY) { console.error('[fatal] BREVO_API_KEY env var missing'); process.exit(1); }
-if (!BREVO_LIST_ID) { console.error('[fatal] BREVO_LIST_ID env var missing'); process.exit(1); }
+// Necesitamos al menos UNA lista configurada (idioma-específico o fallback).
+const langsWithList = Object.entries(BREVO_LIST_IDS).filter(([, id]) => id > 0).map(([l]) => l);
+if (langsWithList.length === 0 && !BREVO_LIST_ID_FALLBACK) {
+  console.error('[fatal] no Brevo list IDs configured (set BREVO_LIST_ID_ES/EN/FR/RU and/or BREVO_LIST_ID)');
+  process.exit(1);
+}
+console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
 
 // DATABASE_URL es opcional al arrancar — si falta, /api/submit-children
 // devolverá 503 hasta que se configure, pero el resto del servidor funciona.
@@ -56,6 +73,51 @@ function sendJson(res, status, obj) {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// ────────────── Helpers de Brevo ──────────────
+
+// Selecciona la lista de Brevo para el idioma dado. Cae a BREVO_LIST_ID
+// (fallback) si no hay lista específica configurada. Devuelve null si no
+// hay nada configurado — el llamante no debería intentar enviar a Brevo.
+function pickListForLang(lang) {
+  const normLang = String(lang || 'es').toLowerCase();
+  return BREVO_LIST_IDS[normLang] || BREVO_LIST_ID_FALLBACK || null;
+}
+
+// ────────────── Codificación COD_DESCUENTO ──────────────
+//
+// Toma una fecha ISO ("YYYY-MM-DD"), la formatea como DD/MM/YYYY, la
+// convierte a bytes UTF-8 y la codifica en base62 con alfabeto
+// 0-9A-Za-z. Los bytes se interpretan como un BigInt big-endian (MSB
+// primero) y se reducen repetidamente módulo 62 para construir la
+// representación.
+//
+// Verificado: "26/05/2026" → "1BUknWDxAsjfq2".
+
+const BASE62_ALPHABET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+
+function bytesToBase62(bytes) {
+  if (!bytes || bytes.length === 0) return '';
+  let n = 0n;
+  for (const b of bytes) n = (n << 8n) | BigInt(b);
+  if (n === 0n) return BASE62_ALPHABET[0];
+  let result = '';
+  while (n > 0n) {
+    result = BASE62_ALPHABET[Number(n % 62n)] + result;
+    n = n / 62n;
+  }
+  return result;
+}
+
+function dateToBase62Code(isoDate) {
+  // isoDate: "YYYY-MM-DD". Si no coincide, devuelve string vacío
+  // (defensa contra inputs corruptos — el llamante decidirá si omitir
+  // el atributo COD_DESCUENTO en ese caso).
+  const m = (isoDate || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return '';
+  const ddmmyyyy = `${m[3]}/${m[2]}/${m[1]}`;
+  return bytesToBase62(Buffer.from(ddmmyyyy, 'utf8'));
+}
 
 // ────────────── Geolocalización IP → país/ciudad ──────────────
 //
@@ -175,12 +237,29 @@ async function handleSubmitAdult(req, res) {
     console.log(`[geo] ip=${ip} → skipped (${geo.reason})`);
   }
 
-  console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} → mapped gender=${JSON.stringify(genderBrevo)}`);
+  // Lista de Brevo según el idioma del test. Si no hay específica, usa
+  // el fallback BREVO_LIST_ID (configuración heredada). Si no hay ni una
+  // ni otra, ya habríamos abortado al arrancar.
+  const listId = pickListForLang(c.language);
+
+  // Código de descuento derivado de la fecha del test:
+  // YYYY-MM-DD → DD/MM/YYYY → UTF-8 bytes → base62
+  const codDescuento = dateToBase62Code(fechaTest);
+
+  console.log(`[submit] received contact: email=${c.email} birthYear=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} lang=${c.language} → mapped gender=${JSON.stringify(genderBrevo)} list=${listId} cod=${codDescuento}`);
 
   // Atributos que deben existir en Brevo:
-  //   FIRSTNAME, YEAR, GENDER (Text, "Male"|"Female"), TEMP1, TEMP2,
-  //   IDIOMA, ACEPTACION_POLITICAS, FECHA_TEST_TEMPERAMENTO, PERFIL,
-  //   PAIS (Text), CIUDAD (Text).
+  //   FIRSTNAME           (Text)
+  //   YEAR                (Number)
+  //   GENDER              (Text, "Male"|"Female")
+  //   TEMP1, TEMP2        (Text)
+  //   IDIOMA              (Text)
+  //   ACEPTACION_POLITICAS, TEST_TEMPERAMENTO  (Boolean)
+  //   CONTACT_SOURCE      (Text, fijo "temperament-test")
+  //   FECHA_TEST_TEMPERAMENTO (Date)
+  //   PERFIL              (Text)
+  //   PAIS, CIUDAD        (Text)
+  //   COD_DESCUENTO       (Text, base62 de la fecha)
   const brevoBody = {
     email: c.email.toLowerCase().trim(),
     attributes: {
@@ -193,13 +272,16 @@ async function handleSubmitAdult(req, res) {
       // un temperamento válido. Útil para segmentaciones que filtran por TEMP2.
       TEMP2:                   r.secundario || r.primario || '',
       IDIOMA:                  String(c.language || 'es').toUpperCase(),
-      ACEPTACION_POLITICAS:    c.consent ? 1 : 0,
+      ACEPTACION_POLITICAS:    true,
+      TEST_TEMPERAMENTO:       true,
+      CONTACT_SOURCE:          'temperament-test',
       FECHA_TEST_TEMPERAMENTO: fechaTest,
       PERFIL:                  r.profileName || '',
       ...(geo.ok && geo.country ? { PAIS:   geo.country } : {}),
       ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
+      ...(codDescuento ? { COD_DESCUENTO: codDescuento } : {}),
     },
-    listIds: [BREVO_LIST_ID],
+    listIds: [listId],
     updateEnabled: true,
   };
 

@@ -4,7 +4,11 @@
 #
 # Variables esperadas en un fichero .env junto a este compose:
 #   BREVO_API_KEY=xkeysib-...
-#   BREVO_LIST_ID=94
+#   BREVO_LIST_ID_ES=123    # listas por idioma (test adulto)
+#   BREVO_LIST_ID_EN=124
+#   BREVO_LIST_ID_FR=125
+#   BREVO_LIST_ID_RU=126
+#   BREVO_LIST_ID=94        # fallback opcional (retrocompat)
 #   DATABASE_URL=postgresql://postgres:PASSWORD@db.xxx.supabase.co:5432/postgres?sslmode=require
 #
 # Puertos: bindeamos a 127.0.0.1 para que sólo el nginx del host pueda
@@ -29,9 +33,13 @@ services:
     container_name: vl-api
     restart: unless-stopped
     environment:
-      BREVO_API_KEY: ${BREVO_API_KEY}
-      BREVO_LIST_ID: ${BREVO_LIST_ID}
-      DATABASE_URL:  ${DATABASE_URL}
+      BREVO_API_KEY:    ${BREVO_API_KEY}
+      BREVO_LIST_ID_ES: ${BREVO_LIST_ID_ES}
+      BREVO_LIST_ID_EN: ${BREVO_LIST_ID_EN}
+      BREVO_LIST_ID_FR: ${BREVO_LIST_ID_FR}
+      BREVO_LIST_ID_RU: ${BREVO_LIST_ID_RU}
+      BREVO_LIST_ID:    ${BREVO_LIST_ID}
+      DATABASE_URL:     ${DATABASE_URL}
       PORT: 3001
     ports:
       - "127.0.0.1:3001:3001"
