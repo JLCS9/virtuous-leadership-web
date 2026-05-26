@@ -456,5 +456,9 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`brevo-proxy listening on :${PORT} (list=${BREVO_LIST_ID})`);
+  const listsSummary = Object.entries(BREVO_LIST_IDS)
+    .filter(([, id]) => id > 0)
+    .map(([l, id]) => `${l}=${id}`)
+    .join(',');
+  console.log(`brevo-proxy listening on :${PORT} (lists: ${listsSummary || '-'}, fallback=${BREVO_LIST_ID_FALLBACK || '-'})`);
 });
