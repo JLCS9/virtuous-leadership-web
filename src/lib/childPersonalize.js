@@ -1,16 +1,45 @@
 // childPersonalize.js — Motor de personalización del test de niños.
 //
-// Resuelve dos cosas sobre una plantilla:
-//   1. Placeholders de género: {él/ella}, {el/la}, {los/las}, {o/a}, {os/as}.
-//   2. Inyección opcional del nombre del niño/a en ítems concretos.
+// Banco unificado 6-17: cada ítem tiene UN solo `template` con posibles
+// placeholders para resolver en tiempo de render:
 //
-// El nombre NO está en las plantillas — el motor lo añade como prefijo en
-// los ítems marcados como "puntos de inyección". Eso da personalización
-// percibida sin saturar el test (48 preguntas con el nombre cansa).
+//   1. Contexto por edad: {6-11: ejemplo escolar | 12-17: ejemplo adolescente}
+//      Resuelto según ctx.set ('A' = 6-11, 'B' = 12-17).
 //
-// Si sex === 'X' (no especificado), se usa la forma masculina (genérico RAE).
+//   2. Género: {él/ella}, {el/la}, {los/las}, {o/a}, {os/as}
+//      Resuelto según ctx.sex ('M' = masculino, 'F' = femenino;
+//      'X' u otros caen a masculino RAE genérico).
+//
+//   3. Inyección de nombre (opcional, controlada por el motor — NO en plantilla)
+//      Sólo se inyecta en ítems concretos (NAME_INJECTION_IDS) para no
+//      saturar el test repitiendo el nombre en las 48 preguntas.
+//
+// Orden de resolución: edad → género → inyección de nombre. Las
+// substituciones se hacen sobre la misma string secuencialmente.
 
-// ──────────────────────────── placeholders ───────────────────────────────
+// ──────────────────────────── edad ────────────────────────────
+
+// Captura {6-11: ... | 12-17: ...}. Los textos internos pueden contener
+// comas, guiones, paréntesis, etc., pero no `|` ni `}` (que sirven de
+// delimitadores). Si en el futuro se quieren placeholders de edad anidados
+// con placeholders de género, habría que reescribir como parser real;
+// hoy los datos no anidan (gender placeholders viven FUERA de los age).
+const AGE_PLACEHOLDER_RE = /\{6-11:\s*([^|}]*?)\s*\|\s*12-17:\s*([^}]*?)\s*\}/g;
+
+/**
+ * Resuelve los placeholders de contexto por edad.
+ * @param {string} template
+ * @param {'A'|'B'} ageGroup — A=6-11, B=12-17.
+ */
+export function applyAgeContext(template, ageGroup) {
+  if (typeof template !== 'string') return '';
+  const useChildVariant = ageGroup === 'A';
+  return template.replace(AGE_PLACEHOLDER_RE, (_, p611, p1217) => {
+    return useChildVariant ? p611 : p1217;
+  });
+}
+
+// ──────────────────────────── género ────────────────────────────
 
 // Mapa por sexo de las 5 variantes soportadas.
 // 'X' (no especificado) → mismas formas que masculino.
@@ -20,10 +49,10 @@ const FORMS = {
   X: { 'él/ella': 'él',   'el/la': 'el', 'los/las': 'los', 'o/a': 'o', 'os/as': 'os' },
 };
 
-// Regex que captura cualquiera de las 5 variantes.
+// Regex que captura cualquiera de las 5 variantes de género.
 // Las claves más largas van primero para evitar que 'el/la' se confunda
-// con 'él/ella' (el segundo lleva tilde de todos modos, pero por si acaso).
-const PLACEHOLDER_RE = /\{(él\/ella|los\/las|el\/la|os\/as|o\/a)\}/g;
+// con 'él/ella'.
+const GENDER_PLACEHOLDER_RE = /\{(él\/ella|los\/las|el\/la|os\/as|o\/a)\}/g;
 
 /**
  * Aplica los placeholders de género a un texto.
@@ -33,20 +62,16 @@ const PLACEHOLDER_RE = /\{(él\/ella|los\/las|el\/la|os\/as|o\/a)\}/g;
 export function applyGender(template, sex) {
   if (typeof template !== 'string') return '';
   const forms = FORMS[sex] || FORMS.M;
-  return template.replace(PLACEHOLDER_RE, (_, key) => forms[key] || '');
+  return template.replace(GENDER_PLACEHOLDER_RE, (_, key) => forms[key] || '');
 }
 
 // ──────────────────────────── inyección de nombre ────────────────────────
 
 // IDs donde inyectamos el nombre del niño/a (1 por bloque temperamental
-// de Stage 1). Si más adelante quieres más/menos, edita esta lista — el
-// resto del motor lo respeta automáticamente.
+// de Stage 1). Configurable: edita esta lista para cambiar dónde aparece
+// el nombre durante el test.
 export const NAME_INJECTION_IDS = new Set(['COL1', 'SAN1', 'MEL1', 'FLE1']);
 
-/**
- * Capitaliza la primera letra (sin lower-casear el resto, así "MARÍA"
- * queda como "MARÍA" — respeta lo que el padre escribió). Trim por seguridad.
- */
 function tidyName(name) {
   if (typeof name !== 'string') return '';
   const trimmed = name.trim();
@@ -55,19 +80,10 @@ function tidyName(name) {
 }
 
 /**
- * Inserta el nombre al principio de la frase, en minúscula la inicial del
- * texto original (porque ahora viene tras el nombre, ya no es comienzo de
- * oración). Mantiene el resto tal cual.
- *
- * Ejemplos:
- *   prefixWithName('María', 'En grupos de niños, suele ser la que…')
- *     → 'María, en grupos de niños, suele ser la que…'
- *   prefixWithName('Juan', 'Cuando algo le molesta, se le nota en la cara…')
- *     → 'Juan, cuando algo le molesta, se le nota en la cara…'
+ * Prefijo "Nombre, " + texto con primera letra minúscula.
  */
 function prefixWithName(name, text) {
   if (!name || !text) return text;
-  // Baja la primera letra del texto original (era inicio de frase).
   const lowered = text[0].toLowerCase() + text.slice(1);
   return `${name}, ${lowered}`;
 }
@@ -75,30 +91,28 @@ function prefixWithName(name, text) {
 // ──────────────────────────── render principal ───────────────────────────
 
 /**
- * Renderiza un ítem del test según el set, el sexo, y opcionalmente
- * inyectando el nombre del niño/a.
+ * Renderiza un ítem del test resolviendo edad, género y opcional inyección
+ * de nombre en orden.
  *
- * @param {object} item    — del JSON: { id, templates: {A,B}, personalize: {A,B}, ... }
- * @param {object} ctx     — { set: 'A'|'B', sex: 'M'|'F'|'X', name?: string }
+ * @param {object} item   — del JSON: { id, template, ... }
+ * @param {object} ctx    — { set: 'A'|'B', sex: 'M'|'F'|'X', name?: string }
  * @returns {string}
  */
 export function renderItem(item, ctx) {
-  if (!item || !item.templates) return '';
+  if (!item || !item.template) return '';
   const set = ctx.set === 'B' ? 'B' : 'A';
   const sex = ctx.sex || 'M';
-  const template = item.templates[set] || item.templates.A || '';
 
-  // 1. Aplica placeholders sólo si el ítem está marcado como personalizable
-  //    en este set (microoptimización; aplicarlos siempre tampoco rompería
-  //    nada porque no habría placeholders que reemplazar).
-  const personalize = item.personalize && item.personalize[set];
-  const withGender = personalize ? applyGender(template, sex) : template;
+  // 1. Contexto por edad
+  let text = applyAgeContext(item.template, set);
 
-  // 2. Inyecta el nombre si el ítem está en la lista de puntos de inyección
-  //    y hay nombre disponible.
+  // 2. Género (no-op si el template no tiene placeholders de género)
+  text = applyGender(text, sex);
+
+  // 3. Inyección de nombre en ítems-objetivo
   const cleanName = tidyName(ctx.name);
   if (cleanName && NAME_INJECTION_IDS.has(item.id)) {
-    return prefixWithName(cleanName, withGender);
+    text = prefixWithName(cleanName, text);
   }
-  return withGender;
+  return text;
 }
