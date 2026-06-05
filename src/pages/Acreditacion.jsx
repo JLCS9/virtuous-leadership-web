@@ -100,7 +100,7 @@ export default function Acreditacion() {
           <h2 style={styles.h2}>{t('acreditacion.contact_title')}</h2>
           <p style={{ ...styles.para, marginTop: 16, fontSize: 17 }}>{t('acreditacion.contact_text')}</p>
           <div style={{ marginTop: 24 }}>
-            <CTA href={`mailto:${t('common.contact_email')}`} variant="primary">
+            <CTA href={`mailto:${t('common.contact_email')}`} variant="primary" dataGtm="contact-lead">
               {t('common.request_meeting')}
             </CTA>
           </div>

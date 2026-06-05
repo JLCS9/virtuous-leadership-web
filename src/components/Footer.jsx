@@ -51,6 +51,7 @@ export default function Footer() {
             {t('footer.contact_heading')}
           </h4>
           <a href={`mailto:${email}`}
+             data-gtm="contact-lead"
              style={{ fontFamily: FONT_SANS, fontSize: 14, color: PAPER, textDecoration: 'none', display: 'block', marginBottom: 8 }}>
             {email}
           </a>

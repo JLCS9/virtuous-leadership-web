@@ -1,28 +1,21 @@
 <!doctype html>
 <html lang="es">
   <head>
+    <!-- Cookiebot CMP — primer script del <head>, ANTES de GTM, para que el
+         bloqueo automático (data-blockingmode="auto") se aplique a las tags
+         que GTM cargue después. Compatible con Google Consent Mode v2. -->
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="ee97635e-a492-46ca-9bf2-0af8a4a0b32c" data-blockingmode="auto" type="text/javascript"></script>
+
     <!-- Google Tag Manager — lo más arriba posible en <head> según docs.
-         Conviven con el gtag.js de abajo (gtag manda directo a GA4; GTM
-         es el contenedor de tags). Si en algún momento mueves GA4 dentro
-         de GTM, el gtag de abajo se puede retirar. -->
+         GA4 (G-HM6K1685L2) se dispara desde dentro del contenedor GTM a
+         partir del evento `page_view` que PageTracker pushea al dataLayer
+         en cada cambio de ruta. -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-W9P5BPF9');</script>
     <!-- End Google Tag Manager -->
-
-    <!-- Google tag (gtag.js) — tag estatico para que GA Verify lo detecte.
-         send_page_view: false porque PageTracker (React Router) envia un
-         page_view por cada cambio de ruta dentro de la SPA. Asi evitamos
-         doble-conteo y al mismo tiempo Google encuentra el tag en el HTML. -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HM6K1685L2"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-HM6K1685L2', { send_page_view: false });
-    </script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

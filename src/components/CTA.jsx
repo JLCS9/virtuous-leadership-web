@@ -16,7 +16,7 @@ import { LocalLink } from '../i18n';
 // "final" se recalcula desde base+style, sin necesidad de "resetear" valores
 // manualmente. Esto evita el bug en el que un boton con background custom
 // se quedaba con el background por defecto tras mouseOut.
-export default function CTA({ to, href, variant = 'primary', children, style, hoverStyle, target, rel }) {
+export default function CTA({ to, href, variant = 'primary', children, style, hoverStyle, target, rel, dataGtm }) {
   const [hovered, setHovered] = useState(false);
   const base = variant === 'primary' ? styles.buttonPrimary : styles.buttonSecondary;
   const merged = { ...base, ...style };
@@ -34,12 +34,15 @@ export default function CTA({ to, href, variant = 'primary', children, style, ho
     ? { ...merged, ...defaultHover, ...hoverStyle }
     : merged;
 
+  // `data-gtm` se mapea desde la prop camelCase `dataGtm` para que GTM
+  // lo lea via Click Element en el DOM. Sólo se renderiza si se pasa.
   const interaction = {
     style: finalStyle,
     onMouseEnter: () => setHovered(true),
     onMouseLeave: () => setHovered(false),
     onFocus:      () => setHovered(true),
     onBlur:       () => setHovered(false),
+    ...(dataGtm ? { 'data-gtm': dataGtm } : null),
   };
 
   if (to) return <LocalLink to={to} {...interaction}>{children}</LocalLink>;

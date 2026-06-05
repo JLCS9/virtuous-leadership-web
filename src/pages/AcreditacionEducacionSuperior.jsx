@@ -100,7 +100,7 @@ export default function AcreditacionEducacionSuperior() {
           <h2 style={{ ...styles.h2, color: PAPER }}>{t('edsup.cta_title')}</h2>
           <p style={{ ...styles.paraLarge, color: '#D9DEE8' }}>{t('edsup.cta_text')}</p>
           <div style={{ marginTop: 24 }}>
-            <CTA href={`mailto:${t('common.contact_email')}`} variant="primary"
+            <CTA href={`mailto:${t('common.contact_email')}`} variant="primary" dataGtm="contact-lead"
                  style={{ background: GOLD, color: NAVY, borderColor: GOLD }}>
               {t('common.request_meeting')}
             </CTA>

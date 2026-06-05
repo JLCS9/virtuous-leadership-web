@@ -309,6 +309,7 @@ function Welcome({ onStart }) {
         </div>
         <div style={{ flex: 1 }} />
         <button
+          data-gtm="comenzar-test-temperamento"
           style={styles.buttonPrimary}
           onMouseOver={e => (e.currentTarget.style.background = NAVY_SOFT)}
           onMouseOut={e => (e.currentTarget.style.background = NAVY)}
@@ -376,6 +377,8 @@ function Transition({ primario, onContinue }) {
 
       <div style={{ marginTop: 28 }}>
         <button
+          data-gtm="fin-etapa-1-test-temperamento"
+          data-temperament={primario}
           style={styles.buttonPrimary}
           onMouseOver={e => (e.currentTarget.style.background = NAVY_SOFT)}
           onMouseOut={e => (e.currentTarget.style.background = NAVY)}
@@ -677,6 +680,19 @@ function GateForm({ profileKey, primario, decision, onSubmitOk }) {
         submittedAt: new Date().toISOString(),
       },
     };
+    // Push al dataLayer ANTES de la llamada de red. Mide intención de envío
+    // del gate del test (todos los campos válidos y submit lanzado), no
+    // depende del resultado de Brevo. GTM levanta `fin_test_temperamento`.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'fin_test_temperamento',
+      test_nombre: payload.contact.name,
+      test_email: payload.contact.email,
+      test_anio: payload.contact.birthYear,
+      test_sexo: payload.contact.sex,
+      test_temperamento: primario,
+    });
+
     try {
       await submitContact(payload);
       onSubmitOk();

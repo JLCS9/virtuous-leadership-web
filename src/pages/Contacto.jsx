@@ -46,7 +46,7 @@ export default function Contacto() {
           </a>
           {/* Nota de idiomas ("Disponible en español, francés, ...") quitada. */}
           <div style={{ marginTop: 24 }}>
-            <CTA href={`mailto:${email}`} variant="primary">{t('common.write_email')}</CTA>
+            <CTA href={`mailto:${email}`} variant="primary" dataGtm="contact-lead">{t('common.write_email')}</CTA>
           </div>
         </div>
       </Section>
