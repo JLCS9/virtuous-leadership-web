@@ -1,0 +1,111 @@
+{
+  "version": "tbp-children-v2-fr",
+  "_notes": {
+    "structure": "Même moteur que la version espagnole. 16 stage1 + 8 tiebreaker + 24 stage2.",
+    "unified": "Un seul template par item. La tranche d'âge change uniquement les exemples contextuels via le placeholder {6-11: ... | 12-17: ...}. Résolu par le moteur.",
+    "placeholders": "Genre: {il/elle}, {le/la}, {lui/elle}, {celui/celle}, {ceux/celles}, {ami/amie}, {amis/amies}, {un/une}, {silencieux/silencieuse}, {éteint/éteinte}, {impatient/impatiente}, {nerveux/nerveuse}, {nerveux/nerveuses}, {seul/seule}, {qu'il/qu'elle}, {s'il/si elle}, {lui-même/elle-même} (capitalisés en début de phrase: {Il/Elle}, {S'il/Si elle}). Âge: {6-11: exemple enfant | 12-17: exemple ado}. Résolus par src/lib/childPersonalize.js.",
+    "name_injection": "Le moteur injecte le nom de l'enfant en COL1, SAN1, MEL1, FLE1 (un item par bloc temperamental de l'étape 1)."
+  },
+  "stage1": {
+    "COL": [
+      { "id": "COL1", "tempera": "COL",
+        "template": "{6-11: Quand {il/elle} joue avec d'autres enfants, {il/elle} a tendance à être {celui/celle} qui décide à quoi jouer et distribue les rôles, plutôt que de suivre ce que les autres proposent. | 12-17: Quand son groupe n'arrive pas à décider quoi faire ou où aller, {il/elle} est généralement {celui/celle} qui met fin à l'indécision et propose un plan.}" },
+      { "id": "COL2", "tempera": "COL",
+        "template": "Quand quelque chose (un jeu, une tâche, un projet) traîne parce que d'autres hésitent, {il/elle} devient visiblement {impatient/impatiente} : {il/elle} soupire, bouscule les autres, ou essaie de prendre le contrôle." },
+      { "id": "COL3", "tempera": "COL",
+        "template": "Quand quelque chose {le/la} met en colère ou {le/la} frustre ({6-11: perdre à un jeu, que quelque chose rate | 12-17: un mauvais résultat, une dispute}), cela se voit immédiatement sur son visage, son ton ou ses gestes, avant même {qu'il/qu'elle} ne dise un mot." },
+      { "id": "COL4", "tempera": "COL",
+        "template": "Quand {il/elle} n'est pas d'accord avec une règle ou une décision ({6-11: à la maison, en classe | 12-17: à la maison, avec les professeurs, avec des amis}), {il/elle} l'exprime directement et discute — même si cela crée des tensions — plutôt que de se taire ou de céder pour éviter le conflit." }
+    ],
+    "SAN": [
+      { "id": "SAN1", "tempera": "SAN",
+        "template": "En arrivant dans un endroit ou un groupe nouveau où {il/elle} ne connaît presque personne, {il/elle} s'approche immédiatement et brise la glace sans difficulté ({6-11: au parc, à un anniversaire | 12-17: à une fête, dans un nouveau groupe})." },
+      { "id": "SAN2", "tempera": "SAN",
+        "template": "Après une déception ({6-11: une engueulade, une perte à un jeu, un plan qui tombe à l'eau | 12-17: une dispute, un mauvais résultat, un plan annulé}), {il/elle} s'en remet rapidement et retrouve son bon moral en peu de temps." },
+      { "id": "SAN3", "tempera": "SAN",
+        "template": "Face à quelque chose de nouveau ou un changement de plan, {il/elle} part du principe que cela va bien se passer et se concentre davantage sur les aspects positifs que sur ce qui pourrait mal tourner." },
+      { "id": "SAN4", "tempera": "SAN",
+        "template": "Quand quelque chose lui arrive (bon ou mauvais), la première chose {qu'il/qu'elle} fait est d'en parler à quelqu'un ({6-11: à vous, à {un/une} {ami/amie} | 12-17: à des {amis/amies}, à la famille}) plutôt que de le garder pour {lui/elle}." }
+    ],
+    "MEL": [
+      { "id": "MEL1", "tempera": "MEL",
+        "template": "Après quelque chose qui l'affecte profondément (une engueulade, une déception, une dispute), {il/elle} reste {silencieux/silencieuse} ou {éteint/éteinte} pendant longtemps — {6-11: plus longtemps que les autres enfants de son âge | 12-17: parfois pendant des heures ou des jours}." },
+      { "id": "MEL2", "tempera": "MEL",
+        "template": "Des commentaires ou critiques qui {6-11: pour d'autres enfants | 12-17: pour d'autres jeunes de son âge} glissent sans les toucher continuent à l'affecter pendant un bon moment, parfois des jours." },
+      { "id": "MEL3", "tempera": "MEL",
+        "template": "Si quelque chose {qu'il/qu'elle} fait ne se passe pas comme {il/elle} le souhaiterait ({6-11: un dessin, des devoirs, un bricolage | 12-17: un projet, une note, quelque chose {qu'il/qu'elle} a créé}), {il/elle} ne le considère pas comme assez bien et a du mal à lâcher prise pour passer à autre chose, même quand c'est déjà correct." },
+      { "id": "MEL4", "tempera": "MEL",
+        "template": "{Il/Elle} préfère être avec une ou deux personnes proches plutôt que de rejoindre un grand groupe ou une réunion avec beaucoup de monde." }
+    ],
+    "FLE": [
+      { "id": "FLE1", "tempera": "FLE",
+        "template": "Dans les moments de tension ({6-11: une dispute à la maison, une urgence, un conflit entre enfants | 12-17: des disputes familiales, des drames entre {amis/amies}, des examens}), {il/elle} reste calme même quand les autres s'énervent." },
+      { "id": "FLE2", "tempera": "FLE",
+        "template": "Face à quelque chose de nouveau (un groupe, une activité), {il/elle} préfère observer un moment depuis la touche avant de se joindre aux autres, plutôt que de se lancer immédiatement." },
+      { "id": "FLE3", "tempera": "FLE",
+        "template": "{S'il/Si elle} peut obtenir ce {qu'il/qu'elle} veut sans discuter ni se battre, {il/elle} choisit presque toujours cette voie." },
+      { "id": "FLE4", "tempera": "FLE",
+        "template": "Quand une routine ou une façon de faire fonctionne pour {lui/elle}, {il/elle} ne ressent pas le besoin de changer pour essayer autre chose ; {il/elle} est à l'aise avec ce {qu'il/qu'elle} connaît." }
+    ]
+  },
+  "tiebreaker": {
+    "COL": [
+      { "id": "TCOL1", "tempera": "COL",
+        "template": "Quand {6-11: un autre enfant {le/la} défie ou {le/la} contredit | 12-17: quelqu'un {le/la} confronte ({un/une} camarade, un frère ou une sœur, un adulte)}, son premier réflexe est de tenir tête, pas de désamorcer la tension." },
+      { "id": "TCOL2", "tempera": "COL",
+        "template": "{Il/Elle} décide rapidement et se met en mouvement même quand tout n'est pas clair ; {il/elle} préfère agir plutôt qu'attendre." }
+    ],
+    "SAN": [
+      { "id": "TSAN1", "tempera": "SAN",
+        "template": "Les choses nouvelles et inconnues l'attirent et l'excitent, même {s'il/si elle} ne sait pas encore comment cela va se passer." },
+      { "id": "TSAN2", "tempera": "SAN",
+        "template": "{Il/Elle} commence {6-11: des jeux ou des loisirs | 12-17: des activités ou des centres d'intérêt} avec beaucoup d'enthousiasme, mais quand la nouveauté s'estompe, {il/elle} s'ennuie et veut passer à autre chose." }
+    ],
+    "MEL": [
+      { "id": "TMEL1", "tempera": "MEL",
+        "template": "Quand quelque chose l'affecte vraiment, {il/elle} n'en parle qu'à une ou deux personnes de confiance." },
+      { "id": "TMEL2", "tempera": "MEL",
+        "template": "Des petits détails que {6-11: d'autres enfants ne remarqueraient même pas | 12-17: d'autres ne prêteraient pas attention} (un ton brusque, un regard, une remarque en passant) continuent de l'affecter longtemps." }
+    ],
+    "FLE": [
+      { "id": "TFLE1", "tempera": "FLE",
+        "template": "Quand les autres s'affolent ou deviennent {nerveux/nerveuses} ({6-11: une urgence, un groupe agité | 12-17: des urgences, des drames, la pression du groupe}), {il/elle} garde son propre rythme sans se laisser contaminer." },
+      { "id": "TFLE2", "tempera": "FLE",
+        "template": "{Il/Elle} préfère s'en tenir à ce {qu'il/qu'elle} connaît déjà plutôt que de se lancer dans quelque chose de nouveau juste pour essayer." }
+    ]
+  },
+  "stage2": {
+    "COL": [
+      { "id": "S2_C1", "adj": "A", "template": "Quand quelque chose réussit bien ou lui fait plaisir, sa bonne humeur dure longtemps, pas seulement sur le moment." },
+      { "id": "S2_C2", "adj": "A", "template": "Les soucis l'empêchent rarement de dormir ou de manger." },
+      { "id": "S2_C3", "adj": "A", "template": "Quand quelque chose tourne mal, {il/elle} le traite rapidement et passe immédiatement à autre chose." },
+      { "id": "S2_C4", "adj": "B", "template": "Après avoir pris une décision importante pour {lui-même/elle-même}, {il/elle} continue à y réfléchir même après qu'elle a été prise." },
+      { "id": "S2_C5", "adj": "B", "template": "Certaines personnes ou situations continuent de peser sur {lui/elle}, même après qu'elles sont terminées, même quand {il/elle} sait qu'elles ne le devraient pas." },
+      { "id": "S2_C6", "adj": "B", "template": "Avant quelque chose d'important ({6-11: un examen, une représentation, un anniversaire | 12-17: un examen, une présentation, un événement social}), on voit de la tension ou de l'inquiétude à l'avance." }
+    ],
+    "SAN": [
+      { "id": "S2_S1", "adj": "A", "template": "Quand quelque chose l'indigne, {il/elle} a du mal à le cacher même quand {il/elle} sait {qu'il/qu'elle} le devrait." },
+      { "id": "S2_S2", "adj": "A", "template": "Son humeur peut passer de très haut à très bas (ou l'inverse) dans la même journée." },
+      { "id": "S2_S3", "adj": "A", "template": "Quand quelque chose compte vraiment pour {lui/elle}, {il/elle} réagit avec une intensité considérable." },
+      { "id": "S2_S4", "adj": "B", "template": "Quand il y a des tensions dans un groupe ({6-11: entre frères et sœurs, entre {amis/amies} | 12-17: entre {amis/amies}, à la maison}), {il/elle} fait généralement partie de {ceux/celles} qui restent calmes." },
+      { "id": "S2_S5", "adj": "B", "template": "Les situations nouvelles ne {le/la} rendent généralement pas {nerveux/nerveuse}." },
+      { "id": "S2_S6", "adj": "B", "template": "Son humeur reste assez stable tout au long de la journée." }
+    ],
+    "MEL": [
+      { "id": "S2_M1", "adj": "A", "template": "Quand {il/elle} sait ce {qu'il/qu'elle} pense, {il/elle} le dit même si cela {le/la} rend impopulaire." },
+      { "id": "S2_M2", "adj": "A", "template": "{Il/Elle} a du mal à laisser passer une injustice sans réagir (en classe, avec ses frères et sœurs, avec ses {amis/amies})." },
+      { "id": "S2_M3", "adj": "A", "template": "Si quelque chose compte pour {lui/elle}, {il/elle} n'a pas de mal à le défendre devant les autres." },
+      { "id": "S2_M4", "adj": "B", "template": "Même quand {il/elle} a une opinion très claire, {il/elle} ne ressent pas de tension à la garder pour {lui/elle}." },
+      { "id": "S2_M5", "adj": "B", "template": "Quand {il/elle} peut éviter de se lancer dans une dispute, {il/elle} le fait." },
+      { "id": "S2_M6", "adj": "B", "template": "{Il/Elle} préfère d'abord observer la situation, puis prendre position." }
+    ],
+    "FLE": [
+      { "id": "S2_F1", "adj": "A", "template": "{Il/Elle} trouve facilement la conversation avec presque n'importe qui." },
+      { "id": "S2_F2", "adj": "A", "template": "{Il/Elle} apprécie les rencontres sociales (anniversaires, réunions, sorties entre {amis/amies}), même si elles sont brèves ou occasionnelles." },
+      { "id": "S2_F3", "adj": "A", "template": "Avec de nouveaux groupes ou de nouvelles personnes, {il/elle} n'a pas de mal à s'intégrer." },
+      { "id": "S2_F4", "adj": "B", "template": "Après une journée avec beaucoup de monde, {il/elle} a besoin d'un moment {seul/seule} (dans sa chambre, sans personne autour) pour recharger ses batteries." },
+      { "id": "S2_F5", "adj": "B", "template": "Lors des grandes réunions (fêtes, événements familiaux), {il/elle} préfère rester en second plan." },
+      { "id": "S2_F6", "adj": "B", "template": "Les tensions dans l'environnement ({6-11: à la maison, à l'école | 12-17: à la maison, entre {amis/amies}, au collège ou au lycée}) l'affectent plus qu'il n'y paraît à première vue." }
+    ]
+  }
+}

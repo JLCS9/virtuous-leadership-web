@@ -1,10 +1,34 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useT } from './i18n';
-import QUESTIONS from './data/questions-children.es.json';
+import QUESTIONS_ES from './data/questions-children.es.json';
+import QUESTIONS_EN from './data/questions-children.en.json';
+import QUESTIONS_FR from './data/questions-children.fr.json';
+import QUESTIONS_RU from './data/questions-children.ru.json';
 import { applyGender, renderItem } from './lib/childPersonalize';
 import ttImg from './assets/tt.png';
+// Imágenes del CTA final por idioma — los archivos tienen leyenda y
+// portada localizadas (no son los mismos files con texto en inglés).
 import crecerEs from './assets/crecer-es.jpg';
-import budleEs  from './assets/budle-es.jpg';
+import crecerEn from './assets/crecer-en.png';
+import crecerFr from './assets/crecer-fr.png';
+import crecerRu from './assets/crecer-rus.png';
+import budleEs from './assets/budle-es.jpg';
+import budleEn from './assets/budle-en.jpg';
+import budleFr from './assets/budle-fr.jpg';
+import budleRu from './assets/budle-rus.png';
+
+// Banco de preguntas y assets indexados por idioma. Los 4 JSONs comparten
+// IDs (COL1..FLE4, TCOL1..TFLE2, S2_C1..S2_F6) y misma estructura
+// stage1/tiebreaker/stage2 — solo cambia el contenido de `template`.
+const QUESTIONS_BY_LANG = { es: QUESTIONS_ES, en: QUESTIONS_EN, fr: QUESTIONS_FR, ru: QUESTIONS_RU };
+const CRECER_BY_LANG    = { es: crecerEs, en: crecerEn, fr: crecerFr, ru: crecerRu };
+const BUDLE_BY_LANG     = { es: budleEs,  en: budleEn,  fr: budleFr,  ru: budleRu  };
+
+// QUESTIONS_BASE se usa SOLO para construir el lookup id→tempera en
+// tiempo de carga del módulo. Los IDs son estables entre idiomas, así
+// que cualquier JSON sirve para esto. Para el texto renderizado usamos
+// el JSON del idioma activo desde useMemo dentro del componente.
+const QUESTIONS_BASE = QUESTIONS_ES;
 
 // ───────────────────── paleta y tipografías ─────────────────────
 // Mismo lenguaje visual que el test adulto. Mantenemos copias locales en lugar
@@ -43,12 +67,13 @@ const STAGE2_MAP = {
 const DIAGONAL = { COL: 'FLE', FLE: 'COL', SAN: 'MEL', MEL: 'SAN' };
 
 // Lookup id → tempera (sólo Stage 1 + Tiebreaker, que es lo que usamos
-// para scoring de primario). Construido del dataset.
+// para scoring de primario). Construido del dataset. IDs son estables
+// entre idiomas, así que usamos QUESTIONS_BASE.
 const TYPE_BY_ID = (() => {
   const m = {};
   for (const t of ['COL', 'SAN', 'MEL', 'FLE']) {
-    for (const it of QUESTIONS.stage1[t])     m[it.id] = t;
-    for (const it of QUESTIONS.tiebreaker[t]) m[it.id] = t;
+    for (const it of QUESTIONS_BASE.stage1[t])     m[it.id] = t;
+    for (const it of QUESTIONS_BASE.tiebreaker[t]) m[it.id] = t;
   }
   return m;
 })();
@@ -64,7 +89,8 @@ function shuffle(arr) {
 
 // Construye el orden de Stage 1: 16 ítems mezclados con la restricción de
 // que no haya dos seguidos del mismo temperamento. Mismo algoritmo que el adulto.
-function buildStage1Order() {
+// Recibe el banco de preguntas del idioma activo.
+function buildStage1Order(QUESTIONS) {
   const types = ['COL', 'SAN', 'MEL', 'FLE'];
   const slots = {};
   for (const t of types) slots[t] = shuffle([0, 1, 2, 3]);
@@ -83,7 +109,7 @@ function buildStage1Order() {
   return out;
 }
 
-function buildStage2Order(primario) {
+function buildStage2Order(QUESTIONS, primario) {
   return shuffle(QUESTIONS.stage2[primario].map(it => ({ ...it })));
 }
 
@@ -562,7 +588,7 @@ function ParentGate({ child, decision, schoolToken, onSubmitOk }) {
 // Resultado: las descripciones de perfil del i18n llevan placeholders
 // ({o/a}, etc.) que resolvemos con applyGender antes de pintar.
 function ResultScreen({ child, decision, onRestart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const profile = t(`tbp_children.profiles.${decision.key}`) || {};
   const isPure = !decision.key.includes('-');
   const primario = decision.primario;
@@ -636,8 +662,8 @@ function ResultScreen({ child, decision, onRestart }) {
           </h2>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }} className="test-end-cta">
-          <CTACard image={crecerEs} buttonLabel={t('tbp_children.result.cta_ebook_button')}   href={t('tbp_children.result.cta_ebook_url')} />
-          <CTACard image={budleEs}  buttonLabel={t('tbp_children.result.cta_courses_button')} href={t('tbp_children.result.cta_courses_url')} />
+          <CTACard image={CRECER_BY_LANG[lang] || crecerEs} buttonLabel={t('tbp_children.result.cta_ebook_button')}   href={t('tbp_children.result.cta_ebook_url')} />
+          <CTACard image={BUDLE_BY_LANG[lang]  || budleEs}  buttonLabel={t('tbp_children.result.cta_courses_button')} href={t('tbp_children.result.cta_courses_url')} />
         </div>
         <style>{`@media (min-width: 700px) { .test-end-cta { grid-template-columns: 1fr 1fr !important; gap: 24px !important; } }`}</style>
       </section>
@@ -685,6 +711,11 @@ const PHASE = {
 };
 
 export default function TestTBPChildren() {
+  const { lang } = useT();
+  // Banco de preguntas del idioma activo. Si el idioma no tiene JSON
+  // (no debería pasar — los 4 están), cae a ES como fallback seguro.
+  const QUESTIONS = useMemo(() => QUESTIONS_BY_LANG[lang] || QUESTIONS_BY_LANG.es, [lang]);
+
   const [phase, setPhase] = useState(PHASE.WELCOME);
   const [schoolToken, setSchoolToken] = useState(null);
   const [child, setChild] = useState(null);  // { firstName, birthYear, sex, age, set }
@@ -727,7 +758,7 @@ export default function TestTBPChildren() {
 
   function handleChildContinue(childData) {
     setChild(childData);
-    setS1Order(buildStage1Order());
+    setS1Order(buildStage1Order(QUESTIONS));
     setS1Answers([]); setS1Index(0);
     setTieOrder([]); setTieAnswers([]); setTieIndex(0);
     setPrimario(null); setStage1Scores(null);
@@ -746,6 +777,7 @@ export default function TestTBPChildren() {
       const { tiedTypes } = topAndMargin(scores);
       if (tiedTypes.length >= 2) {
         const items = tiedTypes.flatMap(tk => QUESTIONS.tiebreaker[tk].map(it => ({ ...it, type: tk })));
+        // (QUESTIONS aquí viene del useMemo dentro del componente — idioma activo)
         setTieOrder(shuffle(items));
         setTieAnswers([]); setTieIndex(0);
         setPhase(PHASE.TIE);
@@ -785,7 +817,7 @@ export default function TestTBPChildren() {
     const top = forcedPrimario || topAndMargin(scoresMerged).top;
     setStage1Scores(scoresMerged);
     setPrimario(top);
-    setS2Order(buildStage2Order(top));
+    setS2Order(buildStage2Order(QUESTIONS, top));
     setS2Answers([]); setS2Index(0);
     setPhase(PHASE.TRANSITION);
   }

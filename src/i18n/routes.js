@@ -24,10 +24,10 @@ export const ROUTES = {
   // Pensada para landing post-envío o link directo desde Brevo. Va con Layout
   // normal (no es NO_LAYOUT) para que el usuario pueda navegar al resto del sitio.
   test_temperamento_gracias: { es: 'tests/temperamento/gracias', en: 'tests/temperament/thank-you', fr: 'tests/temperament/merci', ru: 'testy/temperament/spasibo' },
-  // Test de temperamento para niños — sólo ES de momento. Los demás idiomas
-  // tienen el slug undefined, así no se generan rutas en App.jsx (la pagina
-  // queda inaccesible en EN/FR/RU hasta que se traduzca).
-  test_temperamento_ninos: { es: 'tests/temperamento-infantil' },
+  // Test de temperamento para niños — disponible en los 4 idiomas con
+  // banco unificado de preguntas por idioma (questions-children.{lang}.json)
+  // y motor de personalización lang-agnostic ({X/Y} placeholders).
+  test_temperamento_ninos: { es: 'tests/temperamento-infantil', en: 'tests/temperament-children', fr: 'tests/temperament-enfants', ru: 'testy/temperament-detey' },
   // Paginas legales — disponibles en 4 idiomas; menu oculto, solo bandera de idioma.
   politica_privacidad:   { es: 'politica-de-privacidad',  en: 'privacy-policy',         fr: 'politique-de-confidentialite', ru: 'politika-konfidentsialnosti' },
   cookies:               { es: 'cookies',                  en: 'cookies',                fr: 'cookies',                       ru: 'cookies' },

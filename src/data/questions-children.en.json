@@ -1,0 +1,111 @@
+{
+  "version": "tbp-children-v2-en",
+  "_notes": {
+    "structure": "Same engine as Spanish version. 16 stage1 + 8 tiebreaker + 24 stage2.",
+    "unified": "Single template per item. Age band only changes contextual examples via {6-11: ... | 12-17: ...} placeholder. Resolved by engine.",
+    "placeholders": "Gender: {he/she}, {his/her}, {him/her}, {himself/herself} (capitalized at sentence start: {He/She}, {His/Her}). Age: {6-11: kid example | 12-17: teen example}. Resolved by src/lib/childPersonalize.js.",
+    "name_injection": "Engine injects child's name in COL1, SAN1, MEL1, FLE1 (one item per Stage 1 temperament block)."
+  },
+  "stage1": {
+    "COL": [
+      { "id": "COL1", "tempera": "COL",
+        "template": "{6-11: When playing with other children, {he/she} tends to be the one who decides what to play and assigns roles, rather than following what others suggest. | 12-17: When {his/her} group can't decide what to do or where to go, {he/she} is usually the one who cuts through the indecision and proposes a plan.}" },
+      { "id": "COL2", "tempera": "COL",
+        "template": "When something (a game, a task, a plan) is going slowly because others are hesitating, {he/she} becomes visibly impatient: sighs, hurries others along, or tries to take charge." },
+      { "id": "COL3", "tempera": "COL",
+        "template": "When something makes {him/her} angry or frustrated ({6-11: losing a game, something going wrong | 12-17: a bad outcome, an argument}), it shows immediately on {his/her} face, tone, or gestures, even before {he/she} says a word." },
+      { "id": "COL4", "tempera": "COL",
+        "template": "When {he/she} disagrees with a rule or decision ({6-11: at home, in class | 12-17: at home, with teachers, with friends}), {he/she} addresses it directly and argues the point — even if it creates tension — rather than staying quiet or giving in to avoid conflict." }
+    ],
+    "SAN": [
+      { "id": "SAN1", "tempera": "SAN",
+        "template": "When arriving somewhere new or joining a group where {he/she} knows almost no one, {he/she} immediately approaches and breaks the ice without difficulty ({6-11: at the park, at a birthday party | 12-17: at a party, in a new group})." },
+      { "id": "SAN2", "tempera": "SAN",
+        "template": "After a disappointment ({6-11: a scolding, losing a game, a plan falling through | 12-17: an argument, a bad outcome, a canceled plan}), {he/she} gets over it quickly and returns to good spirits in no time." },
+      { "id": "SAN3", "tempera": "SAN",
+        "template": "When facing something new or a change of plans, {he/she} assumes it will go well and focuses more on the positives than on what could go wrong." },
+      { "id": "SAN4", "tempera": "SAN",
+        "template": "When something happens to {him/her} (good or bad), the first thing {he/she} does is tell someone ({6-11: you, a friend | 12-17: friends, family}) rather than keeping it to {himself/herself}." }
+    ],
+    "MEL": [
+      { "id": "MEL1", "tempera": "MEL",
+        "template": "After something that affects {him/her} deeply (a scolding, a disappointment, an argument), {he/she} stays quiet or withdrawn for a long time — {6-11: longer than other children {his/her} age | 12-17: sometimes for hours or even days}." },
+      { "id": "MEL2", "tempera": "MEL",
+        "template": "Comments or criticisms that {6-11: other children | 12-17: other kids {his/her} age} would let roll off their backs still affect {him/her} for quite a while, sometimes days." },
+      { "id": "MEL3", "tempera": "MEL",
+        "template": "If something {he/she} does doesn't turn out as {he/she} thinks it should ({6-11: a drawing, homework, a craft | 12-17: a project, a grade, something {he/she} has created}), {he/she} doesn't consider it good enough and has trouble letting it go and moving on to something else, even when it's already fine." },
+      { "id": "MEL4", "tempera": "MEL",
+        "template": "{He/She} prefers being with one or two close people rather than joining a large group or a gathering with lots of people." }
+    ],
+    "FLE": [
+      { "id": "FLE1", "tempera": "FLE",
+        "template": "In moments of tension ({6-11: an argument at home, an emergency, a dispute among children | 12-17: family arguments, friend drama, exams}), {he/she} stays calm even when others get upset." },
+      { "id": "FLE2", "tempera": "FLE",
+        "template": "When faced with something new (a group, an activity), {he/she} prefers to observe from the sidelines for a while before joining in, rather than jumping right in." },
+      { "id": "FLE3", "tempera": "FLE",
+        "template": "If {he/she} can get what {he/she} wants without arguing or fighting, {he/she} almost always chooses that path." },
+      { "id": "FLE4", "tempera": "FLE",
+        "template": "When a routine or way of doing things works for {him/her}, {he/she} feels no need to change it just to try something else; {he/she} is comfortable with the familiar." }
+    ]
+  },
+  "tiebreaker": {
+    "COL": [
+      { "id": "TCOL1", "tempera": "COL",
+        "template": "When {6-11: another child challenges or contradicts {him/her} | 12-17: someone confronts {him/her} (a peer, a sibling, an adult)}, {his/her} first impulse is to stand {his/her} ground, not to de-escalate." },
+      { "id": "TCOL2", "tempera": "COL",
+        "template": "{He/She} decides quickly and gets moving even when not everything is clear; {he/she} prefers acting over waiting." }
+    ],
+    "SAN": [
+      { "id": "TSAN1", "tempera": "SAN",
+        "template": "New and unknown things attract and excite {him/her}, even if {he/she} doesn't yet know how they will turn out." },
+      { "id": "TSAN2", "tempera": "SAN",
+        "template": "{He/She} starts {6-11: games or hobbies | 12-17: activities or interests} with great enthusiasm, but once the novelty wears off, {he/she} gets bored and wants to switch to something else." }
+    ],
+    "MEL": [
+      { "id": "TMEL1", "tempera": "MEL",
+        "template": "When something truly affects {him/her}, {he/she} only tells one or two specific people {he/she} trusts." },
+      { "id": "TMEL2", "tempera": "MEL",
+        "template": "Small details that {6-11: other children wouldn't even notice | 12-17: others wouldn't pay attention to} (a brusque tone, a glance, a passing comment) continue to affect {him/her} for a long while." }
+    ],
+    "FLE": [
+      { "id": "TFLE1", "tempera": "FLE",
+        "template": "When others get rushed or nervous ({6-11: an emergency, a chaotic group | 12-17: emergencies, drama, peer pressure}), {he/she} maintains {his/her} own pace without getting caught up in it." },
+      { "id": "TFLE2", "tempera": "FLE",
+        "template": "{He/She} prefers sticking with what {he/she} already knows rather than jumping into something new just for the sake of trying." }
+    ]
+  },
+  "stage2": {
+    "COL": [
+      { "id": "S2_C1", "adj": "A", "template": "When something goes well for {him/her} or makes {him/her} happy, the good mood lasts a long time, not just for the moment." },
+      { "id": "S2_C2", "adj": "A", "template": "Worries rarely keep {him/her} from sleeping or eating." },
+      { "id": "S2_C3", "adj": "A", "template": "When something goes wrong, {he/she} processes it quickly and moves on right away." },
+      { "id": "S2_C4", "adj": "B", "template": "After making an important decision for {himself/herself}, {he/she} continues to mull it over even after it's already been made." },
+      { "id": "S2_C5", "adj": "B", "template": "There are people or situations that continue to weigh on {him/her} even after they're over, even when {he/she} knows they shouldn't." },
+      { "id": "S2_C6", "adj": "B", "template": "Before something important ({6-11: an exam, a performance, a birthday party | 12-17: an exam, a presentation, a social event}), tension or worry shows in advance." }
+    ],
+    "SAN": [
+      { "id": "S2_S1", "adj": "A", "template": "When something outrages {him/her}, {he/she} has trouble hiding it even when {he/she} knows {he/she} should." },
+      { "id": "S2_S2", "adj": "A", "template": "{His/Her} mood can swing from very high to very low (or vice versa) within the same day." },
+      { "id": "S2_S3", "adj": "A", "template": "When something truly matters to {him/her}, {he/she} reacts with considerable intensity." },
+      { "id": "S2_S4", "adj": "B", "template": "When there's tension in a group ({6-11: among siblings, among friends | 12-17: among friends, at home}), {he/she} is usually one of those who stays calm." },
+      { "id": "S2_S5", "adj": "B", "template": "New situations don't usually make {him/her} nervous." },
+      { "id": "S2_S6", "adj": "B", "template": "{His/Her} mood stays fairly steady throughout the day." }
+    ],
+    "MEL": [
+      { "id": "S2_M1", "adj": "A", "template": "When {he/she} knows what {he/she} thinks, {he/she} says it even if it makes {him/her} unpopular." },
+      { "id": "S2_M2", "adj": "A", "template": "{He/She} finds it hard to let an injustice pass without reacting (in class, with siblings, with friends)." },
+      { "id": "S2_M3", "adj": "A", "template": "If something matters to {him/her}, {he/she} has no trouble defending it in front of others." },
+      { "id": "S2_M4", "adj": "B", "template": "Even when {he/she} has a very clear opinion, {he/she} feels no tension keeping it to {himself/herself}." },
+      { "id": "S2_M5", "adj": "B", "template": "When {he/she} can avoid getting into an argument, {he/she} does." },
+      { "id": "S2_M6", "adj": "B", "template": "{He/She} prefers to observe the situation first and take a position afterward." }
+    ],
+    "FLE": [
+      { "id": "S2_F1", "adj": "A", "template": "{He/She} finds it easy to strike up a conversation with almost anyone." },
+      { "id": "S2_F2", "adj": "A", "template": "{He/She} enjoys social gatherings (birthdays, get-togethers, meetups) even if they're brief or occasional." },
+      { "id": "S2_F3", "adj": "A", "template": "With new groups or people, {he/she} has no trouble fitting in." },
+      { "id": "S2_F4", "adj": "B", "template": "After a day with lots of people, {he/she} needs some time alone (in {his/her} room, without people around) to recharge." },
+      { "id": "S2_F5", "adj": "B", "template": "At large gatherings (parties, family events), {he/she} prefers to stay in the background." },
+      { "id": "S2_F6", "adj": "B", "template": "Tensions in the environment ({6-11: at home, at school | 12-17: at home, among friends, at school}) affect {him/her} more than is visible on the surface." }
+    ]
+  }
+}

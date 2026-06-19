@@ -794,7 +794,7 @@ export default {
       cta_ebook_button: 'Leer ebook',
       cta_courses_button: 'Ver cursos',
       cta_ebook_url: 'https://alexhavard.com/es/producto/crecer-con-tu-temperamento/',
-      cta_courses_url: 'https://alexhavard.com/producto/course-1-7-bundle/',
+      cta_courses_url: 'https://alexhavard.com/es/producto/paquete-cursos-1-7/',
       repeat_button: 'Hacer el test otra vez',
     },
 
