@@ -150,12 +150,15 @@ function Question({ progress, total, item, lang, onAnswer, onBack, canBack }) {
   const { t } = useT();
   const text = item.text[lang] || item.text.en || '';
   const labels = t('tbp_character.question.likert'); // { strongly_disagree, disagree, neutral, agree, strongly_agree }
+  // Orden de presentación: descendente — totalmente de acuerdo arriba,
+  // totalmente en desacuerdo abajo. Los valores numéricos asociados no
+  // cambian (siguen siendo -1...+1); sólo el orden visual.
   const options = [
-    { key: 'strongly_disagree', value: -1,   label: labels.strongly_disagree },
-    { key: 'disagree',          value: -0.5, label: labels.disagree },
-    { key: 'neutral',           value: 0,    label: labels.neutral },
-    { key: 'agree',             value: 0.5,  label: labels.agree },
     { key: 'strongly_agree',    value: 1,    label: labels.strongly_agree },
+    { key: 'agree',             value: 0.5,  label: labels.agree },
+    { key: 'neutral',           value: 0,    label: labels.neutral },
+    { key: 'disagree',          value: -0.5, label: labels.disagree },
+    { key: 'strongly_disagree', value: -1,   label: labels.strongly_disagree },
   ];
 
   return (
@@ -436,51 +439,110 @@ function PercentBlock({ label, value, color, size }) {
   );
 }
 
-// ResultScreen — 6 cards expandibles + pirámide.
+// SummaryCard — vista compacta: pirámide pequeña + grid 3×2 de virtudes con
+// su % global. Va antes del desglose detallado para que el usuario tenga el
+// "resumen ejecutivo" antes de profundizar.
+function SummaryCard({ scoreResult, pyramidSrc, pyramidAlt, lang }) {
+  const labels = CHARACTER_SUPPORT.labels;
+  return (
+    <div style={{
+      ...styles.card,
+      maxWidth: 980,
+      padding: '40px 36px',
+      marginBottom: 24,
+    }}>
+      {/* Pirámide pequeña, fondo transparente, centrada arriba. */}
+      <div style={{ textAlign: 'center', marginBottom: 28 }}>
+        <img src={pyramidSrc} alt={pyramidAlt}
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block', margin: '0 auto', background: 'transparent' }} />
+      </div>
+
+      {/* Grid de 6 virtudes con su % global. Cada celda usa el color de la
+          virtud como acento (borde superior). En desktop son 3 columnas
+          (2 filas); en mobile se apila vertical. */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+        gap: 12,
+      }}>
+        {['P', 'C', 'S', 'J', 'M', 'H'].map(code => {
+          const s = scoreResult[code];
+          const c = VIRTUE_COLORS[code];
+          const virtueName = resolveSupport(labels, s.virtue_label_key, lang);
+          return (
+            <div key={code} style={{
+              background: PAPER,
+              border: `1px solid ${LINE}`,
+              borderTop: `3px solid ${c.color}`,
+              padding: '18px 14px',
+              borderRadius: 2,
+              textAlign: 'center',
+            }}>
+              <div style={{ fontFamily: fontSerif, fontSize: 32, fontWeight: 600, color: c.color, lineHeight: 1 }}>
+                {Math.round(s.global ?? 0)}%
+              </div>
+              <div style={{ fontSize: 11, color: NAVY, textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 8, fontWeight: 600 }}>
+                {virtueName}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ResultScreen — pirámide+resumen arriba, luego 6 cards expandibles con detalle.
 function ResultScreen({ scoreResult, contactName, onRestart }) {
   const { t, lang } = useT();
   const aboutHtml = resolveSupport(CHARACTER_SUPPORT.html, 'text-about-character-test.html', lang);
   const pyramidSrc = PYRAMID[lang] || PYRAMID.es;
+  const pyramidAlt = t('tbp_character.result.pyramid_alt');
 
   return (
-    <div style={styles.resultCard}>
-      <div style={styles.subtitle}>{t('tbp_character.result.eyebrow_prefix')} {contactName}</div>
-      <h1 style={{ ...styles.h1, fontSize: 36, marginBottom: 12 }}>{t('tbp_character.result.title')}</h1>
-      <p style={styles.para}>{t('tbp_character.result.intro')}</p>
+    <div>
+      {/* Cabecera fuera de card, sin caja, alineada con el resto del flow. */}
+      <div style={{ maxWidth: 980, margin: '0 auto 24px', padding: '0 36px' }}>
+        <div style={styles.subtitle}>{t('tbp_character.result.eyebrow_prefix')} {contactName}</div>
+        <h1 style={{ ...styles.h1, fontSize: 36, marginBottom: 12 }}>{t('tbp_character.result.title')}</h1>
+        <p style={styles.para}>{t('tbp_character.result.intro')}</p>
+      </div>
 
-      <div style={{ marginTop: 32 }}>
+      {/* Resumen ejecutivo: pirámide + 6 % globales. */}
+      <SummaryCard scoreResult={scoreResult} pyramidSrc={pyramidSrc} pyramidAlt={pyramidAlt} lang={lang} />
+
+      {/* Desglose detallado: 6 cards expandibles, una por virtud. */}
+      <div style={{ ...styles.resultCard, paddingTop: 32 }}>
+        <h2 style={{ ...styles.h2, fontSize: 22, marginBottom: 18 }}>
+          {t('tbp_character.result.detail_title')}
+        </h2>
+        <p style={{ ...styles.para, marginTop: 0, marginBottom: 24, color: MUTED, fontSize: 14 }}>
+          {t('tbp_character.result.detail_intro')}
+        </p>
         {['P', 'C', 'S', 'J', 'M', 'H'].map(code => (
           <VirtueCard key={code} code={code} scores={scoreResult[code]} supportLang={lang} lang={lang} />
         ))}
-      </div>
 
-      <div style={{ marginTop: 40, padding: '24px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 2 }}>
-        <h3 style={{ ...styles.h2, fontSize: 18, textTransform: 'uppercase', letterSpacing: '0.08em', color: GOLD }}>
-          {t('tbp_character.result.pyramid_title')}
-        </h3>
-        <img src={pyramidSrc} alt={t('tbp_character.result.pyramid_alt')}
-             style={{ width: '100%', maxWidth: 640, height: 'auto', display: 'block', margin: '16px auto 0' }} />
-      </div>
+        <details style={{ marginTop: 32, padding: '20px 24px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 2 }}>
+          <summary style={{ cursor: 'pointer', fontFamily: fontSerif, fontSize: 18, fontWeight: 600, color: NAVY }}>
+            {t('tbp_character.result.about_summary')}
+          </summary>
+          <div
+            style={{ marginTop: 16, fontSize: 14, lineHeight: 1.65, color: INK }}
+            dangerouslySetInnerHTML={{ __html: aboutHtml }}
+          />
+        </details>
 
-      <details style={{ marginTop: 32, padding: '20px 24px', background: PAPER, border: `1px solid ${LINE}`, borderRadius: 2 }}>
-        <summary style={{ cursor: 'pointer', fontFamily: fontSerif, fontSize: 18, fontWeight: 600, color: NAVY }}>
-          {t('tbp_character.result.about_summary')}
-        </summary>
-        <div
-          style={{ marginTop: 16, fontSize: 14, lineHeight: 1.65, color: INK }}
-          dangerouslySetInnerHTML={{ __html: aboutHtml }}
-        />
-      </details>
-
-      <div style={{ textAlign: 'center', marginTop: 32 }}>
-        <button
-          style={{ ...styles.buttonPrimary, background: 'transparent', color: NAVY }}
-          onMouseOver={e => { e.currentTarget.style.background = NAVY; e.currentTarget.style.color = PAPER; }}
-          onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = NAVY; }}
-          onClick={onRestart}
-        >
-          {t('tbp_character.result.repeat_button')}
-        </button>
+        <div style={{ textAlign: 'center', marginTop: 32 }}>
+          <button
+            style={{ ...styles.buttonPrimary, background: 'transparent', color: NAVY }}
+            onMouseOver={e => { e.currentTarget.style.background = NAVY; e.currentTarget.style.color = PAPER; }}
+            onMouseOut={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = NAVY; }}
+            onClick={onRestart}
+          >
+            {t('tbp_character.result.repeat_button')}
+          </button>
+        </div>
       </div>
     </div>
   );

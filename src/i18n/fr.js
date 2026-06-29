@@ -858,7 +858,9 @@ export default {
     result: {
       eyebrow_prefix: 'Résultats de',
       title: 'Votre profil de vertus',
-      intro: 'Cliquez sur chaque vertu pour lire la description complète. Le caractère se construit jour après jour.',
+      intro: 'Voici un résumé de votre niveau dans les six vertus selon le modèle d\'Alexandre Havard.',
+      detail_title: 'Détail par vertu',
+      detail_intro: 'Cliquez sur chaque vertu pour voir l\'aspect passif, l\'aspect actif et la description complète.',
       global_label: 'Global',
       pyramid_title: 'La pyramide des vertus',
       pyramid_alt: 'Pyramide des six vertus selon Alexandre Havard',

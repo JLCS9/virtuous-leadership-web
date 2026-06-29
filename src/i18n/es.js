@@ -956,7 +956,9 @@ export default {
     result: {
       eyebrow_prefix: 'Resultados de',
       title: 'Tu perfil de virtudes',
-      intro: 'Pincha en cada virtud para leer la descripción completa. Recuerda: el carácter se construye día a día.',
+      intro: 'Aquí tienes un resumen de tu nivel en las seis virtudes según el modelo de Alexandre Havard.',
+      detail_title: 'Desglose por virtud',
+      detail_intro: 'Pincha en cada virtud para ver el aspecto pasivo, el activo y la descripción completa.',
       global_label: 'Global',
       pyramid_title: 'La pirámide de las virtudes',
       pyramid_alt: 'Pirámide de las seis virtudes según Alexandre Havard',

@@ -887,7 +887,9 @@ export default {
     result: {
       eyebrow_prefix: 'Results for',
       title: 'Your virtues profile',
-      intro: 'Click each virtue to read the full description. Remember: character is built one day at a time.',
+      intro: 'Here is a summary of your level across the six virtues in Alexandre Havard\'s model.',
+      detail_title: 'Detailed breakdown',
+      detail_intro: 'Click each virtue to see the passive and active aspects along with the full description.',
       global_label: 'Overall',
       pyramid_title: 'The pyramid of virtues',
       pyramid_alt: 'The pyramid of the six virtues according to Alexandre Havard',
