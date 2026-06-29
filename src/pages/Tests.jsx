@@ -7,13 +7,25 @@ import {
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import SEO from '../components/SEO';
-// Imagen "tt" del test de temperamento localizada por idioma — texto
-// traducido en la propia imagen. Si falta un idioma, se cae al ES.
+// Miniaturas por test (clave -> mapa por idioma). Cada test del catálogo
+// usa su propia ilustración (el texto va embebido en la imagen, de ahí que
+// cada idioma tenga su archivo). Si falta un idioma cae al ES.
+//   'temperament' → sello "tt" (los 4 temperamentos)
+//   'character'   → pirámide de las 6 virtudes
 import ttEs from '../assets/tt.png';
 import ttEn from '../assets/tt-en.png';
 import ttFr from '../assets/tt-fr.png';
 import ttRu from '../assets/tt-ru.png';
-const TT_IMG_BY_LANG = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
+import pyramidEs from '../assets/piramida ES.png';
+import pyramidEn from '../assets/Pyramid Eng.png';
+import pyramidFr from '../assets/Pyramide FR.png';
+import pyramidRu from '../assets/Pyramid Ruso.png';
+const TEST_IMAGES = {
+  temperament: { es: ttEs,      en: ttEn,      fr: ttFr,      ru: ttRu      },
+  character:   { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu },
+};
+// Fallback final si la card no declara `image` o el idioma no está mapeado.
+const DEFAULT_IMG = ttEs;
 
 const TESTS_SEO = {
   es: { title: 'Tests de autoconocimiento',   description: 'Test de temperamento gratis online basado en la teoría de Alexandre Havard. Descubre tu temperamento dominante y la virtud que más necesitas cultivar.' },
@@ -22,11 +34,20 @@ const TESTS_SEO = {
   ru: { title: 'Тесты самопознания',           description: 'Бесплатный онлайн-тест темперамента, основанный на теории Александра Гавара. Узнайте свой доминирующий темперамент и добродетель, которую вам нужно развивать.' },
 };
 
+// Resuelve la miniatura de una card según su `image` (key 'temperament' /
+// 'character' / etc.) y el idioma activo. Si no hay key o no está mapeada,
+// usa el fallback (sello del test adulto) para no romper la card.
+function imageForCard(card, lang) {
+  if (!card.available) return null;
+  const map = TEST_IMAGES[card.image];
+  if (!map) return DEFAULT_IMG;
+  return map[lang] || map.es || DEFAULT_IMG;
+}
+
 export default function Tests() {
   const { t, lang } = useT();
   const cards = t('tests.cards');
   const seo = TESTS_SEO[lang] || TESTS_SEO.es;
-  const ttImage = TT_IMG_BY_LANG[lang] || ttEs;
 
   return (
     <>
@@ -51,7 +72,7 @@ export default function Tests() {
               text={c.text}
               cta={c.cta}
               comingSoon={t('common.coming_soon')}
-              image={c.available ? ttImage : null}
+              image={imageForCard(c, lang)}
             />
           ))}
         </div>

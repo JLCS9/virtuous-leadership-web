@@ -413,10 +413,10 @@ export default {
     hero_title: 'Empieza por conocerte',
     hero_subtitle: 'Las tres herramientas de evaluación del Sistema Liderazgo Virtuoso ayudan a identificar el temperamento, el carácter y posibles tendencias hacia tipos de racionalismo, voluntarismo y sentimentalismo.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',
+      { available: true,  to: '/tests/temperamento', image: 'temperament', label: 'Test 01', title: 'Test de Temperamento',
         text: 'Esta prueba revela tus predisposiciones biológicas innatas: cómo tiendes a reaccionar de forma natural.\nLos cuatro temperamentos son: colérico, melancólico, sanguíneo y flemático.',
         cta: 'Hacer el test' },
-      { available: true,  to: '/tests/caracter', label: 'Test 02', title: 'Test de Carácter',
+      { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Test de Carácter',
         text: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.\nLas seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.',
         cta: 'Hacer el test' },
       { available: false, label: 'Test 03', title: 'Chequeo Espiritual',

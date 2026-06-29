@@ -403,10 +403,10 @@ export default {
     hero_title: 'Start by knowing yourself',
     hero_subtitle: 'The three assessment tests of the Virtuous Leadership System help identify temperament, character, and possible tendencies toward rationalism, voluntarism, and sentimentalism.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Temperament Test',
+      { available: true,  to: '/tests/temperamento', image: 'temperament', label: 'Test 01', title: 'Temperament Test',
         text: 'This test reveals your innate, biological predispositions—how you’re naturally inclined to react.\nThe four temperaments are: choleric, melancholic, sanguine, and phlegmatic.',
         cta: 'Take the test' },
-      { available: true,  to: '/tests/caracter', label: 'Test 02', title: 'Character Test',
+      { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Character Test',
         text: 'This test assesses your personal growth in virtues—spiritual habits developed through conscious effort.\nThere are six essential virtues: prudence, courage, self-mastery, justice, magnanimity, and humility.',
         cta: 'Take the test' },
       { available: false, label: 'Test 03', title: 'Integrated-Human Test',

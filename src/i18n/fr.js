@@ -402,10 +402,10 @@ export default {
     hero_title: 'Commence par te connaître',
     hero_subtitle: 'Les trois outils d\'évaluation du Système de Leadership Vertueux aident à identifier le tempérament, le caractère et les éventuelles tendances vers des formes de rationalisme, de volontarisme et de sentimentalisme.',
     cards: [
-      { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de tempérament',
+      { available: true,  to: '/tests/temperamento', image: 'temperament', label: 'Test 01', title: 'Test de tempérament',
         text: 'Ce test révèle vos prédispositions biologiques innées – votre manière naturelle de réagir.\nLes quatre tempéraments sont : colérique, mélancolique, sanguin et flegmatique.',
         cta: 'Faire le test' },
-      { available: true,  to: '/tests/caracter', label: 'Test 02', title: 'Test de caractère',
+      { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Test de caractère',
         text: 'Ce test mesure votre progression dans les vertus, ces habitudes spirituelles forgées par l\'effort.\nLes six vertus clés sont : prudence, courage, maîtrise de soi, justice, magnanimité et humilité.',
         cta: 'Faire le test' },
       { available: false, label: 'Test 03', title: 'Check-up spirituel',
