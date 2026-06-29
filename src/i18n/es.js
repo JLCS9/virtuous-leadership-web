@@ -416,8 +416,9 @@ export default {
       { available: true,  to: '/tests/temperamento', label: 'Test 01', title: 'Test de Temperamento',
         text: 'Esta prueba revela tus predisposiciones biológicas innatas: cómo tiendes a reaccionar de forma natural.\nLos cuatro temperamentos son: colérico, melancólico, sanguíneo y flemático.',
         cta: 'Hacer el test' },
-      { available: false, label: 'Test 02', title: 'Test de Carácter',
-        text: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.\nLas seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.' },
+      { available: true,  to: '/tests/caracter', label: 'Test 02', title: 'Test de Carácter',
+        text: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.\nLas seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.',
+        cta: 'Hacer el test' },
       { available: false, label: 'Test 03', title: 'Chequeo Espiritual',
         text: 'Esta prueba te ayudará a identificar y corregir posibles tendencias hacia las siguientes 8 enfermedades espirituales:\nracionalismo, voluntarismo religioso, voluntarismo machista, voluntarismo ideológico, voluntarismo conformista, sentimentalismo voluptuoso, sentimentalismo demente, sentimentalismo cobarde.' },
     ],
@@ -898,6 +899,69 @@ export default {
         debilidad: 'Como flemátic{o/a}, puede tener miedo a soñar, y como sanguíne{o/a}, la tendencia a vivir exclusivamente en el presente puede limitar su visión a largo plazo.',
         reto: 'Su reto consiste en cultivar la magnanimidad, la virtud de la grandeza.',
       },
+    },
+  },
+
+  // ──────────── TEST DE CARÁCTER — i18n ────────────
+  // Las claves "cortas" (labels UI, errores, etiquetas) viven aquí.
+  // Los textos largos (intro completa, descripciones por virtud) viven en
+  // src/data/character-support-text.json para no inflar este bundle.
+  tbp_character: {
+    welcome: {
+      eyebrow: 'Test de Carácter — 2',
+      title: 'Test de carácter',
+      byline: 'Modelo de las 6 virtudes de Alexandre Havard',
+      intro_line1: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.',
+      intro_line2: 'Las seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.',
+      notice: 'Responde con honestidad. El test no juzga: dibuja un mapa para que sepas en qué virtudes puedes crecer.',
+      duration_label: 'Duración',
+      duration_text: 'Unos 8-10 minutos · 68 preguntas',
+      button: 'Empezar',
+    },
+    question: {
+      progress: 'Pregunta {n} de {total}',
+      back: '← Atrás',
+      likert: {
+        strongly_disagree: 'Totalmente en desacuerdo',
+        disagree: 'En desacuerdo',
+        neutral: 'Neutro',
+        agree: 'De acuerdo',
+        strongly_agree: 'Totalmente de acuerdo',
+      },
+    },
+    gate: {
+      eyebrow: 'Último paso',
+      title: 'Recibe tus resultados',
+      intro: 'Te enviamos una copia del resultado a tu email y, una vez al mes, ideas prácticas sobre el desarrollo del carácter.',
+      fields: {
+        name: 'Nombre',
+        email: 'Email',
+        birth_year: 'Año de nacimiento',
+        sex: 'Sexo',
+      },
+      sex_options: { mujer: 'Mujer', hombre: 'Hombre' },
+      consent_html: 'Sí, envíame mis resultados por email y suscríbeme al boletín mensual: contenido sobre virtudes y desarrollo del carácter. Cero spam, baja con un clic cuando quieras. Al suscribirte aceptas nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
+      errors: {
+        name: 'Introduce tu nombre.',
+        email: 'Introduce un email válido.',
+        year_required: 'Introduce el año de nacimiento.',
+        year_range: 'Año fuera de rango (máx. {max}).',
+        sex: 'Selecciona una opción.',
+        consent: 'Es necesario aceptar para continuar.',
+        submit_failed: 'No hemos podido enviar el formulario. Inténtalo de nuevo en unos minutos.',
+      },
+      submit: 'Recibir mis resultados →',
+      submitting: 'Enviando…',
+    },
+    result: {
+      eyebrow_prefix: 'Resultados de',
+      title: 'Tu perfil de virtudes',
+      intro: 'Pincha en cada virtud para leer la descripción completa. Recuerda: el carácter se construye día a día.',
+      global_label: 'Global',
+      pyramid_title: 'La pirámide de las virtudes',
+      pyramid_alt: 'Pirámide de las seis virtudes según Alexandre Havard',
+      about_summary: '¿Qué mide este test?',
+      repeat_button: 'Hacer el test otra vez',
     },
   },
 };

@@ -430,6 +430,132 @@ async function handleSubmitChildren(req, res) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// HANDLER — Test de CARÁCTER (modelo 6 virtudes de Havard, público).
+// Persiste en Brevo igual que el test adulto, pero con su propio set de
+// atributos custom (P_GLOBAL/PASSIVE/ACTIVE × 6 virtudes = 18) y CONTACT_SOURCE.
+//
+// Atributos que deben existir en Brevo antes del primer submit (si no,
+// Brevo los rechaza con 400):
+//   FIRSTNAME, YEAR, GENDER, IDIOMA, PAIS, CIUDAD     (ya existen del adulto)
+//   ACEPTACION_POLITICAS, CONTACT_SOURCE              (ya existen)
+//   TEST_CARACTER          (Boolean)                  ← NUEVO
+//   FECHA_TEST_CARACTER    (Date)                     ← NUEVO
+//   P_GLOBAL, P_PASSIVE, P_ACTIVE                     ← NUEVOS (Number, Prudencia)
+//   C_GLOBAL, C_PASSIVE, C_ACTIVE                     ← NUEVOS (Fortaleza)
+//   S_GLOBAL, S_PASSIVE, S_ACTIVE                     ← NUEVOS (Dominio sí)
+//   J_GLOBAL, J_PASSIVE, J_ACTIVE                     ← NUEVOS (Justicia)
+//   M_GLOBAL, M_PASSIVE, M_ACTIVE                     ← NUEVOS (Magnanimidad)
+//   H_GLOBAL, H_PASSIVE, H_ACTIVE                     ← NUEVOS (Humildad)
+// ════════════════════════════════════════════════════════════════════════════
+
+// Whitelist de los 18 atributos de score (defense in depth: si el frontend
+// manda atributos inesperados o malformados, los rechazamos antes de Brevo).
+const CHARACTER_SCORE_ATTRS = [
+  'P_GLOBAL','P_PASSIVE','P_ACTIVE',
+  'C_GLOBAL','C_PASSIVE','C_ACTIVE',
+  'S_GLOBAL','S_PASSIVE','S_ACTIVE',
+  'J_GLOBAL','J_PASSIVE','J_ACTIVE',
+  'M_GLOBAL','M_PASSIVE','M_ACTIVE',
+  'H_GLOBAL','H_PASSIVE','H_ACTIVE',
+];
+
+function sanitizeCharacterScoreAttrs(raw) {
+  if (!raw || typeof raw !== 'object') return {};
+  const out = {};
+  for (const key of CHARACTER_SCORE_ATTRS) {
+    const v = raw[key];
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      // Brevo NUMBER admite decimales; redondeamos a entero para % de virtud.
+      // Clamp a [0, 100] por seguridad.
+      out[key] = Math.max(0, Math.min(100, Math.round(v)));
+    }
+  }
+  return out;
+}
+
+async function handleSubmitCharacter(req, res) {
+  let payload;
+  try {
+    payload = JSON.parse(await readBody(req));
+  } catch (e) {
+    return sendJson(res, 400, { error: 'Invalid JSON' });
+  }
+
+  const c = payload?.contact || {};
+  const r = payload?.result  || {};
+
+  const emailOk = typeof c.email === 'string' && EMAIL_RE.test(c.email);
+  if (!emailOk || !c.name || !c.consent) {
+    return sendJson(res, 400, { error: 'Missing required fields' });
+  }
+
+  // Sanitiza los 18 atributos de score que vienen del cliente. Si vienen
+  // menos de 18 numéricos válidos, lo logueamos pero NO abortamos: Brevo
+  // aceptará el contacto sin esos atributos, sólo perdemos segmentación.
+  const scoreAttrs = sanitizeCharacterScoreAttrs(r.brevo_attributes);
+  const scoreAttrsCount = Object.keys(scoreAttrs).length;
+  if (scoreAttrsCount < CHARACTER_SCORE_ATTRS.length) {
+    console.warn(`[submit-character] only ${scoreAttrsCount}/18 score attrs valid`);
+  }
+
+  const fechaTest = (c.consentTimestamp && /^\d{4}-\d{2}-\d{2}/.test(c.consentTimestamp))
+    ? c.consentTimestamp.slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
+  const GENDER_MAP = { mujer: 'Female', hombre: 'Male' };
+  const genderBrevo = c.sexBrevo || GENDER_MAP[String(c.sex || '').toLowerCase().trim()];
+
+  const ip = clientIp(req);
+  const geo = await lookupGeo(ip);
+
+  const listId = pickListForLang(c.language);
+
+  console.log(`[submit-character] received contact: email=${c.email} year=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} lang=${c.language} → gender=${JSON.stringify(genderBrevo)} list=${listId} scoreAttrs=${scoreAttrsCount}/18`);
+
+  const brevoBody = {
+    email: c.email.toLowerCase().trim(),
+    attributes: {
+      FIRSTNAME:               c.name,
+      YEAR:                    c.birthYear,
+      ...(genderBrevo ? { GENDER: genderBrevo } : {}),
+      IDIOMA:                  String(c.language || 'es').toUpperCase(),
+      ACEPTACION_POLITICAS:    true,
+      TEST_CARACTER:           true,
+      CONTACT_SOURCE:          'character-test',
+      FECHA_TEST_CARACTER:     fechaTest,
+      ...(geo.ok && geo.country ? { PAIS:   geo.country } : {}),
+      ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
+      ...scoreAttrs,
+    },
+    listIds: [listId],
+    updateEnabled: true,
+  };
+
+  try {
+    const brevoRes = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'api-key':      BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        'accept':       'application/json',
+      },
+      body: JSON.stringify(brevoBody),
+    });
+    const text = await brevoRes.text();
+    console.log(`[brevo:character] attrs sent: ${JSON.stringify(brevoBody.attributes)}`);
+    console.log(`[brevo:character] ${brevoRes.status} ${text.slice(0, 400)}`);
+
+    if (!brevoRes.ok) {
+      return sendJson(res, 502, { error: 'Brevo API error', status: brevoRes.status });
+    }
+    return sendJson(res, 200, { ok: true });
+  } catch (e) {
+    console.error('[brevo:character] fetch error:', e);
+    return sendJson(res, 500, { error: 'Internal error' });
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // HTTP server — routing
 // ════════════════════════════════════════════════════════════════════════════
 const server = http.createServer(async (req, res) => {
@@ -450,6 +576,10 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/submit-children') {
     return handleSubmitChildren(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/submit-character') {
+    return handleSubmitCharacter(req, res);
   }
 
   return sendJson(res, 404, { error: 'Not found' });

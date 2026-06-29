@@ -20,6 +20,9 @@ export const ROUTES = {
   edsup:                 { es: 'educacion-superior',     en: 'higher-education',        fr: 'enseignement-superieur',   ru: 'vysshee-obrazovanie' },
   tests:                 { es: 'tests',                  en: 'tests',                   fr: 'tests',                    ru: 'testy' },
   test_temperamento:     { es: 'tests/temperamento',     en: 'tests/temperament',       fr: 'tests/temperament',        ru: 'testy/temperament' },
+  // Test de carácter — modelo de las 6 virtudes (Havard). Slugs default;
+  // si quieres SEO específico distinto, cámbialos aquí.
+  test_caracter:         { es: 'tests/caracter',          en: 'tests/character',         fr: 'tests/caractere',          ru: 'testy/kharakter' },
   // Página de agradecimiento tras completar el test de temperamento (adultos).
   // Pensada para landing post-envío o link directo desde Brevo. Va con Layout
   // normal (no es NO_LAYOUT) para que el usuario pueda navegar al resto del sitio.
@@ -41,6 +44,7 @@ export const NO_LAYOUT_PAGES = new Set([
   'test_temperamento',
   'test_temperamento_ninos',
   'test_temperamento_gracias',
+  'test_caracter',
   'politica_privacidad',
   'cookies',
 ]);
