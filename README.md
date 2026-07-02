@@ -1,8 +1,66 @@
-# React + Vite
+# Virtuous Leadership — sitio y tests
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Sitio multi-idioma (ES/EN/FR/RU) de **Virtuous Leadership** con tres tests de
+autoconocimiento basados en la teoría de Alexandre Havard:
 
-Currently, two official plugins are available:
+- **Test de temperamento adulto** — 4 temperamentos clásicos.
+- **Test de temperamento infantil** — versión para padres/tutores (6-17 años).
+- **Test de carácter** — 6 virtudes de Havard, 68 preguntas Likert.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Producción: [virtuousleadership.com](https://virtuousleadership.com).
+
+## Stack
+
+Vite 5 + React 18 + React Router 7 · i18n custom · Node 20 HTTP + pg
+(Supabase) · Brevo v3 REST · Docker Compose (VPS Hostinger).
+
+## Requisitos
+
+- Node 20+
+- npm 10+
+
+## Desarrollo local
+
+```bash
+npm install
+npm run dev            # localhost:5173, HMR
+npm test               # tests unitarios del motor de scoring
+npm run build          # bundle a dist/
+npm run lint           # eslint
+```
+
+En dev el backend `api/` no arranca — las variables `VITE_SUBMIT_*` quedan
+vacías y los formularios de test hacen stub (log en consola en vez de
+llamar a Brevo). Para probar el flujo completo hace falta desplegar en
+Docker o levantar `api/server.mjs` a mano con el `.env` correspondiente.
+
+## Estructura
+
+```
+src/                Frontend React (Vite)
+  TestTBP.jsx           Test de temperamento adulto
+  TestTBPChildren.jsx   Test de temperamento infantil
+  TestCharacter.jsx     Test de carácter (6 virtudes)
+  i18n/                 es.js, en.js, fr.js, ru.js + routes.js
+  data/                 Bancos de preguntas + textos largos (JSON)
+  lib/                  Motores puros (scoring, personalize) + tests
+  pages/                Wrappers de página con SEO
+  components/           Layout, Header, Footer, CTA, PageTracker...
+  assets/               Imágenes (localizadas por idioma cuando aplica)
+api/                Backend Node HTTP + pg + Brevo proxy
+  server.mjs            Endpoints /api/submit, /api/submit-children,
+                        /api/submit-character
+  db.mjs                pg pool + queries del test infantil (Supabase)
+  migrations/           SQL
+scripts/            Utilidades one-shot (extracción xlsx → JSON)
+```
+
+## Documentación completa
+
+Ver [CLAUDE.md](./CLAUDE.md) para arquitectura detallada, convenciones,
+patrón para añadir un test nuevo, gotchas conocidos, mapeo de env vars y
+proceso de deploy.
+
+## Licencia
+
+Propietario · **CSO Digital SL**.
