@@ -1,0 +1,74 @@
+# Auto-deploy a staging — se dispara al pushear a `staging`.
+#
+# Requiere que en el VPS haya un directorio /opt/virtuousleadership-staging/
+# con su propio docker-compose.yml apuntando a subdominio dev.virtuousleadership.com
+# (o a otro puerto). Los secrets STAGING_* separados por si el staging vive
+# en otra máquina.
+#
+# Si aún no has montado el entorno de staging en el VPS:
+#   1. Clona el repo en /opt/virtuousleadership-staging/
+#   2. Copia .env (o crea uno con listas de Brevo de TEST — NO uses las reales)
+#   3. Configura Caddy/nginx para dev.virtuousleadership.com → puerto diferente
+#   4. Añade los secrets STAGING_VPS_HOST/USER/SSH_KEY en Settings → Actions
+#   5. Deja este workflow como está (checkeará automáticamente que existan
+#      los secrets — si faltan, el step SSH falla con un error claro).
+
+name: Deploy staging
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://dev.virtuousleadership.com
+    steps:
+      - name: Verify staging secrets exist
+        env:
+          VPS_HOST: ${{ secrets.STAGING_VPS_HOST }}
+        run: |
+          if [ -z "$VPS_HOST" ]; then
+            echo "::error::STAGING_VPS_HOST no está configurado. Setup del staging incompleto."
+            echo "Ver .github/workflows/deploy-staging.yml para pasos de setup."
+            exit 1
+          fi
+
+      - name: Setup SSH
+        env:
+          VPS_HOST: ${{ secrets.STAGING_VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.STAGING_VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.STAGING_VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          if [ -n "$VPS_KNOWN_HOSTS" ]; then
+            echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy to staging
+        env:
+          VPS_HOST: ${{ secrets.STAGING_VPS_HOST }}
+          VPS_USER: ${{ secrets.STAGING_VPS_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "$VPS_USER@$VPS_HOST" bash <<'REMOTE'
+            set -euo pipefail
+            cd /opt/virtuousleadership-staging
+            git fetch origin
+            git checkout staging
+            git pull origin staging
+            docker compose build web api
+            docker compose up -d web api
+            docker compose ps
+          REMOTE

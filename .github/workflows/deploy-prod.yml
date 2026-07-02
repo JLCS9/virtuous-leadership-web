@@ -1,0 +1,89 @@
+# Auto-deploy a producción — se dispara al mergear a `main`.
+#
+# Requiere estos secrets en Settings → Secrets and variables → Actions:
+#   VPS_HOST       IP o dominio del VPS Hostinger
+#   VPS_USER       usuario dedicado al deploy (ej. "deploy")
+#   VPS_SSH_KEY    private key (ed25519) — la pública va en ~/.ssh/authorized_keys
+#                  del usuario deploy en el VPS
+#   VPS_KNOWN_HOSTS   (opcional) output de `ssh-keyscan -H VPS_HOST` para pinning.
+#                     Si lo omites, el workflow hace keyscan on-the-fly (menos seguro
+#                     pero más simple; MITM es un riesgo bajo dado que el flujo es
+#                     GitHub→VPS y GitHub tiene actions runners con IPs conocidas).
+#
+# Reintento manual: el workflow tiene workflow_dispatch, así que si un deploy
+# falla puedes re-lanzarlo desde la pestaña Actions sin nuevo push.
+#
+# El healthcheck final aborta con exit 1 si el /health del api no responde 200
+# tras el `up -d`, dejando el workflow en rojo (te avisará por email).
+
+name: Deploy production
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  # Cancela deploys en curso si llega uno nuevo del mismo tipo. Evita
+  # races si mergeas 2 PRs seguidos — solo el último se despliega.
+  group: deploy-prod
+  cancel-in-progress: false  # NO cancelar deploys en curso — completa el actual antes de empezar el siguiente.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://virtuousleadership.com
+    steps:
+      - name: Setup SSH
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$VPS_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          if [ -n "$VPS_KNOWN_HOSTS" ]; then
+            echo "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            ssh-keyscan -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          fi
+          chmod 600 ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          ssh -i ~/.ssh/id_ed25519 "$VPS_USER@$VPS_HOST" bash <<'REMOTE'
+            set -euo pipefail
+            cd /opt/virtuousleadership
+            echo "=== git pull ==="
+            git pull origin main
+            echo "=== docker compose build ==="
+            docker compose build web api
+            echo "=== docker compose up ==="
+            docker compose up -d web api
+            echo "=== ps ==="
+            docker compose ps
+          REMOTE
+
+      - name: Healthcheck
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: |
+          # Da al api hasta 30s para arrancar tras el `up -d`.
+          for i in 1 2 3 4 5 6; do
+            sleep 5
+            if ssh -i ~/.ssh/id_ed25519 "$VPS_USER@$VPS_HOST" \
+                'curl -sf http://localhost:8080/health || curl -sf http://localhost/health'; then
+              echo "✓ healthcheck passed (attempt $i)"
+              exit 0
+            fi
+            echo "  healthcheck attempt $i failed, retrying..."
+          done
+          echo "✗ healthcheck failed after 30s"
+          exit 1

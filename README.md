@@ -55,6 +55,11 @@ api/                Backend Node HTTP + pg + Brevo proxy
 scripts/            Utilidades one-shot (extracción xlsx → JSON)
 ```
 
+## Contribuir
+
+Ver [CONTRIBUTING.md](./CONTRIBUTING.md) para el flujo de PRs, testing y
+deploy.
+
 ## Documentación completa
 
 Ver [CLAUDE.md](./CLAUDE.md) para arquitectura detallada, convenciones,

@@ -1,0 +1,45 @@
+# CI — corre en cada PR y push a main/staging.
+# Valida: dependencies limpias, tests unitarios del motor de scoring, build de
+# Vite sin errores. NO despliega — eso lo hacen deploy-prod.yml y deploy-staging.yml.
+#
+# Setup para branch protection: en Settings → Branches → main → Require status
+# checks, marca la check "test-and-build" (aparecerá tras el primer run).
+
+name: CI
+on:
+  pull_request:
+    branches: [main, staging]
+  push:
+    branches: [main, staging]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Unit tests (character scoring engine)
+        run: npm test
+
+      - name: Build (Vite production bundle)
+        run: npm run build
+
+      # Sube el bundle como artifact opcional. Útil para debug si el build
+      # pasa en CI pero falla en el VPS. Se auto-borra a los 7 días.
+      - name: Upload dist artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7

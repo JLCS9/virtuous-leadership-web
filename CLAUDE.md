@@ -211,11 +211,35 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
 
 ## Deploy
 
-Repo remote: **github.com/JLCS9/virtuous-leadership-web**. Rama `main`.
+Repo remote: **github.com/JLCS9/virtuous-leadership-web**.
 
-Workflow desde el VPS (Hostinger, path `/opt/virtuousleadership/`):
+### Ramas y despliegue
+
+- `main` → producción (**virtuousleadership.com**). Protegida: sólo se
+  actualiza mergeando PRs. Al mergear, `deploy-prod.yml` despliega solo.
+- `staging` → pre-producción (**dev.virtuousleadership.com** si está montado).
+  `deploy-staging.yml` despliega al pushear a staging.
+- `feature/*`, `fix/*` — ramas cortas, PRs contra `main` (o `staging` si es
+  cambio de riesgo).
+
+### Auto-deploy — cómo funciona
+
+Al mergear a `main`, el workflow `.github/workflows/deploy-prod.yml` hace:
+1. SSH al VPS con la key de `secrets.VPS_SSH_KEY`.
+2. `cd /opt/virtuousleadership && git pull origin main`.
+3. `docker compose build web api && docker compose up -d web api`.
+4. Healthcheck via `curl /health` con reintentos hasta 30s.
+
+Si el healthcheck falla, el workflow queda en rojo y GitHub avisa por email
+al autor del merge. Re-lanzarlo manualmente: pestaña Actions → workflow
+"Deploy production" → botón "Run workflow".
+
+### Deploy manual (fallback)
+
+Si el auto-deploy falla o si necesitas debuggear:
 
 ```bash
+ssh <user>@<vps>
 cd /opt/virtuousleadership && \
   git pull && \
   docker compose build web api && \
