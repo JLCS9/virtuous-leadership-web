@@ -22,7 +22,7 @@ Sitio de **Virtuous Leadership** (virtuousleadership.com), SPA multi-idioma
      dominio de sí, justicia, magnanimidad, humildad) — 68 preguntas escala
      Likert 5 puntos, público, integra con Brevo.
 
-Empresa: **CSO Digital SL** (Kit Digital ADA, dominios secundarios: converflow.ai).
+Empresa: Virtuous Leadership 
 
 ---
 
