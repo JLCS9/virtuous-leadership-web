@@ -82,19 +82,26 @@ En resumen:
 
 ## Deploy
 
-Automático al mergear a `main` o `staging`. Ver
-`.github/workflows/deploy-prod.yml` para detalles.
-
-Si el auto-deploy falla, puedes re-lanzarlo desde la pestaña **Actions**
-del repo (workflow "Deploy production" → botón "Run workflow"). Si sigue
-fallando, deploy manual desde el VPS:
+**Manual, desde el terminal del VPS.** Tras mergear tu PR a `main`, conectas
+al VPS de Hostinger y despliegas:
 
 ```bash
 ssh <user>@<vps>
 cd /opt/virtuousleadership
-git pull && docker compose build web api && docker compose up -d web api
+git pull
+docker compose build web api
+docker compose up -d web api
 docker compose logs --tail=30 api
 ```
+
+- `build web` obligatorio si tocaste código React o `.env.production`.
+- `build api` obligatorio si tocaste `api/server.mjs`, `api/db.mjs`,
+  migrations, o `api/Dockerfile`.
+- Sólo `up -d` (sin build) si el único cambio es un env var runtime.
+
+**Coordinación**: si sois dos deploygando en la misma ventana de tiempo,
+avisa en el chat antes de desplegar para evitar que el otro esté a mitad
+de un `up -d` mientras haces `git pull`.
 
 ## Cómo pedir ayuda
 
