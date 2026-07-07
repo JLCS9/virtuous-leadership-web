@@ -116,10 +116,19 @@ export default function CookieConsent() {
   const [view, setView] = useState('main');      // 'main' | 'custom'
   const [statistics, setStatistics] = useState(false);
   const [marketing, setMarketing] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Al montar: si no hay consentimiento → mostrar banner.
   useEffect(() => {
     if (!readConsent()) setOpen(true);
+  }, []);
+
+  // Layout responsive: móvil = barra inferior full-width; desktop = tarjeta.
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 520);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
   }, []);
 
   // En cada cambio de ruta (incluye cambio de idioma): si hay consentimiento
@@ -164,11 +173,15 @@ export default function CookieConsent() {
       aria-label={t('cookies_banner.title')}
       aria-modal="false"
       style={{
-        position: 'fixed', bottom: 16, left: 16, zIndex: 2147483000,
-        width: 'min(380px, calc(100% - 32px))',
+        position: 'fixed', zIndex: 2147483000,
         background: PAPER, border: `1px solid ${LINE}`, borderTop: `3px solid ${GOLD}`,
-        borderRadius: 4, boxShadow: '0 10px 34px rgba(15,29,56,0.22)',
+        boxShadow: '0 10px 34px rgba(15,29,56,0.22)',
         fontFamily: FONT_SANS, padding: 18,
+        borderRadius: isMobile ? '8px 8px 0 0' : 4,
+        ...(isMobile
+          ? { left: 0, right: 0, bottom: 0, width: 'auto',
+              paddingBottom: 'calc(18px + env(safe-area-inset-bottom, 0px))' }
+          : { left: 16, bottom: 16, width: 'min(380px, calc(100% - 32px))' }),
       }}
     >
       <div style={{ fontFamily: FONT_SERIF, fontSize: 17, fontWeight: 600, color: NAVY, marginBottom: 6 }}>
