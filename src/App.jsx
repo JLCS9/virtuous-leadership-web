@@ -16,6 +16,7 @@ import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
+import CookieConsent from './components/CookieConsent';
 import { SUPPORTED_LANGS, detectInitialLang, ROUTES, NO_LAYOUT_PAGES } from './i18n';
 
 // Mapeo pageId -> componente. Si añades una pagina aqui, añade tambien su
@@ -58,6 +59,7 @@ export default function App() {
   return (
     <>
       <PageTracker />
+      <CookieConsent />
       <Routes>
       {/* Test temperamento sin Layout — uno por idioma */}
       {SUPPORTED_LANGS.flatMap(lang =>

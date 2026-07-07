@@ -1,10 +1,24 @@
 <!doctype html>
 <html lang="es">
   <head>
-    <!-- Cookiebot CMP — primer script del <head>, ANTES de GTM, para que el
-         bloqueo automático (data-blockingmode="auto") se aplique a las tags
-         que GTM cargue después. Compatible con Google Consent Mode v2. -->
-    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="ee97635e-a492-46ca-9bf2-0af8a4a0b32c" data-blockingmode="auto" type="text/javascript"></script>
+    <!-- Consent Mode v2 — estado por DEFECTO = denegado, ANTES de GTM.
+         Reemplaza a Cookiebot: el banner propio (src/components/CookieConsent.jsx)
+         escribe la cookie `vl_consent` y empuja los eventos cookie_consent_*;
+         GTM hace el gtag('consent','update',...) a partir de ellos.
+         functionality/security_storage granted por defecto (no son PII). -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        security_storage: 'granted',
+        wait_for_update: 500
+      });
+    </script>
 
     <!-- Google Tag Manager — lo más arriba posible en <head> según docs.
          GA4 (G-HM6K1685L2) se dispara desde dentro del contenedor GTM a
