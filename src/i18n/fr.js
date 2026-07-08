@@ -1,6 +1,23 @@
 // Dictionnaire français.
 
 export default {
+  cookies_banner: {
+    title: 'Nous utilisons des cookies',
+    body: 'Nous utilisons des cookies pour personnaliser le contenu et les annonces, proposer des fonctionnalités de réseaux sociaux et analyser notre trafic. Nous partageons aussi des informations sur votre utilisation du site avec nos partenaires de réseaux sociaux, de publicité et d\'analyse.',
+    privacy_link: 'En savoir plus',
+    accept_all: 'Tout accepter',
+    reject_all: 'Refuser',
+    customize: 'Personnaliser',
+    save: 'Enregistrer la sélection',
+    always_on: 'Toujours actives',
+    cat_necessary: 'Nécessaires',
+    cat_necessary_desc: 'Indispensables au fonctionnement du site. Ne peuvent pas être désactivées.',
+    cat_statistics: 'Statistiques',
+    cat_statistics_desc: 'Nous aident à comprendre comment le site est utilisé (analyse anonyme).',
+    cat_marketing: 'Marketing',
+    cat_marketing_desc: 'Permettent de mesurer les campagnes et d\'afficher du contenu et des annonces pertinents.',
+  },
+
   nav: {
     home: 'Accueil',
     programs: 'Programmes',

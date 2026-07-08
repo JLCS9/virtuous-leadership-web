@@ -2,6 +2,23 @@
 // añádela también en en.js y fr.js.
 
 export default {
+  cookies_banner: {
+    title: 'Usamos cookies',
+    body: 'Usamos cookies para personalizar contenido y anuncios, ofrecer funciones de redes sociales y analizar el tráfico. También compartimos información de tu uso del sitio con nuestros partners de redes sociales, publicidad y analítica.',
+    privacy_link: 'Más información',
+    accept_all: 'Aceptar todo',
+    reject_all: 'Rechazar',
+    customize: 'Personalizar',
+    save: 'Guardar selección',
+    always_on: 'Siempre activas',
+    cat_necessary: 'Necesarias',
+    cat_necessary_desc: 'Imprescindibles para el funcionamiento del sitio. No se pueden desactivar.',
+    cat_statistics: 'Estadísticas',
+    cat_statistics_desc: 'Nos ayudan a entender cómo se usa el sitio (analítica anónima).',
+    cat_marketing: 'Marketing',
+    cat_marketing_desc: 'Permiten medir campañas y mostrar contenido y anuncios relevantes.',
+  },
+
   nav: {
     home: 'Home',
     programs: 'Programas',

@@ -1,6 +1,23 @@
 // English dictionary.
 
 export default {
+  cookies_banner: {
+    title: 'We use cookies',
+    body: 'We use cookies to personalise content and ads, provide social media features and analyse our traffic. We also share information about your use of our site with our social media, advertising and analytics partners.',
+    privacy_link: 'Learn more',
+    accept_all: 'Accept all',
+    reject_all: 'Reject',
+    customize: 'Customize',
+    save: 'Save selection',
+    always_on: 'Always on',
+    cat_necessary: 'Necessary',
+    cat_necessary_desc: 'Essential for the site to work. These cannot be turned off.',
+    cat_statistics: 'Statistics',
+    cat_statistics_desc: 'Help us understand how the site is used (anonymous analytics).',
+    cat_marketing: 'Marketing',
+    cat_marketing_desc: 'Used to measure campaigns and show relevant content and ads.',
+  },
+
   nav: {
     home: 'Home',
     programs: 'Programs',
