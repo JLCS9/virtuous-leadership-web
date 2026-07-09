@@ -9,6 +9,10 @@
 //   BREVO_LIST_ID_{ES,EN,FR,RU}
 //                      → ID numérico de la lista por idioma. Cada submit del
 //                        test adulto se envía a la lista del idioma usado.
+//   BREVO_LIST_ID_CHARACTER_{ES,EN,FR,RU}
+//                      → listas por idioma para el test de carácter. Si falta
+//                        la de un idioma, ese idioma cae a BREVO_LIST_ID_{lang}
+//                        (las del test de temperamento).
 //   BREVO_LIST_ID      → fallback opcional si no se ha configurado la lista del
 //                        idioma específico (modo retrocompatible).
 //   DATABASE_URL       → connection string de Supabase    — requerido (test niños)
@@ -27,6 +31,13 @@ const BREVO_LIST_IDS = {
   fr: parseInt(process.env.BREVO_LIST_ID_FR || '0', 10),
   ru: parseInt(process.env.BREVO_LIST_ID_RU || '0', 10),
 };
+// Listas del test de carácter, separadas de las del temperamento.
+const BREVO_LIST_IDS_CHARACTER = {
+  es: parseInt(process.env.BREVO_LIST_ID_CHARACTER_ES || '0', 10),
+  en: parseInt(process.env.BREVO_LIST_ID_CHARACTER_EN || '0', 10),
+  fr: parseInt(process.env.BREVO_LIST_ID_CHARACTER_FR || '0', 10),
+  ru: parseInt(process.env.BREVO_LIST_ID_CHARACTER_RU || '0', 10),
+};
 const BREVO_LIST_ID_FALLBACK = parseInt(process.env.BREVO_LIST_ID || '0', 10);
 const PORT          = parseInt(process.env.PORT || '3001', 10);
 
@@ -37,7 +48,8 @@ if (langsWithList.length === 0 && !BREVO_LIST_ID_FALLBACK) {
   console.error('[fatal] no Brevo list IDs configured (set BREVO_LIST_ID_ES/EN/FR/RU and/or BREVO_LIST_ID)');
   process.exit(1);
 }
-console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
+const langsWithCharacterList = Object.entries(BREVO_LIST_IDS_CHARACTER).filter(([, id]) => id > 0).map(([l]) => l);
+console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], character: [${langsWithCharacterList.join(', ') || 'none — using temperament lists'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
 
 // DATABASE_URL es opcional al arrancar — si falta, /api/submit-children
 // devolverá 503 hasta que se configure, pero el resto del servidor funciona.
@@ -82,6 +94,14 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 function pickListForLang(lang) {
   const normLang = String(lang || 'es').toLowerCase();
   return BREVO_LIST_IDS[normLang] || BREVO_LIST_ID_FALLBACK || null;
+}
+
+// Igual que pickListForLang pero para el test de carácter, que tiene sus
+// propias listas. Si un idioma no tiene lista de carácter configurada, cae
+// a la lista del temperamento de ese idioma (y de ahí al fallback global).
+function pickCharacterListForLang(lang) {
+  const normLang = String(lang || 'es').toLowerCase();
+  return BREVO_LIST_IDS_CHARACTER[normLang] || pickListForLang(lang);
 }
 
 // ────────────── Codificación COD_DESCUENTO ──────────────
@@ -508,7 +528,7 @@ async function handleSubmitCharacter(req, res) {
   const ip = clientIp(req);
   const geo = await lookupGeo(ip);
 
-  const listId = pickListForLang(c.language);
+  const listId = pickCharacterListForLang(c.language);
 
   console.log(`[submit-character] received contact: email=${c.email} year=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} lang=${c.language} → gender=${JSON.stringify(genderBrevo)} list=${listId} scoreAttrs=${scoreAttrsCount}/18`);
 

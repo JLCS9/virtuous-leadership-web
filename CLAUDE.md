@@ -37,7 +37,9 @@ Empresa: Virtuous Leadership
 - **Tests**: `node --test` (built-in Node 20), sólo módulos puros.
 - **Deploy**: Docker Compose en VPS Hostinger `/opt/virtuousleadership/`.
 - **Analytics**: GTM (GTM-W9P5BPF9) + GA4 (G-HM6K1685L2) desde el contenedor
-  GTM. Cookiebot CMP delante. dataLayer pushes desde React (PageTracker).
+  GTM. Consentimiento: banner propio (`src/components/CookieConsent.jsx`) +
+  Consent Mode v2 con default DENEGADO fijado en `index.html` antes de cargar
+  GTM (ya NO usamos Cookiebot). dataLayer pushes desde React (PageTracker).
 
 ---
 
@@ -63,6 +65,12 @@ src/
     Layout.jsx  Header.jsx  Footer.jsx  LangSwitcher.jsx
     CTA.jsx  Section.jsx  SEO.jsx  Seal.jsx  PasosBlock.jsx
     PageTracker.jsx          dataLayer.push({event:'page_view',...}) por ruta.
+                             Ignora rutas sin idioma (evita page_view doble en
+                             el redirect / → /es).
+    CookieConsent.jsx        Banner de cookies propio (es/en/fr/ru), montado a
+                             nivel raíz en App.jsx. Persiste elección en cookie
+                             `vl_consent` y actualiza Consent Mode. NO
+                             reintroducir Cookiebot.
 
   lib/                       Módulos puros, testeables. NO importan React.
     characterScoring.js      Motor del test de carácter (vector×matriz).
@@ -182,8 +190,15 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
 - v3 REST, api-key en header `api-key: xkeys-...`.
 - Endpoint principal: `POST /v3/contacts` con `updateEnabled: true` (upsert
   por email).
-- Listas por idioma ya configuradas: **ES=123, EN=124, FR=125, RU=122**.
-  El backend elige la lista con `pickListForLang(lang)` en `server.mjs`.
+- Cada test tiene sus PROPIAS listas por idioma:
+  - **Test de temperamento**: ES=104, FR=105, EN=106, RU=107
+    (`BREVO_LIST_ID_{ES,EN,FR,RU}`, elegida con `pickListForLang()`).
+  - **Test de carácter**: ES=123, EN=124, FR=125, RU=122
+    (`BREVO_LIST_ID_CHARACTER_{ES,EN,FR,RU}`, elegida con
+    `pickCharacterListForLang()`; si falta la de un idioma cae a la lista
+    de temperamento de ese idioma).
+  (Los IDs reales viven en el `.env` del VPS y en la cuenta de Brevo; si
+  dudas, esa es la fuente de verdad, no este doc.)
 - **Sexo**: siempre "Male"/"Female" hacia Brevo, NUNCA "mujer"/"hombre"
   (mapeo en el frontend antes de mandar).
 - **Atributos custom deben existir en Brevo ANTES del primer submit**. Si no,
@@ -215,8 +230,10 @@ Repo remote: **github.com/JLCS9/virtuous-leadership-web**.
 
 ### Ramas
 
-- `main` → producción (**virtuousleadership.com**). Protegida: no se pushea
-  directamente. Sólo entra código vía PR con aprobación.
+- `main` → producción (**virtuousleadership.com**). Por convención no se
+  pushea directamente: el código entra vía PR. (Ojo: la branch protection de
+  GitHub NO está aplicada de hecho — repo privado en plan free — así que es
+  disciplina, no regla técnica. CI sí corre en cada PR: `npm test` + build.)
 - `feature/*`, `fix/*` — ramas cortas para trabajo en curso.
 - (`staging` — reservado por si en el futuro se monta pre-producción; hoy
   no existe ni el subdominio ni el docker compose asociado.)
@@ -295,5 +312,8 @@ Backend `api/` no arranca en dev; el front usa VITE_SUBMIT_* vacías = stub.
 **"¿Qué idiomas soportamos?"** → es, en, fr, ru. Todos deben quedar
 sincronizados: rutas, i18n dicts, assets si van localizados.
 
-**"¿Qué lista de Brevo va con qué idioma?"** → ES=123, EN=124, FR=125,
-RU=122. Está en `pickListForLang()` en `server.mjs`.
+**"¿Qué lista de Brevo va con qué idioma?"** → Temperamento: ES=104,
+FR=105, EN=106, RU=107. Carácter: ES=123, EN=124, FR=125, RU=122. La
+selección la hacen `pickListForLang()` / `pickCharacterListForLang()` en
+`server.mjs`; los IDs viven en el `.env` del VPS (`BREVO_LIST_ID_*` y
+`BREVO_LIST_ID_CHARACTER_*`).
