@@ -38,6 +38,14 @@ const BREVO_LIST_IDS_CHARACTER = {
   fr: parseInt(process.env.BREVO_LIST_ID_CHARACTER_FR || '0', 10),
   ru: parseInt(process.env.BREVO_LIST_ID_CHARACTER_RU || '0', 10),
 };
+// Listas del test del corazón ("Corazón Libre" — 8 enfermedades espirituales).
+// Si un idioma no tiene lista propia, cae a la del temperamento del idioma.
+const BREVO_LIST_IDS_HEART = {
+  es: parseInt(process.env.BREVO_LIST_ID_HEART_ES || '0', 10),
+  en: parseInt(process.env.BREVO_LIST_ID_HEART_EN || '0', 10),
+  fr: parseInt(process.env.BREVO_LIST_ID_HEART_FR || '0', 10),
+  ru: parseInt(process.env.BREVO_LIST_ID_HEART_RU || '0', 10),
+};
 const BREVO_LIST_ID_FALLBACK = parseInt(process.env.BREVO_LIST_ID || '0', 10);
 const PORT          = parseInt(process.env.PORT || '3001', 10);
 
@@ -49,7 +57,8 @@ if (langsWithList.length === 0 && !BREVO_LIST_ID_FALLBACK) {
   process.exit(1);
 }
 const langsWithCharacterList = Object.entries(BREVO_LIST_IDS_CHARACTER).filter(([, id]) => id > 0).map(([l]) => l);
-console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], character: [${langsWithCharacterList.join(', ') || 'none — using temperament lists'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
+const langsWithHeartList = Object.entries(BREVO_LIST_IDS_HEART).filter(([, id]) => id > 0).map(([l]) => l);
+console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], character: [${langsWithCharacterList.join(', ') || 'none — using temperament lists'}], heart: [${langsWithHeartList.join(', ') || 'none — using temperament lists'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
 
 // DATABASE_URL es opcional al arrancar — si falta, /api/submit-children
 // devolverá 503 hasta que se configure, pero el resto del servidor funciona.
@@ -102,6 +111,14 @@ function pickListForLang(lang) {
 function pickCharacterListForLang(lang) {
   const normLang = String(lang || 'es').toLowerCase();
   return BREVO_LIST_IDS_CHARACTER[normLang] || pickListForLang(lang);
+}
+
+// Igual que pickCharacterListForLang pero para el test del corazón. Cae a
+// la lista del temperamento del mismo idioma si no hay lista de corazón
+// específica configurada (y de ahí al fallback global).
+function pickHeartListForLang(lang) {
+  const normLang = String(lang || 'es').toLowerCase();
+  return BREVO_LIST_IDS_HEART[normLang] || pickListForLang(lang);
 }
 
 // ────────────── Codificación COD_DESCUENTO ──────────────
@@ -576,6 +593,133 @@ async function handleSubmitCharacter(req, res) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// HANDLER — Test del CORAZÓN ("Corazón Libre" — 8 enfermedades espirituales).
+// Persistencia solo-Brevo (igual que carácter y adulto). Atributos custom:
+//   FIRSTNAME, YEAR, GENDER, IDIOMA, PAIS, CIUDAD          (ya existen)
+//   ACEPTACION_POLITICAS, CONTACT_SOURCE                   (ya existen)
+//   TEST_CORAZON         (Boolean)                         ← NUEVO
+//   FECHA_TEST_CORAZON   (Date)                            ← NUEVO
+//   HEART_R_SCORE ... HEART_SC_SCORE       (8 × Number 0-16)     ← NUEVOS
+//   HEART_R_STAGE ... HEART_SC_STAGE       (8 × Text: none|stage1|stage2) ← NUEVOS
+//   HEART_TOP            (Text — codes en stage2 concatenados por coma)   ← NUEVO
+//   HEART_BALANCED       (Boolean — true si ninguna en stage1/stage2)     ← NUEVO
+// ════════════════════════════════════════════════════════════════════════════
+
+const HEART_DISORDER_CODES = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
+const HEART_SCORE_ATTRS = HEART_DISORDER_CODES.map(c => `HEART_${c}_SCORE`);
+const HEART_STAGE_ATTRS = HEART_DISORDER_CODES.map(c => `HEART_${c}_STAGE`);
+const HEART_VALID_STAGES = new Set(['none', 'stage1', 'stage2']);
+
+// Sanitiza los atributos que vienen del cliente. Defense in depth:
+// filtramos SCORE fuera de [0,16] y STAGE fuera del enum. HEART_TOP acepta
+// solo códigos válidos (ej. "VM,SV"). HEART_BALANCED se fuerza a bool.
+function sanitizeHeartAttrs(raw) {
+  if (!raw || typeof raw !== 'object') return {};
+  const out = {};
+  for (const key of HEART_SCORE_ATTRS) {
+    const v = raw[key];
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      out[key] = Math.max(0, Math.min(16, Math.round(v)));
+    }
+  }
+  for (const key of HEART_STAGE_ATTRS) {
+    const v = raw[key];
+    if (typeof v === 'string' && HEART_VALID_STAGES.has(v)) {
+      out[key] = v;
+    }
+  }
+  if (typeof raw.HEART_TOP === 'string') {
+    // Sólo aceptamos códigos válidos separados por comas — descartamos ruido.
+    const clean = raw.HEART_TOP.split(',').map(s => s.trim())
+      .filter(c => HEART_DISORDER_CODES.includes(c));
+    out.HEART_TOP = clean.join(',');
+  }
+  if (typeof raw.HEART_BALANCED === 'boolean') {
+    out.HEART_BALANCED = raw.HEART_BALANCED;
+  }
+  return out;
+}
+
+async function handleSubmitHeart(req, res) {
+  let payload;
+  try {
+    payload = JSON.parse(await readBody(req));
+  } catch (e) {
+    return sendJson(res, 400, { error: 'Invalid JSON' });
+  }
+
+  const c = payload?.contact || {};
+  const r = payload?.result  || {};
+
+  const emailOk = typeof c.email === 'string' && EMAIL_RE.test(c.email);
+  if (!emailOk || !c.name || !c.consent) {
+    return sendJson(res, 400, { error: 'Missing required fields' });
+  }
+
+  const heartAttrs = sanitizeHeartAttrs(r.brevo_attributes);
+  const validCount = HEART_SCORE_ATTRS.filter(k => k in heartAttrs).length;
+  if (validCount < 8) {
+    console.warn(`[submit-heart] only ${validCount}/8 SCORE attrs valid`);
+  }
+
+  const fechaTest = (c.consentTimestamp && /^\d{4}-\d{2}-\d{2}/.test(c.consentTimestamp))
+    ? c.consentTimestamp.slice(0, 10)
+    : new Date().toISOString().slice(0, 10);
+
+  const GENDER_MAP = { mujer: 'Female', hombre: 'Male' };
+  const genderBrevo = c.sexBrevo || GENDER_MAP[String(c.sex || '').toLowerCase().trim()];
+
+  const ip = clientIp(req);
+  const geo = await lookupGeo(ip);
+
+  const listId = pickHeartListForLang(c.language);
+
+  console.log(`[submit-heart] received contact: email=${c.email} year=${JSON.stringify(c.birthYear)} sex=${JSON.stringify(c.sex)} lang=${c.language} → gender=${JSON.stringify(genderBrevo)} list=${listId} balanced=${heartAttrs.HEART_BALANCED} top=${JSON.stringify(heartAttrs.HEART_TOP || '')}`);
+
+  const brevoBody = {
+    email: c.email.toLowerCase().trim(),
+    attributes: {
+      FIRSTNAME:              c.name,
+      YEAR:                   c.birthYear,
+      ...(genderBrevo ? { GENDER: genderBrevo } : {}),
+      IDIOMA:                 String(c.language || 'es').toUpperCase(),
+      ACEPTACION_POLITICAS:   true,
+      TEST_CORAZON:           true,
+      CONTACT_SOURCE:         'heart-test',
+      FECHA_TEST_CORAZON:     fechaTest,
+      ...(geo.ok && geo.country ? { PAIS:   geo.country } : {}),
+      ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
+      ...heartAttrs,
+    },
+    listIds: [listId],
+    updateEnabled: true,
+  };
+
+  try {
+    const brevoRes = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: {
+        'api-key':      BREVO_API_KEY,
+        'Content-Type': 'application/json',
+        'accept':       'application/json',
+      },
+      body: JSON.stringify(brevoBody),
+    });
+    const text = await brevoRes.text();
+    console.log(`[brevo:heart] attrs sent: ${JSON.stringify(brevoBody.attributes)}`);
+    console.log(`[brevo:heart] ${brevoRes.status} ${text.slice(0, 400)}`);
+
+    if (!brevoRes.ok) {
+      return sendJson(res, 502, { error: 'Brevo API error', status: brevoRes.status });
+    }
+    return sendJson(res, 200, { ok: true });
+  } catch (e) {
+    console.error('[brevo:heart] fetch error:', e);
+    return sendJson(res, 500, { error: 'Internal error' });
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // HTTP server — routing
 // ════════════════════════════════════════════════════════════════════════════
 const server = http.createServer(async (req, res) => {
@@ -600,6 +744,10 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/submit-character') {
     return handleSubmitCharacter(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/submit-heart') {
+    return handleSubmitHeart(req, res);
   }
 
   return sendJson(res, 404, { error: 'Not found' });

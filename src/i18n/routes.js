@@ -23,6 +23,9 @@ export const ROUTES = {
   // Test de carácter — modelo de las 6 virtudes (Havard). Slugs default;
   // si quieres SEO específico distinto, cámbialos aquí.
   test_caracter:         { es: 'tests/caracter',          en: 'tests/character',         fr: 'tests/caractere',          ru: 'testy/kharakter' },
+  // Test del Corazón (modelo "Corazón Libre" de A. Havard, 8 enfermedades
+  // espirituales). Slugs derivan del título del libro en cada idioma.
+  test_corazon:          { es: 'tests/corazon-libre',     en: 'tests/free-heart',        fr: 'tests/coeur-libre',        ru: 'testy/svobodnoe-serdtse' },
   // Página de agradecimiento tras completar el test de temperamento (adultos).
   // Pensada para landing post-envío o link directo desde Brevo. Va con Layout
   // normal (no es NO_LAYOUT) para que el usuario pueda navegar al resto del sitio.
@@ -45,6 +48,7 @@ export const NO_LAYOUT_PAGES = new Set([
   'test_temperamento_ninos',
   'test_temperamento_gracias',
   'test_caracter',
+  'test_corazon',
   'politica_privacidad',
   'cookies',
 ]);

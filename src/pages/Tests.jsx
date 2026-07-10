@@ -20,9 +20,12 @@ import pyramidEs from '../assets/piramida ES.png';
 import pyramidEn from '../assets/Pyramid Eng.png';
 import pyramidFr from '../assets/Pyramide FR.png';
 import pyramidRu from '../assets/Pyramid Ruso.png';
+// Corazón: SVG único (icónico, sin texto embebido) sirve los 4 idiomas.
+import heartEmblem from '../assets/heart-emblem.svg';
 const TEST_IMAGES = {
-  temperament: { es: ttEs,      en: ttEn,      fr: ttFr,      ru: ttRu      },
-  character:   { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu },
+  temperament: { es: ttEs,        en: ttEn,        fr: ttFr,        ru: ttRu        },
+  character:   { es: pyramidEs,   en: pyramidEn,   fr: pyramidFr,   ru: pyramidRu   },
+  heart:       { es: heartEmblem, en: heartEmblem, fr: heartEmblem, ru: heartEmblem },
 };
 // Fallback final si la card no declara `image` o el idioma no está mapeado.
 const DEFAULT_IMG = ttEs;
