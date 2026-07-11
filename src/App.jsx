@@ -11,6 +11,7 @@ import TestTemperamento from './pages/TestTemperamento';
 import TestTemperamentoNinos from './pages/TestTemperamentoNinos';
 import TestTemperamentoGracias from './pages/TestTemperamentoGracias';
 import TestCaracter from './pages/TestCaracter';
+import TestCorazon from './pages/TestCorazon';
 import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
 import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
@@ -33,6 +34,7 @@ const PAGE_ELEMENTS = {
   test_temperamento_ninos: <TestTemperamentoNinos />,
   test_temperamento_gracias: <TestTemperamentoGracias />,
   test_caracter:         <TestCaracter />,
+  test_corazon:          <TestCorazon />,
   politica_privacidad:   <PoliticaPrivacidad />,
   cookies:               <Cookies />,
   contacto:              <Contacto />,

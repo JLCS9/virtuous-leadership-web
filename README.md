@@ -1,11 +1,14 @@
 # Virtuous Leadership — sitio y tests
 
-Sitio multi-idioma (ES/EN/FR/RU) de **Virtuous Leadership** con tres tests de
-autoconocimiento basados en la teoría de Alexandre Havard:
+Sitio multi-idioma (ES/EN/FR/RU) de **Virtuous Leadership** con cuatro tests
+de autoconocimiento basados en la teoría de Alexandre Havard:
 
-- **Test de temperamento adulto** — 4 temperamentos clásicos.
+- **Test de temperamento adulto** — 4 temperamentos clásicos (colérico,
+  melancólico, sanguíneo, flemático).
 - **Test de temperamento infantil** — versión para padres/tutores (6-17 años).
 - **Test de carácter** — 6 virtudes de Havard, 68 preguntas Likert.
+- **Test del corazón (Corazón Libre)** — 8 enfermedades espirituales,
+  32 preguntas Likert.
 
 Producción: [virtuousleadership.com](https://virtuousleadership.com).
 
@@ -41,6 +44,7 @@ src/                Frontend React (Vite)
   TestTBP.jsx           Test de temperamento adulto
   TestTBPChildren.jsx   Test de temperamento infantil
   TestCharacter.jsx     Test de carácter (6 virtudes)
+  TestHeart.jsx         Test del corazón (8 enfermedades espirituales)
   i18n/                 es.js, en.js, fr.js, ru.js + routes.js
   data/                 Bancos de preguntas + textos largos (JSON)
   lib/                  Motores puros (scoring, personalize) + tests
@@ -49,10 +53,10 @@ src/                Frontend React (Vite)
   assets/               Imágenes (localizadas por idioma cuando aplica)
 api/                Backend Node HTTP + pg + Brevo proxy
   server.mjs            Endpoints /api/submit, /api/submit-children,
-                        /api/submit-character
+                        /api/submit-character, /api/submit-heart
   db.mjs                pg pool + queries del test infantil (Supabase)
   migrations/           SQL
-scripts/            Utilidades one-shot (extracción xlsx → JSON)
+scripts/            Utilidades one-shot (extracción xlsx/ods → JSON)
 ```
 
 ## Contribuir

@@ -176,10 +176,21 @@ chmod 600). Se leen al arrancar el contenedor `api`. Cambiarlas requiere
 
 ```env
 BREVO_API_KEY=xkeys-...
-BREVO_LIST_ID_ES=123
-BREVO_LIST_ID_EN=124
-BREVO_LIST_ID_FR=125
-BREVO_LIST_ID_RU=122
+# Temperamento
+BREVO_LIST_ID_ES=104
+BREVO_LIST_ID_EN=106
+BREVO_LIST_ID_FR=105
+BREVO_LIST_ID_RU=107
+# Carácter
+BREVO_LIST_ID_CHARACTER_ES=123
+BREVO_LIST_ID_CHARACTER_EN=124
+BREVO_LIST_ID_CHARACTER_FR=125
+BREVO_LIST_ID_CHARACTER_RU=122
+# Corazón
+BREVO_LIST_ID_HEART_ES=133
+BREVO_LIST_ID_HEART_EN=136
+BREVO_LIST_ID_HEART_FR=135
+BREVO_LIST_ID_HEART_RU=134
 DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
 ```
 
@@ -197,6 +208,10 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
     (`BREVO_LIST_ID_CHARACTER_{ES,EN,FR,RU}`, elegida con
     `pickCharacterListForLang()`; si falta la de un idioma cae a la lista
     de temperamento de ese idioma).
+  - **Test del corazón**: ES=133, EN=136, FR=135, RU=134
+    (`BREVO_LIST_ID_HEART_{ES,EN,FR,RU}`, elegida con
+    `pickHeartListForLang()`; mismo fallback: si falta la lista del
+    corazón para un idioma, cae a la del temperamento de ese idioma).
   (Los IDs reales viven en el `.env` del VPS y en la cuenta de Brevo; si
   dudas, esa es la fuente de verdad, no este doc.)
 - **Sexo**: siempre "Male"/"Female" hacia Brevo, NUNCA "mujer"/"hombre"
@@ -206,7 +221,9 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
   YEAR, GENDER, TEMP1, TEMP2, IDIOMA, ACEPTACION_POLITICAS,
   TEST_TEMPERAMENTO, CONTACT_SOURCE, FECHA_TEST_TEMPERAMENTO, PERFIL, PAIS,
   CIUDAD, COD_DESCUENTO. Del carácter: TEST_CARACTER, FECHA_TEST_CARACTER, y
-  los 18 P/C/S/J/M/H × _GLOBAL/_PASSIVE/_ACTIVE.
+  los 18 P/C/S/J/M/H × _GLOBAL/_PASSIVE/_ACTIVE. Del corazón: TEST_CORAZON,
+  FECHA_TEST_CORAZON, HEART_TOP, HEART_BALANCED, y los 16 HEART_{R,VR,VM,
+  VI,VC,SV,SI,SC}_{SCORE,STAGE}.
 - Geolocalización IP → PAIS/CIUDAD via `ip-api.com` (HTTP, 45 req/min, sin
   key). Fire-and-forget con timeout 1.5s.
 
