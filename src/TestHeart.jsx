@@ -84,6 +84,37 @@ function resolveMulti(obj, lang) {
 
 const SEX_TO_BREVO = { mujer: 'Female', hombre: 'Male' };
 
+// Divide un texto en párrafos y los envuelve en <p>. El ODS oficial trae los
+// diagnósticos como texto plano sin HTML — sólo con `\n` de separador en la
+// mayoría, y en algún caso (1-R.html) todo concatenado sin separación.
+// Estrategia:
+//   1) Si el input ya trae <p>, no tocamos (por si el ODS cambia en el futuro).
+//   2) Si tiene saltos de línea, un párrafo por cada línea no vacía.
+//   3) Si es un bloque continuo, dividimos por "puntoMayúscula" (concatenación
+//      sin espacio, patrón exacto del ODS entre diagnóstico y remedio).
+//   4) Fallback: un único <p> con el texto entero.
+function formatDiagnosisHtml(raw) {
+  if (!raw) return '';
+  if (/<p[\s>]/i.test(raw)) return raw;
+
+  const lines = raw.split(/\n+/).map(s => s.trim()).filter(Boolean);
+  if (lines.length > 1) {
+    return lines.map(l => `<p>${l}</p>`).join('');
+  }
+
+  // Los signos incluyen «».«» del ruso (У.«Слово» → siguiente párrafo).
+  const withSep = raw.replace(
+    /([\.!?»])([A-ZÁÉÍÓÚÑÀ-ÖØ-Þ«А-ЯЁ])/g,
+    '$1<PARA_SEP>$2'
+  );
+  const chunks = withSep.split('<PARA_SEP>').map(s => s.trim()).filter(Boolean);
+  if (chunks.length > 1) {
+    return chunks.map(c => `<p>${c}</p>`).join('');
+  }
+
+  return `<p>${raw}</p>`;
+}
+
 async function submitHeartContact(payload) {
   const url = import.meta.env.VITE_SUBMIT_HEART_URL;
   if (!url) {
@@ -338,96 +369,115 @@ function GateForm({ onSubmitOk }) {
   );
 }
 
-// DisorderCard — 1 card por trastorno con letra + stage badge + click a expandir.
+// DisorderCard — 1 card por trastorno con letra + stage badge.
+// Si el usuario está EN el trastorno (stage1 o stage2): card expandible con
+// frase de estado + HTML de diagnóstico+remedio.
+// Si NO tiene inclinación (stage='none'): card estática sin descripción
+// (no aporta al usuario ver el diagnóstico de algo que no tiene) y se
+// pinta al final de la lista con un tono apagado.
 function DisorderCard({ code, disorderResult, lang }) {
   const { t } = useT();
   const [expanded, setExpanded] = useState(false);
   const c = DISORDER_COLORS[code];
   const name = resolveMulti(HEART_SUPPORT.labels[disorderResult.label_key], lang);
   const html = resolveMulti(HEART_SUPPORT.html[disorderResult.html_key], lang);
+  const isAffected = disorderResult.stage !== 'none';
 
-  // Frase de estado personalizada según stage.
+  // Frase de estado personalizada según stage. Solo se muestra en cards
+  // afectadas (las none no expanden).
   const stateLabel = {
-    none:   resolveMulti(HEART_SUPPORT.labels.hResultNoDecease, lang),
     stage1: resolveMulti(HEART_SUPPORT.labels.hResultDeceaseStage1, lang),
     stage2: resolveMulti(HEART_SUPPORT.labels.hResultDeceaseStage2, lang),
   }[disorderResult.stage];
 
-  // Badge visual del stage.
   const stageBadge = {
     none:   { text: t('tbp_heart.result.stage_none'),   bg: '#E8EFE9', fg: '#3F7A56' },
     stage1: { text: t('tbp_heart.result.stage_1'),      bg: '#F3E8D0', fg: '#9D8240' },
     stage2: { text: t('tbp_heart.result.stage_2'),      bg: '#E9CFCF', fg: '#9C3A3A' },
   }[disorderResult.stage];
 
-  const emphasize = disorderResult.stage !== 'none';
+  // Contenido de la cabecera (mismo layout en clicable y no clicable).
+  const header = (
+    <>
+      <div style={{
+        width: 56, height: 56, borderRadius: 4, background: c.color,
+        color: PAPER, fontFamily: fontSerif, fontWeight: 700, fontSize: 22,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        letterSpacing: '0.02em', flexShrink: 0,
+      }}>
+        {code}
+      </div>
+      <div style={{ flex: '1 1 220px', minWidth: 200 }}>
+        <div style={{ fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, lineHeight: 1.2 }}>
+          {name}
+        </div>
+        <div style={{ fontSize: 13, color: MUTED, marginTop: 4 }}>
+          {t('tbp_heart.result.score_label')}: <strong style={{ color: INK }}>{disorderResult.score}/16</strong>
+          {' · '}
+          {Math.round(disorderResult.pct)}%
+        </div>
+      </div>
+      <div style={{
+        fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
+        padding: '6px 10px', borderRadius: 2,
+        background: stageBadge.bg, color: stageBadge.fg,
+      }}>
+        {stageBadge.text}
+      </div>
+      {isAffected && (
+        <div style={{ fontSize: 22, color: c.color, marginLeft: 8, transition: 'transform 200ms', transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+          ›
+        </div>
+      )}
+    </>
+  );
 
   return (
     <div style={{
-      background: emphasize ? PAPER : '#FBF7EE',
+      background: isAffected ? PAPER : '#FBF7EE',
       border: `1px solid ${LINE}`,
       borderLeft: `4px solid ${c.color}`,
       borderRadius: 4,
       marginBottom: 14,
       overflow: 'hidden',
-      opacity: emphasize ? 1 : 0.78,
+      opacity: isAffected ? 1 : 0.72,
     }}>
-      <button
-        onClick={() => setExpanded(v => !v)}
-        aria-expanded={expanded}
-        style={{
-          width: '100%', textAlign: 'left', background: 'transparent',
-          border: 'none', padding: '18px 22px', cursor: 'pointer',
+      {isAffected ? (
+        <button
+          onClick={() => setExpanded(v => !v)}
+          aria-expanded={expanded}
+          style={{
+            width: '100%', textAlign: 'left', background: 'transparent',
+            border: 'none', padding: '18px 22px', cursor: 'pointer',
+            display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
+            fontFamily: fontSans,
+          }}
+        >
+          {header}
+        </button>
+      ) : (
+        // No clicable: mismo layout pero sin botón (sin expand). El usuario
+        // no necesita leer el diagnóstico de algo que no tiene.
+        <div style={{
+          padding: '18px 22px',
           display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
           fontFamily: fontSans,
-        }}
-      >
-        {/* Cuadrado con el código del trastorno */}
-        <div style={{
-          width: 56, height: 56, borderRadius: 4, background: c.color,
-          color: PAPER, fontFamily: fontSerif, fontWeight: 700, fontSize: 22,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          letterSpacing: '0.02em', flexShrink: 0,
         }}>
-          {code}
+          {header}
         </div>
+      )}
 
-        <div style={{ flex: '1 1 220px', minWidth: 200 }}>
-          <div style={{ fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, lineHeight: 1.2 }}>
-            {name}
-          </div>
-          <div style={{ fontSize: 13, color: MUTED, marginTop: 4 }}>
-            {t('tbp_heart.result.score_label')}: <strong style={{ color: INK }}>{disorderResult.score}/16</strong>
-            {' · '}
-            {Math.round(disorderResult.pct)}%
-          </div>
-        </div>
-
-        {/* Stage badge */}
-        <div style={{
-          fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
-          padding: '6px 10px', borderRadius: 2,
-          background: stageBadge.bg, color: stageBadge.fg,
-        }}>
-          {stageBadge.text}
-        </div>
-
-        <div style={{ fontSize: 22, color: c.color, marginLeft: 8, transition: 'transform 200ms', transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
-          ›
-        </div>
-      </button>
-
-      {expanded && (
+      {isAffected && expanded && (
         <div style={{ padding: '0 22px 22px 22px', borderTop: `1px solid ${LINE}`, background: BEIGE }}>
-          {/* Frase de estado personalizada arriba del HTML de diagnóstico */}
           {stateLabel && (
             <p style={{ fontFamily: fontSerif, fontStyle: 'italic', fontSize: 17, color: NAVY_SOFT, marginTop: 18, marginBottom: 4 }}>
               {stateLabel} <strong style={{ color: c.color }}>{name.toLowerCase()}</strong>.
             </p>
           )}
           <div
+            className="heart-disorder-html"
             style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: 12 }}
-            dangerouslySetInnerHTML={{ __html: html }}
+            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html) }}
           />
         </div>
       )}
@@ -441,11 +491,43 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
   const aboutHtml = resolveMulti(HEART_SUPPORT.html['about-heart.html'], lang);
   const bookUrl = resolveMulti(HEART_TEST.link_to_book, lang);
 
-  // Título de veredicto: si balanced → hResultInBalance, si has_stages → título general.
+  // Orden visual de trastornos: primero stage2, luego stage1, luego none.
+  // Dentro de cada grupo, orden estable (el del ODS).
+  const orderedCodes = useMemo(() => {
+    const priority = { stage2: 0, stage1: 1, none: 2 };
+    return [...HEART_DISORDER_CODES].sort((a, b) =>
+      (priority[scoreResult.disorders[a].stage] ?? 3) -
+      (priority[scoreResult.disorders[b].stage] ?? 3)
+    );
+  }, [scoreResult]);
+
+  // Título de veredicto:
+  //   balanced       → frase del ODS (hResultInBalance).
+  //   has_stages     → "Tu corazón muestra estas tendencias: {list}. Trabájalas."
+  //                    donde {list} es la lista formateada por Intl.ListFormat
+  //                    con los nombres de los trastornos en stage1/stage2
+  //                    (los de nivel 2 primero, en minúscula para leer en flujo).
   const balancedText = resolveMulti(HEART_SUPPORT.labels.hResultInBalance, lang);
+  const affectedNames = useMemo(() => {
+    const codes = [...scoreResult.stage2_codes, ...scoreResult.stage1_codes];
+    return codes.map(code => {
+      const d = scoreResult.disorders[code];
+      return resolveMulti(HEART_SUPPORT.labels[d.label_key], lang).toLowerCase();
+    });
+  }, [scoreResult, lang]);
+  const affectedList = useMemo(() => {
+    if (affectedNames.length === 0) return '';
+    // Intl.ListFormat resuelve las conjunciones por idioma:
+    //   ES: 'a, b y c' · EN: 'a, b, and c' · FR: 'a, b et c' · RU: 'a, b и c'.
+    try {
+      return new Intl.ListFormat(lang, { style: 'long', type: 'conjunction' }).format(affectedNames);
+    } catch {
+      return affectedNames.join(', ');
+    }
+  }, [affectedNames, lang]);
   const verdictHeadline = scoreResult.verdict === 'balanced'
     ? balancedText
-    : t('tbp_heart.result.has_stages_headline');
+    : t('tbp_heart.result.has_stages_pattern', { list: affectedList });
 
   return (
     <div style={styles.resultCard}>
@@ -469,9 +551,9 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
         {t('tbp_heart.result.intro')}
       </p>
 
-      {/* 8 disorder cards */}
+      {/* 8 disorder cards ordenadas: primero stage2, luego stage1, luego none. */}
       <div style={{ marginTop: 24 }}>
-        {HEART_DISORDER_CODES.map(code => (
+        {orderedCodes.map(code => (
           <DisorderCard key={code} code={code} disorderResult={scoreResult.disorders[code]} lang={lang} />
         ))}
       </div>
@@ -515,8 +597,9 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
             {t('tbp_heart.result.about_summary')}
           </summary>
           <div
+            className="heart-disorder-html"
             style={{ marginTop: 16, fontSize: 14, lineHeight: 1.65, color: INK }}
-            dangerouslySetInnerHTML={{ __html: aboutHtml }}
+            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(aboutHtml) }}
           />
         </details>
       )}
@@ -669,7 +752,16 @@ export default function TestHeart() {
         button:focus-visible { outline: 2px solid ${GOLD}; outline-offset: 2px; }
         @media (max-width: 480px) {
           .vl-test-card { padding: 28px 20px !important; }
-        }`}</style>
+        }
+        /* Formato para el HTML de diagnóstico+remedio que viene del ODS.
+           El ODS trae <p><strong>…</strong></p> — sin margen los <p> quedan
+           apelotonados y los strong se pierden. Damos aire y color. */
+        .heart-disorder-html p { margin: 0 0 14px 0; line-height: 1.65; }
+        .heart-disorder-html p:last-child { margin-bottom: 0; }
+        .heart-disorder-html strong { color: ${NAVY}; font-weight: 600; }
+        .heart-disorder-html ul, .heart-disorder-html ol { margin: 0 0 14px 0; padding-left: 22px; }
+        .heart-disorder-html li { margin-bottom: 6px; line-height: 1.55; }
+        .heart-disorder-html em { font-style: italic; color: ${NAVY_SOFT}; }`}</style>
       {body}
     </div>
   );
