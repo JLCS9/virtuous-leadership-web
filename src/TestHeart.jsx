@@ -1,24 +1,55 @@
 // TestHeart.jsx — Test del Corazón (modelo "Corazón Libre" de A. Havard,
 // 8 enfermedades espirituales).
 //
-// Calca el patrón de TestCharacter.jsx (Welcome → Questions Likert → Gate
-// → Result). La lógica de scoring vive en src/lib/heartScoring.js. Los
-// datos y textos largos vienen de src/data/heart-test.json y
-// src/data/heart-support-text.json (generados desde el ODS oficial).
+// Fases del componente:
+//   Welcome → Questions Likert (32 en orden fijo = 8 bloques × 4 preguntas
+//             del mismo trastorno) → milestone modal cada 4 preguntas
+//             → Gate → Result.
 //
-// Escala de respuestas: enteros 0-4. La UI muestra 5 etiquetas Likert
-// traducidas (mismo orden visual descendente que el test de carácter:
-// totalmente de acuerdo arriba). El valor NUMÉRICO va 0..4: acuerdo alto =
-// alta puntuación de síntoma (todas las preguntas son afirmaciones-síntoma
-// en la misma dirección).
+// La lógica de scoring vive en src/lib/heartScoring.js. Los datos y textos
+// largos vienen de src/data/heart-test.json y heart-support-text.json
+// (generados desde el ODS oficial).
+//
+// Cambios recientes (v2):
+//   - Sin shuffle: las 4 preguntas de cada trastorno van juntas para que
+//     el modal milestone (cada 4) muestre un resumen coherente.
+//   - Imagen HRW (por idioma) en Welcome y Result como imagen destacada.
+//   - 8 caritas (heart-disorder-*.jpeg) reemplazan los emblemas de código.
+//   - En Welcome, grid 4×2 con las 8 enfermedades visibles antes del test.
+//   - En cards del Result: sólo % (sin X/16 y sin badge de nivel).
+//   - Título del Result: "Tus resultados" (antes "Tu chequeo espiritual").
+//   - Diagnóstico dividido en 2 párrafos con subtítulo "Remedio" antes del 2º.
+//   - Sin acordeón "¿Qué mide este test?" al final.
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useT } from './i18n';
 import { scoreHeart, toBrevoAttributes, HEART_DISORDER_CODES } from './lib/heartScoring.js';
 import HEART_TEST from './data/heart-test.json';
 import HEART_SUPPORT from './data/heart-support-text.json';
 
-// ────────────────── paleta y tipografías (sync con TestCharacter) ──────────────────
+// Imagen destacada del test — por idioma (texto embebido).
+import hrwEs from './assets/HRW-es.png';
+import hrwEn from './assets/HRW-en.png';
+import hrwFr from './assets/HRW-fr.png';
+import hrwRu from './assets/HRW-ru.png';
+const HRW_BY_LANG = { es: hrwEs, en: hrwEn, fr: hrwFr, ru: hrwRu };
+
+// Caritas / retratos por trastorno (mismo asset para los 4 idiomas — no
+// llevan texto embebido). Uno por cada uno de los 8 trastornos.
+import faceR   from './assets/heart-disorder-R.jpeg';   // Kant
+import faceVR  from './assets/heart-disorder-VR.jpeg';  // Rivers (Jane Eyre)
+import faceVM  from './assets/heart-disorder-VM.jpeg';  // Clint Eastwood
+import faceVI  from './assets/heart-disorder-VI.jpeg';  // Freedom
+import faceVC  from './assets/heart-disorder-VC.jpeg';  // Pharisee
+import faceSV  from './assets/heart-disorder-SV.jpeg';  // Unknown (Kramskoj)
+import faceSI  from './assets/heart-disorder-SI.jpeg';  // Rousseau (Руссо)
+import faceSC  from './assets/heart-disorder-SC.jpeg';  // Rudin
+const DISORDER_FACES = {
+  R: faceR, VR: faceVR, VM: faceVM, VI: faceVI,
+  VC: faceVC, SV: faceSV, SI: faceSI, SC: faceSC,
+};
+
+// ────────────────── paleta y tipografías (sync con otros tests) ──────────────────
 const NAVY = '#1B2A4A';
 const NAVY_SOFT = '#2A3B5F';
 const GOLD = '#C5A55A';
@@ -29,18 +60,15 @@ const INK = '#22262E';
 const MUTED = '#6B6B6B';
 const LINE = '#D8D2C2';
 
-// Color por trastorno. Rojos/rosas para racionalismos/voluntarismos que
-// endurecen (R, VR, VM, VI, VC); azules/violetas para sentimentalismos
-// (SV, SI, SC). Iterable después con paleta oficial del libro.
 const DISORDER_COLORS = {
-  R:  { color: '#9C3A3A', soft: '#E9CFCF' }, // Racionalismo
-  VR: { color: '#B04836', soft: '#EBD1CA' }, // Voluntarismo religioso
-  VM: { color: '#8B4513', soft: '#DFCEBB' }, // Voluntarismo machista
-  VI: { color: '#7C5A2E', soft: '#DAD0BA' }, // Voluntarismo ideológico
-  VC: { color: '#6B6339', soft: '#D5D3C4' }, // Voluntarismo conformista
-  SV: { color: '#5A3F8B', soft: '#D7CDE6' }, // Sentim. voluptuoso
-  SI: { color: '#3F5A8B', soft: '#CDD5E6' }, // Sentim. insano
-  SC: { color: '#3F7A8B', soft: '#CDE0E6' }, // Sentim. cobarde
+  R:  { color: '#9C3A3A', soft: '#E9CFCF' },
+  VR: { color: '#B04836', soft: '#EBD1CA' },
+  VM: { color: '#8B4513', soft: '#DFCEBB' },
+  VI: { color: '#7C5A2E', soft: '#DAD0BA' },
+  VC: { color: '#6B6339', soft: '#D5D3C4' },
+  SV: { color: '#5A3F8B', soft: '#D7CDE6' },
+  SI: { color: '#3F5A8B', soft: '#CDD5E6' },
+  SC: { color: '#3F7A8B', soft: '#CDE0E6' },
 };
 
 const fontSerif = "'Cormorant Garamond', 'Playfair Display', Georgia, 'Times New Roman', serif";
@@ -54,7 +82,6 @@ const styles = {
   h2: { fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, margin: '0 0 8px 0' },
   subtitle: { fontSize: 14, color: MUTED, margin: '4px 0 24px 0', letterSpacing: '0.04em', textTransform: 'uppercase' },
   para: { fontSize: 16, lineHeight: 1.6, color: INK, margin: '14px 0' },
-  notice: { fontSize: 13, color: MUTED, fontStyle: 'italic', borderLeft: `2px solid ${GOLD}`, paddingLeft: 12, margin: '20px 0' },
   buttonPrimary: { fontFamily: fontSans, fontSize: 15, letterSpacing: '0.06em', textTransform: 'uppercase', fontWeight: 600, color: PAPER, background: NAVY, border: `1px solid ${NAVY}`, padding: '14px 28px', borderRadius: 2, cursor: 'pointer', transition: 'all 160ms ease' },
   buttonGhost: { fontFamily: fontSans, fontSize: 13, color: MUTED, background: 'transparent', border: 'none', padding: '8px 12px', cursor: 'pointer' },
   progress: { fontSize: 13, color: MUTED, letterSpacing: '0.04em', textTransform: 'uppercase' },
@@ -63,20 +90,9 @@ const styles = {
 
 // ─────────────────────────── utilidades ───────────────────────────
 
-function shuffle(arr) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-// Resuelve un texto multi-idioma con fallback: activo → EN → ES → cualquiera
-// no vacío. Cubre los gaps del ODS (linkToBookHeart solo ES, about-heart
-// sin EN, etc.).
+// Resuelve un texto multi-idioma con fallback silencioso: activo → EN → ES.
 function resolveMulti(obj, lang) {
   if (!obj) return '';
   return obj[lang] || obj.en || obj.es || obj.fr || obj.ru || obj.pt || '';
@@ -84,35 +100,48 @@ function resolveMulti(obj, lang) {
 
 const SEX_TO_BREVO = { mujer: 'Female', hombre: 'Male' };
 
-// Divide un texto en párrafos y los envuelve en <p>. El ODS oficial trae los
-// diagnósticos como texto plano sin HTML — sólo con `\n` de separador en la
-// mayoría, y en algún caso (1-R.html) todo concatenado sin separación.
+// Convierte el texto plano del ODS a HTML con párrafos separados + un
+// subtítulo "Remedio" antes del 2º párrafo. El ODS trae el texto en 2
+// bloques (diagnóstico + remedio) unidos por \n o por "puntoMayúscula"
+// pegado sin espacio (patrón exacto entre las 2 partes).
+//
 // Estrategia:
-//   1) Si el input ya trae <p>, no tocamos (por si el ODS cambia en el futuro).
-//   2) Si tiene saltos de línea, un párrafo por cada línea no vacía.
-//   3) Si es un bloque continuo, dividimos por "puntoMayúscula" (concatenación
-//      sin espacio, patrón exacto del ODS entre diagnóstico y remedio).
-//   4) Fallback: un único <p> con el texto entero.
-function formatDiagnosisHtml(raw) {
+//   1. Si trae <p>, respetar tal cual.
+//   2. Split por \n+ (líneas vacías).
+//   3. Si sale un solo chunk, split por "punto o » seguido de mayúscula
+//      sin espacio" (patrón del ODS).
+//   4. Envuelve el PRIMER chunk como diagnóstico (<p>).
+//      Antes del SEGUNDO chunk (si existe) inserta un <h4>Remedio</h4>
+//      con la traducción del idioma activo.
+//   5. Cualquier chunk adicional va como <p> normal después del remedio.
+function formatDiagnosisHtml(raw, remedyLabel) {
   if (!raw) return '';
   if (/<p[\s>]/i.test(raw)) return raw;
 
   const lines = raw.split(/\n+/).map(s => s.trim()).filter(Boolean);
+  let chunks;
   if (lines.length > 1) {
-    return lines.map(l => `<p>${l}</p>`).join('');
+    chunks = lines;
+  } else {
+    // Punto o cierre de comillas rusas seguido de mayúscula latina o cirílica
+    // sin espacio → separador de bloques.
+    const withSep = raw.replace(
+      /([\.!?»])([A-ZÁÉÍÓÚÑÀ-ÖØ-Þ«А-ЯЁ])/g,
+      '$1<PARA_SEP>$2'
+    );
+    chunks = withSep.split('<PARA_SEP>').map(s => s.trim()).filter(Boolean);
   }
 
-  // Los signos incluyen «».«» del ruso (У.«Слово» → siguiente párrafo).
-  const withSep = raw.replace(
-    /([\.!?»])([A-ZÁÉÍÓÚÑÀ-ÖØ-Þ«А-ЯЁ])/g,
-    '$1<PARA_SEP>$2'
-  );
-  const chunks = withSep.split('<PARA_SEP>').map(s => s.trim()).filter(Boolean);
-  if (chunks.length > 1) {
-    return chunks.map(c => `<p>${c}</p>`).join('');
+  if (chunks.length <= 1) {
+    return `<p>${chunks[0] || raw}</p>`;
   }
-
-  return `<p>${raw}</p>`;
+  // 1er párrafo: diagnóstico. Subtítulo "Remedio" + 2º párrafo. Rest → <p>.
+  const out = [
+    `<p>${chunks[0]}</p>`,
+    `<h4 class="heart-remedy-heading">${remedyLabel}</h4>`,
+    ...chunks.slice(1).map(c => `<p>${c}</p>`),
+  ];
+  return out.join('');
 }
 
 async function submitHeartContact(payload) {
@@ -135,22 +164,82 @@ async function submitHeartContact(payload) {
   return res.json();
 }
 
+// Score parcial de un trastorno concreto a partir del vector de respuestas
+// canónico (índice = pos en HEART_TEST.questions, valor 0-4).
+// Usado por el modal cada 4 para mostrar el score inmediato del trastorno
+// que acaba de completar el usuario.
+function partialDisorderStats(answersCanonical, disorderCode) {
+  const disorder = HEART_TEST.disorders.find(d => d.code === disorderCode);
+  if (!disorder) return { score: 0, pct: 0, stage: 'none' };
+  const qIdxByCode = Object.fromEntries(HEART_TEST.questions.map((q, i) => [q.code, i]));
+  let score = 0;
+  for (const qc of disorder.question_codes) {
+    const idx = qIdxByCode[qc];
+    if (idx != null) score += answersCanonical[idx] || 0;
+  }
+  const pct = Math.round((score / 16) * 100);
+  const stage = pct < 33 ? 'none' : pct < 66 ? 'stage1' : 'stage2';
+  return { score, pct, stage };
+}
+
 // ─────────────────────────── subcomponentes ───────────────────────────
 
 function Welcome({ onStart }) {
   const { t, lang } = useT();
   const intro = resolveMulti(HEART_SUPPORT.labels.heartTestIntro, lang);
+  const hrwSrc = HRW_BY_LANG[lang] || HRW_BY_LANG.es;
+
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('tbp_heart.welcome.eyebrow')}</div>
       <h1 style={styles.h1}>{t('tbp_heart.welcome.title')}</h1>
-      <p style={{ ...styles.para, fontFamily: fontSerif, fontSize: 18, color: NAVY_SOFT, fontStyle: 'italic' }}>
-        {t('tbp_heart.welcome.byline')}
-      </p>
-      {/* Texto de bienvenida del ODS (heartTestIntro) — el "copy real" del
-          libro. Los strings i18n contienen sólo labels UI cortos. */}
+
+      {/* Imagen destacada del test — misma que se ve en /tests y en el Result. */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0 24px' }}>
+        <img src={hrwSrc} alt={t('tbp_heart.welcome.title')}
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
+      </div>
+
+      {/* Texto de bienvenida del ODS (heartTestIntro) — copy real del libro. */}
       <p style={styles.para}>{intro}</p>
-      <p style={styles.notice}>{t('tbp_heart.welcome.notice')}</p>
+
+      {/* Grid 4×2 con las 8 enfermedades (carita + nombre). Muestra al
+          usuario qué se evalúa ANTES de arrancar. */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(4, 1fr)',
+        gap: 12,
+        margin: '28px 0 24px',
+      }} className="vl-heart-welcome-grid">
+        {HEART_DISORDER_CODES.map(code => {
+          const d = HEART_TEST.disorders.find(x => x.code === code);
+          const name = resolveMulti(HEART_SUPPORT.labels[d.label_key], lang);
+          const face = DISORDER_FACES[code];
+          const c = DISORDER_COLORS[code];
+          return (
+            <div key={code} style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'center',
+              textAlign: 'center', gap: 8,
+            }}>
+              <div style={{
+                width: 72, height: 72, borderRadius: '50%',
+                border: `2px solid ${c.color}`,
+                overflow: 'hidden', background: BEIGE,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                <img src={face} alt={name}
+                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div style={{
+                fontFamily: fontSans, fontSize: 11, color: NAVY,
+                fontWeight: 500, lineHeight: 1.25,
+              }}>
+                {name}
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 28, marginBottom: 28, flexWrap: 'wrap' }}>
         <div style={{ fontSize: 13, color: MUTED }}>
@@ -174,8 +263,7 @@ function Welcome({ onStart }) {
   );
 }
 
-// Question — pregunta con Likert 5 (valores 0-4). Orden visual descendente
-// (más de acuerdo arriba), consistente con el test de carácter.
+// Question — pregunta con Likert 5 botones (valores 0-4).
 function Question({ progress, total, item, lang, onAnswer, onBack, canBack }) {
   const { t } = useT();
   const text = resolveMulti(item.text, lang);
@@ -224,6 +312,95 @@ function Question({ progress, total, item, lang, onAnswer, onBack, canBack }) {
             {opt.label}
           </button>
         ))}
+      </div>
+    </div>
+  );
+}
+
+// MilestoneModal — modal bloqueante que aparece tras completar las 4 preguntas
+// de un trastorno. Muestra la carita + nombre + % + label del nivel, y el
+// usuario clickea "Continuar" para avanzar.
+function MilestoneModal({ disorderCode, partial, lang, onContinue }) {
+  const { t } = useT();
+  const d = HEART_TEST.disorders.find(x => x.code === disorderCode);
+  const name = resolveMulti(HEART_SUPPORT.labels[d.label_key], lang);
+  const face = DISORDER_FACES[disorderCode];
+  const c = DISORDER_COLORS[disorderCode];
+
+  const stageBadge = {
+    none:   { text: t('tbp_heart.result.stage_none'),   bg: '#E8EFE9', fg: '#3F7A56' },
+    stage1: { text: t('tbp_heart.result.stage_1'),      bg: '#F3E8D0', fg: '#9D8240' },
+    stage2: { text: t('tbp_heart.result.stage_2'),      bg: '#E9CFCF', fg: '#9C3A3A' },
+  }[partial.stage];
+
+  return (
+    <div
+      role="dialog" aria-modal="true"
+      style={{
+        position: 'fixed', inset: 0, zIndex: 1000,
+        background: 'rgba(27, 42, 74, 0.55)',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        padding: 16,
+      }}
+    >
+      <div style={{
+        background: PAPER,
+        maxWidth: 440, width: '100%',
+        borderRadius: 4,
+        borderTop: `4px solid ${c.color}`,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+        padding: '32px 28px', textAlign: 'center',
+        fontFamily: fontSans,
+      }}>
+        <div style={styles.subtitle}>{t('tbp_heart.milestone.eyebrow')}</div>
+
+        {/* Carita del trastorno recién completado */}
+        <div style={{
+          margin: '4px auto 20px',
+          width: 120, height: 120, borderRadius: '50%',
+          border: `3px solid ${c.color}`, overflow: 'hidden',
+          background: BEIGE,
+        }}>
+          <img src={face} alt={name}
+               style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+
+        <h3 style={{
+          fontFamily: fontSerif, fontSize: 24, fontWeight: 600,
+          color: NAVY, margin: '0 0 8px', lineHeight: 1.2,
+        }}>
+          {name}
+        </h3>
+
+        <div style={{
+          fontFamily: fontSerif, fontSize: 48, fontWeight: 600,
+          color: c.color, lineHeight: 1, margin: '12px 0 6px',
+        }}>
+          {partial.pct}%
+        </div>
+
+        <div style={{
+          display: 'inline-block',
+          fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase',
+          padding: '5px 10px', borderRadius: 2,
+          background: stageBadge.bg, color: stageBadge.fg,
+          margin: '0 0 20px',
+        }}>
+          {stageBadge.text}
+        </div>
+
+        <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.5, margin: '0 0 24px' }}>
+          {t('tbp_heart.milestone.note')}
+        </p>
+
+        <button
+          onClick={onContinue}
+          style={{ ...styles.buttonPrimary, width: '100%' }}
+          onMouseOver={e => (e.currentTarget.style.background = NAVY_SOFT)}
+          onMouseOut={e => (e.currentTarget.style.background = NAVY)}
+        >
+          {t('tbp_heart.milestone.continue')}
+        </button>
       </div>
     </div>
   );
@@ -369,60 +546,45 @@ function GateForm({ onSubmitOk }) {
   );
 }
 
-// DisorderCard — 1 card por trastorno con letra + stage badge.
-// Si el usuario está EN el trastorno (stage1 o stage2): card expandible con
-// frase de estado + HTML de diagnóstico+remedio.
-// Si NO tiene inclinación (stage='none'): card estática sin descripción
-// (no aporta al usuario ver el diagnóstico de algo que no tiene) y se
-// pinta al final de la lista con un tono apagado.
-function DisorderCard({ code, disorderResult, lang }) {
+// DisorderCard — card por trastorno en el Result. La carita reemplaza al
+// emblema con letra. Sólo se muestra % (no X/16, no badge de nivel).
+// Si el trastorno está en 'none': card estática, no expandible.
+function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
   const { t } = useT();
   const [expanded, setExpanded] = useState(false);
   const c = DISORDER_COLORS[code];
+  const face = DISORDER_FACES[code];
   const name = resolveMulti(HEART_SUPPORT.labels[disorderResult.label_key], lang);
   const html = resolveMulti(HEART_SUPPORT.html[disorderResult.html_key], lang);
   const isAffected = disorderResult.stage !== 'none';
 
-  // Frase de estado personalizada según stage. Solo se muestra en cards
-  // afectadas (las none no expanden).
   const stateLabel = {
     stage1: resolveMulti(HEART_SUPPORT.labels.hResultDeceaseStage1, lang),
     stage2: resolveMulti(HEART_SUPPORT.labels.hResultDeceaseStage2, lang),
   }[disorderResult.stage];
 
-  const stageBadge = {
-    none:   { text: t('tbp_heart.result.stage_none'),   bg: '#E8EFE9', fg: '#3F7A56' },
-    stage1: { text: t('tbp_heart.result.stage_1'),      bg: '#F3E8D0', fg: '#9D8240' },
-    stage2: { text: t('tbp_heart.result.stage_2'),      bg: '#E9CFCF', fg: '#9C3A3A' },
-  }[disorderResult.stage];
-
-  // Contenido de la cabecera (mismo layout en clicable y no clicable).
   const header = (
     <>
+      {/* Carita del trastorno — reemplaza al emblema con letra. */}
       <div style={{
-        width: 56, height: 56, borderRadius: 4, background: c.color,
-        color: PAPER, fontFamily: fontSerif, fontWeight: 700, fontSize: 22,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        letterSpacing: '0.02em', flexShrink: 0,
+        width: 56, height: 56, borderRadius: '50%',
+        overflow: 'hidden', flexShrink: 0,
+        border: `2px solid ${c.color}`, background: BEIGE,
       }}>
-        {code}
+        <img src={face} alt={name}
+             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
       </div>
       <div style={{ flex: '1 1 220px', minWidth: 200 }}>
         <div style={{ fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, lineHeight: 1.2 }}>
           {name}
         </div>
-        <div style={{ fontSize: 13, color: MUTED, marginTop: 4 }}>
-          {t('tbp_heart.result.score_label')}: <strong style={{ color: INK }}>{disorderResult.score}/16</strong>
-          {' · '}
-          {Math.round(disorderResult.pct)}%
-        </div>
       </div>
+      {/* Sólo % — sin X/16 y sin badge de nivel (quitado a petición). */}
       <div style={{
-        fontSize: 12, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase',
-        padding: '6px 10px', borderRadius: 2,
-        background: stageBadge.bg, color: stageBadge.fg,
+        fontFamily: fontSerif, fontSize: 26, fontWeight: 600,
+        color: c.color, lineHeight: 1,
       }}>
-        {stageBadge.text}
+        {Math.round(disorderResult.pct)}%
       </div>
       {isAffected && (
         <div style={{ fontSize: 22, color: c.color, marginLeft: 8, transition: 'transform 200ms', transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
@@ -456,8 +618,6 @@ function DisorderCard({ code, disorderResult, lang }) {
           {header}
         </button>
       ) : (
-        // No clicable: mismo layout pero sin botón (sin expand). El usuario
-        // no necesita leer el diagnóstico de algo que no tiene.
         <div style={{
           padding: '18px 22px',
           display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
@@ -477,7 +637,7 @@ function DisorderCard({ code, disorderResult, lang }) {
           <div
             className="heart-disorder-html"
             style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: 12 }}
-            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html) }}
+            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html, remedyLabel) }}
           />
         </div>
       )}
@@ -485,14 +645,14 @@ function DisorderCard({ code, disorderResult, lang }) {
   );
 }
 
-// ResultScreen — veredicto arriba + 8 disorder cards + CTA libro + acordeón about.
+// ResultScreen — imagen HRW arriba, veredicto, 8 cards ordenadas, CTA libro.
+// (Sin acordeón "¿Qué mide este test?" — quitado a petición.)
 function ResultScreen({ scoreResult, contactName, onRestart }) {
   const { t, lang } = useT();
-  const aboutHtml = resolveMulti(HEART_SUPPORT.html['about-heart.html'], lang);
   const bookUrl = resolveMulti(HEART_TEST.link_to_book, lang);
+  const hrwSrc = HRW_BY_LANG[lang] || HRW_BY_LANG.es;
+  const remedyLabel = t('tbp_heart.result.remedy_heading');
 
-  // Orden visual de trastornos: primero stage2, luego stage1, luego none.
-  // Dentro de cada grupo, orden estable (el del ODS).
   const orderedCodes = useMemo(() => {
     const priority = { stage2: 0, stage1: 1, none: 2 };
     return [...HEART_DISORDER_CODES].sort((a, b) =>
@@ -501,12 +661,6 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
     );
   }, [scoreResult]);
 
-  // Título de veredicto:
-  //   balanced       → frase del ODS (hResultInBalance).
-  //   has_stages     → "Tu corazón muestra estas tendencias: {list}. Trabájalas."
-  //                    donde {list} es la lista formateada por Intl.ListFormat
-  //                    con los nombres de los trastornos en stage1/stage2
-  //                    (los de nivel 2 primero, en minúscula para leer en flujo).
   const balancedText = resolveMulti(HEART_SUPPORT.labels.hResultInBalance, lang);
   const affectedNames = useMemo(() => {
     const codes = [...scoreResult.stage2_codes, ...scoreResult.stage1_codes];
@@ -517,8 +671,6 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
   }, [scoreResult, lang]);
   const affectedList = useMemo(() => {
     if (affectedNames.length === 0) return '';
-    // Intl.ListFormat resuelve las conjunciones por idioma:
-    //   ES: 'a, b y c' · EN: 'a, b, and c' · FR: 'a, b et c' · RU: 'a, b и c'.
     try {
       return new Intl.ListFormat(lang, { style: 'long', type: 'conjunction' }).format(affectedNames);
     } catch {
@@ -533,6 +685,12 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
     <div style={styles.resultCard}>
       <div style={styles.subtitle}>{t('tbp_heart.result.eyebrow_prefix')} {contactName}</div>
       <h1 style={{ ...styles.h1, fontSize: 32, marginBottom: 12 }}>{t('tbp_heart.result.title')}</h1>
+
+      {/* Imagen destacada del test — misma que Welcome y /tests. */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '16px 0 24px' }}>
+        <img src={hrwSrc} alt={t('tbp_heart.result.title')}
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
+      </div>
 
       {/* Veredicto global */}
       <div style={{
@@ -554,7 +712,9 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
       {/* 8 disorder cards ordenadas: primero stage2, luego stage1, luego none. */}
       <div style={{ marginTop: 24 }}>
         {orderedCodes.map(code => (
-          <DisorderCard key={code} code={code} disorderResult={scoreResult.disorders[code]} lang={lang} />
+          <DisorderCard key={code} code={code}
+                        disorderResult={scoreResult.disorders[code]}
+                        lang={lang} remedyLabel={remedyLabel} />
         ))}
       </div>
 
@@ -590,20 +750,6 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
         </div>
       )}
 
-      {/* Acordeón "¿Qué mide este test?" */}
-      {aboutHtml && (
-        <details style={{ marginTop: 32, padding: '20px 24px', background: PAPER, border: `1px solid ${LINE}`, borderRadius: 2 }}>
-          <summary style={{ cursor: 'pointer', fontFamily: fontSerif, fontSize: 18, fontWeight: 600, color: NAVY }}>
-            {t('tbp_heart.result.about_summary')}
-          </summary>
-          <div
-            className="heart-disorder-html"
-            style={{ marginTop: 16, fontSize: 14, lineHeight: 1.65, color: INK }}
-            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(aboutHtml) }}
-          />
-        </details>
-      )}
-
       <div style={{ textAlign: 'center', marginTop: 32 }}>
         <button
           style={{ ...styles.buttonPrimary, background: 'transparent', color: NAVY }}
@@ -622,30 +768,47 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
 
 const PHASE = { WELCOME: 'welcome', QUESTIONS: 'questions', GATE: 'gate', RESULT: 'result' };
 
+// Orden CANÓNICO de preguntas — sin shuffle. Las 4 preguntas de cada
+// trastorno van consecutivas para que el modal milestone cada 4 muestre
+// un resumen coherente de la enfermedad que acaba de completar el usuario.
+// El orden se calcula UNA VEZ al arranque del módulo — usa el orden de
+// HEART_TEST.disorders (R, VR, VM, VI, VC, SV, SI, SC) y las 4 preguntas
+// por trastorno del ODS.
+function buildCanonicalOrder() {
+  const qIdxByCode = Object.fromEntries(HEART_TEST.questions.map((q, i) => [q.code, i]));
+  const order = [];
+  for (const d of HEART_TEST.disorders) {
+    for (const qc of d.question_codes) {
+      if (qc in qIdxByCode) order.push(qIdxByCode[qc]);
+    }
+  }
+  return order;
+}
+const CANONICAL_ORDER = buildCanonicalOrder();
+
 export default function TestHeart() {
   const { lang } = useT();
   const [phase, setPhase] = useState(PHASE.WELCOME);
-  const [order, setOrder] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [idx, setIdx] = useState(0);
   const [contact, setContact] = useState(null);
+  // Modal milestone que aparece al terminar las 4 preguntas de un trastorno.
+  // Guarda el código del trastorno recién completado; null = no visible.
+  const [milestone, setMilestone] = useState(null);
 
-  // Score sólo se calcula al pasar a RESULT.
   const scoreResult = useMemo(() => {
-    if (phase !== PHASE.RESULT || answers.length !== order.length) return null;
-    // Re-mapear respuestas barajadas → orden canónico (por index en HEART_TEST.questions).
+    if (phase !== PHASE.RESULT || answers.length !== CANONICAL_ORDER.length) return null;
     const canonical = new Array(HEART_TEST.questions.length).fill(0);
-    for (let i = 0; i < order.length; i++) {
-      canonical[order[i]] = answers[i] ?? 0;
+    for (let i = 0; i < CANONICAL_ORDER.length; i++) {
+      canonical[CANONICAL_ORDER[i]] = answers[i] ?? 0;
     }
     return scoreHeart(canonical, HEART_TEST);
-  }, [phase, answers, order]);
+  }, [phase, answers]);
 
   function handleStart() {
-    const N = HEART_TEST.questions.length;
-    setOrder(shuffle(Array.from({ length: N }, (_, i) => i)));
     setAnswers([]);
     setIdx(0);
+    setMilestone(null);
     setPhase(PHASE.QUESTIONS);
   }
 
@@ -653,11 +816,38 @@ export default function TestHeart() {
     const next = [...answers];
     next[idx] = value;
     setAnswers(next);
-    if (idx + 1 < order.length) {
-      setIdx(idx + 1);
+
+    const total = CANONICAL_ORDER.length;
+    const nextIdx = idx + 1;
+
+    // ¿Acabamos de completar las 4 preguntas de un trastorno?
+    // El bloque de trastorno t (0-indexed) va de idx 4t..4t+3.
+    // Trigger milestone si nextIdx es múltiplo de 4, PERO NO en la última
+    // pregunta (nextIdx === total) — ahí ya pasamos al gate directamente
+    // sin milestone (evita doble interrupción antes del gate).
+    if (nextIdx % 4 === 0 && nextIdx < total) {
+      const disorderIdx = Math.floor((nextIdx - 1) / 4); // 0..7
+      const disorderCode = HEART_TEST.disorders[disorderIdx].code;
+      // Construir el vector canónico parcial con las respuestas hasta ahora.
+      const canonical = new Array(HEART_TEST.questions.length).fill(0);
+      for (let i = 0; i < next.length; i++) {
+        canonical[CANONICAL_ORDER[i]] = next[i] ?? 0;
+      }
+      const partial = partialDisorderStats(canonical, disorderCode);
+      setMilestone({ disorderCode, partial });
+      return; // no avanzo idx todavía — el modal ha de dar Continuar
+    }
+
+    if (nextIdx < total) {
+      setIdx(nextIdx);
     } else {
       setPhase(PHASE.GATE);
     }
+  }
+
+  function handleMilestoneContinue() {
+    setMilestone(null);
+    setIdx(idx + 1);
   }
 
   function handleBack() {
@@ -665,29 +855,24 @@ export default function TestHeart() {
   }
 
   async function handleGateSubmit(contactData) {
-    // Score local antes de mandar (mismo cálculo que el memo del RESULT).
     const canonical = new Array(HEART_TEST.questions.length).fill(0);
-    for (let i = 0; i < order.length; i++) {
-      canonical[order[i]] = answers[i] ?? 0;
+    for (let i = 0; i < CANONICAL_ORDER.length; i++) {
+      canonical[CANONICAL_ORDER[i]] = answers[i] ?? 0;
     }
     const result = scoreHeart(canonical, HEART_TEST);
     const brevoAttrs = toBrevoAttributes(result);
 
     const payload = {
       contact: contactData,
-      result: {
-        scores: result,
-        brevo_attributes: brevoAttrs,
-      },
+      result: { scores: result, brevo_attributes: brevoAttrs },
       meta: {
-        version: 'tbp-heart-v1',
+        version: 'tbp-heart-v2',
         test_type: 'heart',
         submittedAt: new Date().toISOString(),
         answers_values: canonical,
       },
     };
 
-    // dataLayer push (mismo patrón que otros tests).
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({
       event: 'fin_test_corazon',
@@ -710,9 +895,9 @@ export default function TestHeart() {
 
   function handleRestart() {
     setPhase(PHASE.WELCOME);
-    setOrder([]);
     setAnswers([]);
     setIdx(0);
+    setMilestone(null);
     setContact(null);
   }
 
@@ -720,17 +905,17 @@ export default function TestHeart() {
   if (phase === PHASE.WELCOME) {
     body = <Welcome onStart={handleStart} />;
   } else if (phase === PHASE.QUESTIONS) {
-    const itemIdx = order[idx];
+    const itemIdx = CANONICAL_ORDER[idx];
     const item = HEART_TEST.questions[itemIdx];
     body = (
       <Question
         progress={idx + 1}
-        total={order.length}
+        total={CANONICAL_ORDER.length}
         item={item}
         lang={lang}
         onAnswer={handleAnswer}
         onBack={handleBack}
-        canBack={idx > 0}
+        canBack={idx > 0 && !milestone}
       />
     );
   } else if (phase === PHASE.GATE) {
@@ -752,17 +937,34 @@ export default function TestHeart() {
         button:focus-visible { outline: 2px solid ${GOLD}; outline-offset: 2px; }
         @media (max-width: 480px) {
           .vl-test-card { padding: 28px 20px !important; }
+          .vl-heart-welcome-grid { grid-template-columns: repeat(2, 1fr) !important; }
         }
-        /* Formato para el HTML de diagnóstico+remedio que viene del ODS.
-           El ODS trae <p><strong>…</strong></p> — sin margen los <p> quedan
-           apelotonados y los strong se pierden. Damos aire y color. */
+        /* Formato para el HTML de diagnóstico+remedio que viene del ODS. */
         .heart-disorder-html p { margin: 0 0 14px 0; line-height: 1.65; }
         .heart-disorder-html p:last-child { margin-bottom: 0; }
         .heart-disorder-html strong { color: ${NAVY}; font-weight: 600; }
-        .heart-disorder-html ul, .heart-disorder-html ol { margin: 0 0 14px 0; padding-left: 22px; }
-        .heart-disorder-html li { margin-bottom: 6px; line-height: 1.55; }
-        .heart-disorder-html em { font-style: italic; color: ${NAVY_SOFT}; }`}</style>
+        .heart-disorder-html em { font-style: italic; color: ${NAVY_SOFT}; }
+        .heart-disorder-html .heart-remedy-heading {
+          font-family: ${fontSerif};
+          font-size: 17px;
+          font-weight: 600;
+          color: ${GOLD};
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+          margin: 18px 0 10px 0;
+          padding-top: 12px;
+          border-top: 1px solid ${LINE};
+        }
+      `}</style>
       {body}
+      {milestone && (
+        <MilestoneModal
+          disorderCode={milestone.disorderCode}
+          partial={milestone.partial}
+          lang={lang}
+          onContinue={handleMilestoneContinue}
+        />
+      )}
     </div>
   );
 }
