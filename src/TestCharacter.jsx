@@ -111,7 +111,8 @@ async function submitCharacterContact(payload) {
 // ─────────────────────────── subcomponentes ───────────────────────────
 
 function Welcome({ onStart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const pyramidSrc = PYRAMID[lang] || PYRAMID.es;
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('tbp_character.welcome.eyebrow')}</div>
@@ -119,6 +120,13 @@ function Welcome({ onStart }) {
       <p style={{ ...styles.para, fontFamily: fontSerif, fontSize: 18, color: NAVY_SOFT, fontStyle: 'italic' }}>
         {t('tbp_character.welcome.byline')}
       </p>
+
+      {/* Imagen destacada del test — pirámide de las 6 virtudes (misma que /tests y Result). */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0 24px' }}>
+        <img src={pyramidSrc} alt={t('tbp_character.result.pyramid_alt')}
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
+      </div>
+
       <p style={styles.para}>{t('tbp_character.welcome.intro_line1')}</p>
       <p style={styles.para}>{t('tbp_character.welcome.intro_line2')}</p>
       <p style={styles.notice}>{t('tbp_character.welcome.notice')}</p>

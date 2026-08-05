@@ -426,7 +426,7 @@ export default {
       { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Character Test',
         text: 'This test assesses your personal growth in virtues—spiritual habits developed through conscious effort.\nThere are six essential virtues: prudence, courage, self-mastery, justice, magnanimity, and humility.',
         cta: 'Take the test' },
-      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03', title: 'Free Heart Test',
+      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03 · Free Heart', title: 'Free Heart Test',
         text: 'This test helps you identify and correct tendencies toward eight spiritual disorders:\nrationalism, religious voluntarism, macho voluntarism, ideological voluntarism, conventional voluntarism, voluptuous sentimentalism, insane sentimentalism, cowardly sentimentalism.',
         cta: 'Take the test' },
     ],
@@ -921,13 +921,16 @@ export default {
   // about-heart) lives in src/data/heart-support-text.json.
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Spiritual check-up',
+      eyebrow: 'Test 03 — Free Heart',
       title: 'Free Heart Test',
-      byline: 'Based on Alexandre Havard\'s book "Free Hearts"',
-      notice: 'Answer honestly. The test isn\'t a judgment: it shows you which tendencies to work on.',
       duration_label: 'Duration',
       duration_text: 'About 15 minutes · 32 questions',
       button: 'Start',
+    },
+    milestone: {
+      eyebrow: 'Checkpoint',
+      note: 'This is a partial result. Continue with the next 4 questions to complete the test.',
+      continue: 'Continue',
     },
     question: {
       progress: 'Question {n} of {total}',
@@ -961,17 +964,16 @@ export default {
     },
     result: {
       eyebrow_prefix: 'Results for',
-      title: 'Your spiritual check-up',
+      title: 'Your results',
       intro: 'Click each affected disorder to read the diagnosis and remedy.',
       has_stages_pattern: 'Your heart shows these tendencies: {list}. Work on them.',
-      score_label: 'Score',
+      remedy_heading: 'Remedy',
       stage_none: 'No tendency',
       stage_1: 'Level 1',
       stage_2: 'Level 2',
       cta_eyebrow: 'GO DEEPER',
       cta_title: 'Read "Free Hearts" by Alexandre Havard',
       cta_button: 'Buy the book',
-      about_summary: 'What does this test measure?',
       repeat_button: 'Take the test again',
     },
   },

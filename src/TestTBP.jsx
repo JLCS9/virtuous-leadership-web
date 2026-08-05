@@ -288,7 +288,8 @@ const styles = {
 };
 
 function Welcome({ onStart }) {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const ttImg = TT[lang] || TT.es;
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('test.welcome.eyebrow')}</div>
@@ -296,6 +297,12 @@ function Welcome({ onStart }) {
       <p style={{ ...styles.para, fontFamily: fontSerif, fontSize: 18, color: NAVY_SOFT, fontStyle: 'italic' }}>
         {t('test.welcome.byline')}
       </p>
+
+      {/* Imagen destacada del test — misma que se ve en /tests y en el Result. */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0 24px' }}>
+        <img src={ttImg} alt={t('test.welcome.title') || 'Test de temperamento'}
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
+      </div>
 
       <p style={styles.para}>{t('test.welcome.intro')}</p>
       <p style={styles.notice}>{t('test.welcome.notice')}</p>

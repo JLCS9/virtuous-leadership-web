@@ -12,6 +12,7 @@ import SEO from '../components/SEO';
 // cada idioma tenga su archivo). Si falta un idioma cae al ES.
 //   'temperament' → sello "tt" (los 4 temperamentos)
 //   'character'   → pirámide de las 6 virtudes
+//   'heart'       → HRW (Havard Reading of Rebellious Wills), imagen del test corazón
 import ttEs from '../assets/tt.png';
 import ttEn from '../assets/tt-en.png';
 import ttFr from '../assets/tt-fr.png';
@@ -20,11 +21,10 @@ import pyramidEs from '../assets/piramida ES.png';
 import pyramidEn from '../assets/Pyramid Eng.png';
 import pyramidFr from '../assets/Pyramide FR.png';
 import pyramidRu from '../assets/Pyramid Ruso.png';
-// Corazón: miniatura localizada por idioma (texto embebido en la imagen).
-import heartEs from '../assets/test-corazon-es.png';
-import heartEn from '../assets/test-corazon-en.png';
-import heartFr from '../assets/test-corazon-fr.png';
-import heartRu from '../assets/test-corazon-ru.png';
+import heartEs from '../assets/HRW-es.png';
+import heartEn from '../assets/HRW-en.png';
+import heartFr from '../assets/HRW-fr.png';
+import heartRu from '../assets/HRW-ru.png';
 const TEST_IMAGES = {
   temperament: { es: ttEs,      en: ttEn,      fr: ttFr,      ru: ttRu      },
   character:   { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu },
@@ -87,7 +87,11 @@ export default function Tests() {
   );
 }
 
+// Miniatura CIRCULAR pequeña centrada arriba de la card. La imagen se ve
+// entera (object-fit: contain sobre fondo BEIGE dentro del círculo). Mismo
+// tratamiento para los 3 tests → coherencia visual en /tests.
 function TestCard({ available, to, label, title, text, cta, image, comingSoon }) {
+  const THUMB_SIZE = 128; // px, diámetro del círculo
   const card = (
     <div style={{
       height: '100%',
@@ -103,27 +107,43 @@ function TestCard({ available, to, label, title, text, cta, image, comingSoon })
     }}>
       {image && (
         <div style={{
-          aspectRatio: '16 / 10',
-          background: BEIGE,
-          borderBottom: `1px solid ${LINE}`,
-          overflow: 'hidden',
+          display: 'flex', justifyContent: 'center',
+          paddingTop: 28, paddingBottom: 4,
         }}>
-          <img src={image} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+          <div style={{
+            width: THUMB_SIZE, height: THUMB_SIZE,
+            borderRadius: '50%',
+            background: BEIGE,
+            border: `1px solid ${LINE}`,
+            overflow: 'hidden',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            flexShrink: 0,
+          }}>
+            {/* object-fit: contain para que la figura completa se vea
+                dentro del círculo, sin recorte. Padding interno para que
+                no toque el borde. */}
+            <img src={image} alt=""
+                 style={{
+                   width: '86%', height: '86%',
+                   objectFit: 'contain',
+                   display: 'block',
+                 }} />
+          </div>
         </div>
       )}
-      <div style={{ padding: '28px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600 }}>
+      <div style={{ padding: '20px 28px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600, textAlign: 'center' }}>
           {label}
           {!available && <span style={{ marginLeft: 8, color: MUTED }}>· {comingSoon}</span>}
         </div>
-        <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 10, marginBottom: 12 }}>{title}</h3>
+        <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 10, marginBottom: 12, textAlign: 'center' }}>{title}</h3>
         {/* whiteSpace: pre-line para que los \n del i18n se rendericen como
             saltos visibles dentro de la tarjeta (las descripciones tienen
             una primera linea de definicion y una segunda con la enumeracion
             de items). */}
         <p style={{ ...styles.para, margin: 0, fontSize: 15, flex: 1, whiteSpace: 'pre-line' }}>{text}</p>
         {available && cta && (
-          <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 13, color: NAVY, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+          <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 13, color: NAVY, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'center' }}>
             {cta} →
           </div>
         )}

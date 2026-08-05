@@ -436,7 +436,7 @@ export default {
       { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Test de Carácter',
         text: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.\nLas seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.',
         cta: 'Hacer el test' },
-      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03', title: 'Test Corazón Libre',
+      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03 · Corazón libre', title: 'Test Corazón Libre',
         text: 'Esta prueba te ayudará a identificar y corregir posibles tendencias hacia las siguientes 8 enfermedades espirituales:\nracionalismo, voluntarismo religioso, voluntarismo machista, voluntarismo ideológico, voluntarismo conformista, sentimentalismo voluptuoso, sentimentalismo demente, sentimentalismo cobarde.',
         cta: 'Hacer el test' },
     ],
@@ -991,13 +991,16 @@ export default {
   // ODS oficial), para no inflar este bundle.
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Chequeo espiritual',
+      eyebrow: 'Test 03 — Corazón libre',
       title: 'Test Corazón Libre',
-      byline: 'Basado en el libro "Corazón libre" de Alexandre Havard',
-      notice: 'Responde con honestidad. El test no juzga: te ayuda a ver qué tendencias trabajar.',
       duration_label: 'Duración',
       duration_text: 'Unos 15 minutos · 32 preguntas',
       button: 'Empezar',
+    },
+    milestone: {
+      eyebrow: 'Punto de control',
+      note: 'Este es un resultado parcial. Continúa con las siguientes 4 preguntas para completar el test.',
+      continue: 'Continuar',
     },
     question: {
       progress: 'Pregunta {n} de {total}',
@@ -1031,17 +1034,16 @@ export default {
     },
     result: {
       eyebrow_prefix: 'Resultados de',
-      title: 'Tu chequeo espiritual',
+      title: 'Tus resultados',
       intro: 'Pincha en cada trastorno con inclinación para ver el diagnóstico y el remedio.',
       has_stages_pattern: 'Tu corazón muestra estas tendencias: {list}. Trabájalas.',
-      score_label: 'Puntuación',
+      remedy_heading: 'Remedio',
       stage_none: 'Sin inclinación',
       stage_1: 'Nivel 1',
       stage_2: 'Nivel 2',
       cta_eyebrow: 'PROFUNDIZA',
       cta_title: 'Lee el libro "Corazón libre" de Alexandre Havard',
       cta_button: 'Comprar el libro',
-      about_summary: '¿Qué mide este test?',
       repeat_button: 'Hacer el test otra vez',
     },
   },

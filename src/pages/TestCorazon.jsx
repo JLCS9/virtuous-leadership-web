@@ -6,15 +6,15 @@ import { useT } from '../i18n';
 // "cœur libre" / "свободное сердце" — nombre del libro y del test.
 const HEART_SEO = {
   es: {
-    title: 'Test Corazón Libre — Chequeo Espiritual | Virtuous Leadership',
+    title: 'Test Corazón Libre | Virtuous Leadership',
     description: 'Test del "Corazón Libre" de Alexandre Havard. Identifica tu tendencia hacia las 8 enfermedades espirituales (racionalismo, voluntarismos y sentimentalismos) y recibe diagnóstico + remedio para cada una. 32 preguntas, 15 minutos, gratis.',
   },
   en: {
-    title: 'Free Heart Test — Spiritual Check-up | Virtuous Leadership',
+    title: 'Free Heart Test | Virtuous Leadership',
     description: 'Alexandre Havard\'s "Free Heart" test. Identify tendencies toward the 8 spiritual disorders (rationalism, voluntarisms, and sentimentalisms). Get diagnosis and remedy for each. 32 questions, 15 minutes, free.',
   },
   fr: {
-    title: 'Test Cœur Libre — Check-up Spirituel | Virtuous Leadership',
+    title: 'Test Cœur Libre | Virtuous Leadership',
     description: 'Test « Cœur Libre » d\'Alexandre Havard. Identifiez vos tendances vers les 8 maladies spirituelles (rationalisme, volontarismes et sentimentalismes). Diagnostic et remède pour chacune. 32 questions, 15 minutes, gratuit.',
   },
   ru: {

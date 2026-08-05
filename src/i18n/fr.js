@@ -425,7 +425,7 @@ export default {
       { available: true,  to: '/tests/caracter', image: 'character', label: 'Test 02', title: 'Test de caractère',
         text: 'Ce test mesure votre progression dans les vertus, ces habitudes spirituelles forgées par l\'effort.\nLes six vertus clés sont : prudence, courage, maîtrise de soi, justice, magnanimité et humilité.',
         cta: 'Faire le test' },
-      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03', title: 'Test Cœur Libre',
+      { available: true,  to: '/tests/corazon-libre', image: 'heart', label: 'Test 03 · Cœur libre', title: 'Test Cœur Libre',
         text: 'Ce test vous aidera à détecter et corriger d\'éventuelles inclinations aux 8 maladies spirituelles suivantes :\nrationalisme, volontarisme religieux, volontarisme machiste, volontarisme idéologique, volontarisme conformiste, sentimentalisme voluptueux, sentimentalisme dément, sentimentalisme lâche.',
         cta: 'Faire le test' },
     ],
@@ -890,13 +890,16 @@ export default {
   // ──────────── TEST CŒUR LIBRE — i18n ────────────
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Check-up spirituel',
+      eyebrow: 'Test 03 — Cœur libre',
       title: 'Test Cœur Libre',
-      byline: 'Basé sur le livre « Cœurs Libres » d\'Alexandre Havard',
-      notice: 'Répondez honnêtement. Le test ne juge pas : il vous montre les tendances à travailler.',
       duration_label: 'Durée',
       duration_text: 'Environ 15 minutes · 32 questions',
       button: 'Commencer',
+    },
+    milestone: {
+      eyebrow: 'Point de contrôle',
+      note: 'Voici un résultat partiel. Continuez avec les 4 questions suivantes pour terminer le test.',
+      continue: 'Continuer',
     },
     question: {
       progress: 'Question {n} sur {total}',
@@ -930,17 +933,16 @@ export default {
     },
     result: {
       eyebrow_prefix: 'Résultats de',
-      title: 'Votre check-up spirituel',
+      title: 'Vos résultats',
       intro: 'Cliquez sur chaque maladie concernée pour voir le diagnostic et le remède.',
       has_stages_pattern: 'Votre cœur montre ces tendances : {list}. Travaillez-les.',
-      score_label: 'Score',
+      remedy_heading: 'Remède',
       stage_none: 'Aucune tendance',
       stage_1: 'Niveau 1',
       stage_2: 'Niveau 2',
       cta_eyebrow: 'APPROFONDISSEZ',
       cta_title: 'Lisez « Cœurs Libres » d\'Alexandre Havard',
       cta_button: 'Acheter le livre',
-      about_summary: 'Que mesure ce test ?',
       repeat_button: 'Refaire le test',
     },
   },
