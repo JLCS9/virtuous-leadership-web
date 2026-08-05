@@ -121,10 +121,12 @@ function Welcome({ onStart }) {
         {t('tbp_character.welcome.byline')}
       </p>
 
-      {/* Imagen destacada del test — pirámide de las 6 virtudes (misma que /tests y Result). */}
+      {/* Imagen destacada del test — pirámide de las 6 virtudes (misma que /tests y Result).
+          mixBlendMode: multiply hace que el fondo blanco del PNG se
+          camuflee con BEIGE (blanco × BEIGE = BEIGE), sin editar el asset. */}
       <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0 24px' }}>
         <img src={pyramidSrc} alt={t('tbp_character.result.pyramid_alt')}
-             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block', mixBlendMode: 'multiply' }} />
       </div>
 
       <p style={styles.para}>{t('tbp_character.welcome.intro_line1')}</p>
@@ -459,10 +461,11 @@ function SummaryCard({ scoreResult, pyramidSrc, pyramidAlt, lang }) {
       padding: '40px 36px',
       marginBottom: 24,
     }}>
-      {/* Pirámide pequeña, fondo transparente, centrada arriba. */}
+      {/* Pirámide pequeña, fondo transparente, centrada arriba.
+          mixBlendMode: multiply → blanco del PNG se funde con BEIGE. */}
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
         <img src={pyramidSrc} alt={pyramidAlt}
-             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block', margin: '0 auto', background: 'transparent' }} />
+             style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block', margin: '0 auto', mixBlendMode: 'multiply' }} />
       </div>
 
       {/* Grid de 6 virtudes con su % global. Cada celda usa el color de la

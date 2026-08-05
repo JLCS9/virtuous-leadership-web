@@ -121,12 +121,17 @@ function TestCard({ available, to, label, title, text, cta, image, comingSoon })
           }}>
             {/* object-fit: contain para que la figura completa se vea
                 dentro del círculo, sin recorte. Padding interno para que
-                no toque el borde. */}
+                no toque el borde.
+                mixBlendMode: 'multiply' hace que los píxeles blancos del
+                PNG se transparenten sobre el fondo BEIGE (blanco × BEIGE
+                = BEIGE), preservando los detalles oscuros. Truco visual
+                para PNGs con fondo blanco intrínseco sin editar el asset. */}
             <img src={image} alt=""
                  style={{
                    width: '86%', height: '86%',
                    objectFit: 'contain',
                    display: 'block',
+                   mixBlendMode: 'multiply',
                  }} />
           </div>
         </div>

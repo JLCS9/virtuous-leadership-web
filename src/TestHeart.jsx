@@ -200,46 +200,11 @@ function Welcome({ onStart }) {
              style={{ width: '100%', maxWidth: 320, height: 'auto', display: 'block' }} />
       </div>
 
-      {/* Texto de bienvenida del ODS (heartTestIntro) — copy real del libro. */}
+      {/* Texto de bienvenida del ODS (heartTestIntro) — copy real del libro.
+          Ya menciona "las 8 enfermedades espirituales descritas a continuación",
+          así que no hace falta el grid con caritas antes de empezar
+          (eliminado a petición: menos ruido visual antes del test). */}
       <p style={styles.para}>{intro}</p>
-
-      {/* Grid 4×2 con las 8 enfermedades (carita + nombre). Muestra al
-          usuario qué se evalúa ANTES de arrancar. */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(4, 1fr)',
-        gap: 12,
-        margin: '28px 0 24px',
-      }} className="vl-heart-welcome-grid">
-        {HEART_DISORDER_CODES.map(code => {
-          const d = HEART_TEST.disorders.find(x => x.code === code);
-          const name = resolveMulti(HEART_SUPPORT.labels[d.label_key], lang);
-          const face = DISORDER_FACES[code];
-          const c = DISORDER_COLORS[code];
-          return (
-            <div key={code} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              textAlign: 'center', gap: 8,
-            }}>
-              <div style={{
-                width: 72, height: 72, borderRadius: '50%',
-                border: `2px solid ${c.color}`,
-                overflow: 'hidden', background: BEIGE,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-              }}>
-                <img src={face} alt={name}
-                     style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              </div>
-              <div style={{
-                fontFamily: fontSans, fontSize: 11, color: NAVY,
-                fontWeight: 500, lineHeight: 1.25,
-              }}>
-                {name}
-              </div>
-            </div>
-          );
-        })}
-      </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 24, marginTop: 28, marginBottom: 28, flexWrap: 'wrap' }}>
         <div style={{ fontSize: 13, color: MUTED }}>
@@ -318,20 +283,16 @@ function Question({ progress, total, item, lang, onAnswer, onBack, canBack }) {
 }
 
 // MilestoneModal — modal bloqueante que aparece tras completar las 4 preguntas
-// de un trastorno. Muestra la carita + nombre + % + label del nivel, y el
-// usuario clickea "Continuar" para avanzar.
+// de un trastorno. Muestra la carita + nombre + % + botón "Continuar".
+// (El badge de nivel se quitó a petición — el % lleva toda la info que
+// necesita ver el usuario en un paso intermedio; el nivel formal queda
+// implícito en el color y se verá luego en el Result final.)
 function MilestoneModal({ disorderCode, partial, lang, onContinue }) {
   const { t } = useT();
   const d = HEART_TEST.disorders.find(x => x.code === disorderCode);
   const name = resolveMulti(HEART_SUPPORT.labels[d.label_key], lang);
   const face = DISORDER_FACES[disorderCode];
   const c = DISORDER_COLORS[disorderCode];
-
-  const stageBadge = {
-    none:   { text: t('tbp_heart.result.stage_none'),   bg: '#E8EFE9', fg: '#3F7A56' },
-    stage1: { text: t('tbp_heart.result.stage_1'),      bg: '#F3E8D0', fg: '#9D8240' },
-    stage2: { text: t('tbp_heart.result.stage_2'),      bg: '#E9CFCF', fg: '#9C3A3A' },
-  }[partial.stage];
 
   return (
     <div
@@ -374,19 +335,9 @@ function MilestoneModal({ disorderCode, partial, lang, onContinue }) {
 
         <div style={{
           fontFamily: fontSerif, fontSize: 48, fontWeight: 600,
-          color: c.color, lineHeight: 1, margin: '12px 0 6px',
+          color: c.color, lineHeight: 1, margin: '12px 0 20px',
         }}>
           {partial.pct}%
-        </div>
-
-        <div style={{
-          display: 'inline-block',
-          fontSize: 11, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase',
-          padding: '5px 10px', borderRadius: 2,
-          background: stageBadge.bg, color: stageBadge.fg,
-          margin: '0 0 20px',
-        }}>
-          {stageBadge.text}
         </div>
 
         <p style={{ fontSize: 14, color: MUTED, lineHeight: 1.5, margin: '0 0 24px' }}>
