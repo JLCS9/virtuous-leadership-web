@@ -857,15 +857,19 @@ export default {
   // live in src/data/character-support-text.json.
   tbp_character: {
     welcome: {
-      eyebrow: 'Character Test — 2',
-      title: 'Character Test',
-      byline: 'Alexandre Havard\'s 6-virtues model',
+      eyebrow: 'Character Test',
+      title: '',
+      byline: 'Based on Alexandre Havard\'s Virtuous Leadership book.',
       intro_line1: 'This test assesses your personal growth in virtues — spiritual habits developed through conscious effort.',
       intro_line2: 'There are six essential virtues: prudence, courage, self-mastery, justice, magnanimity, and humility.',
-      notice: 'Answer honestly. The test isn\'t a judgment: it draws a map so you know which virtues to grow.',
       duration_label: 'Duration',
       duration_text: 'About 8-10 minutes · 68 questions',
       button: 'Start',
+    },
+    milestone: {
+      eyebrow: 'Checkpoint',
+      note: 'This is a partial result for one virtue. Continue with the next questions to complete the test.',
+      continue: 'Continue',
     },
     question: {
       progress: 'Question {n} of {total}',
@@ -905,13 +909,13 @@ export default {
     result: {
       eyebrow_prefix: 'Results for',
       title: 'Your virtues profile',
-      intro: 'Here is a summary of your level across the six virtues in Alexandre Havard\'s model.',
       detail_title: 'Detailed breakdown',
-      detail_intro: 'Click each virtue to see the passive and active aspects along with the full description.',
+      detail_intro: 'Click each virtue to see the full description.',
       global_label: 'Overall',
       pyramid_title: 'The pyramid of virtues',
       pyramid_alt: 'The pyramid of the six virtues according to Alexandre Havard',
-      about_summary: 'What does this test measure?',
+      passive_label: 'Passive aspect',
+      active_label: 'Active aspect',
       repeat_button: 'Take the test again',
     },
   },
@@ -921,8 +925,8 @@ export default {
   // about-heart) lives in src/data/heart-support-text.json.
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Free Heart',
-      title: 'Free Heart Test',
+      eyebrow: 'Free Heart Test',
+      title: '',
       duration_label: 'Duration',
       duration_text: 'About 15 minutes · 32 questions',
       button: 'Start',

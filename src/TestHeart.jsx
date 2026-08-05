@@ -192,7 +192,11 @@ function Welcome({ onStart }) {
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('tbp_heart.welcome.eyebrow')}</div>
-      <h1 style={styles.h1}>{t('tbp_heart.welcome.title')}</h1>
+      {/* h1 sólo si hay title. En prod title = '' — el eyebrow ya funciona
+          como cabecera, no queremos duplicar el nombre del test. */}
+      {t('tbp_heart.welcome.title') && (
+        <h1 style={styles.h1}>{t('tbp_heart.welcome.title')}</h1>
+      )}
 
       {/* Imagen destacada del test — misma que se ve en /tests y en el Result. */}
       <div style={{ display: 'flex', justifyContent: 'center', margin: '20px 0 24px' }}>

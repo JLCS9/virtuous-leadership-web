@@ -926,15 +926,19 @@ export default {
   // src/data/character-support-text.json para no inflar este bundle.
   tbp_character: {
     welcome: {
-      eyebrow: 'Test de Carácter — 2',
-      title: 'Test de carácter',
-      byline: 'Modelo de las 6 virtudes de Alexandre Havard',
+      eyebrow: 'Test de Carácter',
+      title: '',
+      byline: 'Basado en el libro de Liderazgo Virtuoso de Alexandre Havard.',
       intro_line1: 'Esta prueba evalúa tu crecimiento en virtudes: hábitos espirituales que se fortalecen con el esfuerzo constante.',
       intro_line2: 'Las seis virtudes claves son: prudencia, fortaleza, autodominio, justicia, magnanimidad y humildad.',
-      notice: 'Responde con honestidad. El test no juzga: dibuja un mapa para que sepas en qué virtudes puedes crecer.',
       duration_label: 'Duración',
       duration_text: 'Unos 8-10 minutos · 68 preguntas',
       button: 'Empezar',
+    },
+    milestone: {
+      eyebrow: 'Punto de control',
+      note: 'Este es un resultado parcial de una virtud. Continúa con las siguientes preguntas para completar el test.',
+      continue: 'Continuar',
     },
     question: {
       progress: 'Pregunta {n} de {total}',
@@ -974,13 +978,13 @@ export default {
     result: {
       eyebrow_prefix: 'Resultados de',
       title: 'Tu perfil de virtudes',
-      intro: 'Aquí tienes un resumen de tu nivel en las seis virtudes según el modelo de Alexandre Havard.',
       detail_title: 'Desglose por virtud',
-      detail_intro: 'Pincha en cada virtud para ver el aspecto pasivo, el activo y la descripción completa.',
+      detail_intro: 'Pincha en cada virtud para ver la descripción completa.',
       global_label: 'Global',
       pyramid_title: 'La pirámide de las virtudes',
       pyramid_alt: 'Pirámide de las seis virtudes según Alexandre Havard',
-      about_summary: '¿Qué mide este test?',
+      passive_label: 'Aspecto pasivo',
+      active_label: 'Aspecto activo',
       repeat_button: 'Hacer el test otra vez',
     },
   },
@@ -991,8 +995,8 @@ export default {
   // ODS oficial), para no inflar este bundle.
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Corazón libre',
-      title: 'Test Corazón Libre',
+      eyebrow: 'Test Corazón Libre',
+      title: '',
       duration_label: 'Duración',
       duration_text: 'Unos 15 minutos · 32 preguntas',
       button: 'Empezar',

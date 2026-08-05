@@ -828,15 +828,19 @@ export default {
   // ──────────── TEST DE CARACTÈRE — i18n ────────────
   tbp_character: {
     welcome: {
-      eyebrow: 'Test de Caractère — 2',
-      title: 'Test de caractère',
-      byline: 'Modèle des 6 vertus d\'Alexandre Havard',
+      eyebrow: 'Test de Caractère',
+      title: '',
+      byline: 'Basé sur le livre du Leadership Vertueux d\'Alexandre Havard.',
       intro_line1: 'Ce test mesure votre progression dans les vertus, ces habitudes spirituelles forgées par l\'effort.',
       intro_line2: 'Les six vertus clés sont : prudence, courage, maîtrise de soi, justice, magnanimité et humilité.',
-      notice: 'Répondez honnêtement. Le test ne juge pas : il dessine une carte pour vous montrer quelles vertus cultiver.',
       duration_label: 'Durée',
       duration_text: 'Environ 8 à 10 minutes · 68 questions',
       button: 'Commencer',
+    },
+    milestone: {
+      eyebrow: 'Point de contrôle',
+      note: 'Voici un résultat partiel pour une vertu. Continuez avec les questions suivantes pour terminer le test.',
+      continue: 'Continuer',
     },
     question: {
       progress: 'Question {n} sur {total}',
@@ -876,13 +880,13 @@ export default {
     result: {
       eyebrow_prefix: 'Résultats de',
       title: 'Votre profil de vertus',
-      intro: 'Voici un résumé de votre niveau dans les six vertus selon le modèle d\'Alexandre Havard.',
       detail_title: 'Détail par vertu',
-      detail_intro: 'Cliquez sur chaque vertu pour voir l\'aspect passif, l\'aspect actif et la description complète.',
+      detail_intro: 'Cliquez sur chaque vertu pour voir la description complète.',
       global_label: 'Global',
       pyramid_title: 'La pyramide des vertus',
       pyramid_alt: 'Pyramide des six vertus selon Alexandre Havard',
-      about_summary: 'Que mesure ce test ?',
+      passive_label: 'Aspect passif',
+      active_label: 'Aspect actif',
       repeat_button: 'Refaire le test',
     },
   },
@@ -890,8 +894,8 @@ export default {
   // ──────────── TEST CŒUR LIBRE — i18n ────────────
   tbp_heart: {
     welcome: {
-      eyebrow: 'Test 03 — Cœur libre',
-      title: 'Test Cœur Libre',
+      eyebrow: 'Test Cœur Libre',
+      title: '',
       duration_label: 'Durée',
       duration_text: 'Environ 15 minutes · 32 questions',
       button: 'Commencer',
