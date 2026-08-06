@@ -123,11 +123,16 @@ function formatDiagnosisHtml(raw, remedyLabel) {
   if (lines.length > 1) {
     chunks = lines;
   } else {
-    // Punto o cierre de comillas rusas seguido de mayúscula latina o cirílica
-    // sin espacio → separador de bloques.
+    // Split por punto/interrogación/exclamación, OPCIONALMENTE seguidos de un
+    // cierre de comillas (»/"/"/'/"), y a continuación una MAYÚSCULA sin
+    // espacio. Cubre los patrones del ODS entre diagnóstico y remedio:
+    //   • "imperative."When   ← ASCII quote (falla en EN si no se contempla)
+    //   • "categorical."Duty  ← smart quote
+    //   • "guilloché."Prends
+    //   • ...alma.Guillermo   ← sin comilla intermedia (típico ES/FR)
     const withSep = raw.replace(
-      /([\.!?»])([A-ZÁÉÍÓÚÑÀ-ÖØ-Þ«А-ЯЁ])/g,
-      '$1<PARA_SEP>$2'
+      /([\.!?])(["""'»])?([A-ZÁÉÍÓÚÑÀ-ÖØ-Þ«А-ЯЁ])/g,
+      '$1$2<PARA_SEP>$3'
     );
     chunks = withSep.split('<PARA_SEP>').map(s => s.trim()).filter(Boolean);
   }
@@ -501,11 +506,21 @@ function GateForm({ onSubmitOk }) {
   );
 }
 
-// DisorderCard — card por trastorno en el Result. La carita reemplaza al
-// emblema con letra. Sólo se muestra % (no X/16, no badge de nivel).
-// Si el trastorno está en 'none': card estática, no expandible.
+// DisorderCard — card por trastorno en el Result.
+//
+// Reglas de UI (v3):
+//   - TODOS los trastornos son expandibles, aunque estén en 'none'. El
+//     usuario ha de poder leer el diagnóstico + remedio de las 8
+//     enfermedades independientemente de si tiene inclinación o no
+//     (peticion del usuario 2026-08-06: "aunque tenga un nivel bajo de la
+//     enfermedad, se tiene que poder ver el contenido").
+//   - Los 'none' se muestran con opacidad reducida y fondo levemente
+//     distinto para señalar visualmente que no hay tendencia — pero
+//     siguen siendo clicables y muestran el mismo contenido.
+//   - En el expandido, sólo se pinta el "Aparentemente posees una etapa
+//     X de..." si el stage lo justifica (stage1 / stage2); en 'none' se
+//     omite ese titular italic para no contradecir al usuario.
 function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
-  const { t } = useT();
   const [expanded, setExpanded] = useState(false);
   const c = DISORDER_COLORS[code];
   const face = DISORDER_FACES[code];
@@ -518,37 +533,6 @@ function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
     stage2: resolveMulti(HEART_SUPPORT.labels.hResultDeceaseStage2, lang),
   }[disorderResult.stage];
 
-  const header = (
-    <>
-      {/* Carita del trastorno — reemplaza al emblema con letra. */}
-      <div style={{
-        width: 56, height: 56, borderRadius: '50%',
-        overflow: 'hidden', flexShrink: 0,
-        border: `2px solid ${c.color}`, background: BEIGE,
-      }}>
-        <img src={face} alt={name}
-             style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-      </div>
-      <div style={{ flex: '1 1 220px', minWidth: 200 }}>
-        <div style={{ fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, lineHeight: 1.2 }}>
-          {name}
-        </div>
-      </div>
-      {/* Sólo % — sin X/16 y sin badge de nivel (quitado a petición). */}
-      <div style={{
-        fontFamily: fontSerif, fontSize: 26, fontWeight: 600,
-        color: c.color, lineHeight: 1,
-      }}>
-        {Math.round(disorderResult.pct)}%
-      </div>
-      {isAffected && (
-        <div style={{ fontSize: 22, color: c.color, marginLeft: 8, transition: 'transform 200ms', transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
-          ›
-        </div>
-      )}
-    </>
-  );
-
   return (
     <div style={{
       background: isAffected ? PAPER : '#FBF7EE',
@@ -559,39 +543,52 @@ function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
       overflow: 'hidden',
       opacity: isAffected ? 1 : 0.72,
     }}>
-      {isAffected ? (
-        <button
-          onClick={() => setExpanded(v => !v)}
-          aria-expanded={expanded}
-          style={{
-            width: '100%', textAlign: 'left', background: 'transparent',
-            border: 'none', padding: '18px 22px', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
-            fontFamily: fontSans,
-          }}
-        >
-          {header}
-        </button>
-      ) : (
-        <div style={{
-          padding: '18px 22px',
+      <button
+        onClick={() => setExpanded(v => !v)}
+        aria-expanded={expanded}
+        style={{
+          width: '100%', textAlign: 'left', background: 'transparent',
+          border: 'none', padding: '18px 22px', cursor: 'pointer',
           display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
           fontFamily: fontSans,
+        }}
+      >
+        {/* Carita del trastorno — reemplaza al emblema con letra. */}
+        <div style={{
+          width: 56, height: 56, borderRadius: '50%',
+          overflow: 'hidden', flexShrink: 0,
+          border: `2px solid ${c.color}`, background: BEIGE,
         }}>
-          {header}
+          <img src={face} alt={name}
+               style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         </div>
-      )}
+        <div style={{ flex: '1 1 220px', minWidth: 200 }}>
+          <div style={{ fontFamily: fontSerif, fontSize: 22, fontWeight: 600, color: NAVY, lineHeight: 1.2 }}>
+            {name}
+          </div>
+        </div>
+        {/* Sólo % — sin X/16 y sin badge de nivel. */}
+        <div style={{
+          fontFamily: fontSerif, fontSize: 26, fontWeight: 600,
+          color: c.color, lineHeight: 1,
+        }}>
+          {Math.round(disorderResult.pct)}%
+        </div>
+        <div style={{ fontSize: 22, color: c.color, marginLeft: 8, transition: 'transform 200ms', transform: expanded ? 'rotate(90deg)' : 'rotate(0deg)' }}>
+          ›
+        </div>
+      </button>
 
-      {isAffected && expanded && (
+      {expanded && (
         <div style={{ padding: '0 22px 22px 22px', borderTop: `1px solid ${LINE}`, background: BEIGE }}>
-          {stateLabel && (
+          {isAffected && stateLabel && (
             <p style={{ fontFamily: fontSerif, fontStyle: 'italic', fontSize: 17, color: NAVY_SOFT, marginTop: 18, marginBottom: 4 }}>
               {stateLabel} <strong style={{ color: c.color }}>{name.toLowerCase()}</strong>.
             </p>
           )}
           <div
             className="heart-disorder-html"
-            style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: 12 }}
+            style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: isAffected ? 12 : 18 }}
             dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html, remedyLabel) }}
           />
         </div>
@@ -608,13 +605,13 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
   const hrwSrc = HRW_BY_LANG[lang] || HRW_BY_LANG.es;
   const remedyLabel = t('tbp_heart.result.remedy_heading');
 
-  const orderedCodes = useMemo(() => {
-    const priority = { stage2: 0, stage1: 1, none: 2 };
-    return [...HEART_DISORDER_CODES].sort((a, b) =>
-      (priority[scoreResult.disorders[a].stage] ?? 3) -
-      (priority[scoreResult.disorders[b].stage] ?? 3)
-    );
-  }, [scoreResult]);
+  // Orden CANÓNICO del test: R (racionalismo) → 4 voluntarismos (VR/VM/VI/VC)
+  // → 3 sentimentalismos (SV/SI/SC). Antes reordenábamos por stage (stage2
+  // arriba, stage1, none abajo) pero eso mezclaba voluntarismos con
+  // sentimentalismos y rompía la agrupación temática. Ahora respetamos el
+  // orden del libro: se ve el mapa completo del corazón en el mismo orden
+  // en que se responden las preguntas.
+  const orderedCodes = HEART_DISORDER_CODES;
 
   const balancedText = resolveMulti(HEART_SUPPORT.labels.hResultInBalance, lang);
   const affectedNames = useMemo(() => {
