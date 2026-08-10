@@ -483,6 +483,11 @@ async function handleSubmitChildren(req, res) {
 //   J_GLOBAL, J_PASSIVE, J_ACTIVE                     ← NUEVOS (Justicia)
 //   M_GLOBAL, M_PASSIVE, M_ACTIVE                     ← NUEVOS (Magnanimidad)
 //   H_GLOBAL, H_PASSIVE, H_ACTIVE                     ← NUEVOS (Humildad)
+//   RESULTADOS_CARACTER (Text — volcado legible del resultado completo)
+//     ← NUEVO. Se genera en el frontend en el idioma del usuario
+//     (buildResultadosCaracter en TestCharacter.jsx). Formato: una línea
+//     por virtud con % global + pasivo + activo + nombres de facetas.
+//     Crear en Brevo como custom attribute tipo TEXT antes del primer submit.
 // ════════════════════════════════════════════════════════════════════════════
 
 // Whitelist de los 18 atributos de score (defense in depth: si el frontend
@@ -506,6 +511,14 @@ function sanitizeCharacterScoreAttrs(raw) {
       // Clamp a [0, 100] por seguridad.
       out[key] = Math.max(0, Math.min(100, Math.round(v)));
     }
+  }
+  // RESULTADOS_CARACTER — atributo TEXT en Brevo con el volcado legible
+  // completo del resultado (una línea por virtud + % global/pasivo/activo
+  // + nombre de faceta). Lo genera el frontend en el idioma del usuario;
+  // aquí sólo saneamos: strings, longitud máx 2000 (Brevo TEXT admite más,
+  // pero conviene ser conservador).
+  if (typeof raw.RESULTADOS_CARACTER === 'string') {
+    out.RESULTADOS_CARACTER = raw.RESULTADOS_CARACTER.slice(0, 2000);
   }
   return out;
 }
@@ -603,6 +616,11 @@ async function handleSubmitCharacter(req, res) {
 //   HEART_R_STAGE ... HEART_SC_STAGE       (8 × Text: none|stage1|stage2) ← NUEVOS
 //   HEART_TOP            (Text — codes en stage2 concatenados por coma)   ← NUEVO
 //   HEART_BALANCED       (Boolean — true si ninguna en stage1/stage2)     ← NUEVO
+//   RESULTADOS_CORAZON   (Text — volcado legible del resultado completo)  ← NUEVO
+//     Formato: una línea por trastorno con % + stage. Se genera en el
+//     frontend en el idioma del usuario (buildResultadosCorazon en
+//     TestHeart.jsx). Crear como custom attribute tipo TEXT en Brevo antes
+//     del primer submit.
 // ════════════════════════════════════════════════════════════════════════════
 
 const HEART_DISORDER_CODES = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
@@ -636,6 +654,11 @@ function sanitizeHeartAttrs(raw) {
   }
   if (typeof raw.HEART_BALANCED === 'boolean') {
     out.HEART_BALANCED = raw.HEART_BALANCED;
+  }
+  // RESULTADOS_CORAZON — atributo TEXT en Brevo. Mismo criterio que
+  // RESULTADOS_CARACTER: string, cap 2000 chars.
+  if (typeof raw.RESULTADOS_CORAZON === 'string') {
+    out.RESULTADOS_CORAZON = raw.RESULTADOS_CORAZON.slice(0, 2000);
   }
   return out;
 }

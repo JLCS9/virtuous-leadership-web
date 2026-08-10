@@ -129,6 +129,34 @@ const VIRTUE_CUMULATIVE = (() => {
   return cum;
 })();
 
+// Construye un texto legible con el resultado completo del test de carácter,
+// para meterlo en el atributo Brevo TEXT `RESULTADOS_CARACTER`. Formato
+// (una línea por virtud), pensado para que el equipo pueda leerlo de un
+// vistazo desde la interfaz de Brevo:
+//
+//   Prudencia: 62% · pasivo 58% (Deliberación) · activo 65% (Decisión)
+//   Fortaleza: 71% · pasivo 68% (Constancia)   · activo 74% (Audacia)
+//   ...
+//
+// Nombres y aspectos en el idioma del usuario. Se llama en handleGateSubmit,
+// justo antes de mandar al backend. Se limita a ~1500 chars — el atributo
+// TEXT de Brevo admite más, pero conviene ser conservador.
+function buildResultadosCaracter(scoreResult, lang, passiveLabel, activeLabel) {
+  const labels = CHARACTER_SUPPORT.labels;
+  const lines = ['P', 'C', 'S', 'J', 'M', 'H'].map(code => {
+    const s = scoreResult?.[code];
+    if (!s) return '';
+    const virtueName = resolveSupport(labels, s.virtue_label_key, lang);
+    const passiveName = resolveSupport(labels, s.passive_facet_key, lang);
+    const activeName  = resolveSupport(labels, s.active_facet_key, lang);
+    const g = Math.round(s.global ?? 0);
+    const p = Math.round(s.passive ?? 0);
+    const a = Math.round(s.active ?? 0);
+    return `${virtueName}: ${g}% · ${passiveLabel.toLowerCase()} ${p}% (${passiveName}) · ${activeLabel.toLowerCase()} ${a}% (${activeName})`;
+  }).filter(Boolean);
+  return lines.join('\n').slice(0, 1500);
+}
+
 // Calcula el % global parcial de una virtud dada el vector de respuestas
 // canónico hasta el momento. Reutiliza scoreCharacter (que ya rellena con 0
 // las preguntas no contestadas), luego coge el .global de la virtud pedida.
@@ -763,7 +791,7 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
 const PHASE = { WELCOME: 'welcome', QUESTIONS: 'questions', GATE: 'gate', RESULT: 'result' };
 
 export default function TestCharacter() {
-  const { lang } = useT();
+  const { t, lang } = useT();
   const [phase, setPhase] = useState(PHASE.WELCOME);
   // Orden CANÓNICO de las 68 preguntas — fijo, sin shuffle. Los bloques por
   // virtud van consecutivos (P → C → S → J → M → H) para que el
@@ -846,6 +874,14 @@ export default function TestCharacter() {
     }
     const result = scoreCharacter(canonical, CHARACTER_TEST);
     const brevoAttrs = toBrevoAttributes(result);
+    // Volcado legible del resultado completo → atributo TEXT en Brevo.
+    // Se genera aquí para que backend no tenga que reimplementar el i18n
+    // ni el mapeo de facetas.
+    brevoAttrs.RESULTADOS_CARACTER = buildResultadosCaracter(
+      result, lang,
+      t('tbp_character.result.passive_label'),
+      t('tbp_character.result.active_label'),
+    );
 
     const payload = {
       contact: contactData,

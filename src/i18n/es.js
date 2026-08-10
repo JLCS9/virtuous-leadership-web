@@ -1041,6 +1041,13 @@ export default {
       title: 'Tus resultados',
       intro: 'Pincha en cada trastorno con inclinación para ver el diagnóstico y el remedio.',
       has_stages_pattern: 'Tu corazón muestra estas tendencias: {list}. Trabájalas.',
+      diagnosis_heading: 'Diagnóstico',
+      not_inclined_pattern: 'Parece que no estás inclinado al {name}.',
+      // Labels usadas en el texto de RESULTADOS_CORAZON enviado a Brevo.
+      // Compactas para caber en un atributo TEXT de Brevo.
+      brevo_no_inclination: 'sin inclinación',
+      brevo_stage1: 'nivel 1',
+      brevo_stage2: 'nivel 2',
       remedy_heading: 'Remedio',
       stage_none: 'Sin inclinación',
       stage_1: 'Nivel 1',

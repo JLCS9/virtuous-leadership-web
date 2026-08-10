@@ -114,7 +114,7 @@ const SEX_TO_BREVO = { mujer: 'Female', hombre: 'Male' };
 //      Antes del SEGUNDO chunk (si existe) inserta un <h4>Remedio</h4>
 //      con la traducción del idioma activo.
 //   5. Cualquier chunk adicional va como <p> normal después del remedio.
-function formatDiagnosisHtml(raw, remedyLabel) {
+function formatDiagnosisHtml(raw, remedyLabel, diagnosisLabel) {
   if (!raw) return '';
   if (/<p[\s>]/i.test(raw)) return raw;
 
@@ -137,11 +137,22 @@ function formatDiagnosisHtml(raw, remedyLabel) {
     chunks = withSep.split('<PARA_SEP>').map(s => s.trim()).filter(Boolean);
   }
 
+  // 1er chunk = diagnóstico; el resto = remedio (habitualmente 1 chunk más).
+  // Estructura visual:
+  //   <h4>DIAGNÓSTICO</h4>       ← siempre (paralelo al de REMEDIO)
+  //   <p>chunk 0</p>
+  //   <h4>REMEDIO</h4>           ← sólo si hay ≥ 2 chunks
+  //   <p>chunk 1</p>[...chunks.slice(2)]
+  const diagHead = diagnosisLabel
+    ? `<h4 class="heart-remedy-heading">${diagnosisLabel}</h4>`
+    : '';
   if (chunks.length <= 1) {
-    return `<p>${chunks[0] || raw}</p>`;
+    // Edge case: sólo un chunk (típicamente sólo diagnóstico). Aún así
+    // pinta el subtítulo Diagnóstico si viene, para uniformidad visual.
+    return `${diagHead}<p>${chunks[0] || raw}</p>`;
   }
-  // 1er párrafo: diagnóstico. Subtítulo "Remedio" + 2º párrafo. Rest → <p>.
   const out = [
+    diagHead,
     `<p>${chunks[0]}</p>`,
     `<h4 class="heart-remedy-heading">${remedyLabel}</h4>`,
     ...chunks.slice(1).map(c => `<p>${c}</p>`),
@@ -167,6 +178,31 @@ async function submitHeartContact(payload) {
     throw new Error(`HTTP ${res.status}${detail ? ' — ' + detail : ''}`);
   }
   return res.json();
+}
+
+// Construye un texto legible con el resultado completo del test del
+// corazón, para el atributo Brevo TEXT `RESULTADOS_CORAZON`. Formato
+// (una línea por trastorno), pensado para lectura humana en la UI de
+// Brevo:
+//
+//   Racionalismo: 12% · sin inclinación
+//   Voluntarismo religioso: 75% · nivel 2
+//   ...
+//
+// Nombres y stage labels en el idioma del usuario. Se llama en
+// handleGateSubmit, justo antes de mandar al backend. Se limita a ~1200
+// chars — 8 líneas ~ 40-80 chars → holgura de sobra.
+function buildResultadosCorazon(scoreResult, lang, stageLabels) {
+  const labels = HEART_SUPPORT.labels;
+  const lines = HEART_DISORDER_CODES.map(code => {
+    const d = scoreResult?.disorders?.[code];
+    if (!d) return '';
+    const name = resolveMulti(labels[d.label_key], lang);
+    const pct = Math.round(d.pct);
+    const stageLbl = stageLabels[d.stage] || d.stage;
+    return `${name}: ${pct}% · ${stageLbl}`;
+  }).filter(Boolean);
+  return lines.join('\n').slice(0, 1200);
 }
 
 // Score parcial de un trastorno concreto a partir del vector de respuestas
@@ -520,7 +556,7 @@ function GateForm({ onSubmitOk }) {
 //   - En el expandido, sólo se pinta el "Aparentemente posees una etapa
 //     X de..." si el stage lo justifica (stage1 / stage2); en 'none' se
 //     omite ese titular italic para no contradecir al usuario.
-function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
+function DisorderCard({ code, disorderResult, lang, remedyLabel, diagnosisLabel, notInclinedPattern }) {
   const [expanded, setExpanded] = useState(false);
   const c = DISORDER_COLORS[code];
   const face = DISORDER_FACES[code];
@@ -581,15 +617,26 @@ function DisorderCard({ code, disorderResult, lang, remedyLabel }) {
 
       {expanded && (
         <div style={{ padding: '0 22px 22px 22px', borderTop: `1px solid ${LINE}`, background: BEIGE }}>
-          {isAffected && stateLabel && (
-            <p style={{ fontFamily: fontSerif, fontStyle: 'italic', fontSize: 17, color: NAVY_SOFT, marginTop: 18, marginBottom: 4 }}>
-              {stateLabel} <strong style={{ color: c.color }}>{name.toLowerCase()}</strong>.
-            </p>
-          )}
+          {/* Titular italic — SIEMPRE, aunque no haya inclinación.
+              - stage1/stage2: "Al parecer posees una etapa X de..."
+              - none:          "Parece que no estás inclinado al X."
+              Antes en 'none' se omitía; el usuario pidió que aparezca
+              siempre y que se explicite explícitamente cuando no hay
+              inclinación (2026-08-10). */}
+          <p style={{ fontFamily: fontSerif, fontStyle: 'italic', fontSize: 17, color: NAVY_SOFT, marginTop: 18, marginBottom: 4 }}>
+            {isAffected
+              ? (<>{stateLabel} <strong style={{ color: c.color }}>{name.toLowerCase()}</strong>.</>)
+              : (() => {
+                  // Split "no_inclined_pattern" en el placeholder {name}
+                  // para poder pintar el nombre con estilo (color+bold).
+                  const parts = (notInclinedPattern || '{name}').split('{name}');
+                  return (<>{parts[0]}<strong style={{ color: c.color }}>{name.toLowerCase()}</strong>{parts[1] || ''}</>);
+                })()}
+          </p>
           <div
             className="heart-disorder-html"
-            style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: isAffected ? 12 : 18 }}
-            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html, remedyLabel) }}
+            style={{ fontSize: 15, lineHeight: 1.65, color: INK, marginTop: 12 }}
+            dangerouslySetInnerHTML={{ __html: formatDiagnosisHtml(html, remedyLabel, diagnosisLabel) }}
           />
         </div>
       )}
@@ -604,6 +651,8 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
   const bookUrl = resolveMulti(HEART_TEST.link_to_book, lang);
   const hrwSrc = HRW_BY_LANG[lang] || HRW_BY_LANG.es;
   const remedyLabel = t('tbp_heart.result.remedy_heading');
+  const diagnosisLabel = t('tbp_heart.result.diagnosis_heading');
+  const notInclinedPattern = t('tbp_heart.result.not_inclined_pattern');
 
   // Orden CANÓNICO del test: R (racionalismo) → 4 voluntarismos (VR/VM/VI/VC)
   // → 3 sentimentalismos (SV/SI/SC). Antes reordenábamos por stage (stage2
@@ -666,7 +715,10 @@ function ResultScreen({ scoreResult, contactName, onRestart }) {
         {orderedCodes.map(code => (
           <DisorderCard key={code} code={code}
                         disorderResult={scoreResult.disorders[code]}
-                        lang={lang} remedyLabel={remedyLabel} />
+                        lang={lang}
+                        remedyLabel={remedyLabel}
+                        diagnosisLabel={diagnosisLabel}
+                        notInclinedPattern={notInclinedPattern} />
         ))}
       </div>
 
@@ -739,7 +791,7 @@ function buildCanonicalOrder() {
 const CANONICAL_ORDER = buildCanonicalOrder();
 
 export default function TestHeart() {
-  const { lang } = useT();
+  const { t, lang } = useT();
   const [phase, setPhase] = useState(PHASE.WELCOME);
   const [answers, setAnswers] = useState([]);
   const [idx, setIdx] = useState(0);
@@ -813,6 +865,12 @@ export default function TestHeart() {
     }
     const result = scoreHeart(canonical, HEART_TEST);
     const brevoAttrs = toBrevoAttributes(result);
+    // Volcado legible del resultado completo → atributo TEXT en Brevo.
+    brevoAttrs.RESULTADOS_CORAZON = buildResultadosCorazon(result, lang, {
+      none:   t('tbp_heart.result.brevo_no_inclination'),
+      stage1: t('tbp_heart.result.brevo_stage1'),
+      stage2: t('tbp_heart.result.brevo_stage2'),
+    });
 
     const payload = {
       contact: contactData,
