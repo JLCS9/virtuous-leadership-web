@@ -233,6 +233,49 @@ async function lookupGeo(ip) {
   }
 }
 
+// ────────────── Contador de retomas (test de temperamento) ──────────────
+//
+// TEST_TEMPERAMENTO_VECES (Number en Brevo) cuenta los envíos del test por
+// email. Brevo no sabe "sumar 1": hay que leer el valor actual y reescribir
+// valor+1 (dos llamadas). Vacío o ausente cuenta como 0.
+//
+// ORDEN NO NEGOCIABLE: esto corre después de guardar el lead y de responder
+// al usuario (fire-and-forget). Si una llamada falla o supera el timeout, se
+// loguea y no pasa nada más: el contador no sube esa vez, el lead ya está a
+// salvo. Dos envíos simultáneos del mismo email pueden perder un incremento
+// (cuenta de menos, nunca de más; se autocorrige en la siguiente retoma).
+
+function fetchWithTimeout(url, opts, ms) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), ms);
+  return fetch(url, { ...opts, signal: controller.signal }).finally(() => clearTimeout(timer));
+}
+
+async function bumpTemperamentTimes(email) {
+  const id = encodeURIComponent(email);
+  const headers = { 'api-key': BREVO_API_KEY, 'accept': 'application/json' };
+
+  const readRes = await fetchWithTimeout(`https://api.brevo.com/v3/contacts/${id}`, { headers }, 2500);
+  if (!readRes.ok) {
+    console.log(`[veces] skipped: read http_${readRes.status} email=${email}`);
+    return;
+  }
+  const data = await readRes.json();
+  const current = Number(data?.attributes?.TEST_TEMPERAMENTO_VECES) || 0;
+  const next = current + 1;
+
+  const writeRes = await fetchWithTimeout(`https://api.brevo.com/v3/contacts/${id}`, {
+    method: 'PUT',
+    headers: { ...headers, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ attributes: { TEST_TEMPERAMENTO_VECES: next } }),
+  }, 2500);
+  if (!writeRes.ok) {
+    console.log(`[veces] skipped: write http_${writeRes.status} email=${email}`);
+    return;
+  }
+  console.log(`[veces] email=${email} ${current} → ${next}`);
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // HANDLER — Test de ADULTOS (sin cambios respecto a la versión previa).
 // Toda la lógica vive aquí dentro para que el handler de niños no la pueda
@@ -339,7 +382,13 @@ async function handleSubmitAdult(req, res) {
     if (!brevoRes.ok) {
       return sendJson(res, 502, { error: 'Brevo API error', status: brevoRes.status });
     }
-    return sendJson(res, 200, { ok: true });
+    sendJson(res, 200, { ok: true });
+
+    // Lead guardado y usuario respondido: ahora (y sólo ahora) el contador.
+    bumpTemperamentTimes(brevoBody.email).catch(e => {
+      console.error('[veces] error:', e?.name === 'AbortError' ? 'timeout' : e);
+    });
+    return;
   } catch (e) {
     console.error('[brevo] fetch error:', e);
     return sendJson(res, 500, { error: 'Internal error' });

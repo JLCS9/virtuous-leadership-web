@@ -356,7 +356,14 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
   Brevo responde 400 y el contacto no se crea:
   - **Temperamento**: YEAR, GENDER, TEMP1, TEMP2, IDIOMA,
     ACEPTACION_POLITICAS, TEST_TEMPERAMENTO, CONTACT_SOURCE,
-    FECHA_TEST_TEMPERAMENTO, PERFIL, PAIS, CIUDAD, COD_DESCUENTO.
+    FECHA_TEST_TEMPERAMENTO, PERFIL, PAIS, CIUDAD, COD_DESCUENTO,
+    TEST_TEMPERAMENTO_VECES (Number).
+- **TEST_TEMPERAMENTO_VECES** = contador de retomas del test de temperamento
+  (segmento "repetidores" en Brevo: VECES ≥ 2, desde 2026-08-21, no
+  retroactivo). Brevo no incrementa: `bumpTemperamentTimes()` en server.mjs
+  lee el valor y reescribe +1, fire-and-forget DESPUÉS de guardar el lead y
+  responder al usuario. Si falla, log `[veces]` y no sube esa vez. NUNCA
+  mover esa llamada antes del upsert del lead.
   - **Carácter**: TEST_CARACTER, FECHA_TEST_CARACTER + los 18 P/C/S/J/M/H
     × _GLOBAL/_PASSIVE/_ACTIVE.
   - **Corazón**: TEST_CORAZON, FECHA_TEST_CORAZON, HEART_TOP,
