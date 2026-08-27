@@ -364,6 +364,16 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
   lee el valor y reescribe +1, fire-and-forget DESPUÉS de guardar el lead y
   responder al usuario. Si falla, log `[veces]` y no sube esa vez. NUNCA
   mover esa llamada antes del upsert del lead.
+- **Eventos por envío** (`sendTestEvent()` en server.mjs, mismas reglas
+  fire-and-forget que el contador): cada submit registra en Brevo
+  `test_temperamento_completado` / `test_caracter_completado` /
+  `test_corazon_completado` (con `idioma` y datos del resultado como
+  propiedades). Las automatizaciones de resultados disparan con este evento
+  (trigger "se registra un evento" + re-entrada permitida) para que las
+  RETOMAS también reciban email — el antiguo trigger "contacto añadido a una
+  lista" sólo salta la primera vez. OJO al migrar una automatización:
+  sustituir el trigger de lista por el de evento (no dejar ambos: la primera
+  vez entraría dos veces = email duplicado).
   - **Carácter**: TEST_CARACTER, FECHA_TEST_CARACTER + los 18 P/C/S/J/M/H
     × _GLOBAL/_PASSIVE/_ACTIVE.
   - **Corazón**: TEST_CORAZON, FECHA_TEST_CORAZON, HEART_TOP,

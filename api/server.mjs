@@ -251,6 +251,37 @@ function fetchWithTimeout(url, opts, ms) {
   return fetch(url, { ...opts, signal: controller.signal }).finally(() => clearTimeout(timer));
 }
 
+// ────────────── Evento por envío de test ──────────────
+//
+// Registra en Brevo un evento por CADA envío de un test, retomas incluidas
+// (test_temperamento_completado / test_caracter_completado /
+// test_corazon_completado). Las automatizaciones de resultados disparan con
+// este evento (trigger "se registra un evento" + re-entrada permitida), en
+// lugar del antiguo "contacto añadido a una lista", que sólo salta la
+// primera vez. Mismas reglas que el contador de retomas: corre tras guardar
+// el lead y responder al usuario; si falla, log [evento] y se sigue.
+async function sendTestEvent(eventName, email, props) {
+  const res = await fetchWithTimeout('https://api.brevo.com/v3/events', {
+    method: 'POST',
+    headers: {
+      'api-key':      BREVO_API_KEY,
+      'Content-Type': 'application/json',
+      'accept':       'application/json',
+    },
+    body: JSON.stringify({
+      event_name: eventName,
+      identifiers: { email_id: email },
+      event_properties: props,
+    }),
+  }, 2500);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    console.log(`[evento] skipped: ${eventName} http_${res.status} email=${email} ${text.slice(0, 200)}`);
+    return;
+  }
+  console.log(`[evento] ${eventName} email=${email} idioma=${props.idioma}`);
+}
+
 async function bumpTemperamentTimes(email) {
   const id = encodeURIComponent(email);
   const headers = { 'api-key': BREVO_API_KEY, 'accept': 'application/json' };
@@ -384,9 +415,18 @@ async function handleSubmitAdult(req, res) {
     }
     sendJson(res, 200, { ok: true });
 
-    // Lead guardado y usuario respondido: ahora (y sólo ahora) el contador.
+    // Lead guardado y usuario respondido: ahora (y sólo ahora) el contador
+    // de retomas y el evento que dispara la automatización de resultados.
     bumpTemperamentTimes(brevoBody.email).catch(e => {
       console.error('[veces] error:', e?.name === 'AbortError' ? 'timeout' : e);
+    });
+    sendTestEvent('test_temperamento_completado', brevoBody.email, {
+      idioma: brevoBody.attributes.IDIOMA,
+      temp1:  brevoBody.attributes.TEMP1,
+      temp2:  brevoBody.attributes.TEMP2,
+      perfil: brevoBody.attributes.PERFIL,
+    }).catch(e => {
+      console.error('[evento] error:', e?.name === 'AbortError' ? 'timeout' : e);
     });
     return;
   } catch (e) {
@@ -647,7 +687,15 @@ async function handleSubmitCharacter(req, res) {
     if (!brevoRes.ok) {
       return sendJson(res, 502, { error: 'Brevo API error', status: brevoRes.status });
     }
-    return sendJson(res, 200, { ok: true });
+    sendJson(res, 200, { ok: true });
+
+    // Lead guardado y usuario respondido: evento para la automatización.
+    sendTestEvent('test_caracter_completado', brevoBody.email, {
+      idioma: brevoBody.attributes.IDIOMA,
+    }).catch(e => {
+      console.error('[evento] error:', e?.name === 'AbortError' ? 'timeout' : e);
+    });
+    return;
   } catch (e) {
     console.error('[brevo:character] fetch error:', e);
     return sendJson(res, 500, { error: 'Internal error' });
@@ -784,7 +832,16 @@ async function handleSubmitHeart(req, res) {
     if (!brevoRes.ok) {
       return sendJson(res, 502, { error: 'Brevo API error', status: brevoRes.status });
     }
-    return sendJson(res, 200, { ok: true });
+    sendJson(res, 200, { ok: true });
+
+    // Lead guardado y usuario respondido: evento para la automatización.
+    sendTestEvent('test_corazon_completado', brevoBody.email, {
+      idioma: brevoBody.attributes.IDIOMA,
+      top:    brevoBody.attributes.HEART_TOP,
+    }).catch(e => {
+      console.error('[evento] error:', e?.name === 'AbortError' ? 'timeout' : e);
+    });
+    return;
   } catch (e) {
     console.error('[brevo:heart] fetch error:', e);
     return sendJson(res, 500, { error: 'Internal error' });
