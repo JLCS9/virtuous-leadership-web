@@ -16,6 +16,12 @@
 //   BREVO_LIST_ID      → fallback opcional si no se ha configurado la lista del
 //                        idioma específico (modo retrocompatible).
 //   DATABASE_URL       → connection string de Supabase    — requerido (test niños)
+//   CONVERFLOW_API_KEY → API key de Converflow (cfai_...) — opcional. Si está,
+//                        cada envío del test adulto se replica también en
+//                        Converflow (POST /leads/upsert) tras guardarlo en Brevo.
+//   CONVERFLOW_TT_LIST_{ES,EN,FR,RU}
+//                      → nombre de la lista de Converflow por idioma. Default
+//                        "TT-ES", "TT-EN", "TT-FR", "TT-RU".
 //   PORT               → puerto donde escucha (default 3001)
 
 import http from 'http';
@@ -47,6 +53,17 @@ const BREVO_LIST_IDS_HEART = {
   ru: parseInt(process.env.BREVO_LIST_ID_HEART_RU || '0', 10),
 };
 const BREVO_LIST_ID_FALLBACK = parseInt(process.env.BREVO_LIST_ID || '0', 10);
+
+// Converflow (CRM propio). Opcional: si no hay API key, el envío se omite con
+// un warn al arrancar y el resto del servidor funciona igual.
+const CONVERFLOW_API_KEY = process.env.CONVERFLOW_API_KEY || '';
+const CONVERFLOW_URL     = process.env.CONVERFLOW_URL || 'https://api.converflow.ai/leads/upsert';
+const CONVERFLOW_TT_LISTS = {
+  es: process.env.CONVERFLOW_TT_LIST_ES || 'TT-ES',
+  en: process.env.CONVERFLOW_TT_LIST_EN || 'TT-EN',
+  fr: process.env.CONVERFLOW_TT_LIST_FR || 'TT-FR',
+  ru: process.env.CONVERFLOW_TT_LIST_RU || 'TT-RU',
+};
 const PORT          = parseInt(process.env.PORT || '3001', 10);
 
 if (!BREVO_API_KEY) { console.error('[fatal] BREVO_API_KEY env var missing'); process.exit(1); }
@@ -58,6 +75,11 @@ if (langsWithList.length === 0 && !BREVO_LIST_ID_FALLBACK) {
 }
 const langsWithCharacterList = Object.entries(BREVO_LIST_IDS_CHARACTER).filter(([, id]) => id > 0).map(([l]) => l);
 const langsWithHeartList = Object.entries(BREVO_LIST_IDS_HEART).filter(([, id]) => id > 0).map(([l]) => l);
+if (CONVERFLOW_API_KEY) {
+  console.log(`[converflow] enabled → ${CONVERFLOW_URL} lists: ${JSON.stringify(CONVERFLOW_TT_LISTS)}`);
+} else {
+  console.warn('[warn] CONVERFLOW_API_KEY not set — Converflow sync disabled');
+}
 console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], character: [${langsWithCharacterList.join(', ') || 'none — using temperament lists'}], heart: [${langsWithHeartList.join(', ') || 'none — using temperament lists'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
 
 // DATABASE_URL es opcional al arrancar — si falta, /api/submit-children
@@ -307,6 +329,70 @@ async function bumpTemperamentTimes(email) {
   console.log(`[veces] email=${email} ${current} → ${next}`);
 }
 
+// ────────────── Réplica del lead en Converflow ──────────────
+//
+// Envía el mismo lead del test de temperamento a Converflow (POST
+// /leads/upsert) con los mismos datos que van a Brevo, mapeados a los slugs
+// de los campos personalizados de Converflow. Se ejecuta DESPUÉS de guardar
+// en Brevo y de responder al usuario: si Converflow falla o tarda, se loguea
+// [converflow] y no afecta al usuario ni a Brevo. Converflow se encarga de
+// incrementar test_temperamento_veces (campo `increment`), así que no hay
+// read-modify-write como en Brevo.
+//
+// Mapeo Brevo → Converflow:
+//   FIRSTNAME → name · YEAR → year · GENDER → gender · TEMP1/TEMP2 → temp1/temp2
+//   IDIOMA → idioma (minúsculas) · FECHA_TEST_TEMPERAMENTO → fecha_test_temperamento
+//   PAIS/CIUDAD → pais/ciudad · COD_DESCUENTO → cod_descuento
+//   ACEPTACION_POLITICAS/TEST_TEMPERAMENTO → aceptacion_politicas/test_temperamento
+//   CONTACT_SOURCE → source (nivel raíz) · lista Brevo por idioma → listNames
+//   PERFIL no tiene campo equivalente en Converflow: se omite.
+function buildConverflowLead(brevoBody, lang) {
+  const a = brevoBody.attributes;
+  const normLang = String(lang || 'es').toLowerCase();
+  const listName = CONVERFLOW_TT_LISTS[normLang] || CONVERFLOW_TT_LISTS.es;
+  const customFields = {
+    test_temperamento:       true,
+    fecha_test_temperamento: a.FECHA_TEST_TEMPERAMENTO,
+    aceptacion_politicas:    true,
+    idioma:                  normLang,
+    temp1:                   a.TEMP1,
+    temp2:                   a.TEMP2,
+  };
+  if (a.YEAR != null && a.YEAR !== '') customFields.year = Number(a.YEAR);
+  if (a.GENDER)        customFields.gender        = a.GENDER;
+  if (a.PAIS)          customFields.pais          = a.PAIS;
+  if (a.CIUDAD)        customFields.ciudad        = a.CIUDAD;
+  if (a.COD_DESCUENTO) customFields.cod_descuento = a.COD_DESCUENTO;
+  return {
+    email:     brevoBody.email,
+    name:      a.FIRSTNAME,
+    source:    'test-temperamento',
+    listNames: [listName],
+    increment: ['test_temperamento_veces'],
+    customFields,
+  };
+}
+
+async function sendToConverflow(brevoBody, lang) {
+  if (!CONVERFLOW_API_KEY) return;
+  const lead = buildConverflowLead(brevoBody, lang);
+  const res = await fetchWithTimeout(CONVERFLOW_URL, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${CONVERFLOW_API_KEY}`,
+      'Content-Type':  'application/json',
+      'accept':        'application/json',
+    },
+    body: JSON.stringify(lead),
+  }, 4000);
+  const text = await res.text().catch(() => '');
+  if (!res.ok) {
+    console.log(`[converflow] skipped: http_${res.status} email=${lead.email} list=${lead.listNames[0]} ${text.slice(0, 300)}`);
+    return;
+  }
+  console.log(`[converflow] upsert ok email=${lead.email} list=${lead.listNames[0]} ${text.slice(0, 200)}`);
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // HANDLER — Test de ADULTOS (sin cambios respecto a la versión previa).
 // Toda la lógica vive aquí dentro para que el handler de niños no la pueda
@@ -427,6 +513,9 @@ async function handleSubmitAdult(req, res) {
       perfil: brevoBody.attributes.PERFIL,
     }).catch(e => {
       console.error('[evento] error:', e?.name === 'AbortError' ? 'timeout' : e);
+    });
+    sendToConverflow(brevoBody, c.language).catch(e => {
+      console.error('[converflow] error:', e?.name === 'AbortError' ? 'timeout' : e);
     });
     return;
   } catch (e) {

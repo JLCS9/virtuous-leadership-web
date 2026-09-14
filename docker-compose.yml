@@ -14,6 +14,8 @@
 #                                             opcional: si falta un idioma, cae a la
 #                                             lista del temperamento del mismo idioma)
 #   BREVO_LIST_ID=94        # fallback opcional (retrocompat)
+#   CONVERFLOW_API_KEY=cfai_...  # opcional: réplica del test adulto en Converflow
+#   CONVERFLOW_TT_LIST_{ES,EN,FR,RU}  # opcional, default TT-ES / TT-EN / TT-FR / TT-RU
 #   DATABASE_URL=postgresql://postgres:PASSWORD@db.xxx.supabase.co:5432/postgres?sslmode=require
 #
 # Puertos: bindeamos a 127.0.0.1 para que sólo el nginx del host pueda
@@ -53,6 +55,11 @@ services:
       BREVO_LIST_ID_HEART_RU: ${BREVO_LIST_ID_HEART_RU}
       BREVO_LIST_ID:    ${BREVO_LIST_ID}
       DATABASE_URL:     ${DATABASE_URL}
+      CONVERFLOW_API_KEY:     ${CONVERFLOW_API_KEY:-}
+      CONVERFLOW_TT_LIST_ES:  ${CONVERFLOW_TT_LIST_ES:-}
+      CONVERFLOW_TT_LIST_EN:  ${CONVERFLOW_TT_LIST_EN:-}
+      CONVERFLOW_TT_LIST_FR:  ${CONVERFLOW_TT_LIST_FR:-}
+      CONVERFLOW_TT_LIST_RU:  ${CONVERFLOW_TT_LIST_RU:-}
       PORT: 3001
     ports:
       - "127.0.0.1:3001:3001"

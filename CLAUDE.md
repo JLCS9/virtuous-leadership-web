@@ -312,6 +312,11 @@ chmod 600). Se leen al arrancar el contenedor `api`. Cambiarlas requiere
 
 ```env
 BREVO_API_KEY=xkeys-...
+# Converflow (CRM propio) — opcional. Si está, cada envío del test de
+# temperamento adulto se replica en Converflow (POST /leads/upsert) tras
+# guardarse en Brevo. Listas por idioma: default TT-ES / TT-EN / TT-FR / TT-RU
+# (sobrescribibles con CONVERFLOW_TT_LIST_{ES,EN,FR,RU}).
+CONVERFLOW_API_KEY=cfai_...
 # Temperamento
 BREVO_LIST_ID_ES=104
 BREVO_LIST_ID_EN=106
