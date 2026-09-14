@@ -25,6 +25,7 @@ export default {
     accreditation_system: 'Презентация',
     schools: 'Школы',
     universities: 'Университеты',
+    businesses: 'Компании',
     higher_ed: 'Профессиональное обучение',
     higher_ed_long: 'Учреждения высшего образования',
     tests: 'Тесты самопознания',
@@ -56,7 +57,7 @@ export default {
 
   home: {
     eyebrow_official: 'Liderazgo Virtuoso®',
-    hero_title: 'ДЛЯ ОБРАЗОВАТЕЛЬНЫХ УЧРЕЖДЕНИЙ',
+    hero_title: 'ДЛЯ УЧРЕЖДЕНИЙ',
     hero_subtitle: '',
     hero_more_cta: 'Хотите узнать о нас больше?',
     cta_know_system: 'Аккредитация',
@@ -233,6 +234,15 @@ export default {
   },
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
+  // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
+  // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
+  // via ColegiosPrograma heroNs='empresas_prog'.
+  empresas_prog: {
+    eyebrow: '',
+    hero_title: 'НРАВСТВЕННОЕ ЛИДЕРСТВО ДЛЯ КОМПАНИЙ',
+    hero_subtitle: 'Руководители, менеджеры, лидеры команд и сотрудники.',
+  },
+
   colegios_prog: {
     eyebrow: '',
     hero_title: 'НРАВСТВЕННОЕ ЛИДЕРСТВО ДЛЯ ШКОЛ',

@@ -27,6 +27,7 @@ const PAGE_ELEMENTS = {
   acreditacion_landing:  <Acreditacion />,
   acreditacion_colegios: <AcreditacionColegios />,
   programa_colegios:     <ColegiosPrograma />,
+  programa_empresas:     <ColegiosPrograma heroNs="empresas_prog" />,
   universidades:         <AcreditacionUniversidades />,
   edsup:                 <AcreditacionEducacionSuperior />,
   tests:                 <Tests />,

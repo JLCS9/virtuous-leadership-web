@@ -25,6 +25,7 @@ export default {
     accreditation_system: 'Présentation',
     schools: 'Écoles',
     universities: 'Universités',
+    businesses: 'Entreprises',
     higher_ed: 'Formation Professionnelle',
     higher_ed_long: 'Centres d\'enseignement supérieur',
     tests: 'Tests de connaissance de soi',
@@ -56,7 +57,7 @@ export default {
 
   home: {
     eyebrow_official: 'Leadership Vertueux®',
-    hero_title: 'POUR LES INSTITUTIONS ÉDUCATIVES',
+    hero_title: 'POUR LES INSTITUTIONS',
     hero_subtitle: '',
     hero_more_cta: 'Vous voulez en savoir plus sur nous ?',
     cta_know_system: 'Certification',
@@ -233,6 +234,15 @@ export default {
   },
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
+  // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
+  // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
+  // via ColegiosPrograma heroNs='empresas_prog'.
+  empresas_prog: {
+    eyebrow: '',
+    hero_title: 'LEADERSHIP VERTUEUX POUR LES ENTREPRISES',
+    hero_subtitle: 'Équipes de direction, managers, responsables d\'équipe et collaborateurs.',
+  },
+
   colegios_prog: {
     eyebrow: '',
     hero_title: 'LEADERSHIP VERTUEUX POUR LES ÉCOLES',

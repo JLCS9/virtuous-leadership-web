@@ -16,6 +16,7 @@ export const ROUTES = {
   acreditacion_landing:  { es: 'acreditacion',           en: 'certification',           fr: 'accreditation',            ru: 'akkreditatsiya' },
   acreditacion_colegios: { es: 'acreditacion/colegios',  en: 'certification/schools',   fr: 'accreditation/ecoles',     ru: 'akkreditatsiya/shkoly' },
   programa_colegios:     { es: 'colegios',               en: 'schools',                 fr: 'ecoles',                   ru: 'shkoly' },
+  programa_empresas:     { es: 'empresas',               en: 'businesses',              fr: 'entreprises',              ru: 'kompanii' },
   universidades:         { es: 'universidades',          en: 'universities',            fr: 'universites',              ru: 'universitety' },
   edsup:                 { es: 'educacion-superior',     en: 'higher-education',        fr: 'enseignement-superieur',   ru: 'vysshee-obrazovanie' },
   tests:                 { es: 'tests',                  en: 'tests',                   fr: 'tests',                    ru: 'testy' },

@@ -35,6 +35,7 @@ export default function Footer() {
           </h4>
           <FootLink to="/acreditacion/colegios">{t('nav.schools')}</FootLink>
           <FootLink to="/universidades">{t('nav.universities')}</FootLink>
+          <FootLink to="/empresas">{t('nav.businesses')}</FootLink>
           <FootLink to="/educacion-superior">{t('nav.higher_ed')}</FootLink>
         </div>
 

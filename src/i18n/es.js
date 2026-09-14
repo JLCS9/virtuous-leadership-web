@@ -26,6 +26,7 @@ export default {
     accreditation_system: 'Presentación',
     schools: 'Colegios',
     universities: 'Universidades',
+    businesses: 'Empresas',
     higher_ed: 'Formación Profesional',
     higher_ed_long: 'Centros de Educación Superior',
     tests: 'Tests de autoconocimiento',
@@ -57,7 +58,7 @@ export default {
 
   home: {
     eyebrow_official: 'Liderazgo Virtuoso®',
-    hero_title: 'PARA INSTITUCIONES EDUCATIVAS',
+    hero_title: 'PARA INSTITUCIONES',
     hero_subtitle: '',
     hero_more_cta: '¿Quieres saber más sobre nosotros?',
     cta_know_system: 'Acreditación',
@@ -242,6 +243,15 @@ export default {
   // colegios_prog: la rama i18n de /colegios (Programas). Tiene su propia
   // copia editable y un cross-link al detalle de la acreditacion via
   // entregables_cta_*.
+  // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
+  // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
+  // via ColegiosPrograma heroNs='empresas_prog'.
+  empresas_prog: {
+    eyebrow: '',
+    hero_title: 'LIDERAZGO VIRTUOSO PARA EMPRESAS',
+    hero_subtitle: 'Equipos directivos, mandos intermedios, responsables de equipo y empleados.',
+  },
+
   colegios_prog: {
     eyebrow: '',
     hero_title: 'LIDERAZGO VIRTUOSO PARA COLEGIOS',

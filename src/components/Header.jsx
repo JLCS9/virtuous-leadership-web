@@ -31,6 +31,7 @@ export default function Header() {
       children: [
         { to: '/colegios',           label: t('nav.schools') },
         { to: '/universidades',      label: t('nav.universities') },
+        { to: '/empresas',           label: t('nav.businesses') },
         { to: '/educacion-superior', label: t('nav.higher_ed') },
       ],
     },

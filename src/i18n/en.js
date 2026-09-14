@@ -25,6 +25,7 @@ export default {
     accreditation_system: 'Presentation',
     schools: 'Schools',
     universities: 'Universities',
+    businesses: 'Businesses',
     higher_ed: 'Vocational Training',
     higher_ed_long: 'Higher Education Centers',
     tests: 'Self-knowledge tests',
@@ -56,7 +57,7 @@ export default {
 
   home: {
     eyebrow_official: 'Virtuous Leadership®',
-    hero_title: 'FOR EDUCATIONAL INSTITUTIONS',
+    hero_title: 'FOR INSTITUTIONS',
     hero_subtitle: '',
     hero_more_cta: 'Want to know more about us?',
     cta_know_system: 'Certification',
@@ -233,6 +234,15 @@ export default {
   },
 
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
+  // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
+  // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
+  // via ColegiosPrograma heroNs='empresas_prog'.
+  empresas_prog: {
+    eyebrow: '',
+    hero_title: 'VIRTUOUS LEADERSHIP FOR BUSINESSES',
+    hero_subtitle: 'Executives, managers, team leaders and employees.',
+  },
+
   colegios_prog: {
     eyebrow: '',
     hero_title: 'VIRTUOUS LEADERSHIP FOR SCHOOLS',

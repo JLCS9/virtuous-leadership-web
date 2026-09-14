@@ -28,9 +28,14 @@ import CTA from '../components/CTA';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
 import genteImg from '../assets/gente.jpeg';
 
-export default function ColegiosPrograma() {
+// heroNs: rama del i18n de la que se lee el hero (eyebrow, hero_title,
+// hero_subtitle). Permite reutilizar esta misma pagina para /empresas
+// (heroNs='empresas_prog') cambiando solo titulo y subtitulo; el resto de
+// bloques siguen leyendo de colegios_prog.
+export default function ColegiosPrograma({ heroNs = 'colegios_prog' }) {
   const { t } = useT();
   const k = (key) => t(`colegios_prog.${key}`);
+  const h = (key) => t(`${heroNs}.${key}`);
   // El cuadro de Modalidad y el bloque "Contenido" (conceptos) se reusan tal
   // cual desde la rama 'universidades' del i18n, asi /colegios, /universidades
   // y /educacion-superior muestran exactamente la misma tabla y las mismas 7
@@ -42,19 +47,19 @@ export default function ColegiosPrograma() {
   const conceptosEyebrow  = t('universidades.conceptos_eyebrow');
   const conceptosTitle    = t('universidades.conceptos_title');
   const testimonios       = k('testimonios');
-  const heroTitle         = k('hero_title');
+  const heroTitle         = h('hero_title');
 
   return (
     <>
       {/* Hero — sin sello */}
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          {k('eyebrow') && (
-            <div style={styles.eyebrow}>{k('eyebrow')}</div>
+          {h('eyebrow') && (
+            <div style={styles.eyebrow}>{h('eyebrow')}</div>
           )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line', fontSize: 'clamp(26px, 4vw, 44px)' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0', whiteSpace: 'pre-line' }}>
-            {k('hero_subtitle')}
+            {h('hero_subtitle')}
           </p>
         </div>
         {/* Foto 'gente' full-width tras el hero (específica de colegios) */}
