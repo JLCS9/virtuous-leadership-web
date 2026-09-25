@@ -883,6 +883,7 @@ export default function TestTBP() {
   // slug del idioma activo (ej. '/en/tests/temperament/thank-you').
   const navigate = useNavigate();
   const lp = useLocalPath();
+  const { lang } = useT();
 
   const [s1Order, setS1Order] = useState([]);
   const [s1Answers, setS1Answers] = useState([]);
@@ -1008,10 +1009,16 @@ export default function TestTBP() {
   }
 
   function onGateOk() {
-    // En lugar de mostrar el resultado in-page (PHASE.RESULT), redirigimos
-    // a la página de agradecimiento. El usuario recibirá los resultados
-    // por email (Brevo automation). ResultScreen queda como dead code pero
-    // se mantiene en el archivo por si se quiere restaurar el comportamiento.
+    // RU: mostramos el resultado in-page (PHASE.RESULT) tras guardar el
+    // contacto en Brevo; los textos de los 12 perfiles vienen del e-book
+    // «Задачи твоего темперамента» (sección «12 типов темперамента»).
+    // Resto de idiomas: redirigimos a la página de agradecimiento y el
+    // usuario recibe los resultados por email (Brevo automation).
+    if (lang === 'ru') {
+      setPhase(PHASE.RESULT);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     navigate(lp('/tests/temperamento/gracias'));
   }
 
