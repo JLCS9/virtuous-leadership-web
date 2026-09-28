@@ -21,6 +21,7 @@ export default {
   nav: {
     home: 'Главная',
     programs: 'Программы',
+    education_centers: 'Образовательные учреждения',
     accreditation: 'Аккредитация',
     accreditation_system: 'Презентация',
     schools: 'Школы',
@@ -101,25 +102,32 @@ export default {
     audiences_title: 'Все виды образовательных учреждений',
     audiences_subtitle: 'Нравственное лидерство, адаптированное под особенности каждого учреждения',
     audiences_cta: 'Узнать о программе →',
-    audiences: [
-      {
-        to: '/colegios',
-        eyebrow: '',
-        title: 'Школы',
-        text: 'Руководство, тьюторы, учителя и семьи.',
-      },
-      {
-        to: '/universidades',
-        eyebrow: '',
-        title: 'Университеты',
-        text: 'Персонал, преподаватели, магистранты и выпускники.',
-      },
-      {
-        to: '/educacion-superior',
-        eyebrow: '',
-        title: 'Профессиональное обучение',
-        text: 'Технические школы, профессиональные институты и центры профессионального обучения.',
-      },
+    // Dos verticales: centros educativos (3 tarjetas) y empresas (1 tarjeta).
+    // Home.jsx pinta una cabecera por grupo y un grid de tarjetas debajo.
+    audience_groups: [
+      { title: 'Образовательные учреждения', items: [
+        {
+          to: '/colegios',
+          eyebrow: '',
+          title: 'Школы',
+          text: 'Руководство, тьюторы, учителя и семьи.',
+        },
+        {
+          to: '/universidades',
+          eyebrow: '',
+          title: 'Университеты',
+          text: 'Персонал, преподаватели, магистранты и выпускники.',
+        },
+        {
+          to: '/educacion-superior',
+          eyebrow: '',
+          title: 'Профессиональное обучение',
+          text: 'Технические школы, профессиональные институты и центры профессионального обучения.',
+        },
+      ] },
+      { title: 'Компании', items: [
+        { to: '/empresas', eyebrow: '', title: 'Компании', text: 'Руководители, менеджеры, лидеры команд и сотрудники.' },
+      ] },
     ],
     alex_eyebrow: 'Основатель',
     alex_title: 'Александр Хавард',
@@ -237,10 +245,23 @@ export default {
   // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
   // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
   // via ColegiosPrograma heroNs='empresas_prog'.
+  // Pagina /empresas (Businesses). Misma estructura que colegios_prog; solo
+  // define lo que cambia: hero, fila de Modalidad "Aplicacion al contexto",
+  // testimonios (solo las citas neutras) y CTA final. Contenido y Modalidad se
+  // siguen leyendo de 'universidades' via ColegiosPrograma ns='empresas_prog'.
   empresas_prog: {
     eyebrow: '',
     hero_title: 'НРАВСТВЕННОЕ ЛИДЕРСТВО ДЛЯ КОМПАНИЙ',
     hero_subtitle: 'Руководители, менеджеры, лидеры команд и сотрудники.',
+    modalidad_context_row: { label: 'Применение к контексту', value: 'Очные встречи', detail: 'Очные встречи для интеграции содержания и его применения к реальности компании, модерируемые фасилитатором, назначенным компанией.' },
+    testimonios_eyebrow: '',
+    testimonios_title: 'Что говорят те, кто уже завершил программу',
+    testimonios: [
+      { text: 'Это обучение стало рубежом «до и после». Не только в моей манере преподавать, но и в том, как я вижу себя как личность.', author: 'Мару Х.', role: 'Участница' },
+      { text: 'Нравственное лидерство позволило мне открыть, что вести — это не только принимать решения: это расти, помогая расти другим.', author: 'Сонсолес Р.', role: 'Руководитель команды' },
+    ],
+    cta_title: 'Хотите принести программу в вашу компанию?',
+    cta_text: 'Начнём с первого разговора, чтобы понять контекст организации и профили участников.',
   },
 
   colegios_prog: {

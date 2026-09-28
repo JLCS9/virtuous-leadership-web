@@ -21,6 +21,7 @@ export default {
   nav: {
     home: 'Accueil',
     programs: 'Programmes',
+    education_centers: 'Établissements éducatifs',
     accreditation: 'Accréditation',
     accreditation_system: 'Présentation',
     schools: 'Écoles',
@@ -101,25 +102,32 @@ export default {
     audiences_title: 'Tout type d\'institutions éducatives',
     audiences_subtitle: 'Leadership Vertueux adapté au profil spécifique de l\'institution',
     audiences_cta: 'Voir le programme →',
-    audiences: [
-      {
-        to: '/colegios',
-        eyebrow: '',
-        title: 'Écoles',
-        text: 'Direction, tuteurs, enseignants et familles.',
-      },
-      {
-        to: '/universidades',
-        eyebrow: '',
-        title: 'Universités',
-        text: 'Personnel, enseignants, étudiants en master et anciens élèves.',
-      },
-      {
-        to: '/educacion-superior',
-        eyebrow: '',
-        title: 'Formation Professionnelle',
-        text: 'Écoles techniques, instituts professionnels et centres de FP.',
-      },
+    // Dos verticales: centros educativos (3 tarjetas) y empresas (1 tarjeta).
+    // Home.jsx pinta una cabecera por grupo y un grid de tarjetas debajo.
+    audience_groups: [
+      { title: 'Établissements éducatifs', items: [
+        {
+          to: '/colegios',
+          eyebrow: '',
+          title: 'Écoles',
+          text: 'Direction, tuteurs, enseignants et familles.',
+        },
+        {
+          to: '/universidades',
+          eyebrow: '',
+          title: 'Universités',
+          text: 'Personnel, enseignants, étudiants en master et anciens élèves.',
+        },
+        {
+          to: '/educacion-superior',
+          eyebrow: '',
+          title: 'Formation Professionnelle',
+          text: 'Écoles techniques, instituts professionnels et centres de FP.',
+        },
+      ] },
+      { title: 'Entreprises', items: [
+        { to: '/empresas', eyebrow: '', title: 'Entreprises', text: 'Équipes de direction, managers, responsables d\'équipe et collaborateurs.' },
+      ] },
     ],
     alex_eyebrow: 'Le fondateur',
     alex_title: 'Alexandre Havard',
@@ -237,10 +245,23 @@ export default {
   // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
   // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
   // via ColegiosPrograma heroNs='empresas_prog'.
+  // Pagina /empresas (Businesses). Misma estructura que colegios_prog; solo
+  // define lo que cambia: hero, fila de Modalidad "Aplicacion al contexto",
+  // testimonios (solo las citas neutras) y CTA final. Contenido y Modalidad se
+  // siguen leyendo de 'universidades' via ColegiosPrograma ns='empresas_prog'.
   empresas_prog: {
     eyebrow: '',
     hero_title: 'LEADERSHIP VERTUEUX POUR LES ENTREPRISES',
     hero_subtitle: 'Équipes de direction, managers, responsables d\'équipe et collaborateurs.',
+    modalidad_context_row: { label: 'Application au contexte', value: 'Rencontres en présentiel', detail: 'Rencontres en présentiel pour intégrer les contenus et les appliquer à la réalité de l\'entreprise, modérées par un facilitateur désigné par elle.' },
+    testimonios_eyebrow: '',
+    testimonios_title: 'Retours des participants',
+    testimonios: [
+      { text: 'Cette formation a été un avant et un après. Pas seulement dans ma manière d\'enseigner, mais dans la façon dont je me vois moi-même.', author: 'Maru H.', role: 'Participante' },
+      { text: 'Le Leadership Vertueux m\'a permis de découvrir que diriger ne consiste pas seulement à prendre des décisions : c\'est grandir pour faire grandir les autres.', author: 'Sonsoles R.', role: 'Responsable d\'équipe' },
+    ],
+    cta_title: 'Tu aimerais proposer ce programme dans ton entreprise ?',
+    cta_text: 'Nous commençons par une conversation initiale pour comprendre le contexte de l\'organisation et les profils des participants.',
   },
 
   colegios_prog: {

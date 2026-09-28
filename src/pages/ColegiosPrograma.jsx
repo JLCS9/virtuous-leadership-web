@@ -28,38 +28,42 @@ import CTA from '../components/CTA';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
 import genteImg from '../assets/gente.jpeg';
 
-// heroNs: rama del i18n de la que se lee el hero (eyebrow, hero_title,
-// hero_subtitle). Permite reutilizar esta misma pagina para /empresas
-// (heroNs='empresas_prog') cambiando solo titulo y subtitulo; el resto de
-// bloques siguen leyendo de colegios_prog.
-export default function ColegiosPrograma({ heroNs = 'colegios_prog' }) {
+// ns: rama del i18n de la que se leen los textos propios de la pagina (hero,
+// testimonios, CTA final). Permite reutilizar esta misma pagina para /empresas
+// (ns='empresas_prog'). Contenido y Modalidad siguen leyendo de
+// 'universidades' en ambas; si la rama define `modalidad_context_row`, esa
+// fila sustituye a la ultima de la tabla ("Aplicacion al contexto"), que es
+// la unica que menciona a la institucion/profesor.
+export default function ColegiosPrograma({ ns = 'colegios_prog' }) {
   const { t } = useT();
-  const k = (key) => t(`colegios_prog.${key}`);
-  const h = (key) => t(`${heroNs}.${key}`);
+  const k = (key) => t(`${ns}.${key}`);
   // El cuadro de Modalidad y el bloque "Contenido" (conceptos) se reusan tal
   // cual desde la rama 'universidades' del i18n, asi /colegios, /universidades
   // y /educacion-superior muestran exactamente la misma tabla y las mismas 7
   // tarjetas, sin riesgo de divergir.
-  const modalidad         = t('universidades.modalidad');
+  const contextRow        = k('modalidad_context_row');
+  const modalidad         = (contextRow && typeof contextRow === 'object')
+    ? t('universidades.modalidad').map((m, i, arr) => (i === arr.length - 1 ? contextRow : m))
+    : t('universidades.modalidad');
   const modalidadEyebrow  = t('universidades.modalidad_eyebrow');
   const modalidadTitle    = t('universidades.modalidad_title');
   const conceptos         = t('universidades.conceptos');
   const conceptosEyebrow  = t('universidades.conceptos_eyebrow');
   const conceptosTitle    = t('universidades.conceptos_title');
   const testimonios       = k('testimonios');
-  const heroTitle         = h('hero_title');
+  const heroTitle         = k('hero_title');
 
   return (
     <>
       {/* Hero — sin sello */}
       <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
         <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
-          {h('eyebrow') && (
-            <div style={styles.eyebrow}>{h('eyebrow')}</div>
+          {k('eyebrow') && (
+            <div style={styles.eyebrow}>{k('eyebrow')}</div>
           )}
           <h1 style={{ ...styles.h1, whiteSpace: 'pre-line', fontSize: 'clamp(26px, 4vw, 44px)' }}>{heroTitle}</h1>
           <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0', whiteSpace: 'pre-line' }}>
-            {h('hero_subtitle')}
+            {k('hero_subtitle')}
           </p>
         </div>
         {/* Foto 'gente' full-width tras el hero (específica de colegios) */}

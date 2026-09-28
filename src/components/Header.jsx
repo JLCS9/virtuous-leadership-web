@@ -20,21 +20,24 @@ export default function Header() {
   const { t } = useT();
   const lp = useLocalPath();
   const [open, setOpen] = useState(false);
-  const [submenuOpen, setSubmenuOpen] = useState(false);
   const location = useLocation();
 
-  useEffect(() => { setOpen(false); setSubmenuOpen(false); }, [location.pathname]);
+  useEffect(() => { setOpen(false); }, [location.pathname]);
 
+  // Dos verticales: "Centros educativos" (pestaña que lleva a la home, donde
+  // estan las 3 tarjetas, y despliega los 3 programas educativos) y
+  // "Empresas" (enlace directo al programa para empresas).
   const NAV = [
     {
-      label: t('nav.programs'),
+      to: '/',
+      label: t('nav.education_centers'),
       children: [
         { to: '/colegios',           label: t('nav.schools') },
         { to: '/universidades',      label: t('nav.universities') },
-        { to: '/empresas',           label: t('nav.businesses') },
         { to: '/educacion-superior', label: t('nav.higher_ed') },
       ],
     },
+    { to: '/empresas',              label: t('nav.businesses') },
     { to: '/acreditacion/colegios', label: t('nav.accreditation') },
     { to: '/tests',                  label: t('nav.tests') },
   ];
@@ -124,18 +127,21 @@ export default function Header() {
         <div style={{ background: NAVY_DEEP, borderTop: `1px solid ${NAVY_SOFT}` }} className="nav-mobile-panel">
           {NAV.map((item, i) => item.children ? (
             <div key={i}>
-              <button
-                onClick={() => setSubmenuOpen(s => !s)}
-                style={{
-                  display: 'block', width: '100%', textAlign: 'left',
-                  padding: '14px 24px', border: 'none', background: 'transparent',
-                  fontFamily: FONT_SANS, fontSize: 16, color: PAPER, fontWeight: 600,
-                  cursor: 'pointer', borderBottom: `1px solid ${NAVY_SOFT}`,
-                }}
+              {/* El padre navega (home); los hijos van siempre visibles debajo. */}
+              <NavLink
+                to={lp(item.to)}
+                end
+                style={({ isActive }) => ({
+                  display: 'block',
+                  padding: '14px 24px',
+                  fontFamily: FONT_SANS, fontSize: 16, color: isActive ? GOLD : PAPER, fontWeight: 600,
+                  textDecoration: 'none', borderBottom: `1px solid ${NAVY_SOFT}`,
+                  background: isActive ? NAVY : 'transparent',
+                })}
               >
-                {item.label} {submenuOpen ? '−' : '+'}
-              </button>
-              {submenuOpen && item.children.map((c, j) => (
+                {item.label}
+              </NavLink>
+              {item.children.map((c, j) => (
                 <NavLink
                   key={j}
                   to={lp(c.to)}
@@ -206,9 +212,10 @@ function Submenu({ item }) {
       onMouseLeave={() => setOpen(false)}
       style={{ position: 'relative' }}
     >
-      <button
-        type="button"
-        onClick={() => setOpen(o => !o)}
+      {/* La pestaña es un enlace (navega a item.to); el desplegable se abre
+          por hover sobre el contenedor. */}
+      <Link
+        to={lp(item.to)}
         style={{
           fontFamily: FONT_SANS, fontSize: 14,
           color: someActive ? GOLD : PAPER,
@@ -216,6 +223,7 @@ function Submenu({ item }) {
           padding: '10px 14px', background: 'transparent', border: 'none',
           borderBottom: `2px solid ${someActive ? GOLD : 'transparent'}`,
           cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4,
+          textDecoration: 'none',
           transition: 'color 160ms ease',
         }}
         onMouseOver={e => { e.currentTarget.style.color = GOLD; }}
@@ -223,7 +231,7 @@ function Submenu({ item }) {
       >
         {item.label}
         <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 3 L5 7 L8 3 Z"/></svg>
-      </button>
+      </Link>
       {open && (
         <div style={{
           position: 'absolute', top: '100%', left: 0,

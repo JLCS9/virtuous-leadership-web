@@ -28,7 +28,7 @@ const HOME_SEO = {
 export default function Home() {
   const { t, lang } = useT();
   const stats     = t('home.stats');
-  const audiences = t('home.audiences');
+  const audienceGroups = t('home.audience_groups');
   const seo = HOME_SEO[lang] || HOME_SEO.es;
 
   return (
@@ -105,10 +105,21 @@ export default function Home() {
         `}</style>
       </section>
 
-      {/* Audiencias — solo las 3 cards, sin titulo ni subtitulo */}
+      {/* Audiencias — dos verticales (Centros educativos / Empresas). Cada
+          grupo lleva una cabecera tipo eyebrow y su propio grid de 3 columnas
+          en escritorio, de modo que la unica tarjeta de Empresas mide lo mismo
+          que las de centros y no se estira a todo el ancho. */}
       <Section background={NAVY} paddingY={88} style={{ color: PAPER }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 20 }}>
-          {audiences.map((a, i) => (
+        {audienceGroups.map((g, gi) => (
+        <div key={gi} style={{ marginTop: gi === 0 ? 0 : 40 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 18 }}>
+            <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600, whiteSpace: 'nowrap' }}>
+              {g.title}
+            </div>
+            <div style={{ flex: 1, height: 1, background: NAVY_SOFT }} />
+          </div>
+        <div className="aud-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 20 }}>
+          {g.items.map((a, i) => (
             <Link key={i} to={a.to} style={{
               display: 'flex', flexDirection: 'column',
               padding: '36px 30px',
@@ -132,6 +143,11 @@ export default function Home() {
             </Link>
           ))}
         </div>
+        </div>
+        ))}
+        <style>{`
+          @media (min-width: 900px) { .aud-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+        `}</style>
       </Section>
 
       {/* Imagen 'gente' a ancho completo */}

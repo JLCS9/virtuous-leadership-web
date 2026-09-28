@@ -21,6 +21,7 @@ export default {
   nav: {
     home: 'Home',
     programs: 'Programs',
+    education_centers: 'Educational institutions',
     accreditation: 'Accreditation',
     accreditation_system: 'Presentation',
     schools: 'Schools',
@@ -101,25 +102,32 @@ export default {
     audiences_title: 'All kinds of educational institutions',
     audiences_subtitle: 'Virtuous Leadership adapted to the specific profile of the institution',
     audiences_cta: 'See program →',
-    audiences: [
-      {
-        to: '/colegios',
-        eyebrow: '',
-        title: 'Schools',
-        text: 'Directors, tutors, teachers and families.',
-      },
-      {
-        to: '/universidades',
-        eyebrow: '',
-        title: 'Universities',
-        text: 'Staff, faculty, master\'s students and alumni.',
-      },
-      {
-        to: '/educacion-superior',
-        eyebrow: '',
-        title: 'Vocational Training',
-        text: 'Technical schools and vocational centers.',
-      },
+    // Dos verticales: centros educativos (3 tarjetas) y empresas (1 tarjeta).
+    // Home.jsx pinta una cabecera por grupo y un grid de tarjetas debajo.
+    audience_groups: [
+      { title: 'Educational institutions', items: [
+        {
+          to: '/colegios',
+          eyebrow: '',
+          title: 'Schools',
+          text: 'Directors, tutors, teachers and families.',
+        },
+        {
+          to: '/universidades',
+          eyebrow: '',
+          title: 'Universities',
+          text: 'Staff, faculty, master\'s students and alumni.',
+        },
+        {
+          to: '/educacion-superior',
+          eyebrow: '',
+          title: 'Vocational Training',
+          text: 'Technical schools and vocational centers.',
+        },
+      ] },
+      { title: 'Businesses', items: [
+        { to: '/empresas', eyebrow: '', title: 'Businesses', text: 'Executives, managers, team leaders and employees.' },
+      ] },
     ],
     alex_eyebrow: 'Founder',
     alex_title: 'Alex Havard',
@@ -237,10 +245,23 @@ export default {
   // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
   // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
   // via ColegiosPrograma heroNs='empresas_prog'.
+  // Pagina /empresas (Businesses). Misma estructura que colegios_prog; solo
+  // define lo que cambia: hero, fila de Modalidad "Aplicacion al contexto",
+  // testimonios (solo las citas neutras) y CTA final. Contenido y Modalidad se
+  // siguen leyendo de 'universidades' via ColegiosPrograma ns='empresas_prog'.
   empresas_prog: {
     eyebrow: '',
     hero_title: 'VIRTUOUS LEADERSHIP FOR BUSINESSES',
     hero_subtitle: 'Executives, managers, team leaders and employees.',
+    modalidad_context_row: { label: 'Application to context', value: 'In-person sessions', detail: 'In-person sessions to integrate content and apply it to the reality of the company, moderated by a facilitator appointed by the company.' },
+    testimonios_eyebrow: '',
+    testimonios_title: 'They say about us',
+    testimonios: [
+      { text: 'This training has been a before and after. Not only in my way of teaching, but in how I see myself as a person.', author: 'Maru H.', role: 'Participant' },
+      { text: 'Virtuous Leadership has allowed me to discover that leading is not just making decisions: it about growing in order to help others grow.', author: 'Sonsoles R.', role: 'Team leader' },
+    ],
+    cta_title: 'Want to bring the program to your company?',
+    cta_text: 'We start with an initial conversation to understand the context of the organization and the participant profiles.',
   },
 
   colegios_prog: {

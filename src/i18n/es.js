@@ -22,6 +22,7 @@ export default {
   nav: {
     home: 'Home',
     programs: 'Programas',
+    education_centers: 'Centros educativos',
     accreditation: 'Acreditación',
     accreditation_system: 'Presentación',
     schools: 'Colegios',
@@ -102,25 +103,32 @@ export default {
     audiences_title: 'Todo tipo de instituciones educativas',
     audiences_subtitle: 'Liderazgo Virtuoso adaptado al perfil específico de la institución',
     audiences_cta: 'Conocer programa →',
-    audiences: [
-      {
-        to: '/colegios',
-        eyebrow: '',
-        title: 'Colegios',
-        text: 'Dirección, tutores, profesores y familias.',
-      },
-      {
-        to: '/universidades',
-        eyebrow: '',
-        title: 'Universidades',
-        text: 'Personal, profesores, alumnos de máster y alumni.',
-      },
-      {
-        to: '/educacion-superior',
-        eyebrow: '',
-        title: 'Formación Profesional',
-        text: 'Escuelas técnicas, institutos profesionales y centros de FP.',
-      },
+    // Dos verticales: centros educativos (3 tarjetas) y empresas (1 tarjeta).
+    // Home.jsx pinta una cabecera por grupo y un grid de tarjetas debajo.
+    audience_groups: [
+      { title: 'Centros educativos', items: [
+        {
+          to: '/colegios',
+          eyebrow: '',
+          title: 'Colegios',
+          text: 'Dirección, tutores, profesores y familias.',
+        },
+        {
+          to: '/universidades',
+          eyebrow: '',
+          title: 'Universidades',
+          text: 'Personal, profesores, alumnos de máster y alumni.',
+        },
+        {
+          to: '/educacion-superior',
+          eyebrow: '',
+          title: 'Formación Profesional',
+          text: 'Escuelas técnicas, institutos profesionales y centros de FP.',
+        },
+      ] },
+      { title: 'Empresas', items: [
+        { to: '/empresas', eyebrow: '', title: 'Empresas', text: 'Equipos directivos, mandos intermedios, responsables de equipo y empleados.' },
+      ] },
     ],
     alex_eyebrow: 'El fundador',
     alex_title: 'Alexandre Havard',
@@ -246,10 +254,23 @@ export default {
   // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
   // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
   // via ColegiosPrograma heroNs='empresas_prog'.
+  // Pagina /empresas (Businesses). Misma estructura que colegios_prog; solo
+  // define lo que cambia: hero, fila de Modalidad "Aplicacion al contexto",
+  // testimonios (solo las citas neutras) y CTA final. Contenido y Modalidad se
+  // siguen leyendo de 'universidades' via ColegiosPrograma ns='empresas_prog'.
   empresas_prog: {
     eyebrow: '',
     hero_title: 'LIDERAZGO VIRTUOSO PARA EMPRESAS',
     hero_subtitle: 'Equipos directivos, mandos intermedios, responsables de equipo y empleados.',
+    modalidad_context_row: { label: 'Aplicación al contexto', value: 'Encuentros presenciales', detail: 'Encuentros presenciales para integrar los contenidos y aplicarlos a la realidad de la empresa, moderados por un facilitador designado por ella.' },
+    testimonios_eyebrow: '',
+    testimonios_title: 'Lo que cuentan quienes ya han completado el programa',
+    testimonios: [
+      { text: 'Esta formación ha sido un antes y un después. No solo en mi manera de enseñar, sino en cómo me veo a mí misma como persona.', author: 'Maru H.', role: 'Participante' },
+      { text: 'Liderazgo Virtuoso me ha permitido descubrir que liderar no es solo tomar decisiones: es crecer para hacer crecer a los demás.', author: 'Sonsoles R.', role: 'Responsable de equipo' },
+    ],
+    cta_title: '¿Quieres llevar el programa a tu empresa?',
+    cta_text: 'Empezamos con una conversación inicial para entender el contexto de la organización y los perfiles de los participantes.',
   },
 
   colegios_prog: {
