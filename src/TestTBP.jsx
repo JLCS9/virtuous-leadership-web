@@ -329,7 +329,7 @@ function Welcome({ onStart }) {
   );
 }
 
-function Question({ progress, total, item, onAnswer, onBack, canBack }) {
+function Question({ progress, total, item, onAnswer, onBack, canBack, yesLabel, noLabel }) {
   const { t } = useT();
   return (
     <div style={styles.card} className="vl-test-card">
@@ -356,13 +356,13 @@ function Question({ progress, total, item, onAnswer, onBack, canBack }) {
           onMouseOver={e => { e.currentTarget.style.background = NAVY; e.currentTarget.style.color = PAPER; }}
           onMouseOut={e => { e.currentTarget.style.background = PAPER; e.currentTarget.style.color = NAVY; }}
           onClick={() => onAnswer('SI')}
-        >{t('test.question.yes')}</button>
+        >{yesLabel || t('test.question.yes')}</button>
         <button
           style={styles.yesNoBtn}
           onMouseOver={e => { e.currentTarget.style.background = NAVY; e.currentTarget.style.color = PAPER; }}
           onMouseOut={e => { e.currentTarget.style.background = PAPER; e.currentTarget.style.color = NAVY; }}
           onClick={() => onAnswer('NO')}
-        >{t('test.question.no')}</button>
+        >{noLabel || t('test.question.no')}</button>
       </div>
     </div>
   );
@@ -619,7 +619,7 @@ async function submitContact(payload) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function GateForm({ profileKey, primario, decision, onSubmitOk }) {
+function GateForm({ profileKey, primario, decision, conoceAlex, onSubmitOk }) {
   const { t, lang } = useT();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -669,6 +669,7 @@ function GateForm({ profileKey, primario, decision, onSubmitOk }) {
         consent: true,
         consentTimestamp: new Date().toISOString(),
         language: lang,
+        conoceAlex: conoceAlex === true,
       },
       result: {
         profileKey,
@@ -874,7 +875,7 @@ function GateForm({ profileKey, primario, decision, onSubmitOk }) {
 
 // ───────── Main ─────────
 
-const PHASE = { WELCOME: 'welcome', STAGE1: 'stage1', TIE: 'tie', TRANSITION: 'transition', STAGE2: 'stage2', GATE: 'gate', RESULT: 'result' };
+const PHASE = { WELCOME: 'welcome', STAGE1: 'stage1', TIE: 'tie', TRANSITION: 'transition', STAGE2: 'stage2', QUALIFY: 'qualify', GATE: 'gate', RESULT: 'result' };
 
 export default function TestTBP() {
   const [phase, setPhase] = useState(PHASE.WELCOME);
@@ -883,7 +884,7 @@ export default function TestTBP() {
   // slug del idioma activo (ej. '/en/tests/temperament/thank-you').
   const navigate = useNavigate();
   const lp = useLocalPath();
-  const { lang } = useT();
+  const { t, lang } = useT();
 
   const [s1Order, setS1Order] = useState([]);
   const [s1Answers, setS1Answers] = useState([]);
@@ -902,13 +903,15 @@ export default function TestTBP() {
   const [s2Index, setS2Index] = useState(0);
 
   const [result, setResult] = useState(null);
+  const [conoceAlex, setConoceAlex] = useState(null);
 
-  const totalQuestions = useMemo(() => 16 + tieOrder.length + 6, [tieOrder]);
+  const totalQuestions = useMemo(() => 16 + tieOrder.length + 6 + 1, [tieOrder]);
 
   const globalIndex = useMemo(() => {
     if (phase === PHASE.STAGE1) return s1Index + 1;
     if (phase === PHASE.TIE) return 16 + tieIndex + 1;
     if (phase === PHASE.STAGE2) return 16 + tieOrder.length + s2Index + 1;
+    if (phase === PHASE.QUALIFY) return 16 + tieOrder.length + 6 + 1;
     return 0;
   }, [phase, s1Index, tieIndex, s2Index, tieOrder.length]);
 
@@ -920,6 +923,7 @@ export default function TestTBP() {
     setPrimario(null); setStage1Scores(null);
     setS2Order([]); setS2Answers([]); setS2Index(0);
     setResult(null);
+    setConoceAlex(null);
     setPhase(PHASE.STAGE1);
   }
 
@@ -999,13 +1003,18 @@ export default function TestTBP() {
       const score_s2 = computeStage2Score(s2Order, next);
       const decision = decideProfile(primario, stage1Scores, score_s2);
       setResult(decision);
-      setPhase(PHASE.GATE);
+      setPhase(PHASE.QUALIFY);
     }
   }
 
   function backStage2() {
     if (s2Index === 0) return;
     setS2Index(s2Index - 1);
+  }
+
+  function answerQualify(value) {
+    setConoceAlex(value === 'SI');
+    setPhase(PHASE.GATE);
   }
 
   function onGateOk() {
@@ -1037,8 +1046,10 @@ export default function TestTBP() {
     body = <Transition primario={primario} onContinue={continueToStage2} />;
   } else if (phase === PHASE.STAGE2) {
     body = <Question progress={globalIndex} total={totalQuestions} item={s2Order[s2Index]} onAnswer={answerStage2} onBack={backStage2} canBack={s2Index > 0} />;
+  } else if (phase === PHASE.QUALIFY) {
+    body = <Question progress={globalIndex} total={totalQuestions} item={{ id: 'QUALIFY' }} onAnswer={answerQualify} onBack={() => {}} canBack={false} yesLabel={t('test.question.qualify_yes')} noLabel={t('test.question.qualify_no')} />;
   } else if (phase === PHASE.GATE) {
-    body = <GateForm profileKey={result.key} primario={primario} decision={result} onSubmitOk={onGateOk} />;
+    body = <GateForm profileKey={result.key} primario={primario} decision={result} conoceAlex={conoceAlex} onSubmitOk={onGateOk} />;
   } else if (phase === PHASE.RESULT) {
     body = <ResultScreen profileKey={result.key} primario={primario} secondaryStrength={result.isPure ? null : Math.abs(result.score_s2)} onRestart={restart} />;
   }

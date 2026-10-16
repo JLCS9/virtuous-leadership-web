@@ -477,6 +477,7 @@ async function handleSubmitAdult(req, res) {
       ...(geo.ok && geo.country ? { PAIS:   geo.country } : {}),
       ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
       ...(codDescuento ? { COD_DESCUENTO: codDescuento } : {}),
+      ...(typeof c.conoceAlex === 'boolean' ? { CONOCE_ALEX: c.conoceAlex } : {}),
     },
     listIds: [listId],
     updateEnabled: true,

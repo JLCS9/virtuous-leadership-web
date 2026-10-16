@@ -501,6 +501,8 @@ export default {
       progress: 'Question {n} sur {total}',
       yes: 'VRAI',
       no: 'FAUX',
+      qualify_yes: 'OUI',
+      qualify_no: 'NON',
       back: '← Précédent',
     },
     transition: {
@@ -559,6 +561,7 @@ export default {
       S2_F4: "J'ai besoin de passer pas mal de temps seul pour recharger mes batteries.",
       S2_F5: "Dans les grands rassemblements, je préfère rester en retrait.",
       S2_F6: "Les tensions ambiantes m'affectent plus qu'il n'y paraît.",
+      QUALIFY: 'Connaissais-tu déjà Alexandre Havard ou le système de Leadership Vertueux ?',
     },
   },
 

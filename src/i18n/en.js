@@ -502,6 +502,8 @@ export default {
       progress: 'Question {n} of {total}',
       yes: 'TRUE',
       no: 'FALSE',
+      qualify_yes: 'YES',
+      qualify_no: 'NO',
       back: '← Back',
     },
     transition: {
@@ -560,6 +562,7 @@ export default {
       S2_F4: 'I need quite a bit of time alone to recharge my energy.',
       S2_F5: 'In large gatherings, I prefer to stay in the background.',
       S2_F6: 'Environmental tensions affect me more than it seems.',
+      QUALIFY: 'Did you already know Alexandre Havard or the Virtuous Leadership system?',
     },
   },
 

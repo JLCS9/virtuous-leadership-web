@@ -706,6 +706,8 @@ export default {
       progress: 'Pregunta {n} de {total}',
       yes: 'VERDADERO',
       no: 'FALSO',
+      qualify_yes: 'SÍ',
+      qualify_no: 'NO',
       back: '← Anterior',
     },
     transition: {
@@ -767,6 +769,7 @@ export default {
       S2_F4: 'Necesito bastante tiempo a solas para recargar energía.',
       S2_F5: 'En reuniones grandes prefiero quedarme en segundo plano.',
       S2_F6: 'Las tensiones del entorno me afectan más de lo que parece.',
+      QUALIFY: '¿Conocías previamente a Alexandre Havard o al sistema de Liderazgo Virtuoso?',
     },
   },
 
