@@ -247,6 +247,199 @@ export default {
     ],
   },
 
+  // Pagina /colegios — version "Certificacion" (rediseño oct-2026, sistema
+  // visual Liderazgo Virtuoso: Roboto Slab + Roboto, azul profundo + oro).
+  // La renderiza ColegiosCertificacion.jsx. Solo existe en ES por ahora: en
+  // EN/FR/RU /colegios sigue mostrando ColegiosPrograma (colegios_prog). Para
+  // activarla en otro idioma, copiar esta rama a ese dict y añadir el idioma a
+  // CERT_LANGS en ColegiosCertificacion.jsx.
+  colegios_cert: {
+    seo_title: 'Certificación en Liderazgo Virtuoso® para colegios',
+    seo_description: 'Un proceso acompañado para que toda su comunidad educativa crezca en carácter a través de las virtudes humanas. Su colegio, Institución Certificada.',
+    contact_email: 'certification@virtuousleadership.com',
+    mail_subject_conversation: 'Conversación inicial — Certificación para colegios',
+    mail_subject_presentation: 'Solicitud de la presentación — Certificación para colegios',
+    cta_conversation: 'Solicite una conversación inicial',
+    cta_presentation: 'Reciba la presentación completa',
+
+    hero_eyebrow: 'Para instituciones educativas',
+    hero_title: 'Certificación en Liderazgo Virtuoso®',
+    hero_text: 'Un proceso acompañado para que toda su comunidad educativa crezca en carácter a través de las virtudes humanas, y su colegio se convierta en Institución Certificada.',
+    hero_img_alt: 'Perfil del David de Miguel Ángel en penumbra',
+
+    trust: ['29 países', '+100.000 personas formadas', '95% lo recomienda'],
+
+    why_eyebrow: 'El porqué',
+    why_title: 'Cada persona educa con lo que es, no solo con lo que enseña.',
+    why_text: 'Los colegios enseñan con excelencia, pero lo que marca a un alumno es el carácter de quienes lo educan. El liderazgo no es un cargo: es crecer y hacer crecer a los demás.',
+    why_img_alt: 'Directivos y docentes en una sesión de formación',
+
+    delmar_eyebrow: 'Ya está ocurriendo',
+    delmar_title: 'Delmar International School · México',
+    delmar_logo_alt: 'Logotipo de Delmar International School',
+    delmar_img_alt: 'Equipo docente de Delmar International School',
+    delmar_quote: 'Buscábamos un curso profundo y a la vez práctico, que nos ayudara a crecer como personas para ayudar a crecer a nuestros alumnos y familias.',
+    delmar_quote_highlight: 'La satisfacción por lo logrado como Colegio es total.',
+    delmar_author: 'Rodrigo Minakata, Subdirector General · Delmar International School',
+    delmar_stats: [
+      { n: 104, label: 'de sus 170 profesionales en formación' },
+      { n: 20,  label: 'responsables, un curso por delante de sus equipos' },
+    ],
+
+    cert_eyebrow: 'La certificación',
+    cert_title: 'Es un proceso acompañado, con sello oficial.',
+    cert_text: 'El camino por el que un colegio forma a su comunidad en el Sistema de Liderazgo Virtuoso de Alex Havard y se convierte, oficialmente, en Institución Certificada.',
+    cert_seal_alt: 'Sello de Institución Certificada de Virtuous Leadership',
+    pillars: [
+      { icon: 'video',  title: 'Impartida por su creador', text: 'Alexandre Havard imparte cada curso en vídeo, sin intermediarios.' },
+      { icon: 'users',  title: 'Un proceso acompañado',    text: 'Un responsable del equipo acompaña al centro de principio a fin.' },
+      { icon: 'chat',   title: 'Un lenguaje común',        text: 'Dirección, docentes y personal hablan el mismo idioma del carácter.' },
+      { icon: 'award',  title: 'Reconocimiento oficial',   text: 'Sello de Institución Certificada y Certificado Oficial para cada participante.' },
+    ],
+
+    fund_eyebrow: 'Fundamentos',
+    fund_title_lines: ['El temperamento es biológico.', 'El carácter es espiritual.'],
+    fund_text: 'Se nace con un temperamento. El carácter, en cambio, se construye mediante la práctica de las virtudes.',
+    fund_quote_lines: ['Sin carácter, el temperamento domina.', 'Con carácter, la persona gobierna.'],
+    fund_table_title: 'Cada temperamento, su virtud-desafío',
+    fund_table: [
+      ['Colérico', 'Humildad'],
+      ['Sanguíneo', 'Perseverancia'],
+      ['Melancólico', 'Audacia'],
+      ['Flemático', 'Magnanimidad'],
+    ],
+    fund_img_alt: 'Rueda de los cuatro temperamentos: colérico, melancólico, sanguíneo y flemático',
+
+    part_eyebrow: 'Participantes',
+    part_title: 'El liderazgo no está reservado a una minoría.',
+    part_text: 'No exige un perfil ni un cargo: solo disposición a mirar hacia dentro.',
+    part_roles_label: 'Roles',
+    part_roles: ['Dirección', 'Docentes', 'Tutores', 'Orientación', 'Entrenadores', 'Administración', 'Servicios'],
+    part_facts: [
+      { icon: 'clock',    text: '30 horas de formación' },
+      { icon: 'calendar', text: 'Desde 7 semanas' },
+      { icon: 'hourglass',text: 'Unas 4 horas por semana' },
+      { icon: 'calcheck', text: 'Calendario adaptado a su centro' },
+    ],
+    timeline_label: 'Línea de tiempo',
+    weeks: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5', 'Semana 6', 'Semana 7'],
+    timeline_end: 'Certificado Oficial',
+
+    inc_eyebrow: 'Contenido',
+    inc_title: 'Qué incluye la Certificación',
+    inc_participant_title: 'Para cada participante:',
+    inc_participant: [
+      { icon: 'video',    text: '7 cursos en vídeo impartidos por Alexandre Havard' },
+      { icon: 'notebook', text: '6 cuadernos de trabajo personal' },
+      { icon: 'clipboard',text: '3 tests de autoconocimiento' },
+      { icon: 'award',    text: 'Certificado Oficial firmado por Alexandre Havard' },
+    ],
+    inc_direction_title: 'Para la dirección:',
+    inc_direction: [
+      { icon: 'report',   text: 'Informe de Temperamentos de la institución' },
+      { icon: 'dashboard',text: 'Panel de seguimiento por persona y grupo' },
+      { icon: 'usercheck',text: 'Responsable dedicado y reunión mensual' },
+      { icon: 'shield',   text: 'Sello de Institución Certificada' },
+    ],
+    inc_cert_alt: 'Certificado Oficial de Virtuous Leadership',
+    inc_more: 'El detalle completo, en la presentación',
+
+    path_eyebrow: 'El recorrido',
+    path_title: '7 cursos, un solo camino',
+    courses: [
+      'Del Temperamento al Carácter',
+      'Practicar la Magnanimidad',
+      'Practicar la Humildad',
+      'Las 4 Virtudes Fundamentales',
+      'Corazón, Intelecto y Voluntad',
+      'Descubre tu Misión',
+      'La Educación del Corazón',
+    ],
+
+    res_eyebrow: 'Resultados',
+    res_title: 'Qué consigue la Certificación',
+    res_participant_title: 'Cada participante:',
+    res_participant: [
+      'Conoce su temperamento y su virtud-desafío.',
+      'Gana claridad sobre su crecimiento, personal y profesional.',
+      'Se atreve a la grandeza y al servicio.',
+      'Formula su misión y da sentido a lo que hace.',
+      'Lidera e influye de verdad en alumnos, familias y compañeros.',
+    ],
+    res_institution_title: 'La institución:',
+    res_institution: [
+      'Una comunidad que comparte un mismo lenguaje.',
+      'Fortalecer la corresponsabilidad en la formación del carácter.',
+      'Desarrollar un marco compartido de liderazgo virtuoso.',
+      'Responsables que acompañan desde su propia experiencia.',
+      'Un proyecto formativo con identidad propia, respaldado por el sello.',
+    ],
+
+    rev_eyebrow: 'La experiencia de quienes lo hicieron',
+    rev_title: 'Lo que cambió para ellos.',
+    rev_stats: [
+      { n: 93, suffix: '%', label: 'lo valora como Excelente o Muy bueno.' },
+      { n: 95, suffix: '%', label: 'lo recomienda.' },
+    ],
+    rev_top_courses: '«Del Temperamento al Carácter» y «Descubre tu Misión»',
+    rev_top_label: 'los cursos más valorados.',
+    rating_label: 'Valoración: 5 de 5',
+    rev_featured: {
+      text: 'Me ha ayudado a entender mejor a los que son diferentes a mí, en especial a los coléricos, y también a los sanguíneos. A no avergonzarme cuando ensalzan mis talentos, algo que me violentaba mucho, y a ser un poco más audaz, aunque me sigue costando, cuando tengo que decidir y actuar, sobre todo en lo relacionado con la gestión de personas.',
+      author: 'Mª Dolores',
+    },
+    reviews: [
+      { text: 'La claridad de la exposición y lo bien enraizada que está. Muchos cursos sobre «tipos de persona» son pura palabrería; esta formación se apoya en la antropología y enseña de verdad a crecer como persona.', author: 'David B.' },
+      { text: 'Me ha sorprendido el enfoque, la profundidad y la espiritualidad del programa. Va más allá de lo teórico: toca el corazón y el alma, algo muy diferente a lo que suelen ofrecer.', author: 'Isabel G.' },
+      { text: 'He tomado mayor conciencia de que el liderazgo consiste, ante todo, en crecer haciendo crecer a los demás.', author: 'Luis E.' },
+    ],
+
+    author_eyebrow: 'El autor',
+    author_name: 'Alexandre Havard',
+    author_role: 'Fundador del Sistema de Liderazgo Virtuoso',
+    author_img_alt: 'Retrato de Alexandre Havard',
+    author_bio: [
+      { icon: 'cap',   text: 'Cursó Derecho en la Universidad René Descartes (París) y ejerció la abogacía en varios países europeos.' },
+      { icon: 'globe', text: 'Forma a altos directivos de compañías internacionales en los 7 continentes y enseña en el MIT-Skoltech de Moscú.' },
+      { icon: 'book',  text: 'Su primer libro, Liderazgo Virtuoso (Nueva York, 2007), está traducido a más de veinte lenguas.', em: 'Liderazgo Virtuoso' },
+    ],
+    author_stats: [
+      { n: 100000, prefix: '+', label: 'personas formadas' },
+      { n: 29, label: 'países' },
+    ],
+
+    steps_eyebrow: 'Siguiente paso',
+    steps_title: 'Cómo se pone en marcha',
+    steps: [
+      { title: 'Conversación inicial.', text: 'Conocemos su centro y preparamos una propuesta a medida.' },
+      { title: 'Organización.',         text: 'Se definen los participantes, los responsables de cada grupo y el calendario.' },
+      { title: 'Accesos.',              text: 'Cada participante recibe su acceso y sus instrucciones.' },
+      { title: 'El recorrido.',         text: 'Cada participante recibe su Certificado Oficial, y el centro, el sello de Institución Certificada.' },
+    ],
+    steps_highlight_eyebrow: 'Modelo recomendado',
+    steps_highlight: 'Los responsables de cada grupo empiezan antes: acompañan desde la experiencia, no desde la teoría.',
+
+    faq_title: 'Preguntas frecuentes',
+    faqs: [
+      { q: '¿Cuánto tiempo exige?', a: '30 horas de formación, desde 7 semanas, con unas 4 horas semanales. El calendario se adapta al ritmo del centro.' },
+      { q: '¿Quién puede participar?', a: 'Toda la comunidad educativa: dirección, docentes, tutores, orientación, entrenadores, administración y servicios.' },
+      { q: '¿Qué pasa con las nuevas incorporaciones?', a: 'Los accesos no caducan: sirven para una primera promoción y para las siguientes.' },
+      { q: '¿Son confidenciales los resultados de los tests?', a: 'El Informe de Temperamentos se presenta siempre con datos agregados, sin nombres.' },
+      { q: '¿Se adapta a centros o redes grandes?', a: 'Sí. La Certificación se amplía a medida según el número de participantes.' },
+    ],
+
+    final_img_alt: 'El David de Miguel Ángel visto desde abajo',
+    final_logo_alt: 'Liderazgo Virtuoso®',
+    final_title: '¿Llevamos el Liderazgo Virtuoso® a su institución?',
+    final_text: 'Empezamos con una conversación para conocer su centro y construir un plan a medida.',
+
+    modal_title: 'Reciba la presentación de la Certificación',
+    modal_text: 'Se la enviamos por email en unos minutos.',
+    modal_fallback_text: 'Escríbanos y le enviamos la presentación completa por email.',
+    modal_fallback_button: 'Solicitar la presentación por email',
+    modal_close: 'Cerrar',
+  },
+
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
   // colegios_prog: la rama i18n de /colegios (Programas). Tiene su propia
   // copia editable y un cross-link al detalle de la acreditacion via
