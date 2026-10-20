@@ -771,13 +771,31 @@ export default {
       S2_F6: 'Las tensiones del entorno me afectan más de lo que parece.',
       QUALIFY: '¿Conocías previamente a Alexandre Havard o al sistema de Liderazgo Virtuoso?',
     },
+    qualify_source: {
+      yes_title: '¿Cómo conociste a Alexandre Havard?',
+      yes_options: {
+        books: 'Libros de Alex Havard',
+        youtube: 'Vídeos de YouTube',
+        live: 'Ponencias o sesiones en directo',
+      },
+      no_title: '¿Qué te ha traído hasta aquí?',
+      no_options: {
+        social: 'Redes sociales (Instagram, TikTok, Facebook…)',
+        google: 'Búsqueda en Google',
+        recommendation: 'Recomendación de un amigo o conocido',
+        institution: 'A través de un colegio, universidad o empresa',
+      },
+      other: 'Otros',
+      other_placeholder: 'Cuéntanos cómo…',
+      continue: 'Continuar',
+    },
   },
 
   // ──────────── GATE FORM ────────────
   gate: {
     eyebrow: 'Último paso',
     title: 'Recibe tus resultados',
-    intro: 'Te enviamos una copia a tu email y, una vez al mes, te mandamos ideas prácticas para entender mejor tu temperamento y ayudarte a desarrollar tu virtud-desafío.',
+    intro: 'Recibirás un informe personalizado con tus resultados y algunas claves prácticas para entender tu temperamento y desarrollar tu carácter.',
     fields: {
       name: 'Nombre',
       email: 'Email',

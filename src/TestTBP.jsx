@@ -619,7 +619,7 @@ async function submitContact(payload) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function GateForm({ profileKey, primario, decision, conoceAlex, onSubmitOk }) {
+function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, onSubmitOk }) {
   const { t, lang } = useT();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -670,6 +670,7 @@ function GateForm({ profileKey, primario, decision, conoceAlex, onSubmitOk }) {
         consentTimestamp: new Date().toISOString(),
         language: lang,
         conoceAlex: conoceAlex === true,
+        qualifySource: qualifySource || '',
       },
       result: {
         profileKey,
@@ -875,7 +876,108 @@ function GateForm({ profileKey, primario, decision, conoceAlex, onSubmitOk }) {
 
 // ───────── Main ─────────
 
-const PHASE = { WELCOME: 'welcome', STAGE1: 'stage1', TIE: 'tie', TRANSITION: 'transition', STAGE2: 'stage2', QUALIFY: 'qualify', GATE: 'gate', RESULT: 'result' };
+const PHASE = { WELCOME: 'welcome', STAGE1: 'stage1', TIE: 'tie', TRANSITION: 'transition', STAGE2: 'stage2', QUALIFY: 'qualify', QUALIFY2: 'qualify2', GATE: 'gate', RESULT: 'result' };
+
+function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
+  const { t } = useT();
+  const [selected, setSelected] = useState('');
+  const [otherText, setOtherText] = useState('');
+
+  const options = conoceAlex
+    ? t('test.qualify_source.yes_options')
+    : t('test.qualify_source.no_options');
+
+  const title = conoceAlex
+    ? t('test.qualify_source.yes_title')
+    : t('test.qualify_source.no_title');
+
+  const canSubmit = selected && (selected !== 'other' || otherText.trim().length > 0);
+
+  function handleSubmit() {
+    if (!canSubmit) return;
+    const value = selected === 'other' ? otherText.trim() : options[selected];
+    onSubmit(value);
+  }
+
+  return (
+    <div style={styles.card} className="vl-test-card">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={styles.progress}>{t('test.question.progress', { n: progress, total })}</span>
+        <button style={{ ...styles.buttonGhost, cursor: 'pointer' }} onClick={onBack}>
+          {t('test.question.back')}
+        </button>
+      </div>
+
+      <div style={{ height: 3, background: LINE, borderRadius: 2, overflow: 'hidden', marginBottom: 8 }}>
+        <div style={{ height: '100%', width: `${(progress / total) * 100}%`, background: GOLD, transition: 'width 240ms ease' }} />
+      </div>
+
+      <div style={styles.questionText}>{title}</div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 420, margin: '0 auto' }}>
+        {Object.entries(options).map(([key, label]) => (
+          <button
+            key={key}
+            style={{
+              ...styles.yesNoBtn,
+              width: '100%',
+              minWidth: 0,
+              textAlign: 'left',
+              fontSize: 16,
+              padding: '14px 20px',
+              background: selected === key ? NAVY : PAPER,
+              color: selected === key ? PAPER : NAVY,
+            }}
+            onClick={() => { setSelected(key); if (key !== 'other') setOtherText(''); }}
+          >{label}</button>
+        ))}
+        <button
+          style={{
+            ...styles.yesNoBtn,
+            width: '100%',
+            minWidth: 0,
+            textAlign: 'left',
+            fontSize: 16,
+            padding: '14px 20px',
+            background: selected === 'other' ? NAVY : PAPER,
+            color: selected === 'other' ? PAPER : NAVY,
+          }}
+          onClick={() => setSelected('other')}
+        >{t('test.qualify_source.other')}</button>
+        {selected === 'other' && (
+          <input
+            type="text"
+            value={otherText}
+            onChange={e => setOtherText(e.target.value)}
+            placeholder={t('test.qualify_source.other_placeholder')}
+            style={{
+              fontFamily: fontSans,
+              fontSize: 15,
+              padding: '12px 16px',
+              border: `1.5px solid ${LINE}`,
+              borderRadius: 2,
+              outline: 'none',
+              width: '100%',
+              boxSizing: 'border-box',
+            }}
+            onFocus={e => { e.target.style.borderColor = NAVY; }}
+            onBlur={e => { e.target.style.borderColor = LINE; }}
+          />
+        )}
+      </div>
+      <div style={{ textAlign: 'center', marginTop: 28 }}>
+        <button
+          style={{
+            ...styles.buttonPrimary,
+            opacity: canSubmit ? 1 : 0.4,
+            pointerEvents: canSubmit ? 'auto' : 'none',
+          }}
+          onClick={handleSubmit}
+        >{t('test.qualify_source.continue')}</button>
+      </div>
+    </div>
+  );
+}
 
 export default function TestTBP() {
   const [phase, setPhase] = useState(PHASE.WELCOME);
@@ -904,14 +1006,16 @@ export default function TestTBP() {
 
   const [result, setResult] = useState(null);
   const [conoceAlex, setConoceAlex] = useState(null);
+  const [qualifySource, setQualifySource] = useState('');
 
-  const totalQuestions = useMemo(() => 16 + tieOrder.length + 6 + 1, [tieOrder]);
+  const totalQuestions = useMemo(() => 16 + tieOrder.length + 6 + 1 + 1, [tieOrder]);
 
   const globalIndex = useMemo(() => {
     if (phase === PHASE.STAGE1) return s1Index + 1;
     if (phase === PHASE.TIE) return 16 + tieIndex + 1;
     if (phase === PHASE.STAGE2) return 16 + tieOrder.length + s2Index + 1;
     if (phase === PHASE.QUALIFY) return 16 + tieOrder.length + 6 + 1;
+    if (phase === PHASE.QUALIFY2) return 16 + tieOrder.length + 6 + 1 + 1;
     return 0;
   }, [phase, s1Index, tieIndex, s2Index, tieOrder.length]);
 
@@ -924,6 +1028,7 @@ export default function TestTBP() {
     setS2Order([]); setS2Answers([]); setS2Index(0);
     setResult(null);
     setConoceAlex(null);
+    setQualifySource('');
     setPhase(PHASE.STAGE1);
   }
 
@@ -1014,6 +1119,11 @@ export default function TestTBP() {
 
   function answerQualify(value) {
     setConoceAlex(value === 'SI');
+    setPhase(PHASE.QUALIFY2);
+  }
+
+  function answerQualify2(value) {
+    setQualifySource(value);
     setPhase(PHASE.GATE);
   }
 
@@ -1048,8 +1158,10 @@ export default function TestTBP() {
     body = <Question progress={globalIndex} total={totalQuestions} item={s2Order[s2Index]} onAnswer={answerStage2} onBack={backStage2} canBack={s2Index > 0} />;
   } else if (phase === PHASE.QUALIFY) {
     body = <Question progress={globalIndex} total={totalQuestions} item={{ id: 'QUALIFY' }} onAnswer={answerQualify} onBack={() => {}} canBack={false} yesLabel={t('test.question.qualify_yes')} noLabel={t('test.question.qualify_no')} />;
+  } else if (phase === PHASE.QUALIFY2) {
+    body = <QualifySource conoceAlex={conoceAlex} progress={globalIndex} total={totalQuestions} onSubmit={answerQualify2} onBack={() => { setConoceAlex(null); setPhase(PHASE.QUALIFY); }} />;
   } else if (phase === PHASE.GATE) {
-    body = <GateForm profileKey={result.key} primario={primario} decision={result} conoceAlex={conoceAlex} onSubmitOk={onGateOk} />;
+    body = <GateForm profileKey={result.key} primario={primario} decision={result} conoceAlex={conoceAlex} qualifySource={qualifySource} onSubmitOk={onGateOk} />;
   } else if (phase === PHASE.RESULT) {
     body = <ResultScreen profileKey={result.key} primario={primario} secondaryStrength={result.isPure ? null : Math.abs(result.score_s2)} onRestart={restart} />;
   }

@@ -564,12 +564,30 @@ export default {
       S2_F6: 'Environmental tensions affect me more than it seems.',
       QUALIFY: 'Did you already know Alexandre Havard or the Virtuous Leadership system?',
     },
+    qualify_source: {
+      yes_title: 'How did you learn about Alexandre Havard?',
+      yes_options: {
+        books: 'Books by Alex Havard',
+        youtube: 'YouTube videos',
+        live: 'Talks or live sessions',
+      },
+      no_title: 'What brought you here?',
+      no_options: {
+        social: 'Social media (Instagram, TikTok, Facebook…)',
+        google: 'Google search',
+        recommendation: 'Recommendation from a friend or acquaintance',
+        institution: 'Through a school, university or company',
+      },
+      other: 'Other',
+      other_placeholder: 'Tell us how…',
+      continue: 'Continue',
+    },
   },
 
   gate: {
     eyebrow: 'Last step',
     title: 'Receive your results',
-    intro: 'We send you a copy by email and, once a month, practical ideas to better understand your temperament and help you develop your virtue-challenge.',
+    intro: 'You will receive a personalized report with your results and practical keys to understand your temperament and develop your character.',
     fields: {
       name: 'Name',
       email: 'Email',
