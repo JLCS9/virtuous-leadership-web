@@ -563,12 +563,30 @@ export default {
       S2_F6: "Les tensions ambiantes m'affectent plus qu'il n'y paraît.",
       QUALIFY: 'Connaissais-tu déjà Alexandre Havard ou le système de Leadership Vertueux ?',
     },
+    qualify_source: {
+      yes_title: 'Comment as-tu connu Alexandre Havard ?',
+      yes_options: {
+        books: 'Livres d\'Alex Havard',
+        youtube: 'Vidéos YouTube',
+        live: 'Conférences ou sessions en direct',
+      },
+      no_title: 'Qu\'est-ce qui t\'a amené ici ?',
+      no_options: {
+        social: 'Réseaux sociaux (Instagram, TikTok, Facebook…)',
+        google: 'Recherche Google',
+        recommendation: 'Recommandation d\'un ami ou d\'une connaissance',
+        institution: 'Par un établissement scolaire, une université ou une entreprise',
+      },
+      other: 'Autre',
+      other_placeholder: 'Dis-nous comment…',
+      continue: 'Continuer',
+    },
   },
 
   gate: {
     eyebrow: 'Dernière étape',
     title: 'Reçois tes résultats',
-    intro: 'Nous t\'envoyons une copie par e-mail et, une fois par mois, des idées pratiques pour mieux comprendre ton tempérament et t\'aider à développer ta vertu-défi.',
+    intro: 'Tu recevras un rapport personnalisé avec tes résultats et des clés pratiques pour comprendre ton tempérament et développer ton caractère.',
     fields: {
       name: 'Prénom',
       email: 'E-mail',

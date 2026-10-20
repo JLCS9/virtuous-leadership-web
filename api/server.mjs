@@ -478,6 +478,8 @@ async function handleSubmitAdult(req, res) {
       ...(geo.ok && geo.city    ? { CIUDAD: geo.city    } : {}),
       ...(codDescuento ? { COD_DESCUENTO: codDescuento } : {}),
       ...(typeof c.conoceAlex === 'boolean' ? { CONOCE_ALEX: c.conoceAlex } : {}),
+      ...(c.conoceAlex === true  && c.qualifySource ? { COMO_CONOCE_AH: c.qualifySource } : {}),
+      ...(c.conoceAlex === false && c.qualifySource ? { FUENTE_TEST_NO_CONOCE: c.qualifySource } : {}),
     },
     listIds: [listId],
     updateEnabled: true,
