@@ -65,8 +65,8 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:ital,wght@0,400;0,600;1,400&display=swap');
 .vlc { font-family: ${SANS}; color: ${C.pizarra}; background: ${C.page}; overflow-x: clip; -webkit-font-smoothing: antialiased; }
 .vlc *:focus-visible { outline: 2px solid ${C.goldLight}; outline-offset: 3px; }
-.vlc-cta { white-space: nowrap; flex: none; display: inline-flex; align-items: center; justify-content: center; background: ${C.gold}; color: ${C.blueNight}; font-family: ${SANS}; font-weight: 600; font-size: 16px; padding: 16px 28px; text-decoration: none; transition: background 200ms ${EASE}; }
-.vlc-cta:hover { background: ${C.goldLight}; color: ${C.blueNight}; }
+.vlc-cta { white-space: nowrap; flex: none; display: inline-flex; align-items: center; justify-content: center; background: ${C.gold}; color: #fff; font-family: ${SANS}; font-weight: 600; font-size: 16px; padding: 16px 28px; text-decoration: none; transition: background 200ms ${EASE}; }
+.vlc-cta:hover { background: ${C.goldLight}; color: #fff; }
 .vlc-btn { font-family: ${SANS}; font-weight: 600; font-size: 16px; padding: 14px 26px; cursor: pointer; display: inline-flex; align-items: center; gap: 9px; border-radius: 0; line-height: 1.2; background: transparent; transition: background 200ms ${EASE}, color 200ms ${EASE}; }
 .vlc-btn--light { color: #fff; border: 2px solid rgba(255,255,255,.55); }
 .vlc-btn--light:hover { background: rgba(255,255,255,.08); border-color: #fff; }
@@ -74,7 +74,7 @@ const CSS = `
 .vlc-btn--dark:hover { background: ${C.blueDeep}; color: #fff; }
 .vlc-review { transition: background 240ms ${EASE}, box-shadow 240ms ${EASE}; }
 .vlc-review:hover { background: #fff !important; box-shadow: 0 2px 8px rgba(15,30,51,0.10); }
-.vlc-faq-btn { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 26px 0; font-family: ${SLAB}; font-weight: 700; font-size: clamp(18px,1.8vw,21px); line-height: 1.35; color: ${C.blueDeep}; transition: color 200ms ${EASE}; }
+.vlc-faq-btn { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 26px 0; font-family: ${SLAB}; font-weight: 700; font-size: 21px; line-height: 1.35; color: ${C.blueDeep}; transition: color 200ms ${EASE}; }
 .vlc-faq-btn:hover { color: ${C.blueMid}; }
 .vlc-link { color: ${C.cream}; font-size: 16px; text-underline-offset: 4px; }
 .vlc-link:hover { color: ${C.goldLight}; }
@@ -179,10 +179,12 @@ function Eyebrow({ children, dark }) {
   );
 }
 
-function H2({ children, dark, size = 'clamp(32px,4.4vw,54px)', style }) {
+function H2({ children, dark, size = 48, style }) {
+  const min = Math.round(size * 0.63);
+  const fs = `clamp(${min}px, ${(size / 10).toFixed(1)}vw + ${Math.round(size * 0.3)}px, ${size}px)`;
   return (
     <h2 style={{
-      margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: size, lineHeight: 1.08,
+      margin: '0 0 2px', fontFamily: SLAB, fontWeight: 700, fontSize: fs, lineHeight: 1.08,
       color: dark ? '#fff' : C.blueDeep, ...style,
     }}>{children}</h2>
   );
@@ -222,7 +224,7 @@ function RuleList({ items, render }) {
     <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
       {items.map((it, i) => (
         <li key={i} style={{
-          padding: '16px 0', borderBottom: `1px solid ${C.bruma}`, fontSize: 17, lineHeight: 1.55,
+          padding: '16px 0', borderBottom: i < items.length - 1 ? `1px solid ${C.bruma}` : 'none', fontSize: 18, lineHeight: 1.55,
           display: 'flex', alignItems: 'center', gap: 16,
         }}>{render(it)}</li>
       ))}
@@ -248,9 +250,10 @@ function ColegiosCertificacion() {
   useReveal(rootRef);
 
   const isMobile = w < 760;
+  const tablet = w >= 760;
   const wide = w >= 1000;
   const cols4 = wide ? 'repeat(4,minmax(0,1fr))' : w >= 560 ? 'repeat(2,minmax(0,1fr))' : '1fr';
-  const nw = w >= 760 ? 'nowrap' : 'normal';
+  const nw = tablet ? 'nowrap' : 'normal';
 
   const email = k('contact_email');
   const mailConversation = `mailto:${email}?subject=${encodeURIComponent(k('mail_subject_conversation'))}`;
@@ -286,12 +289,14 @@ function ColegiosCertificacion() {
 
   // Linea de tiempo (semanas) y recorrido (cursos): horizontales en ancho,
   // verticales en estrecho.
-  const tl = wide
-    ? { dir: 'row', gap: 8, line: { top: 5, left: 0, right: 0, height: 1 }, itemDir: 'column', itemAlign: 'flex-start' }
-    : { dir: 'column', gap: 22, line: { top: 0, bottom: 0, left: 5, width: 1 }, itemDir: 'row', itemAlign: 'center' };
+  const tl = tablet
+    ? { dir: 'row', gap: 8, line: null, itemDir: 'column', itemAlign: 'flex-start' }
+    : { dir: 'column', gap: 22, line: null, itemDir: 'row', itemAlign: 'center' };
   const path = wide
-    ? { dir: 'row', gap: 20, line: { top: 30, left: 0, right: 0, height: 1 }, itemDir: 'column', numW: 'auto', numPad: '0 14px 0 0', titlePad: 0 }
-    : { dir: 'column', gap: 28, line: { top: 0, bottom: 0, left: 24, width: 1 }, itemDir: 'row', numW: 50, numPad: '0 0 6px', titlePad: 12 };
+    ? { mode: 'flex', dir: 'row', gap: 20, line: { top: 30, left: 0, right: 0, height: 1 }, itemDir: 'column', numW: 'auto', numPad: '0 14px 0 0', titlePad: 0, scroll: false }
+    : tablet
+      ? { mode: 'flex', dir: 'row', gap: 20, line: { top: 30, left: 0, right: 0, height: 1 }, itemDir: 'column', numW: 'auto', numPad: '0 14px 0 0', titlePad: 0, scroll: true }
+      : { mode: 'flex', dir: 'column', gap: 28, line: { top: 0, bottom: 0, left: 13, width: 1 }, itemDir: 'row', numW: 50, numPad: '0 0 6px', titlePad: 12, scroll: false };
 
   const statNum = (color, size) => ({
     fontFamily: SLAB, fontWeight: 700, fontSize: size, lineHeight: 0.9, color, fontVariantNumeric: 'tabular-nums',
@@ -305,7 +310,7 @@ function ColegiosCertificacion() {
 
       {/* 01 Hero */}
       <section style={{
-        position: 'relative', minHeight: 'calc(100svh - 81px)', background: C.blueNight, color: '#fff',
+        position: 'relative', minHeight: wide || isMobile ? 'calc(100svh - 81px)' : 'auto', background: C.blueNight, color: '#fff',
         display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'hidden',
       }}>
         <div style={{ position: 'absolute', top: 0, right: 0, bottom: 0, width: isMobile ? '100%' : '52%' }}>
@@ -321,13 +326,18 @@ function ColegiosCertificacion() {
             : 'linear-gradient(90deg, #0f1e33 0%, #0f1e33 44%, rgba(15,30,51,.35) 62%, rgba(15,30,51,0) 80%)',
         }} />
         <Container style={{ position: 'relative', width: '100%', paddingTop: 112, paddingBottom: 96 }}>
-          <Stack gap={28} style={{ maxWidth: 640 }}>
+          <Stack style={{ maxWidth: 640 }}>
             <Eyebrow dark>{k('hero_eyebrow')}</Eyebrow>
             <h1 style={{
-              margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 'clamp(42px,6.4vw,80px)', lineHeight: 1.02,
+              margin: '0 0 2px', fontFamily: SLAB, fontWeight: 700, fontSize: 'clamp(42px,6.4vw,80px)', lineHeight: 1.02,
               letterSpacing: '-0.01em', color: '#fff', textWrap: 'balance',
-            }}>{isMobile ? k('hero_title').replace(/ /g, ' ') : k('hero_title')}</h1>
-            <p style={{ margin: 0, fontSize: 'clamp(18px,1.6vw,21px)', lineHeight: 1.6, color: C.cream, maxWidth: '56ch', textWrap: 'pretty' }}>
+            }}>{(() => {
+              const raw = isMobile ? k('hero_title').replace(/ /g, ' ') : k('hero_title');
+              const idx = raw.indexOf('®');
+              if (idx === -1) return raw;
+              return <>{raw.slice(0, idx)}<sup style={{ fontSize: '0.4em', verticalAlign: 'super', lineHeight: 1 }}>®</sup>{raw.slice(idx + 1)}</>;
+            })()}</h1>
+            <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6, color: C.cream, maxWidth: '56ch', textWrap: 'pretty' }}>
               {k('hero_text')}
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, paddingTop: 8 }}>
@@ -348,13 +358,13 @@ function ColegiosCertificacion() {
       </section>
 
       {/* 02 El porque */}
-      <section style={{ background: C.page, paddingTop: SECTION_Y }}>
+      <section style={{ background: C.page, paddingTop: wide ? SECTION_Y : 'clamp(40px,6vw,80px)' }}>
         <Container style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Stack gap={28} style={{ alignItems: 'center', textAlign: 'center' }}>
+          <Stack style={{ alignItems: 'center', textAlign: 'center' }}>
             <span aria-hidden="true" style={{ display: 'block', width: 1, height: 64, background: C.gold }} />
             <Eyebrow>{k('why_eyebrow')}</Eyebrow>
-            <H2 size="clamp(34px,4.6vw,60px)" style={{ maxWidth: 1100, textWrap: 'balance' }}>{k('why_title')}</H2>
-            <p style={{ margin: 0, fontSize: 'clamp(18px,1.5vw,21px)', lineHeight: 1.65, maxWidth: 1000, textWrap: 'balance' }}>{k('why_text')}</p>
+            <H2 style={{ maxWidth: 1100, textWrap: 'balance' }}>{k('why_title')}</H2>
+            <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, maxWidth: 1000, textWrap: 'balance' }}>{k('why_text')}</p>
           </Stack>
         </Container>
         <figure data-reveal="" style={{
@@ -374,19 +384,28 @@ function ColegiosCertificacion() {
           position: 'absolute', right: '-6%', top: '50%', transform: 'translateY(-50%)', height: '120%', width: 'auto', opacity: 0.05, pointerEvents: 'none',
         }} />
         <Container style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 'clamp(48px,6vw,72px)' }}>
-          <div data-reveal="" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '24px 32px' }}>
-            <div style={{ flex: 'none', width: 112, height: 112, background: C.cream, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 14, boxSizing: 'border-box' }}>
-              <img src={delmarLogo} alt={k('delmar_logo_alt')} loading="lazy" style={{ display: 'block', maxWidth: '100%', maxHeight: '100%' }} />
+          {wide ? (
+            <div data-reveal="" style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+              <img src={delmarLogo} alt={k('delmar_logo_alt')} loading="lazy" style={{ display: 'block', width: 80, height: 'auto', flex: 'none', filter: 'brightness(0) invert(1)' }} />
+              <span style={{ width: 1, alignSelf: 'stretch', background: C.goldLight, opacity: 0.4 }} />
+              <Stack gap={10}>
+                <Eyebrow dark>{k('delmar_eyebrow')}</Eyebrow>
+                <H2 dark size={40} style={{ lineHeight: 1.15 }}>{k('delmar_title')}</H2>
+              </Stack>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, paddingLeft: 32, borderLeft: `1px solid ${C.goldLight}`, minWidth: 0 }}>
+          ) : (
+            <Stack data-reveal="" gap={24}>
               <Eyebrow dark>{k('delmar_eyebrow')}</Eyebrow>
-              <H2 dark size="clamp(26px,3vw,36px)" style={{ lineHeight: 1.15 }}>{k('delmar_title')}</H2>
-            </div>
-          </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+                <img src={delmarLogo} alt={k('delmar_logo_alt')} loading="lazy" style={{ display: 'block', width: 80, height: 'auto', flex: 'none', filter: 'brightness(0) invert(1)' }} />
+                <H2 dark size={40} style={{ lineHeight: 1.15 }}>{k('delmar_title')}</H2>
+              </div>
+            </Stack>
+          )}
           <div data-reveal="" style={{
-            display: 'grid', gridTemplateColumns: w >= 900 ? 'minmax(0,5fr) minmax(0,6fr)' : '1fr', gap: 'clamp(32px,5vw,72px)', alignItems: 'center',
+            display: 'grid', gridTemplateColumns: tablet ? 'minmax(0,5fr) minmax(0,6fr)' : '1fr', gap: 'clamp(32px,5vw,72px)', alignItems: 'stretch',
           }}>
-            <figure style={{ margin: 0, position: 'relative', aspectRatio: '3/2', overflow: 'hidden', background: C.blueNight }}>
+            <figure style={{ margin: 0, position: 'relative', aspectRatio: tablet ? undefined : '3/2', overflow: 'hidden', background: C.blueNight, minHeight: tablet ? 0 : undefined }}>
               <img src={delmarDocentesImg} alt={k('delmar_img_alt')} loading="lazy" style={{
                 display: 'block', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 40%', filter: 'saturate(.55) contrast(1.03)',
               }} />
@@ -404,11 +423,11 @@ function ColegiosCertificacion() {
               </figcaption>
             </figure>
           </div>
-          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,260px),1fr))', gap: 40, maxWidth: 820 }}>
+          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: tablet ? 'repeat(2,1fr)' : '1fr', gap: 40, maxWidth: 820 }}>
             {k('delmar_stats').map((s) => (
-              <div key={s.n} style={{ borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div key={s.n} style={{ display: 'flex', flexDirection: 'column', gap: 12, ...(wide ? { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 28 } : {}) }}>
                 <span data-count={s.n} style={statNum(C.goldLight, 'clamp(72px,9vw,120px)')}>{fmtNum(s)}</span>
-                <span style={{ fontSize: 17, lineHeight: 1.5, color: C.cream, maxWidth: '24ch' }}>{s.label}</span>
+                <span style={{ fontSize: 18, lineHeight: 1.5, color: C.cream, maxWidth: '24ch' }}>{s.label}</span>
               </div>
             ))}
           </div>
@@ -417,24 +436,41 @@ function ColegiosCertificacion() {
 
       {/* 04 La certificacion */}
       <section style={{ background: C.page, padding: `${SECTION_Y} 0` }}>
-        <Container style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(56px,7vw,96px)' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'center' }}>
-            <Stack>
-              <Eyebrow>{k('cert_eyebrow')}</Eyebrow>
-              <H2 size="clamp(32px,4.4vw,54px)" style={{ maxWidth: '18ch', textWrap: 'balance' }}>{k('cert_title')}</H2>
-              <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, maxWidth: '56ch', textWrap: 'pretty' }}>{k('cert_text')}</p>
-            </Stack>
-            <div data-reveal="" style={{ display: 'flex', justifyContent: 'center' }}>
-              <img src={selloImg} alt={k('cert_seal_alt')} loading="lazy" style={{ display: 'block', width: 'min(100%,300px)', aspectRatio: '1/1', objectFit: 'contain' }} />
+        <Container style={{ display: 'flex', flexDirection: 'column', gap: wide ? 'clamp(56px,7vw,96px)' : 'clamp(20px,3vw,32px)' }}>
+          {wide ? (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,340px),1fr))', gap: 48, alignItems: 'center' }}>
+              <Stack>
+                <Eyebrow>{k('cert_eyebrow')}</Eyebrow>
+                <H2 style={{ maxWidth: '18ch', textWrap: 'balance' }}>{k('cert_title')}</H2>
+                <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, maxWidth: '56ch', textWrap: 'pretty' }}>{k('cert_text')}</p>
+              </Stack>
+              <div data-reveal="" style={{ display: 'flex', justifyContent: 'center' }}>
+                <img src={selloImg} alt={k('cert_seal_alt')} loading="lazy" style={{ display: 'block', width: 'min(100%,300px)', aspectRatio: '1/1', objectFit: 'contain' }} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <Stack gap={16}>
+                <Eyebrow>{k('cert_eyebrow')}</Eyebrow>
+                <H2>{k('cert_title')}</H2>
+              </Stack>
+              <div style={{ display: 'grid', gridTemplateColumns: tablet ? 'minmax(0,1.6fr) minmax(0,1fr)' : '1fr', gap: 'clamp(16px,3vw,32px)', alignItems: 'center' }}>
+                <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, maxWidth: '56ch', textWrap: 'pretty' }}>{k('cert_text')}</p>
+                {!isMobile && (
+                  <div data-reveal="" style={{ display: 'flex', justifyContent: 'center' }}>
+                    <img src={selloImg} alt={k('cert_seal_alt')} loading="lazy" style={{ display: 'block', width: 'min(100%,200px)', aspectRatio: '1/1', objectFit: 'contain' }} />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
           <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: cols4, gap: '32px 0' }}>
             {k('pillars').map((p) => (
               <article key={p.title} style={{ padding: '32px 28px', borderLeft: `1px solid ${C.bruma}`, display: 'flex', flexDirection: 'column', gap: 18 }}>
                 <Icon name={p.icon} size={32} />
                 <GoldTick />
-                <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 20, lineHeight: 1.25, color: C.blueDeep }}>{p.title}</h3>
-                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6, maxWidth: '30ch' }}>{p.text}</p>
+                <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 21, lineHeight: 1.25, color: C.blueDeep }}>{p.title}</h3>
+                <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6 }}>{p.text}</p>
               </article>
             ))}
           </div>
@@ -444,11 +480,11 @@ function ColegiosCertificacion() {
       {/* 05 Fundamentos */}
       <section style={{ background: C.white, padding: `${SECTION_Y} 0` }}>
         <Container style={{
-          display: 'grid', gridTemplateColumns: wide ? 'minmax(0,1.6fr) minmax(0,1fr)' : '1fr', gap: 'clamp(48px,6vw,80px)', alignItems: 'center',
+          display: 'grid', gridTemplateColumns: tablet ? 'minmax(0,1.6fr) minmax(0,1fr)' : '1fr', gap: 'clamp(48px,6vw,80px)', alignItems: 'center',
         }}>
           <Stack>
             <Eyebrow>{k('fund_eyebrow')}</Eyebrow>
-            <H2 size="clamp(28px,3vw,40px)" style={{ lineHeight: 1.12 }}>
+            <H2 size={40} style={{ lineHeight: 1.12 }}>
               {k('fund_title_lines').map((l, i) => (
                 <span key={i}>{i > 0 && <br />}<span style={{ whiteSpace: nw }}>{l}</span></span>
               ))}
@@ -469,8 +505,8 @@ function ColegiosCertificacion() {
               <dl style={{ margin: 0, borderTop: `1px solid ${C.blueDeep}` }}>
                 {k('fund_table').map(([temp, virtue]) => (
                   <div key={temp} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '16px 0', borderBottom: `1px solid ${C.bruma}` }}>
-                    <dt style={{ fontSize: 17 }}>{temp}</dt>
-                    <dd style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 17, color: C.blueDeep }}>{virtue}</dd>
+                    <dt style={{ fontSize: 18 }}>{temp}</dt>
+                    <dd style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 18, color: C.blueDeep }}>{virtue}</dd>
                   </div>
                 ))}
               </dl>
@@ -478,7 +514,7 @@ function ColegiosCertificacion() {
           </Stack>
           <div data-reveal="" style={{ display: 'flex', justifyContent: 'center' }}>
             <img src={ruedaImg} alt={k('fund_img_alt')} loading="lazy" style={{
-              display: 'block', width: 'min(100%,540px)', aspectRatio: '1/1', objectFit: 'contain', filter: 'drop-shadow(0 18px 36px rgba(15,30,51,.18))',
+              display: 'block', width: isMobile ? 'min(100%,280px)' : 'min(100%,540px)', aspectRatio: '1/1', objectFit: 'contain', filter: 'drop-shadow(0 18px 36px rgba(15,30,51,.18))',
             }} />
           </div>
         </Container>
@@ -489,7 +525,7 @@ function ColegiosCertificacion() {
         <Container style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(48px,6vw,72px)' }}>
           <Stack>
             <Eyebrow dark>{k('part_eyebrow')}</Eyebrow>
-            <H2 dark size="clamp(32px,4.6vw,58px)" style={{ lineHeight: 1.06, maxWidth: 1000, textWrap: 'balance' }}>{k('part_title')}</H2>
+            <H2 dark style={{ lineHeight: 1.06, maxWidth: 1000, textWrap: 'balance' }}>{k('part_title')}</H2>
             <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, color: C.cream }}>{k('part_text')}</p>
             <ul aria-label={k('part_roles_label')} style={{ listStyle: 'none', margin: '8px 0 0', padding: 0, display: 'flex', flexWrap: 'wrap', gap: 10 }}>
               {k('part_roles').map((r) => (
@@ -497,14 +533,15 @@ function ColegiosCertificacion() {
               ))}
             </ul>
           </Stack>
-          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: cols4, gap: '28px 32px' }}>
-            {k('part_facts').map((f) => (
-              <div key={f.text} style={{ borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : cols4, gap: '28px 32px' }}>
+            {k('part_facts').map((f, i) => (
+              <div key={f.text} style={{ ...(isMobile ? (i % 2 === 1 ? { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20 } : {}) : { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20 }), display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <Icon name={f.icon} size={28} color={C.goldLight} />
-                <p style={{ margin: 0, fontFamily: SLAB, fontSize: 20, lineHeight: 1.35, color: '#fff' }}>{f.text}</p>
+                <p style={{ margin: 0, fontFamily: SLAB, fontSize: 21, lineHeight: 1.35, color: '#fff' }}>{f.text}</p>
               </div>
             ))}
           </div>
+          {/* Timeline de semanas — oculto temporalmente
           <ol data-reveal="" aria-label={k('timeline_label')} style={{
             listStyle: 'none', margin: 0, padding: 0, position: 'relative', display: 'flex', flexDirection: tl.dir, gap: tl.gap,
           }}>
@@ -517,9 +554,10 @@ function ColegiosCertificacion() {
             ))}
             <li style={{ position: 'relative', flex: 1.4, display: 'flex', flexDirection: tl.itemDir, alignItems: tl.itemAlign, gap: 14 }}>
               <span aria-hidden="true" style={{ display: 'block', width: 11, height: 11, flex: 'none', background: C.goldLight }} />
-              <span style={{ fontFamily: SLAB, fontWeight: 700, fontSize: 17, color: C.goldLight, lineHeight: 1 }}>{k('timeline_end')}</span>
+              <span style={{ fontFamily: SLAB, fontWeight: 700, fontSize: 18, color: C.goldLight, lineHeight: 1 }}>{k('timeline_end')}</span>
             </li>
           </ol>
+          */}
         </Container>
       </section>
 
@@ -532,7 +570,7 @@ function ColegiosCertificacion() {
           </Stack>
           <div style={{
             display: 'grid', gap: 48, alignItems: 'start',
-            gridTemplateColumns: wide ? 'minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr)' : w >= 640 ? 'repeat(2,minmax(0,1fr))' : '1fr',
+            gridTemplateColumns: wide ? 'minmax(0,1fr) minmax(0,1fr) minmax(0,.8fr)' : tablet ? 'repeat(2,minmax(0,1fr))' : '1fr',
           }}>
             {[['inc_participant_title', 'inc_participant'], ['inc_direction_title', 'inc_direction']].map(([title, list]) => (
               <Stack key={list} gap={16}>
@@ -541,18 +579,28 @@ function ColegiosCertificacion() {
                 <RuleList items={k(list)} render={(it) => <><Icon name={it.icon} /><span>{it.text}</span></>} />
               </Stack>
             ))}
+            {!wide && (
+              <div data-reveal="" style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 24px', borderTop: `1px solid ${C.bruma}`, paddingTop: 32 }}>
+                <p style={{ margin: 0, fontSize: 18 }}>{k('inc_more')}</p>
+                <button type="button" className="vlc-btn vlc-btn--dark" onClick={openModal} data-gtm="presentation-open">
+                  {k('cta_presentation')} →
+                </button>
+              </div>
+            )}
             <div data-reveal="" style={{ display: 'flex', justifyContent: 'center', gridColumn: wide ? 'auto' : '1 / -1' }}>
               <img src={certificadoImg} alt={k('inc_cert_alt')} loading="lazy" style={{
-                display: 'block', width: 'min(100%,340px)', height: 'auto', aspectRatio: '1748/2250', boxShadow: '0 8px 28px rgba(15,30,51,0.14)',
+                display: 'block', width: isMobile ? 'min(100%,200px)' : 'min(100%,340px)', height: 'auto', aspectRatio: '1748/2250', boxShadow: '0 8px 28px rgba(15,30,51,0.14)',
               }} />
             </div>
           </div>
-          <div data-reveal="" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 24px', borderTop: `1px solid ${C.bruma}`, paddingTop: 32 }}>
-            <p style={{ margin: 0, fontSize: 17 }}>{k('inc_more')}</p>
-            <button type="button" className="vlc-btn vlc-btn--dark" onClick={openModal} data-gtm="presentation-open">
-              {k('cta_presentation')} →
-            </button>
-          </div>
+          {wide && (
+            <div data-reveal="" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '16px 24px', borderTop: `1px solid ${C.bruma}`, paddingTop: 32 }}>
+              <p style={{ margin: 0, fontSize: 18 }}>{k('inc_more')}</p>
+              <button type="button" className="vlc-btn vlc-btn--dark" onClick={openModal} data-gtm="presentation-open">
+                {k('cta_presentation')} →
+              </button>
+            </div>
+          )}
         </Container>
       </section>
 
@@ -561,20 +609,43 @@ function ColegiosCertificacion() {
         <Container style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(56px,7vw,88px)' }}>
           <Stack>
             <Eyebrow dark>{k('path_eyebrow')}</Eyebrow>
-            <H2 dark size="clamp(32px,4.6vw,58px)" style={{ lineHeight: 1.06 }}>{k('path_title')}</H2>
+            <H2 dark style={{ lineHeight: 1.06 }}>{k('path_title')}</H2>
           </Stack>
-          <ol data-reveal="" style={{ listStyle: 'none', margin: 0, padding: 0, position: 'relative', display: 'flex', flexDirection: path.dir, gap: path.gap }}>
-            <li aria-hidden="true" style={{ position: 'absolute', ...path.line, background: C.goldLight, opacity: 0.6 }} />
-            {k('courses').map((title, i) => (
-              <li key={title} style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: path.itemDir, gap: 20, alignItems: 'flex-start' }}>
-                <span style={{
-                  display: 'block', flex: 'none', width: path.numW, background: C.blueDeep, fontFamily: SLAB, fontWeight: 700,
-                  fontSize: 'clamp(44px,4.6vw,60px)', lineHeight: 1, color: C.goldLight, fontVariantNumeric: 'tabular-nums', padding: path.numPad,
-                }}>{i + 1}</span>
-                <span style={{ fontFamily: SLAB, fontWeight: 400, fontSize: 19, lineHeight: 1.3, color: C.cream, maxWidth: '16ch', paddingTop: path.titlePad }}>{title}</span>
-              </li>
-            ))}
-          </ol>
+          {path.scroll ? (
+            <div data-reveal="" style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', paddingBottom: 8 }}>
+              <ol style={{
+                listStyle: 'none', margin: 0, padding: 0, position: 'relative',
+                display: 'flex', flexDirection: path.dir, gap: path.gap, minWidth: 'max-content',
+              }}>
+                {path.line && <li aria-hidden="true" style={{ position: 'absolute', ...path.line, background: C.goldLight, opacity: 0.6 }} />}
+                {k('courses').map((title, i) => (
+                  <li key={title} style={{ position: 'relative', flex: '0 0 auto', minWidth: 140, display: 'flex', flexDirection: path.itemDir, gap: 20, alignItems: 'flex-start' }}>
+                    <span style={{
+                      display: 'block', flex: 'none', width: path.numW, background: C.blueDeep, fontFamily: SLAB, fontWeight: 700,
+                      fontSize: 'clamp(44px,4.6vw,60px)', lineHeight: 1, color: C.goldLight, fontVariantNumeric: 'tabular-nums', padding: path.numPad,
+                    }}>{i + 1}</span>
+                    <span style={{ fontFamily: SLAB, fontWeight: 400, fontSize: 17, lineHeight: 1.3, color: C.cream, maxWidth: '16ch', paddingTop: path.titlePad }}>{title}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          ) : (
+            <ol data-reveal="" style={{
+              listStyle: 'none', margin: 0, padding: 0, position: 'relative',
+              display: 'flex', flexDirection: path.dir, gap: path.gap,
+            }}>
+              {path.line && <li aria-hidden="true" style={{ position: 'absolute', ...path.line, background: C.goldLight, opacity: 0.6 }} />}
+              {k('courses').map((title, i) => (
+                <li key={title} style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: path.itemDir, gap: 20, alignItems: 'flex-start' }}>
+                  <span style={{
+                    display: 'block', flex: 'none', width: path.numW, background: C.blueDeep, fontFamily: SLAB, fontWeight: 700,
+                    fontSize: 'clamp(44px,4.6vw,60px)', lineHeight: 1, color: C.goldLight, fontVariantNumeric: 'tabular-nums', padding: path.numPad,
+                  }}>{i + 1}</span>
+                  <span style={{ fontFamily: SLAB, fontWeight: 400, fontSize: isMobile ? 21 : 17, lineHeight: 1.3, color: C.cream, maxWidth: '16ch', paddingTop: path.titlePad }}>{title}</span>
+                </li>
+              ))}
+            </ol>
+          )}
         </Container>
       </section>
 
@@ -588,12 +659,12 @@ function ColegiosCertificacion() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: '48px 0' }}>
             {[
               ['person', 'res_participant_title', 'res_participant', { paddingRight: 'clamp(0px,4vw,56px)' }],
-              ['building', 'res_institution_title', 'res_institution', { borderLeft: `1px solid ${C.gold}`, paddingLeft: 'clamp(24px,4vw,56px)' }],
+              ['building', 'res_institution_title', 'res_institution', isMobile ? {} : { borderLeft: `1px solid ${C.gold}`, paddingLeft: 'clamp(24px,4vw,56px)' }],
             ].map(([icon, title, list, extra]) => (
               <Stack key={list} gap={20} style={extra}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                   <Icon name={icon} size={32} />
-                  <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 22, color: C.blueDeep }}>{k(title)}</h3>
+                  <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 21, color: C.blueDeep }}>{k(title)}</h3>
                 </div>
                 <RuleList items={k(list)} render={(it) => it} />
               </Stack>
@@ -611,21 +682,21 @@ function ColegiosCertificacion() {
           </Stack>
           <div data-reveal="" style={{
             display: 'grid', gap: '40px 32px', alignItems: 'start',
-            gridTemplateColumns: w >= 900 ? 'minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr)' : w >= 560 ? 'repeat(2,minmax(0,1fr))' : '1fr',
+            gridTemplateColumns: wide ? 'minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr)' : tablet ? 'repeat(2,minmax(0,1fr))' : '1fr',
           }}>
             {k('rev_stats').map((s) => (
               <div key={s.n} style={{ borderLeft: `1px solid ${C.gold}`, paddingLeft: 28, display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <span data-count={s.n} data-suffix={s.suffix} style={statNum(C.gold, 'clamp(64px,8vw,104px)')}>{fmtNum(s)}</span>
-                <span style={{ fontSize: 17, lineHeight: 1.5, maxWidth: '24ch' }}>{s.label}</span>
+                <span style={{ fontSize: 18, lineHeight: 1.5, maxWidth: '24ch' }}>{s.label}</span>
               </div>
             ))}
             <div style={{
               borderLeft: `1px solid ${C.gold}`, paddingLeft: 28, display: 'flex', flexDirection: 'column', gap: 12,
-              gridColumn: w >= 560 && w < 900 ? '1 / -1' : 'auto',
+              gridColumn: tablet && !wide ? '1 / -1' : 'auto',
             }}>
               <Icon name="award" size={32} />
               <span style={{ fontFamily: SLAB, fontWeight: 700, fontSize: 'clamp(20px,2vw,24px)', lineHeight: 1.3, color: C.blueDeep }}>{k('rev_top_courses')}</span>
-              <span style={{ fontSize: 17, lineHeight: 1.5 }}>{k('rev_top_label')}</span>
+              <span style={{ fontSize: 18, lineHeight: 1.5 }}>{k('rev_top_label')}</span>
             </div>
           </div>
           <figure data-reveal="" style={{
@@ -642,13 +713,13 @@ function ColegiosCertificacion() {
               <Stars color={C.goldLight} size={16} />
             </figcaption>
           </figure>
-          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: w >= 900 ? 'repeat(3,minmax(0,1fr))' : '1fr', gap: 24 }}>
+          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: wide ? 'repeat(3,minmax(0,1fr))' : tablet ? 'repeat(2,minmax(0,1fr))' : '1fr', gap: 24 }}>
             {k('reviews').map((r) => (
               <figure key={r.author} className="vlc-review" style={{
                 margin: 0, background: C.page, borderTop: `2px solid ${C.gold}`, padding: 'clamp(28px,3vw,36px)',
                 display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 28,
               }}>
-                <blockquote style={{ margin: 0, fontSize: 17, lineHeight: 1.65, textWrap: 'pretty' }}>«{r.text}»</blockquote>
+                <blockquote style={{ margin: 0, fontSize: 18, lineHeight: 1.65, textWrap: 'pretty' }}>«{r.text}»</blockquote>
                 <figcaption style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 16px', fontSize: 15 }}>
                   <GoldTick />
                   <span style={{ fontWeight: 600, color: C.blueDeep, whiteSpace: 'nowrap' }}>{r.author}</span>
@@ -662,20 +733,20 @@ function ColegiosCertificacion() {
 
       {/* 10 El autor */}
       <section style={{ background: C.blueDeep, color: '#fff', padding: `${SECTION_Y} 0` }}>
-        <Container style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,360px),1fr))', gap: 'clamp(48px,7vw,96px)', alignItems: 'center' }}>
-          <div data-reveal="" style={{ aspectRatio: '4/5', width: '100%' }}>
+        <Container style={{ display: 'grid', gridTemplateColumns: tablet ? 'minmax(0,1fr) minmax(0,1.2fr)' : '1fr', gap: 'clamp(48px,7vw,96px)', alignItems: tablet ? 'start' : 'center' }}>
+          <div data-reveal="" style={{ position: tablet ? 'sticky' : 'relative', top: tablet ? 101 : undefined, alignSelf: 'start', aspectRatio: '4/5', width: '100%' }}>
             <img src={havardImg} alt={k('author_img_alt')} loading="lazy" style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover', objectPosition: '54% 30%' }} />
           </div>
-          <Stack gap={22}>
+          <Stack>
             <Eyebrow dark>{k('author_eyebrow')}</Eyebrow>
-            <H2 dark size="clamp(36px,4.8vw,60px)" style={{ lineHeight: 1.04 }}>{k('author_name')}</H2>
+            <H2 dark style={{ lineHeight: 1.04 }}>{k('author_name')}</H2>
             <p style={{ margin: 0, fontFamily: SLAB, fontWeight: 400, fontSize: 'clamp(19px,1.8vw,22px)', lineHeight: 1.35, color: C.goldLight }}>{k('author_role')}</p>
             <ul style={{ listStyle: 'none', margin: '12px 0 0', padding: 0, borderTop: '1px solid rgba(250,247,238,.2)' }}>
               {k('author_bio').map((b) => {
                 const parts = b.em ? b.text.split(b.em) : [b.text];
                 return (
                   <li key={b.icon} style={{
-                    padding: '18px 0', borderBottom: '1px solid rgba(250,247,238,.2)', fontSize: 17, lineHeight: 1.6, color: C.cream,
+                    padding: '18px 0', borderBottom: '1px solid rgba(250,247,238,.2)', fontSize: 18, lineHeight: 1.6, color: C.cream,
                     display: 'flex', alignItems: 'flex-start', gap: 16,
                   }}>
                     <Icon name={b.icon} color={C.goldLight} style={{ marginTop: 2 }} />
@@ -708,9 +779,9 @@ function ColegiosCertificacion() {
           <ol data-reveal="" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gridTemplateColumns: cols4, gap: '40px 32px' }}>
             {k('steps').map((s, i) => (
               <li key={s.title} style={{ borderTop: `1px solid ${C.gold}`, paddingTop: 24, display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <span aria-hidden="true" style={{ fontFamily: SLAB, fontWeight: 700, fontSize: 64, lineHeight: 1, color: C.gold }}>{i + 1}</span>
-                <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 20, color: C.blueDeep }}>{s.title}</h3>
-                <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{s.text}</p>
+                <span aria-hidden="true" style={{ fontFamily: SLAB, fontWeight: 700, fontSize: isMobile ? 44 : 64, lineHeight: 1, color: C.gold }}>{i + 1}</span>
+                <h3 style={{ margin: 0, fontFamily: SLAB, fontWeight: 700, fontSize: 21, color: C.blueDeep }}>{s.title}</h3>
+                <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6 }}>{s.text}</p>
               </li>
             ))}
           </ol>
@@ -737,7 +808,7 @@ function ColegiosCertificacion() {
               const panelId = `faq-panel-${i}`;
               return (
                 <div key={f.q} style={{ borderBottom: `1px solid ${C.bruma}` }}>
-                  <h3 style={{ margin: 0 }}>
+                  <h3 style={{ margin: 0, fontSize: 21 }}>
                     <button type="button" className="vlc-faq-btn" aria-expanded={open} aria-controls={panelId}
                             onClick={() => setFaq(open ? -1 : i)}>
                       <span>{f.q}</span>
@@ -749,7 +820,7 @@ function ColegiosCertificacion() {
                   </h3>
                   {open && (
                     <div id={panelId} role="region" style={{ padding: '0 52px 28px 0' }}>
-                      <p style={{ margin: 0, fontSize: 17, lineHeight: 1.65, maxWidth: '62ch' }}>{f.a}</p>
+                      <p style={{ margin: 0, fontSize: 18, lineHeight: 1.65, maxWidth: '62ch' }}>{f.a}</p>
                     </div>
                   )}
                 </div>
@@ -761,7 +832,7 @@ function ColegiosCertificacion() {
 
       {/* 13 CTA final */}
       <section style={{
-        position: 'relative', minHeight: '100svh', background: C.blueNight, color: '#fff', display: 'flex', alignItems: 'center', overflow: 'hidden',
+        position: 'relative', minHeight: wide ? '100svh' : 'auto', background: C.blueNight, color: '#fff', display: 'flex', alignItems: 'center', overflow: 'hidden',
         paddingBottom: isMobile ? 72 : 0,
       }}>
         <div style={{ position: 'absolute', inset: 0 }}>
@@ -771,10 +842,10 @@ function ColegiosCertificacion() {
         </div>
         <div aria-hidden="true" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'rgba(15,30,51,.74)' }} />
         <Container max={880} style={{ position: 'relative', width: '100%', paddingTop: 120, paddingBottom: 120 }}>
-          <Stack gap={28} style={{ alignItems: 'center', textAlign: 'center' }}>
+          <Stack style={{ alignItems: 'center', textAlign: 'center' }}>
             <img src={logoFullWhite} alt={k('final_logo_alt')} loading="lazy" style={{ width: 200, height: 'auto', display: 'block', marginBottom: 16 }} />
-            <H2 dark size="clamp(34px,5vw,64px)" style={{ lineHeight: 1.06, textWrap: 'balance' }}>{k('final_title')}</H2>
-            <p style={{ margin: 0, fontSize: 'clamp(18px,1.6vw,20px)', lineHeight: 1.6, color: C.cream, maxWidth: '48ch' }}>{k('final_text')}</p>
+            <H2 dark style={{ lineHeight: 1.06, textWrap: 'balance' }}>{k('final_title')}</H2>
+            <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6, color: C.cream, maxWidth: '48ch' }}>{k('final_text')}</p>
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 12, paddingTop: 8 }}>
               <CtaConversation />
               <BtnPresentation />
@@ -818,13 +889,13 @@ function ColegiosCertificacion() {
               }}>{k('modal_title')}</h2>
               {BREVO_FORM_URL ? (
                 <>
-                  <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{k('modal_text')}</p>
+                  <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6 }}>{k('modal_text')}</p>
                   <iframe title={k('modal_title')} src={BREVO_FORM_URL} frameBorder="0" scrolling="auto" allowFullScreen
                           style={{ display: 'block', width: '100%', minHeight: 420, border: 0, marginTop: 12 }} />
                 </>
               ) : (
                 <>
-                  <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{k('modal_fallback_text')}</p>
+                  <p style={{ margin: 0, fontSize: 18, lineHeight: 1.6 }}>{k('modal_fallback_text')}</p>
                   <div style={{ marginTop: 12 }}>
                     <a href={mailPresentation} className="vlc-cta" data-gtm="presentation-request">{k('modal_fallback_button')}</a>
                   </div>

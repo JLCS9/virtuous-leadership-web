@@ -49,9 +49,9 @@ export default function Header() {
       borderBottom: `1px solid ${NAVY_SOFT}`,
       boxShadow: '0 1px 0 rgba(197,165,90,0.18)',
     }}>
-      <div style={{
+      <div className="header-inner" style={{
         maxWidth: MAX_WIDTH, margin: '0 auto',
-        padding: '14px 24px',
+        padding: '14px 14px',
         display: 'flex', alignItems: 'center', gap: 18,
       }}>
         <Brand />
@@ -188,6 +188,7 @@ export default function Header() {
 
       <style>{`
         @media (min-width: 900px) {
+          .header-inner { padding-left: 0 !important; padding-right: 0 !important; }
           .nav-desktop { display: flex !important; }
           .nav-mobile-actions { display: none !important; }
           .nav-mobile-panel { display: none !important; }
