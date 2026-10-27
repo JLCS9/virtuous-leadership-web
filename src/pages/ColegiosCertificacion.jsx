@@ -82,6 +82,7 @@ const CSS = `
 .vlc-close { all: unset; position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: ${C.pizarra}; }
 .vlc-close:hover { color: ${C.blueMid}; }
 @media (prefers-reduced-motion: reduce) { .vlc [data-reveal] { opacity: 1 !important; transform: none !important; } }
+.vlc-review-track::-webkit-scrollbar { display: none; }
 `;
 
 // ---------- hooks ----------
@@ -230,6 +231,118 @@ function RuleList({ items, render }) {
         }}>{render(it)}</li>
       ))}
     </ul>
+  );
+}
+
+function ReviewCard({ r }) {
+  return (
+    <figure className="vlc-review" style={{
+      margin: 0, background: C.page, borderTop: `2px solid ${C.gold}`, padding: 'clamp(28px,3vw,36px)',
+      display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 28,
+    }}>
+      <blockquote style={{ margin: 0, fontSize: 18, lineHeight: 1.65, textWrap: 'pretty' }}>«{r.text}»</blockquote>
+      <figcaption style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 16px', fontSize: 15 }}>
+        <GoldTick />
+        <span style={{ fontWeight: 600, color: C.blueDeep, whiteSpace: 'nowrap' }}>{r.author}</span>
+        <Stars color={C.gold} size={15} />
+      </figcaption>
+    </figure>
+  );
+}
+
+function ReviewCarousel({ reviews, isMobile, tablet, wide }) {
+  const trackRef = useRef(null);
+  const [active, setActive] = useState(0);
+  const perView = tablet ? 2 : 1;
+  const maxIdx = Math.max(0, reviews.length - perView);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const onScroll = () => {
+      const card = track.firstElementChild;
+      if (!card) return;
+      const gap = 24;
+      const cardW = card.offsetWidth + gap;
+      const idx = Math.round(track.scrollLeft / cardW);
+      setActive(Math.min(idx, maxIdx));
+    };
+    track.addEventListener('scroll', onScroll, { passive: true });
+    return () => track.removeEventListener('scroll', onScroll);
+  }, [maxIdx]);
+
+  const scrollTo = (idx) => {
+    const track = trackRef.current;
+    if (!track) return;
+    const card = track.firstElementChild;
+    if (!card) return;
+    const gap = 24;
+    const cardW = card.offsetWidth + gap;
+    track.scrollTo({ left: cardW * idx, behavior: 'smooth' });
+  };
+
+  if (wide) {
+    return (
+      <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: `repeat(${Math.min(reviews.length, 3)},minmax(0,1fr))`, gap: 24 }}>
+        {reviews.map((r) => <ReviewCard key={r.author} r={r} />)}
+      </div>
+    );
+  }
+
+  const cardWidth = perView === 1 ? '100%' : `calc((100% - ${(perView - 1) * 24}px) / ${perView})`;
+
+  return (
+    <div data-reveal="">
+      <div style={{ position: 'relative' }}>
+        <div ref={trackRef} className="vlc-review-track" style={{
+          display: 'flex', gap: 24, overflowX: 'auto', scrollSnapType: 'x mandatory',
+          WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none',
+          paddingBottom: 4,
+        }}>
+          {reviews.map((r) => (
+            <figure key={r.author} className="vlc-review" style={{
+              margin: 0, background: C.page, borderTop: `2px solid ${C.gold}`, padding: 'clamp(28px,3vw,36px)',
+              display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 28,
+              flex: `0 0 ${cardWidth}`, minWidth: 0, scrollSnapAlign: 'start',
+            }}>
+              <blockquote style={{ margin: 0, fontSize: 18, lineHeight: 1.65, textWrap: 'pretty' }}>«{r.text}»</blockquote>
+              <figcaption style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 16px', fontSize: 15 }}>
+                <GoldTick />
+                <span style={{ fontWeight: 600, color: C.blueDeep, whiteSpace: 'nowrap' }}>{r.author}</span>
+                <Stars color={C.gold} size={15} />
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        {maxIdx > 0 && (
+          <button type="button" aria-label="Anterior" onClick={() => scrollTo(Math.max(0, active - 1))} style={{
+            position: 'absolute', left: -16, top: '50%', transform: 'translateY(-50%)',
+            width: 40, height: 40, border: `1px solid ${C.bruma}`, background: '#fff',
+            display: active === 0 ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: C.blueDeep, fontSize: 18, boxShadow: '0 2px 8px rgba(0,0,0,.08)',
+          }}>‹</button>
+        )}
+        {maxIdx > 0 && (
+          <button type="button" aria-label="Siguiente" onClick={() => scrollTo(Math.min(maxIdx, active + 1))} style={{
+            position: 'absolute', right: -16, top: '50%', transform: 'translateY(-50%)',
+            width: 40, height: 40, border: `1px solid ${C.bruma}`, background: '#fff',
+            display: active >= maxIdx ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', color: C.blueDeep, fontSize: 18, boxShadow: '0 2px 8px rgba(0,0,0,.08)',
+          }}>›</button>
+        )}
+      </div>
+      {maxIdx > 0 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 10, marginTop: 28 }}>
+          {Array.from({ length: maxIdx + 1 }, (_, i) => (
+            <button key={i} type="button" aria-label={`Testimonio ${i + 1}`} onClick={() => scrollTo(i)} style={{
+              width: active === i ? 24 : 8, height: 8, border: 'none', cursor: 'pointer', padding: 0,
+              background: active === i ? C.gold : C.bruma,
+              transition: `width 200ms ${EASE}, background 200ms ${EASE}`,
+            }} />
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -547,6 +660,9 @@ function ColegiosCertificacion() {
               </div>
             ))}
           </div>
+          <p data-reveal="" style={{ margin: 0, fontSize: 15, color: C.cream, opacity: 0.8, textAlign: 'center' }}>
+            {k('part_fundae')}
+          </p>
           {/* Timeline de semanas — oculto temporalmente
           <ol data-reveal="" aria-label={k('timeline_label')} style={{
             listStyle: 'none', margin: 0, padding: 0, position: 'relative', display: 'flex', flexDirection: tl.dir, gap: tl.gap,
@@ -719,21 +835,7 @@ function ColegiosCertificacion() {
               <Stars color={C.goldLight} size={16} />
             </figcaption>
           </figure>
-          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: wide ? 'repeat(3,minmax(0,1fr))' : tablet ? 'repeat(2,minmax(0,1fr))' : '1fr', gap: 24 }}>
-            {k('reviews').map((r) => (
-              <figure key={r.author} className="vlc-review" style={{
-                margin: 0, background: C.page, borderTop: `2px solid ${C.gold}`, padding: 'clamp(28px,3vw,36px)',
-                display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 28,
-              }}>
-                <blockquote style={{ margin: 0, fontSize: 18, lineHeight: 1.65, textWrap: 'pretty' }}>«{r.text}»</blockquote>
-                <figcaption style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '10px 16px', fontSize: 15 }}>
-                  <GoldTick />
-                  <span style={{ fontWeight: 600, color: C.blueDeep, whiteSpace: 'nowrap' }}>{r.author}</span>
-                  <Stars color={C.gold} size={15} />
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+          <ReviewCarousel reviews={k('reviews')} isMobile={isMobile} tablet={tablet} wide={wide} />
         </Container>
       </section>
 

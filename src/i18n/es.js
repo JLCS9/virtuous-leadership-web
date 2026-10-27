@@ -321,6 +321,7 @@ export default {
       { icon: 'hourglass',text: 'Unas 4 horas por semana' },
       { icon: 'calcheck', text: 'Calendario adaptado a su centro' },
     ],
+    part_fundae: 'Formación bonificable a través de FUNDAE (solo en España)',
     timeline_label: 'Línea de tiempo',
     weeks: ['Semana 1', 'Semana 2', 'Semana 3', 'Semana 4', 'Semana 5', 'Semana 6', 'Semana 7'],
     timeline_end: 'Certificado Oficial',
@@ -440,17 +441,209 @@ export default {
     modal_close: 'Cerrar',
   },
 
+  // Pagina /empresas — version "Certificacion" (oct 2026). Mismo sistema visual
+  // que colegios_cert. Solo ES de momento.
+  empresas_cert: {
+    seo_title: 'Certificación en Liderazgo Virtuoso® para empresas',
+    seo_description: 'Un programa en 7 pasos para que sus profesionales crezcan en carácter y su empresa se convierta en Organización Certificada.',
+    contact_email: 'certification@virtuousleadership.com',
+    mail_subject_conversation: 'Conversación inicial — Certificación para empresas',
+    mail_subject_presentation: 'Solicitud de la presentación — Certificación para empresas',
+    cta_conversation: 'Solicite una conversación inicial',
+    cta_presentation: 'Reciba la presentación completa',
+
+    hero_eyebrow: 'Para empresas y organizaciones',
+    hero_title: 'Certificación en Liderazgo Virtuoso®',
+    hero_text: 'Un programa, en 7 pasos y al ritmo de su organización, para que sus profesionales se formen y crezcan en carácter a través de las virtudes humanas, y su empresa se convierta en Organización Certificada.',
+    hero_quote: 'Si no, los valores corporativos seguirán siendo un cartel.',
+    hero_img_alt: 'Columnas clásicas de un edificio romano',
+
+    trust: ['29 países', '+100.000 personas formadas', '96% lo recomienda'],
+
+    why_eyebrow: 'El porqué',
+    why_title: 'Cada persona lidera con lo que es, no con el cargo que ocupa.',
+    why_text: 'Las empresas forman en técnica y competencias, pero lo que marca la diferencia es el carácter de las personas. El liderazgo no es un cargo: es crecer y hacer crecer a los demás, con una eficacia que no confieren el poder, el dinero ni la técnica.',
+    why_img_alt: 'Directivos en una sesión de formación',
+    why_havard_quote: 'Alexandre Havard ha formado a altos directivos de empresas internacionales como Michelin, Leroy Merlin, Metro o DXC Technology.',
+
+    ben_eyebrow: 'Beneficios',
+    ben_title: 'Lo que gana su organización',
+    benefits: [
+      { icon: 'users',     title: 'Equipos que se entienden.',           text: 'Cada persona comprende cómo es y cómo son sus compañeros. Menos fricciones, más colaboración.' },
+      { icon: 'heart',     title: 'Responsables que cuidan a las personas.', text: 'Lideran con menos presión y más claridad, pendientes del crecimiento de su equipo, no solo de los resultados.' },
+      { icon: 'chat',      title: 'Mejor comunicación.',                 text: 'Conocer los temperamentos permite hablar a cada persona en el lenguaje que entiende.' },
+      { icon: 'target',    title: 'Decisiones a tiempo.',                text: 'La prudencia y la audacia se entrenan: menos decisiones aplazadas, más acción con criterio.' },
+      { icon: 'compass',   title: 'Personas con sentido.',               text: 'Cada profesional formula su misión y da sentido a su trabajo. El compromiso nace de dentro.' },
+      { icon: 'shield',    title: 'Valores que se viven.',               text: 'Los valores corporativos dejan de ser un cartel y se convierten en conducta diaria.' },
+    ],
+    ben_note: '100 % online, a escala, sin desplazamientos y bonificable a través de FUNDAE (solo en España).',
+
+    cert_eyebrow: 'La certificación',
+    cert_title: 'Profunda en su base. Práctica en su aplicación.',
+    cert_text: 'El camino por el que una organización forma a sus profesionales en el Sistema de Liderazgo Virtuoso de Alexandre Havard: una base sólida para comprender, una práctica personal para crecer y un reconocimiento oficial que lo certifica.',
+    cert_seal_alt: 'Sello de Organización Certificada de Virtuous Leadership',
+    pillars: [
+      { icon: 'video',  title: 'Una base sólida',        text: 'Alexandre Havard imparte cada curso en vídeo, sin intermediarios, desde una antropología clásica y profunda.' },
+      { icon: 'notebook', title: 'La práctica personal',  text: 'Seis cuadernos de trabajo para que cada participante aplique lo aprendido a su propia vida.' },
+      { icon: 'users',  title: 'Un proceso acompañado',  text: 'Un responsable del equipo acompaña a la organización de principio a fin.' },
+      { icon: 'award',  title: 'Reconocimiento oficial',  text: 'Sello de Organización Certificada y Certificado Oficial para cada participante.' },
+    ],
+
+    practice_eyebrow: 'La práctica',
+    practice_title: 'Lo que se comprende, se practica.',
+    practice_text: 'Seis cuadernos de trabajo personal acompañan los siete cursos.',
+    practice_bullets: [
+      'Ejercicios personales en cada cuaderno',
+      'Para imprimir y completar a mano',
+      'Para releer y ver el propio avance',
+    ],
+
+    fund_eyebrow: 'Fundamentos',
+    fund_title_lines: ['El temperamento es biológico.', 'El carácter es espiritual.'],
+    fund_text: 'Se nace con un temperamento. El carácter, en cambio, se construye mediante la práctica de las virtudes.',
+    fund_quote_lines: ['Sin carácter, el temperamento domina.', 'Con carácter, la persona gobierna.'],
+    fund_table_title: 'Cada temperamento, su virtud-desafío',
+    fund_table: [
+      ['Colérico', 'Humildad'],
+      ['Sanguíneo', 'Perseverancia'],
+      ['Melancólico', 'Audacia'],
+      ['Flemático', 'Magnanimidad'],
+    ],
+    fund_img_alt: 'Rueda de los cuatro temperamentos: colérico, melancólico, sanguíneo y flemático',
+    fund_link: 'Leer el fundamento académico del sistema',
+
+    part_eyebrow: 'Participantes',
+    part_title: 'El liderazgo no está reservado a quienes dirigen.',
+    part_text: 'No exige un perfil ni un cargo: solo disposición a mirar hacia dentro. Cada organización decide quién participa y cuándo.',
+    part_roles_label: 'Roles',
+    part_roles: ['Dirección', 'Mandos intermedios', 'Equipos', 'Recursos humanos', 'Áreas comerciales', 'Atención al cliente', 'Operaciones'],
+    part_facts: [
+      { icon: 'clock',    text: '35 horas', sub: 'de formación, 5 por paso' },
+      { icon: 'video',    text: '7 cursos profundos', sub: 'impartidos por Alexandre Havard, con sus cuadernos de trabajo' },
+      { icon: 'globe',    text: '100 % online', sub: 'compatible con la jornada laboral' },
+      { icon: 'calcheck', text: 'Calendario a medida', sub: 'personalizado para cada organización' },
+    ],
+    part_fundae: 'Formación bonificable a través de FUNDAE (solo en España)',
+    part_timeline_text: 'Cada organización decide su recorrido: un paso por semana, uno cada quince días o a lo largo de varios meses.',
+    timeline_label: 'Línea de tiempo',
+    timeline_end: 'Certificado Oficial',
+
+    inc_eyebrow: 'Contenido',
+    inc_title: 'Qué incluye la Certificación',
+    inc_participant_title: 'Para cada participante:',
+    inc_participant: [
+      { icon: 'video',    text: '7 cursos en vídeo impartidos por Alexandre Havard' },
+      { icon: 'notebook', text: '6 cuadernos de trabajo personal' },
+      { icon: 'clipboard',text: '3 tests de autoconocimiento' },
+      { icon: 'award',    text: 'Certificado Oficial firmado por Alexandre Havard' },
+    ],
+    inc_responsible_title: 'Para los responsables de cada equipo:',
+    inc_responsible: [
+      { icon: 'person',   text: 'Posibilidad de empezar antes, para ir un paso por delante de su equipo' },
+      { icon: 'building', text: 'Materiales y dinámicas para llevar la formación en cascada' },
+      { icon: 'shield',   text: 'Apoyo directo del responsable de Virtuous Leadership' },
+    ],
+    inc_direction_title: 'Para la dirección:',
+    inc_direction: [
+      { icon: 'report',   text: 'Informe de Temperamentos de la organización: una visión de cómo es cada equipo, para acompañar y comunicar mejor.' },
+      { icon: 'dashboard',text: 'Panel de seguimiento por persona y equipo' },
+      { icon: 'usercheck',text: 'Responsable dedicado y reunión mensual' },
+      { icon: 'shield',   text: 'Sello de Organización Certificada' },
+    ],
+    inc_cert_alt: 'Certificado Oficial de Virtuous Leadership',
+    inc_more: 'El detalle completo, en la presentación',
+
+    path_eyebrow: 'El recorrido',
+    path_title: '7 cursos, un solo camino',
+    courses: [
+      'Del Temperamento al Carácter',
+      'Practicar la Magnanimidad',
+      'Practicar la Humildad',
+      'Las 4 Virtudes Fundamentales',
+      'Corazón, Intelecto y Voluntad',
+      'Descubre tu Misión',
+      'La Educación del Corazón',
+    ],
+
+    res_eyebrow: 'Resultados',
+    res_title: 'Qué consigue cada participante',
+    res_items: [
+      'Conoce su temperamento y su virtud-desafío.',
+      'Comprende a sus compañeros y se comunica mejor con ellos.',
+      'Gana claridad sobre su crecimiento, personal y profesional.',
+      'Formula su misión y da sentido a su trabajo.',
+      'Lidera e influye de verdad, sin depender del cargo.',
+    ],
+
+    rev_eyebrow: 'La experiencia de quienes lo hicieron',
+    rev_title: 'Lo que cambió para ellos.',
+    rev_stats: [
+      { n: 95, suffix: '%', label: 'lo valora como Excelente o Muy bueno' },
+      { n: 96, suffix: '%', label: 'lo recomienda' },
+    ],
+    rating_label: 'Valoración: 5 de 5',
+    rev_featured: {
+      text: 'Pasé de centrarme sobre todo en los resultados a centrarme más en las personas: cómo servirlas, apoyar su crecimiento y crear el entorno adecuado. Ha cambiado mi forma de liderar: menos presión, más claridad y más atención a las personas que a los resultados.',
+      author: 'Kristijan G.',
+      role: 'Directivo',
+    },
+    reviews: [
+      { text: 'El verdadero éxito de un líder no se mide solo por los resultados de la empresa, sino también por el desarrollo humano de las personas que le han sido confiadas. La formación me ha llevado a preguntarme no solo qué debo hacer, sino, sobre todo, quién debo llegar a ser.', author: 'Luis P.', role: 'Empresario' },
+      { text: 'Como colérico, presto más atención al cuidado del equipo y de las personas. Sirvo más a las personas de mi equipo, siendo más paciente y generoso con su desarrollo.', author: 'Gonzalo I.', role: 'Directivo' },
+      { text: 'Di una sesión sobre temperamentos a mis empleados, con un ejercicio por grupos. Después hablamos de lo valioso que es cada persona para el equipo: es fácil ver solo las frustraciones, pero todos aportamos.', author: 'Beth D.', role: 'Responsable de equipo' },
+      { text: 'Me ha dado la confianza para aspirar a grandes cosas. Me ha transformado como padre, como esposo y como trabajador. Ahora doy más a quienes me rodean, con atención y con libertad.', author: 'Justen A.', role: 'Profesional' },
+    ],
+
+    author_eyebrow: 'El autor',
+    author_name: 'Alexandre Havard',
+    author_role: 'Fundador del Sistema de Liderazgo Virtuoso',
+    author_img_alt: 'Retrato de Alexandre Havard',
+    author_bio: [
+      { icon: 'cap',   text: 'Autor y conferenciante de prestigio internacional. Cursó Derecho en la Universidad René Descartes (París) y ejerció la abogacía en varios países europeos.' },
+      { icon: 'globe', text: 'Forma a altos directivos de empresas internacionales en los 7 continentes (Michelin, Leroy Merlin, Metro, DXC Technology). Enseña en el MIT-Skoltech y ha presentado su modelo en las Academias de Guerra de Estados Unidos (U.S. Army War College y U.S. Naval War College).' },
+      { icon: 'book',  text: 'Su primer libro, Liderazgo Virtuoso (Nueva York, 2007), está traducido a 24 lenguas.', em: 'Liderazgo Virtuoso' },
+    ],
+    author_stats: [
+      { n: 100000, prefix: '+', label: 'personas formadas' },
+      { n: 29, label: 'países' },
+    ],
+
+    steps_eyebrow: 'Siguiente paso',
+    steps_title: 'Cómo se pone en marcha',
+    steps: [
+      { title: 'Conversación inicial.', text: 'Conocemos su organización y preparamos una propuesta a medida.' },
+      { title: 'Organización.',         text: 'Se definen los participantes, los responsables de cada equipo y el calendario.' },
+      { title: 'Accesos.',              text: 'Cada participante recibe su acceso y sus instrucciones.' },
+      { title: 'El recorrido.',         text: 'Cada participante recibe su Certificado Oficial, y la organización, el sello de Organización Certificada.' },
+    ],
+    steps_highlight_eyebrow: 'Modelo recomendado',
+    steps_highlight: 'Los responsables de cada equipo empiezan antes, para acompañar desde su propia experiencia.',
+
+    faq_title: 'Preguntas frecuentes',
+    faqs: [
+      { q: '¿Cuánto tiempo exige?', a: '35 horas en total, 5 por paso. Cada persona avanza online, dentro del calendario que acuerde la organización.' },
+      { q: '¿Se puede hacer en horario laboral?', a: 'Sí. Es 100 % online, y cada organización decide si se realiza dentro o fuera de la jornada.' },
+      { q: '¿Quién puede participar?', a: 'Cualquier persona de la organización, sin importar su cargo. Cada organización decide quién participa y cuándo.' },
+      { q: '¿Son confidenciales los resultados de los tests?', a: 'Sí. Los resultados individuales son personales. La dirección recibe una visión de conjunto de cada equipo. El objetivo no es clasificar a las personas, sino que cada una se comprenda y comprenda mejor a quienes trabajan con ella.' },
+      { q: '¿Se adapta a organizaciones grandes o con varias sedes?', a: 'Sí. El número de participantes, los grupos y el calendario se diseñan a medida de cada organización.' },
+      { q: '¿Es bonificable?', a: 'Sí. En España, la formación es bonificable a través de FUNDAE.' },
+    ],
+
+    final_img_alt: 'Escultura clásica en penumbra',
+    final_logo_alt: 'Liderazgo Virtuoso®',
+    final_title: '¿Llevamos el Liderazgo Virtuoso® a su organización?',
+    final_text: 'Empezamos con una conversación para conocer su organización y construir un plan a medida.',
+
+    modal_title: 'Reciba la presentación de la Certificación',
+    modal_text: 'Se la enviamos por email en unos minutos.',
+    modal_fallback_text: 'Escríbanos y le enviamos la presentación completa por email.',
+    modal_fallback_button: 'Solicitar la presentación por email',
+    modal_close: 'Cerrar',
+  },
+
   // Duplicado de 'colegios' para /colegios (Programas). Edicion independiente.
-  // colegios_prog: la rama i18n de /colegios (Programas). Tiene su propia
-  // copia editable y un cross-link al detalle de la acreditacion via
-  // entregables_cta_*.
-  // Pagina /empresas (Businesses). Solo define el hero; el resto de bloques
-  // (contenido, modalidad, testimonios, CTA) se reutilizan de colegios_prog
-  // via ColegiosPrograma heroNs='empresas_prog'.
-  // Pagina /empresas (Businesses). Misma estructura que colegios_prog; solo
-  // define lo que cambia: hero, fila de Modalidad "Aplicacion al contexto",
-  // testimonios (solo las citas neutras) y CTA final. Contenido y Modalidad se
-  // siguen leyendo de 'universidades' via ColegiosPrograma ns='empresas_prog'.
+  // Pagina /empresas (Businesses, rama antigua Programa). Solo define el hero;
+  // el resto reutiliza colegios_prog via ColegiosPrograma.
   empresas_prog: {
     eyebrow: '',
     hero_title: 'LIDERAZGO VIRTUOSO PARA EMPRESAS',
