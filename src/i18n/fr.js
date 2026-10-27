@@ -579,6 +579,7 @@ export default {
       },
       other: 'Autre',
       other_placeholder: 'Dis-nous comment…',
+      institution_placeholder: 'Quel établissement, université ou entreprise ?',
       continue: 'Continuer',
     },
   },

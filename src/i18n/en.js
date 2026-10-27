@@ -580,6 +580,7 @@ export default {
       },
       other: 'Other',
       other_placeholder: 'Tell us how…',
+      institution_placeholder: 'Which school, university or company?',
       continue: 'Continue',
     },
   },

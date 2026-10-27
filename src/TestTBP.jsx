@@ -882,6 +882,7 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
   const { t } = useT();
   const [selected, setSelected] = useState('');
   const [otherText, setOtherText] = useState('');
+  const [institutionText, setInstitutionText] = useState('');
 
   const options = conoceAlex
     ? t('test.qualify_source.yes_options')
@@ -891,11 +892,16 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
     ? t('test.qualify_source.yes_title')
     : t('test.qualify_source.no_title');
 
-  const canSubmit = selected && (selected !== 'other' || otherText.trim().length > 0);
+  const needsDetail = selected === 'other' || selected === 'institution';
+  const detailFilled = selected === 'other' ? otherText.trim().length > 0 : selected === 'institution' ? institutionText.trim().length > 0 : true;
+  const canSubmit = selected && (!needsDetail || detailFilled);
 
   function handleSubmit() {
     if (!canSubmit) return;
-    const value = selected === 'other' ? otherText.trim() : options[selected];
+    let value;
+    if (selected === 'other') value = otherText.trim();
+    else if (selected === 'institution') value = `${options[selected]} - ${institutionText.trim()}`;
+    else value = options[selected];
     onSubmit(value);
   }
 
@@ -916,8 +922,8 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 12, maxWidth: 420, margin: '0 auto' }}>
         {Object.entries(options).map(([key, label]) => (
+          <React.Fragment key={key}>
           <button
-            key={key}
             style={{
               ...styles.yesNoBtn,
               width: '100%',
@@ -928,8 +934,30 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
               background: selected === key ? NAVY : PAPER,
               color: selected === key ? PAPER : NAVY,
             }}
-            onClick={() => { setSelected(key); if (key !== 'other') setOtherText(''); }}
+            onClick={() => { setSelected(key); if (key !== 'other') setOtherText(''); if (key !== 'institution') setInstitutionText(''); }}
           >{label}</button>
+          {key === 'institution' && selected === 'institution' && (
+            <input
+              type="text"
+              value={institutionText}
+              onChange={e => setInstitutionText(e.target.value)}
+              placeholder={t('test.qualify_source.institution_placeholder')}
+              style={{
+                fontFamily: fontSans,
+                fontSize: 15,
+                padding: '12px 16px',
+                border: `1.5px solid ${LINE}`,
+                borderRadius: 2,
+                outline: 'none',
+                width: '100%',
+                boxSizing: 'border-box',
+              }}
+              onFocus={e => { e.target.style.borderColor = NAVY; }}
+              onBlur={e => { e.target.style.borderColor = LINE; }}
+              autoFocus
+            />
+          )}
+          </React.Fragment>
         ))}
         <button
           style={{
@@ -942,7 +970,7 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
             background: selected === 'other' ? NAVY : PAPER,
             color: selected === 'other' ? PAPER : NAVY,
           }}
-          onClick={() => setSelected('other')}
+          onClick={() => { setSelected('other'); setInstitutionText(''); }}
         >{t('test.qualify_source.other')}</button>
         {selected === 'other' && (
           <input
