@@ -1,4 +1,4 @@
-// Pagina /colegios — version "Certificacion" (rediseño oct-2026).
+// Pagina /colegios — version "Certificacion" (rediseño oct-2026). v2
 // Traslada a React el HTML de diseño "Certificacion Liderazgo Virtuoso".
 // Usa el sistema visual nuevo de Liderazgo Virtuoso (Roboto Slab + Roboto,
 // azul profundo + oro, esquinas rectas), con tokens LOCALES a esta pagina
@@ -58,7 +58,7 @@ const C = {
 const SLAB = "'Roboto Slab', Georgia, serif";
 const SANS = "'Roboto', system-ui, sans-serif";
 const EASE = 'cubic-bezier(.22,.61,.36,1)';
-const PAD_X = 'clamp(20px,5vw,48px)';
+const PAD_X = 'clamp(20px,5.4vw,48px)';
 const SECTION_Y = 'clamp(88px,12vw,168px)';
 
 const CSS = `
@@ -75,6 +75,7 @@ const CSS = `
 .vlc-review { transition: background 240ms ${EASE}, box-shadow 240ms ${EASE}; }
 .vlc-review:hover { background: #fff !important; box-shadow: 0 2px 8px rgba(15,30,51,0.10); }
 .vlc-faq-btn { all: unset; box-sizing: border-box; width: 100%; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 24px; padding: 26px 0; font-family: ${SLAB}; font-weight: 700; font-size: 21px; line-height: 1.35; color: ${C.blueDeep}; transition: color 200ms ${EASE}; }
+@media (max-width: 759px) { .vlc-faq-btn { font-size: 18px; padding: 22px 0; } }
 .vlc-faq-btn:hover { color: ${C.blueMid}; }
 .vlc-link { color: ${C.cream}; font-size: 16px; text-underline-offset: 4px; }
 .vlc-link:hover { color: ${C.goldLight}; }
@@ -351,8 +352,8 @@ function ColegiosCertificacion() {
       {/* Barra de confianza */}
       <section aria-label="Barra de confianza" style={{ background: C.blueDeep, color: C.cream, borderTop: '1px solid rgba(201,171,66,.35)' }}>
         <Container style={{ padding: `26px ${PAD_X}`, display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px 40px' }}>
-          {k('trust').map((s) => (
-            <p key={s} style={{ margin: 0, paddingLeft: 18, borderLeft: `1px solid ${C.goldLight}`, fontSize: 15, letterSpacing: '0.02em' }}>{s}</p>
+          {(isMobile ? [k('trust')[0], k('trust')[2], k('trust')[1]] : k('trust')).map((s, i) => (
+            <p key={s} style={{ margin: 0, fontSize: 15, letterSpacing: '0.02em', ...(isMobile ? (i === 1 ? { paddingLeft: 18, borderLeft: `1px solid ${C.goldLight}` } : {}) : { paddingLeft: 18, borderLeft: `1px solid ${C.goldLight}` }) }}>{s}</p>
           ))}
         </Container>
       </section>
@@ -533,11 +534,16 @@ function ColegiosCertificacion() {
               ))}
             </ul>
           </Stack>
-          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : cols4, gap: '28px 32px' }}>
+          <div data-reveal="" style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2,1fr)' : cols4, gap: isMobile ? '40px 24px' : '28px 32px' }}>
             {k('part_facts').map((f, i) => (
-              <div key={f.text} style={{ ...(isMobile ? (i % 2 === 1 ? { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20 } : {}) : { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20 }), display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div key={f.text} style={{
+                ...(isMobile
+                  ? { textAlign: 'center', alignItems: 'center', ...(i % 2 === 1 ? { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 24 } : { paddingRight: 24 }) }
+                  : { borderLeft: `1px solid ${C.goldLight}`, paddingLeft: 20 }),
+                display: 'flex', flexDirection: 'column', gap: 14,
+              }}>
                 <Icon name={f.icon} size={28} color={C.goldLight} />
-                <p style={{ margin: 0, fontFamily: SLAB, fontSize: 21, lineHeight: 1.35, color: '#fff' }}>{f.text}</p>
+                <p style={{ margin: 0, fontFamily: SLAB, fontSize: isMobile ? 16 : 21, lineHeight: 1.35, color: '#fff' }}>{f.text}</p>
               </div>
             ))}
           </div>
