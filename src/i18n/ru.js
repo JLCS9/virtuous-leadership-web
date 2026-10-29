@@ -583,6 +583,7 @@ export default {
       },
       other: 'Другое',
       other_placeholder: 'Расскажите как…',
+      institution_placeholder: 'Какая школа, университет или компания?',
       continue: 'Продолжить',
     },
   },

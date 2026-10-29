@@ -543,7 +543,7 @@ function EmpresasCertificacion() {
       {/* 04B La practica (cuadernos) */}
       <section style={{ background: C.blueDeep, color: '#fff', padding: `${SECTION_Y} 0` }}>
         <Container style={{
-          display: 'grid', gridTemplateColumns: tablet ? 'minmax(0,1fr) minmax(0,1fr)' : '1fr', gap: 'clamp(48px,6vw,80px)', alignItems: 'center',
+          display: 'grid', gridTemplateColumns: wide ? 'minmax(0,1fr) minmax(0,1fr)' : '1fr', gap: 'clamp(48px,6vw,80px)', alignItems: 'center',
         }}>
           <Stack>
             <Eyebrow dark>{k('practice_eyebrow')}</Eyebrow>
@@ -558,9 +558,9 @@ function EmpresasCertificacion() {
               ))}
             </ul>
           </Stack>
-          <div data-reveal="" style={{ display: 'flex', justifyContent: 'center' }}>
+          <div data-reveal="" style={{ display: 'flex', justifyContent: 'center', overflow: wide ? 'visible' : 'hidden' }}>
             <img src={cuadernosImg} alt="" loading="lazy" style={{
-              display: 'block', width: 'min(100%,480px)', height: 'auto', filter: 'drop-shadow(0 18px 36px rgba(0,0,0,.35))',
+              display: 'block', width: wide ? '130%' : '100%', maxWidth: 'none', height: 'auto', filter: 'drop-shadow(0 18px 36px rgba(0,0,0,.35))',
             }} />
           </div>
         </Container>

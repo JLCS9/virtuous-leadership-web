@@ -980,6 +980,7 @@ export default {
       },
       other: 'Otros',
       other_placeholder: 'Cuéntanos cómo…',
+      institution_placeholder: '¿Qué colegio, universidad o empresa?',
       continue: 'Continuar',
     },
   },
