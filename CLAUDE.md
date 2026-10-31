@@ -440,15 +440,17 @@ Lo mismo corre en la app móvil de Virtus; **toda la lógica vive en las Edge Fu
 `retos-manana`, `retos-noche` y `retos-onboarding`** del Supabase de Virtus (repo `~/virtus`, rama
 `feat/retos-havard`). Esta web solo las llama.
 
-- **Acceso**: solo cuentas con una fila en `public.feature_access` (`feature = 'retos_web'`); el
-  servidor también lo exige (cabecera `x-virtus-cliente: web`). Para abrirlo al público, borrar esa
-  comprobación en `supabase/functions/_shared/retos.ts`, no solo en el front.
+- **Acceso**: solo cuentas con **suscripción activa a Retos** (`public.suscripciones_retos`, `activa = true`
+  y sin caducar). Por defecto toda cuenta nueva (también la del test) nace **desactivada**; de momento
+  solo se activa a mano (SQL en Supabase). El servidor lo exige en todas las funciones `retos-*` para
+  web y app (403 `sin_suscripcion`); la web solo lee su fila para mostrar u ocultar la interfaz.
+  No se usa `subscriptions` (la de la app, que escribe RevenueCat).
 - **Piezas**: `src/account/retos.js` (cliente), `src/account/RetosCard.jsx` (tarjeta de entrada, se
   autooculta sin acceso o fuera de ES; está en `MiPanel` y en la landing de resultados
   `TestTemperamentoGracias`), `src/pages/Retos.jsx` (`/es/mi-panel/retos`, sin Layout, noindex).
 - **Recorrido**: test → cuenta → `/tests/temperamento/gracias` → tarjeta «Retos diarios» → onboarding
   (una vez; reutiliza el temperamento del test) → reto de la mañana → examen de la noche.
-- Una cuenta nueva **no** tiene acceso hasta darle `retos_web` en `feature_access`.
+- Una cuenta nueva **no** tiene acceso hasta activarle la suscripción.
 
 ---
 

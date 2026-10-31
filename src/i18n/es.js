@@ -1575,7 +1575,7 @@ export default {
       repeat_button: 'Hacer el test otra vez',
     },
   },
-  // Retos diarios de carácter (beta privada, solo ES; acceso por feature_access 'retos_web').
+  // Retos diarios de carácter (beta privada, solo ES; solo con suscripción activa a Retos).
   retos: {
     title: 'Retos diarios',
     eyebrow: 'Retos diarios · beta',

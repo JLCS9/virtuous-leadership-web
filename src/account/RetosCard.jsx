@@ -1,5 +1,5 @@
 // Entrada a «Retos diarios» (beta privada): solo versión ES y solo cuentas con
-// feature_access 'retos_web'. Para el resto no renderiza nada, así que se puede
+// suscripción activa a Retos. Para el resto no renderiza nada, así que se puede
 // montar en cualquier página (Mi panel, landing de resultados) sin afectar al público.
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';

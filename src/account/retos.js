@@ -1,18 +1,22 @@
 // Retos diarios de carácter (método Havard), compartidos con la app Virtus.
 // Toda la lógica vive en las Edge Functions retos-* del proyecto Supabase de Virtus;
-// aquí solo se llaman. La web va tras la puerta 'retos_web' (feature_access): por ahora
-// solo cuentas autorizadas. La cabecera x-virtus-cliente: web hace que el servidor lo exija.
+// aquí solo se llaman. Solo con suscripción activa (public.suscripciones_retos): por defecto
+// desactivada, se activa a mano. El servidor lo exige en cada llamada.
 import { supabase } from './supabase';
 
 export class RetosError extends Error {
   constructor(code) { super(code); this.code = code; }
 }
 
-/** ¿Tiene esta cuenta acceso a los retos en la web? (RLS: cada uno solo ve sus filas.) */
+/**
+ * ¿Tiene esta cuenta la suscripción a Retos activa? (RLS: cada una solo ve su fila.)
+ * Es solo para mostrar u ocultar la interfaz: quien manda es el servidor, que repite la comprobación
+ * en cada función y responde 403 'sin_suscripcion' si no está activa.
+ */
 export async function tieneAccesoRetos() {
   if (!supabase) return false;
-  const { data } = await supabase.from('feature_access').select('feature').eq('feature', 'retos_web').maybeSingle();
-  return Boolean(data);
+  const { data } = await supabase.from('suscripciones_retos').select('activa, hasta').maybeSingle();
+  return Boolean(data?.activa && (!data.hasta || new Date(data.hasta) > new Date()));
 }
 
 /** Fecha local YYYY-MM-DD: el día del usuario, no el de UTC. */

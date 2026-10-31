@@ -194,7 +194,7 @@ function ResultsLanding({ user }) {
           </div>
         </section>
 
-        {/* Retos diarios (beta privada): solo se pinta con acceso 'retos_web' y en ES */}
+        {/* Retos diarios (beta privada): solo se pinta con suscripción activa a Retos y en ES */}
         <RetosCard />
 
         {/* 02 Tu temperamento */}

@@ -1,6 +1,6 @@
 // «Retos diarios» — reto de la mañana + examen guiado de la noche (método Havard),
 // compartido con la app Virtus. Beta privada: solo ES y solo cuentas con
-// feature_access 'retos_web' (el servidor lo exige también). Toda la lógica vive en
+// suscripción activa a Retos (el servidor lo exige también). Toda la lógica vive en
 // las Edge Functions retos-*; esta página solo conversa con ellas.
 //
 // Va SIN Layout (NO_LAYOUT_PAGES), como «Mi panel». SEO: noindex.
@@ -51,6 +51,7 @@ function Puerta() {
 }
 
 function mensajeError(t, e) {
+  if (e instanceof RetosError && e.code === 'forbidden') return t('retos.no_access'); // suscripción no activa
   return t(e instanceof RetosError && e.code === 'unavailable' ? 'retos.unavailable' : 'retos.failed');
 }
 
