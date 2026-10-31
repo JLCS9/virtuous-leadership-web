@@ -20,6 +20,8 @@ export default {
   },
 
   nav: {
+    my_panel: 'Mi panel',
+    login: 'Entrar',
     home: 'Home',
     programs: 'Programas',
     education_centers: 'Centros educativos',
@@ -987,10 +989,18 @@ export default {
 
   // ──────────── GATE FORM ────────────
   gate: {
+    title_account: 'Crea tu cuenta y descubre tu perfil',
+    intro_account: 'Con tu cuenta verás ahora mismo tu resultado completo en tu panel personal, y podrás volver a él cuando quieras.',
+    password_hint: 'Mínimo 8 caracteres. La usarás para entrar en tu panel.',
+    consent_account: 'Sí, creadme una cuenta para ver mis resultados, envíamelos por email y suscríbeme al boletín mensual: un correo al mes con contenido sobre temperamento y desarrollo personal. Cero spam, baja con un clic cuando quieras.',
+    submit_account: 'Crear mi cuenta y ver mis resultados →',
+    forgot: '¿Has olvidado tu contraseña?',
+    reset_sent: 'Te hemos enviado un email para restablecerla.',
     eyebrow: 'Último paso',
     title: 'Recibe tus resultados',
     intro: 'Recibirás un informe personalizado con tus resultados y algunas claves prácticas para entender tu temperamento y desarrollar tu carácter.',
     fields: {
+      password: 'Contraseña',
       name: 'Nombre',
       email: 'Email',
       year: 'Año de nacimiento',
@@ -1000,6 +1010,10 @@ export default {
     consent: 'Sí, envíame mis resultados por email y suscríbeme al boletín mensual: un correo al mes con contenido sobre temperamento y desarrollo personal. Cero spam, baja con un clic cuando quieras.',
     privacy: 'Al suscribirte aceptas nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
     errors: {
+      password: 'La contraseña debe tener al menos 8 caracteres.',
+      wrong_password: 'Ya tienes una cuenta con este email y la contraseña no coincide.',
+      account_failed: 'No hemos podido crear tu cuenta. Reintenta en unos segundos.',
+      rate_limited: 'Demasiados intentos. Espera unos minutos y vuelve a probar.',
       name: 'Introduce tu nombre.',
       email: 'Email no válido.',
       year_required: 'Indica tu año de nacimiento.',
@@ -1013,7 +1027,55 @@ export default {
   },
 
   // ──────────── RESULT SCREEN ────────────
+  // ──────────── MI PANEL (cuenta del usuario) ────────────
+  panel: {
+    title: 'Mi panel',
+    eyebrow: 'Mi panel',
+    greeting: 'Hola, {name}',
+    logout: 'Cerrar sesión',
+    loading: 'Cargando…',
+    load_failed: 'No hemos podido cargar tus resultados. Recarga la página en unos segundos.',
+    empty_title: 'Aún no tienes resultados',
+    empty_intro: 'Haz el test de temperamento para descubrir tu perfil y tu virtud-desafío.',
+    take_test: 'Hacer el test de temperamento',
+    login_title: 'Entra en tu panel',
+    login_intro: 'Accede con el email y la contraseña que elegiste al hacer el test.',
+    no_accounts: 'Haz el test de temperamento para descubrir tu perfil.',
+    fields: { email: 'Email', password: 'Contraseña' },
+    submit: 'Entrar',
+    submitting: 'Entrando…',
+    forgot: '¿Has olvidado tu contraseña?',
+    no_account: '¿Aún no tienes cuenta? Haz el test',
+    reset_sent: 'Si existe una cuenta con ese email, te hemos enviado un enlace para restablecer la contraseña.',
+    errors: {
+      invalid: 'Email o contraseña incorrectos.',
+      generic: 'Algo ha fallado. Reintenta en unos segundos.',
+      email_for_reset: 'Escribe tu email y vuelve a pulsar «¿Has olvidado tu contraseña?».',
+    },
+  },
+  reset: {
+    title: 'Nueva contraseña',
+    intro: 'Elige una nueva contraseña para tu cuenta.',
+    password: 'Nueva contraseña',
+    submit: 'Guardar y entrar →',
+    invalid_link: 'El enlace no es válido o ha caducado. Pide uno nuevo desde la página de acceso.',
+    back: 'Ir a la página de acceso',
+    errors: {
+      short: 'La contraseña debe tener al menos 8 caracteres.',
+      generic: 'No hemos podido guardar la contraseña. Pide un enlace nuevo e inténtalo otra vez.',
+    },
+  },
+
   result: {
+    challenge_card_eyebrow: 'Tu virtud-desafío',
+    challenge_defs: {
+      humildad:             { name: 'Humildad',                   def: 'La virtud de la humildad en sus dos dimensiones: el autoconocimiento (vivir en la verdad sobre ti) y el servicio fraterno a los demás.' },
+      humildad_fraterna:    { name: 'Humildad fraterna',          def: 'El aspecto de la virtud de la humildad que te insta a cuidar de los demás y a servirles, en lugar de servirte de ellos.' },
+      humildad_fundamental: { name: 'Humildad fundamental',       def: 'El aspecto de la virtud de la humildad relacionado con el autoconocimiento: vivir en la verdad sobre ti mismo, sobre tus talentos y tus límites.' },
+      audacia:              { name: 'Audacia',                    def: 'El aspecto activo de la virtud de la fortaleza: atreverte a actuar, a correr riesgos y a convertir tus sueños en realidad superando el miedo a equivocarte.' },
+      resistencia:          { name: 'Resistencia y persistencia', def: 'El aspecto pasivo de la virtud de la fortaleza: la perseverancia, la constancia y la fidelidad necesarias para terminar lo que comienzas.' },
+      magnanimidad:         { name: 'Magnanimidad',               def: 'La virtud de la grandeza: aspirar a cosas grandes, soñar en grande y convertir el sueño en una misión que da sentido a tu vida.' },
+    },
     subtitle: 'Tu perfil',
     pure_note: '· perfil puro · estadísticamente menos frecuente',
     challenge_label: 'Virtud-desafío',

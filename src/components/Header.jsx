@@ -3,6 +3,8 @@ import { NavLink, Link, useLocation } from 'react-router-dom';
 import { NAVY, NAVY_SOFT, NAVY_DEEP, GOLD, GOLD_SOFT, GOLD_DEEP, PAPER, BEIGE, LINE, MUTED, FONT_SERIF, FONT_SANS, MAX_WIDTH } from '../theme';
 import { useT, useLocalPath } from '../i18n';
 import LangSwitcher from './LangSwitcher';
+import { accountsEnabled } from '../account/supabase';
+import { useSession } from '../account/useSession';
 import logoUrl from '../assets/logo-1.png';
 
 function Brand() {
@@ -21,6 +23,7 @@ export default function Header() {
   const lp = useLocalPath();
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const session = useSession();
 
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
@@ -40,6 +43,7 @@ export default function Header() {
     { to: '/empresas',              label: t('nav.businesses') },
     { to: '/acreditacion/colegios', label: t('nav.accreditation') },
     { to: '/tests',                  label: t('nav.tests') },
+    ...(accountsEnabled ? [{ to: '/mi-panel', label: session ? t('nav.my_panel') : t('nav.login') }] : []),
   ];
 
   return (

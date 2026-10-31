@@ -19,6 +19,8 @@ export default {
   },
 
   nav: {
+    my_panel: 'My dashboard',
+    login: 'Log in',
     home: 'Home',
     programs: 'Programs',
     education_centers: 'Educational institutions',
@@ -586,10 +588,18 @@ export default {
   },
 
   gate: {
+    title_account: 'Create your account and discover your profile',
+    intro_account: 'With your account you will see your full result right now in your personal dashboard, and you can come back to it whenever you like.',
+    password_hint: 'At least 8 characters. You will use it to log in to your dashboard.',
+    consent_account: 'Yes, create an account so I can see my results, email them to me and subscribe me to the monthly newsletter: one email a month about temperament and personal growth. No spam, unsubscribe in one click at any time.',
+    submit_account: 'Create my account and see my results →',
+    forgot: 'Forgot your password?',
+    reset_sent: 'We have sent you an email to reset it.',
     eyebrow: 'Last step',
     title: 'Receive your results',
     intro: 'You will receive a personalized report with your results and practical keys to understand your temperament and develop your character.',
     fields: {
+      password: 'Password',
       name: 'Name',
       email: 'Email',
       year: 'Year of birth',
@@ -599,6 +609,10 @@ export default {
     consent: 'Yes, send me my results by email and subscribe me to the monthly newsletter: one email a month with content about temperament and personal development. No spam, unsubscribe with one click whenever you want.',
     privacy: 'By subscribing you accept our <a href="/en/privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a>.',
     errors: {
+      password: 'Your password must be at least 8 characters long.',
+      wrong_password: 'You already have an account with this email and the password does not match.',
+      account_failed: 'We could not create your account. Please try again in a few seconds.',
+      rate_limited: 'Too many attempts. Please wait a few minutes and try again.',
       name: 'Enter your name.',
       email: 'Invalid email.',
       year_required: 'Indicate your year of birth.',
@@ -611,7 +625,55 @@ export default {
     submitting: 'Sending…',
   },
 
+  // ──────────── MY DASHBOARD (user account) ────────────
+  panel: {
+    title: 'My dashboard',
+    eyebrow: 'My dashboard',
+    greeting: 'Hello, {name}',
+    logout: 'Log out',
+    loading: 'Loading…',
+    load_failed: 'We could not load your results. Please reload the page in a few seconds.',
+    empty_title: 'You have no results yet',
+    empty_intro: 'Take the temperament test to discover your profile and your virtue-challenge.',
+    take_test: 'Take the temperament test',
+    login_title: 'Log in to your dashboard',
+    login_intro: 'Use the email and password you chose when you took the test.',
+    no_accounts: 'Take the temperament test to discover your profile.',
+    fields: { email: 'Email', password: 'Password' },
+    submit: 'Log in',
+    submitting: 'Logging in…',
+    forgot: 'Forgot your password?',
+    no_account: 'No account yet? Take the test',
+    reset_sent: 'If an account exists for that email, we have sent you a link to reset your password.',
+    errors: {
+      invalid: 'Incorrect email or password.',
+      generic: 'Something went wrong. Please try again in a few seconds.',
+      email_for_reset: 'Enter your email and click “Forgot your password?” again.',
+    },
+  },
+  reset: {
+    title: 'New password',
+    intro: 'Choose a new password for your account.',
+    password: 'New password',
+    submit: 'Save and log in →',
+    invalid_link: 'This link is invalid or has expired. Request a new one from the login page.',
+    back: 'Go to the login page',
+    errors: {
+      short: 'Your password must be at least 8 characters long.',
+      generic: 'We could not save your password. Request a new link and try again.',
+    },
+  },
+
   result: {
+    challenge_card_eyebrow: 'Your virtue-challenge',
+    challenge_defs: {
+      humildad:             { name: 'Humility',             def: 'The virtue of humility in both its dimensions: self-knowledge (fundamental humility) and service to others (fraternal humility).' },
+      humildad_fraterna:    { name: 'Fraternal humility',   def: 'The aspect of the virtue of humility which helps us to care for others and serve them, rather than to use them.' },
+      humildad_fundamental: { name: 'Fundamental humility', def: 'The aspect of the virtue of humility related to self-knowledge: living in the truth about yourself, your talents and your limits.' },
+      audacia:              { name: 'Audacity',             def: 'The active aspect of the virtue of courage: to dare to act, take risks, and turn your dreams into reality by overcoming the fear of failure.' },
+      resistencia:          { name: 'Endurance',            def: 'The passive aspect of the virtue of courage: persistence, patience and fidelity — the strength to finish what you begin.' },
+      magnanimidad:         { name: 'Magnanimity',          def: 'The virtue of greatness: striving for great things, dreaming big, and transforming your dream into a mission that gives meaning to your life.' },
+    },
     subtitle: 'Your profile',
     pure_note: '· pure profile · statistically less frequent',
     challenge_label: 'Virtue-challenge',

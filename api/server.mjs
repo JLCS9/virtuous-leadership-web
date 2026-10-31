@@ -22,12 +22,16 @@
 //   CONVERFLOW_TT_LIST_{ES,EN,FR,RU}
 //                      → nombre de la lista de Converflow por idioma. Default
 //                        "TT-ES", "TT-EN", "TT-FR", "TT-RU".
+//   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+//                      → proyecto Supabase de Virtus. Opcional: si faltan,
+//                        POST /api/account responde 503 (ver api/auth.mjs).
 //   PORT               → puerto donde escucha (default 3001)
 
 import http from 'http';
 import {
   withTx, upsertSchool, upsertParent, upsertChild, insertSubmission, ping,
 } from './db.mjs';
+import { accountsEnabled, createAccount, rateLimited } from './auth.mjs';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 // Listas por idioma. parseInt('') o '0' → 0, lo tratamos como "no configurado".
@@ -81,6 +85,10 @@ if (CONVERFLOW_API_KEY) {
   console.warn('[warn] CONVERFLOW_API_KEY not set — Converflow sync disabled');
 }
 console.log(`[brevo] lists configured per language: [${langsWithList.join(', ') || 'none'}], character: [${langsWithCharacterList.join(', ') || 'none — using temperament lists'}], heart: [${langsWithHeartList.join(', ') || 'none — using temperament lists'}], fallback: ${BREVO_LIST_ID_FALLBACK || 'none'}`);
+
+if (!accountsEnabled) {
+  console.warn('[warn] SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY not set — /api/account disabled');
+}
 
 // DATABASE_URL es opcional al arrancar — si falta, /api/submit-children
 // devolverá 503 hasta que se configure, pero el resto del servidor funciona.
@@ -528,6 +536,46 @@ async function handleSubmitAdult(req, res) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// HANDLER — Alta de cuenta al terminar el test de temperamento adulto.
+// Crea el usuario en el Supabase de Virtus; el front inicia sesión después
+// con email + contraseña. 201 = creada, 409 = ya existía (el front intenta
+// entrar con esa contraseña). Nunca se registra la contraseña en logs.
+// ════════════════════════════════════════════════════════════════════════════
+async function handleAccount(req, res) {
+  if (!accountsEnabled) return sendJson(res, 503, { error: 'Accounts disabled' });
+  if (rateLimited(clientIp(req) || 'unknown')) return sendJson(res, 429, { error: 'Too many requests' });
+
+  let data;
+  try { data = JSON.parse(await readBody(req)); }
+  catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+
+  const email = String(data.email || '').trim().toLowerCase();
+  const password = typeof data.password === 'string' ? data.password : '';
+  const name = String(data.name || '').trim().slice(0, 80);
+  if (!EMAIL_RE.test(email) || password.length < 8 || password.length > 72 || !name || data.consent !== true) {
+    return sendJson(res, 400, { error: 'Invalid account data' });
+  }
+
+  const r = await createAccount({
+    email,
+    password,
+    name,
+    birthYear: Number.isInteger(data.birthYear) ? data.birthYear : null,
+    sex: data.sex,
+    language: String(data.language || 'es').toLowerCase(),
+    consentAt: new Date().toISOString(),
+  });
+
+  if (r.status === 'created') {
+    console.log(`[account] created lang=${data.language || 'es'}`);
+    return sendJson(res, 201, { ok: true, account: 'created' });
+  }
+  if (r.status === 'exists') return sendJson(res, 409, { ok: false, account: 'exists' });
+  console.error('[account] error:', r.detail);
+  return sendJson(res, 502, { error: 'Account service error' });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // HANDLER — Test de NIÑOS (nuevo). Persiste en Supabase, NO toca Brevo.
 // ════════════════════════════════════════════════════════════════════════════
 
@@ -957,6 +1005,10 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/submit') {
     return handleSubmitAdult(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/account') {
+    return handleAccount(req, res);
   }
 
   if (req.method === 'POST' && req.url === '/api/submit-children') {
