@@ -9,11 +9,11 @@ import { catalogoFormacion } from '../account/retos';
 let cache = null; // el catálogo no cambia durante la visita
 export function olvidarCatalogo() { cache = null; }
 
-// Solo en desarrollo: con ?demo en la dirección, el catálogo se lee de un archivo local temporal
-// (public/__dev_cursos.json, sin versionar) en lugar de la función. En producción no existe.
+// Solo en desarrollo: si existe public/__dev_cursos.json (sin versionar), el catálogo se lee de ahí
+// en lugar de la función, para probar en local sin desplegarla. En producción no existe.
 const cargarCatalogo = () => (
-  import.meta.env.DEV && typeof location !== 'undefined' && location.search.includes('demo')
-    ? fetch('/__dev_cursos.json').then((r) => r.json())
+  import.meta.env.DEV
+    ? fetch('/__dev_cursos.json').then((r) => (r.ok && r.headers.get('content-type')?.includes('json') ? r.json() : Promise.reject(new Error('sin fixture')))).catch(() => catalogoFormacion())
     : catalogoFormacion()
 );
 
