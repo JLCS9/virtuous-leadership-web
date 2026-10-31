@@ -13,12 +13,16 @@ import {
 } from '../theme';
 import { Card, Title, Field, PrimaryButton, LinkButton, Notice } from '../account/ui';
 import RetosCard from '../account/RetosCard';
+import { useAcceso } from '../account/useAcceso';
+import { PanelHoy } from './PanelApp';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function MiPanel() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const session = useSession();
+  // Con la suscripción a Retos activa (y en ES), el panel es el de pestañas; sin ella, el de siempre.
+  const acceso = useAcceso(Boolean(session) && lang === 'es');
 
   return (
     <>
@@ -31,7 +35,9 @@ export default function MiPanel() {
       {session === undefined ? (
         <Shell><Loading /></Shell>
       ) : session ? (
-        <Shell><PanelHome session={session} /></Shell>
+        acceso === true ? <PanelHoy />
+          : acceso === undefined && lang === 'es' ? <Shell><Loading /></Shell>
+          : <Shell><PanelHome session={session} /></Shell>
       ) : (
         <Shell><LoginForm /></Shell>
       )}
