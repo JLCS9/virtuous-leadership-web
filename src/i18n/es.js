@@ -1028,8 +1028,24 @@ export default {
 
   // ──────────── RESULT SCREEN ────────────
   // ──────────── MI PANEL (cuenta del usuario) ────────────
+  landing: {
+    result_heading: '{name}, tu temperamento es {temperament}',
+    strengths_title: 'Tus puntos fuertes',
+    weakness_title: 'Lo que te cuesta',
+    video_caption: 'Ámate como eres y trabaja tu carácter',
+    video_eyebrow: 'Empieza aquí',
+    video_title: 'Temperamento y carácter',
+    video_description: 'La primera lección del curso «Del temperamento al carácter», completa y gratuita. Veinte minutos en los que Alex Havard explica la diferencia entre temperamento y carácter, y recorre los cuatro temperamentos.',
+    quote_text: 'Tu temperamento reacciona primero, y no lo eliges. Pero tú puedes elegir una segunda reacción. Esa segunda reacción es tu carácter.<br/><strong>Y el carácter se forja.</strong>',
+    next_step_title: 'Tu siguiente paso',
+    next_step_heading: 'Entiéndete, comprende a los demás\ny crece en lo que más te cuesta, en 7 pasos, a tu ritmo.',
+    next_step_description: 'La Formación completa de Liderazgo Virtuoso®: 7 cursos en vídeo de Alexandre Havard y 6 cuadernos de trabajo para pasar de entender a actuar.',
+    next_step_cta: 'Empezar la formación',
+  },
+
   panel: {
     title: 'Mi panel',
+    seo_description: 'Tu resultado del test de temperamento de Virtuous Leadership.',
     eyebrow: 'Mi panel',
     greeting: 'Hola, {name}',
     logout: 'Cerrar sesión',
