@@ -433,6 +433,25 @@ entra a `/{lang}/mi-panel` (es `mi-panel`, en `my-dashboard`, fr
 
 ---
 
+## Retos diarios (beta privada, solo ES)
+
+Retos de carácter según el método de Havard: reto por la mañana y examen guiado por la noche.
+Lo mismo corre en la app móvil de Virtus; **toda la lógica vive en las Edge Functions
+`retos-manana`, `retos-noche` y `retos-onboarding`** del Supabase de Virtus (repo `~/virtus`, rama
+`feat/retos-havard`). Esta web solo las llama.
+
+- **Acceso**: solo cuentas con una fila en `public.feature_access` (`feature = 'retos_web'`); el
+  servidor también lo exige (cabecera `x-virtus-cliente: web`). Para abrirlo al público, borrar esa
+  comprobación en `supabase/functions/_shared/retos.ts`, no solo en el front.
+- **Piezas**: `src/account/retos.js` (cliente), `src/account/RetosCard.jsx` (tarjeta de entrada, se
+  autooculta sin acceso o fuera de ES; está en `MiPanel` y en la landing de resultados
+  `TestTemperamentoGracias`), `src/pages/Retos.jsx` (`/es/mi-panel/retos`, sin Layout, noindex).
+- **Recorrido**: test → cuenta → `/tests/temperamento/gracias` → tarjeta «Retos diarios» → onboarding
+  (una vez; reutiliza el temperamento del test) → reto de la mañana → examen de la noche.
+- Una cuenta nueva **no** tiene acceso hasta darle `retos_web` en `feature_access`.
+
+---
+
 ## Deploy
 
 Repo remote: **github.com/JLCS9/virtuous-leadership-web**.

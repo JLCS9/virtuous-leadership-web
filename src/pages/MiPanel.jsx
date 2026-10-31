@@ -1,25 +1,18 @@
-// «Mi panel» — espacio privado del usuario. La cuenta se crea al terminar el
-// test de temperamento (TestTBP.jsx → /api/account) y aquí se muestra su
-// último resultado: perfil, virtud-desafío, fortaleza, debilidad y reto.
-//
-// Sin sesión: formulario de acceso (email + contraseña) con recuperación de
-// contraseña. Sin cuentas configuradas (faltan VITE_SUPABASE_*): invita a
-// hacer el test.
-//
-// Va SIN Layout (NO_LAYOUT_PAGES) con el mismo fondo y tipografías del test.
-// SEO: noindex (página privada).
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT, useLocalPath, LocalLink as Link, ROUTES } from '../i18n';
 import SEO from '../components/SEO';
-import { TestShell, ResultScreen } from '../TestTBP';
 import { supabase, accountsEnabled } from '../account/supabase';
 import { useSession } from '../account/useSession';
-import { AccountError, signIn, sendPasswordReset, fetchLatestTemperament, fetchFirstName } from '../account/account';
-import { tieneAccesoRetos } from '../account/retos';
-import { Card, Title, Field, PrimaryButton, LinkButton, Notice, TopBar } from '../account/ui';
-import { NAVY, MUTED, FONT_SANS, styles } from '../theme';
+import { AccountError, signIn, sendPasswordReset } from '../account/account';
+import {
+  NAVY, GOLD, GOLD_DEEP,
+  PAPER, BEIGE, MUTED,
+  FONT_SANS,
+  styles,
+} from '../theme';
+import { Card, Title, Field, PrimaryButton, LinkButton, Notice } from '../account/ui';
+import RetosCard from '../account/RetosCard';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -29,89 +22,67 @@ export default function MiPanel() {
 
   return (
     <>
-      <SEO title={`${t('panel.title')} | Virtuous Leadership`} description={t('panel.title')} path="/mi-panel" noindex={true} />
-      <TestShell>
-        {session === undefined ? null
-          : session ? <Dashboard user={session.user} />
-          : <LoginForm />}
-      </TestShell>
-    </>
-  );
-}
-
-function Dashboard({ user }) {
-  const { t, lang } = useT();
-  const lp = useLocalPath();
-  const navigate = useNavigate();
-  const [state, setState] = useState({ loading: true });
-  const [retos, setRetos] = useState(false);
-
-  // Retos diarios: beta privada (solo ES y solo cuentas con acceso).
-  useEffect(() => {
-    if (lang !== 'es') return;
-    tieneAccesoRetos().then(setRetos).catch(() => setRetos(false));
-  }, [user, lang]);
-
-  useEffect(() => {
-    let alive = true;
-    Promise.all([fetchLatestTemperament(), fetchFirstName(user)])
-      .then(([row, firstName]) => { if (alive) setState({ loading: false, row, firstName }); })
-      .catch(() => { if (alive) setState({ loading: false, failed: true }); });
-    return () => { alive = false; };
-  }, [user]);
-
-  async function logout() {
-    // Solo este navegador: no cierra la sesión de la app móvil.
-    await supabase.auth.signOut({ scope: 'local' });
-  }
-
-  const r = state.row?.result;
-
-  return (
-    <>
-      <TopBar>
-        {state.firstName && <span>{t('panel.greeting', { name: state.firstName })}</span>}
-        <LinkButton onClick={logout}>{t('panel.logout')}</LinkButton>
-      </TopBar>
-
-      {state.loading ? (
-        <p style={{ ...styles.para, textAlign: 'center', color: MUTED }}>{t('panel.loading')}</p>
-      ) : state.failed ? (
-        <Card><Notice>{t('panel.load_failed')}</Notice></Card>
-      ) : !r ? (
-        <Card>
-          <Title eyebrow={t('panel.eyebrow')}>{t('panel.empty_title')}</Title>
-          <p style={{ ...styles.para, marginTop: 12 }}>{t('panel.empty_intro')}</p>
-          <div style={{ marginTop: 20 }}>
-            <PrimaryButton onClick={() => navigate(lp('/tests/temperamento'))}>{t('panel.take_test')}</PrimaryButton>
-          </div>
-        </Card>
+      <SEO
+        title={`${t('panel.title')} | Virtuous Leadership`}
+        description={t('panel.seo_description')}
+        path="/mi-panel"
+        noindex={true}
+      />
+      {session === undefined ? (
+        <Shell><Loading /></Shell>
+      ) : session ? (
+        <Shell><PanelHome session={session} /></Shell>
       ) : (
-        <>
-        {retos && <RetosCard onOpen={() => navigate(lp('/mi-panel/retos'))} />}
-        <ResultScreen
-          inPanel
-          profileKey={r.profileKey}
-          primario={r.primario}
-          secondaryStrength={r.isPure ? null : Math.abs(r.scoreS2)}
-          onRestart={() => navigate(lp('/tests/temperamento'))}
-        />
-        </>
+        <Shell><LoginForm /></Shell>
       )}
     </>
   );
 }
 
-function RetosCard({ onOpen }) {
-  const { t } = useT();
+function Shell({ children }) {
   return (
-    <div style={{ marginBottom: 20 }}>
-      <Card>
-        <Title eyebrow={t('retos.eyebrow')}>{t('retos.card_title')}</Title>
-        <p style={{ ...styles.para, marginTop: 12, marginBottom: 20 }}>{t('retos.card_intro')}</p>
-        <PrimaryButton onClick={onOpen}>{t('retos.card_cta')}</PrimaryButton>
-      </Card>
+    <div style={{
+      minHeight: '100vh',
+      background: BEIGE,
+      fontFamily: FONT_SANS,
+      WebkitFontSmoothing: 'antialiased',
+    }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        * { box-sizing: border-box; margin: 0; }
+        button:focus-visible { outline: 2px solid ${GOLD}; outline-offset: 2px; }
+      `}</style>
+      <main style={{ padding: '48px 24px' }}>
+        {children}
+      </main>
     </div>
+  );
+}
+
+function Loading() {
+  return <p style={{ ...styles.para, textAlign: 'center', color: MUTED }}>...</p>;
+}
+
+function PanelHome({ session }) {
+  const { t } = useT();
+
+  async function logout() {
+    await supabase.auth.signOut({ scope: 'local' });
+  }
+
+  return (
+    <>
+      <RetosCard />
+      <Card>
+        <Title eyebrow={t('panel.eyebrow')}>{t('panel.title')}</Title>
+        <p style={{ ...styles.para, marginTop: 12 }}>
+          {session.user.email}
+        </p>
+        <div style={{ marginTop: 20 }}>
+          <LinkButton onClick={logout}>{t('panel.logout')}</LinkButton>
+        </div>
+      </Card>
+    </>
   );
 }
 
