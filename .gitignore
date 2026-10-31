@@ -29,3 +29,6 @@ dist-ssr
 .env.*.local
 !.env.example
 !.env.production
+
+# Catálogo de cursos para probar en local (copia de virtus/packages/content/src/es/cursos.json)
+public/__dev_cursos.json

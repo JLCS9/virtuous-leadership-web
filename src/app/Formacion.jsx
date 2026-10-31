@@ -78,7 +78,8 @@ function VistaLeccion({ cursos, encontrada, progreso, volver, ir }) {
   const siguiente = siguienteDelCurso ?? siguienteCurso?.lecciones[0] ?? null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="vl-leccion" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <style>{`@media (min-width: 1100px) { .vl-leccion { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-leccion > button { grid-column: 1 / -1; } }`}</style>
       <button type="button" onClick={volver} style={{ alignSelf: 'flex-start', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600 }}>← Formación</button>
       <Reproductor leccion={leccion} onProgreso={(f) => { if (f >= UMBRAL_VISTA) progreso.marcarVista(leccion.id); }} />
       <section style={tarjeta}>
@@ -147,14 +148,14 @@ function Listado({ cursos, progreso, abrirLeccion }) {
   const [abiertos, setAbiertos] = useState(() => (siguiente ? { [siguiente.curso.id]: true } : {}));
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <div>
+    <div className="vl-cols vl-cols-3">
+      <div className="vl-ancho">
         <div style={eyebrow}>Formación</div>
         <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Virtuous Leadership</h1>
         <p style={{ ...parrafo, color: MUTED }}>Los cursos de Alexandre Havard, a tu ritmo.</p>
       </div>
 
-      <section style={{ ...tarjeta, display: 'flex', alignItems: 'center', gap: 18 }} aria-label="Tu progreso">
+      <section className="vl-ancho" style={{ ...tarjeta, display: 'flex', alignItems: 'center', gap: 18 }} aria-label="Tu progreso">
         <Anillo valor={resumen.porcentaje} />
         <div>
           <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{resumen.hechas} de {resumen.total} lecciones</div>
@@ -163,7 +164,7 @@ function Listado({ cursos, progreso, abrirLeccion }) {
       </section>
 
       {siguiente && (
-        <section style={{ background: heroFondo, color: PAPER, borderRadius: 22, padding: 18, boxShadow: '0 18px 40px rgba(15,29,56,0.26)' }}>
+        <section className="vl-ancho" style={{ background: heroFondo, color: PAPER, borderRadius: 22, padding: 18, boxShadow: '0 18px 40px rgba(15,29,56,0.26)' }}>
           <div style={{ ...eyebrow, color: GOLD_SOFT, padding: '4px 6px 12px' }}>{siguiente.retomada ? 'Continúa donde lo dejaste' : resumen.hechas ? 'Siguiente lección' : 'Empieza aquí'}</div>
           <button type="button" onClick={() => abrirLeccion(siguiente.leccion.id)} style={{ all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer', display: 'flex', gap: 14, alignItems: 'center' }}>
             <Miniatura leccion={siguiente.leccion} />
@@ -181,7 +182,7 @@ function Listado({ cursos, progreso, abrirLeccion }) {
                alternar={() => setAbiertos((a) => ({ ...a, [c.id]: !a[c.id] }))} abrirLeccion={abrirLeccion} />
       ))}
 
-      <p style={{ ...parrafo, fontSize: 12.5, textAlign: 'center' }}>Tu progreso se guarda en este navegador.</p>
+      <p className="vl-ancho" style={{ ...parrafo, fontSize: 12.5, textAlign: 'center' }}>Tu progreso se guarda en este navegador.</p>
     </div>
   );
 }

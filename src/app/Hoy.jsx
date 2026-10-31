@@ -136,7 +136,7 @@ function MiResultado() {
 
 export default function Hoy() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+    <div className="vl-cols">
       <RetoDelDia />
       <MiResultado />
     </div>

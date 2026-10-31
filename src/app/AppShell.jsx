@@ -1,5 +1,5 @@
 // Marco del panel con pestañas: cabecera, contenido y una «burbuja» de navegación fija abajo con
-// tres opciones: Hoy · Camino · Formación. Pensado para móvil primero; en escritorio queda centrado.
+// tres opciones: Hoy · Camino · Formación. Móvil primero; en escritorio ocupa todo el ancho con rejillas.
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LocalLink as Link, useLocalPath } from '../i18n';
@@ -40,15 +40,23 @@ export default function AppShell({ user, children }) {
     <div style={{ minHeight: '100vh', background: BEIGE, fontFamily: FONT_SANS, WebkitFontSmoothing: 'antialiased', paddingBottom: 132 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+        .vl-app { --vl-pad: clamp(16px, 3.2vw, 56px); }
         .vl-app * { box-sizing: border-box; }
         .vl-app a:focus-visible, .vl-app button:focus-visible, .vl-app textarea:focus-visible { outline: 2px solid ${GOLD}; outline-offset: 2px; }
         @keyframes vl-puntos { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
         @keyframes vl-entra { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
         .vl-entra { animation: vl-entra 320ms ease both; }
+        .vl-cols { display: flex; flex-direction: column; gap: 18px; }
+        @media (min-width: 960px) {
+          .vl-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+          .vl-cols > .vl-ancho { grid-column: 1 / -1; }
+        }
+        @media (min-width: 1500px) { .vl-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (min-width: 2000px) { .vl-cols-3 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
         @media (prefers-reduced-motion: reduce) { .vl-entra { animation: none; } }
       `}</style>
       <div className="vl-app">
-        <header style={{ maxWidth: 640, margin: '0 auto', padding: '18px 20px 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <header style={{ maxWidth: 'none', margin: 0, padding: '18px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link to="/" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
             <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block', borderRadius: '50%' }} />
           </Link>
@@ -63,7 +71,7 @@ export default function AppShell({ user, children }) {
           </button>
         </header>
 
-        <main style={{ maxWidth: 640, margin: '0 auto', padding: '20px 20px 0' }} className="vl-entra" key={pathname}>
+        <main style={{ maxWidth: 'none', margin: 0, padding: '20px var(--vl-pad) 0' }} className="vl-entra" key={pathname}>
           {children}
         </main>
 
