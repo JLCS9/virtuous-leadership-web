@@ -52,10 +52,11 @@ export default function AppShell({ user, children }) {
           .vl-cols > .vl-ancho { grid-column: 1 / -1; }
         }
         @media (min-width: 1500px) { .vl-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (min-width: 2000px) { .vl-cols-3 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
         @media (prefers-reduced-motion: reduce) { .vl-entra { animation: none; } }
       `}</style>
       <div className="vl-app">
-        <header style={{ maxWidth: 1480, margin: '0 auto', padding: '18px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <header style={{ maxWidth: 'none', margin: 0, padding: '18px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link to="/" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
             <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block', borderRadius: '50%' }} />
           </Link>
@@ -70,7 +71,7 @@ export default function AppShell({ user, children }) {
           </button>
         </header>
 
-        <main style={{ maxWidth: 1480, margin: '0 auto', padding: '20px var(--vl-pad) 0' }} className="vl-entra" key={pathname}>
+        <main style={{ maxWidth: 'none', margin: 0, padding: '20px var(--vl-pad) 0' }} className="vl-entra" key={pathname}>
           {children}
         </main>
 
