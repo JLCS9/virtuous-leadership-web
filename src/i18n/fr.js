@@ -19,6 +19,8 @@ export default {
   },
 
   nav: {
+    my_panel: 'Mon espace',
+    login: 'Se connecter',
     home: 'Accueil',
     programs: 'Programmes',
     education_centers: 'Établissements éducatifs',
@@ -585,10 +587,18 @@ export default {
   },
 
   gate: {
+    title_account: 'Créez votre compte et découvrez votre profil',
+    intro_account: 'Avec votre compte, vous verrez tout de suite votre résultat complet dans votre espace personnel, et vous pourrez y revenir quand vous le souhaitez.',
+    password_hint: '8 caractères minimum. Vous l’utiliserez pour accéder à votre espace.',
+    consent_account: 'Oui, créez-moi un compte pour voir mes résultats, envoyez-les-moi par email et abonnez-moi à la newsletter mensuelle : un email par mois sur le tempérament et le développement personnel. Zéro spam, désinscription en un clic à tout moment.',
+    submit_account: 'Créer mon compte et voir mes résultats →',
+    forgot: 'Mot de passe oublié ?',
+    reset_sent: 'Nous vous avons envoyé un email pour le réinitialiser.',
     eyebrow: 'Dernière étape',
     title: 'Reçois tes résultats',
     intro: 'Tu recevras un rapport personnalisé avec tes résultats et des clés pratiques pour comprendre ton tempérament et développer ton caractère.',
     fields: {
+      password: 'Mot de passe',
       name: 'Prénom',
       email: 'E-mail',
       year: 'Année de naissance',
@@ -598,6 +608,10 @@ export default {
     consent: 'Oui, envoyez-moi mes résultats par e-mail et abonnez-moi à la lettre mensuelle : un e-mail par mois avec du contenu sur le tempérament et le développement personnel. Zéro spam, désinscription en un clic à tout moment.',
     privacy: 'En t\'abonnant, tu acceptes notre <a href="/fr/politique-de-confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.',
     errors: {
+      password: 'Le mot de passe doit comporter au moins 8 caractères.',
+      wrong_password: 'Vous avez déjà un compte avec cet email et le mot de passe ne correspond pas.',
+      account_failed: 'Nous n’avons pas pu créer votre compte. Réessayez dans quelques secondes.',
+      rate_limited: 'Trop de tentatives. Patientez quelques minutes et réessayez.',
       name: 'Indique ton prénom.',
       email: 'E-mail invalide.',
       year_required: 'Indique ton année de naissance.',
@@ -610,7 +624,55 @@ export default {
     submitting: 'Envoi en cours…',
   },
 
+  // ──────────── MON ESPACE (compte utilisateur) ────────────
+  panel: {
+    title: 'Mon espace',
+    eyebrow: 'Mon espace',
+    greeting: 'Bonjour, {name}',
+    logout: 'Se déconnecter',
+    loading: 'Chargement…',
+    load_failed: 'Nous n’avons pas pu charger vos résultats. Rechargez la page dans quelques secondes.',
+    empty_title: 'Vous n’avez pas encore de résultats',
+    empty_intro: 'Faites le test de tempérament pour découvrir votre profil et votre vertu-défi.',
+    take_test: 'Faire le test de tempérament',
+    login_title: 'Accédez à votre espace',
+    login_intro: 'Connectez-vous avec l’email et le mot de passe choisis lors du test.',
+    no_accounts: 'Faites le test de tempérament pour découvrir votre profil.',
+    fields: { email: 'Email', password: 'Mot de passe' },
+    submit: 'Se connecter',
+    submitting: 'Connexion…',
+    forgot: 'Mot de passe oublié ?',
+    no_account: 'Pas encore de compte ? Faites le test',
+    reset_sent: 'Si un compte existe avec cet email, nous vous avons envoyé un lien pour réinitialiser votre mot de passe.',
+    errors: {
+      invalid: 'Email ou mot de passe incorrect.',
+      generic: 'Une erreur est survenue. Réessayez dans quelques secondes.',
+      email_for_reset: 'Saisissez votre email puis cliquez à nouveau sur « Mot de passe oublié ? ».',
+    },
+  },
+  reset: {
+    title: 'Nouveau mot de passe',
+    intro: 'Choisissez un nouveau mot de passe pour votre compte.',
+    password: 'Nouveau mot de passe',
+    submit: 'Enregistrer et se connecter →',
+    invalid_link: 'Ce lien n’est pas valide ou a expiré. Demandez-en un nouveau depuis la page de connexion.',
+    back: 'Aller à la page de connexion',
+    errors: {
+      short: 'Le mot de passe doit comporter au moins 8 caractères.',
+      generic: 'Nous n’avons pas pu enregistrer le mot de passe. Demandez un nouveau lien et réessayez.',
+    },
+  },
+
   result: {
+    challenge_card_eyebrow: 'Votre vertu-défi',
+    challenge_defs: {
+      humildad:             { name: 'Humilité',              def: 'La vertu d’humilité dans ses deux dimensions : la connaissance de soi (humilité fondamentale) et le service des autres (humilité fraternelle).' },
+      humildad_fraterna:    { name: 'Humilité fraternelle',  def: 'L’aspect de la vertu d’humilité qui vous aide à servir les autres, à prendre soin d’eux plutôt qu’à vous servir d’eux.' },
+      humildad_fundamental: { name: 'Humilité fondamentale', def: 'L’aspect de la vertu d’humilité lié à la connaissance de soi : vivre dans la vérité sur vous-même, vos talents et vos limites.' },
+      audacia:              { name: 'Audace',                def: 'L’aspect actif de la vertu de courage : oser agir, prendre des risques et transformer vos rêves en réalité en surmontant la peur de l’échec.' },
+      resistencia:          { name: 'Endurance',             def: 'L’aspect passif de la vertu de courage : la persistance, la patience et la fidélité nécessaires pour terminer ce que vous commencez.' },
+      magnanimidad:         { name: 'Magnanimité',           def: 'La vertu de la grandeur : tendre vers les grandes choses, rêver en grand et transformer votre rêve en mission qui donne sens à votre existence.' },
+    },
     subtitle: 'Ton profil',
     pure_note: '· profil pur · statistiquement moins fréquent',
     challenge_label: 'Vertu-défi',

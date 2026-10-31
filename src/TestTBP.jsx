@@ -1,6 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useT, useLocalPath } from './i18n';
+import { useT, useLocalPath, ROUTES } from './i18n';
+import { accountsEnabled } from './account/supabase';
+import { AccountError, createAccountAndSignIn, saveTemperamentResult, sendPasswordReset } from './account/account';
+import { CHALLENGE_VIRTUE } from './account/challengeVirtues';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
 // el texto traducido en la propia imagen.
 import ttEs from './assets/tt.png';
@@ -476,7 +479,36 @@ function CTACard({ image, buttonLabel, href }) {
   );
 }
 
-function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
+// Tarjeta destacada «Tu virtud-desafío» del panel: nombre + definición,
+// tal como en las guías personales del temperamento (PDF).
+function ChallengeCard({ profileKey }) {
+  const { t } = useT();
+  const virtue = t(`result.challenge_defs.${CHALLENGE_VIRTUE[profileKey]}`);
+  if (!virtue || typeof virtue !== 'object') return null;
+  return (
+    <section style={{
+      background: NAVY,
+      color: PAPER,
+      padding: '24px 28px',
+      borderRadius: 2,
+      margin: '0 0 32px 0',
+    }}>
+      <div style={{ fontFamily: fontSans, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: GOLD, fontWeight: 600, marginBottom: 8 }}>
+        {t('result.challenge_card_eyebrow')}
+      </div>
+      <div style={{ fontFamily: fontSerif, fontSize: 30, fontWeight: 600, lineHeight: 1.15, marginBottom: 8 }}>
+        {virtue.name}
+      </div>
+      <p style={{ fontFamily: fontSans, fontSize: 16, lineHeight: 1.6, margin: 0, color: PAPER }}>
+        {virtue.def}
+      </p>
+    </section>
+  );
+}
+
+// `inPanel`: versión del panel del usuario («Mi panel»). Añade la tarjeta de
+// la virtud-desafío y quita los CTA de venta del final del test.
+export function ResultScreen({ profileKey, primario, secondaryStrength, onRestart, inPanel = false }) {
   const { t, lang } = useT();
   const profile = t(`result.profiles.${profileKey}`);
   const tempInfo = t(`temperaments.${primario}`);
@@ -499,6 +531,8 @@ function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
           <span style={{ marginLeft: 14 }}>· {t('result.intensity_label')}: <strong style={{ color: NAVY }}>{secondaryStrength === 3 ? t('result.intensity_marked') : t('result.intensity_light')}</strong></span>
         )}
       </p>
+
+      {inPanel && <ChallengeCard profileKey={profileKey} />}
 
       <div style={{ display: 'flex', gap: 32, alignItems: 'flex-start', flexWrap: 'wrap' }}>
         <div style={{ flex: '1 1 360px', minWidth: 280, display: 'flex', justifyContent: 'center' }}>
@@ -553,7 +587,7 @@ function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
       </blockquote>
 
       {/* CTA — empezar el camino */}
-      <section style={{
+      {!inPanel && <section style={{
         marginTop: 48,
         padding: '40px 32px',
         background: BEIGE,
@@ -577,7 +611,7 @@ function ResultScreen({ profileKey, primario, secondaryStrength, onRestart }) {
         <style>{`
           @media (min-width: 700px) { .test-end-cta { grid-template-columns: 1fr 1fr !important; gap: 24px !important; } }
         `}</style>
-      </section>
+      </section>}
 
       <div style={{ textAlign: 'center', marginTop: 32 }}>
         <button
@@ -619,16 +653,20 @@ async function submitContact(payload) {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, onSubmitOk }) {
+function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualifySource, onSubmitOk }) {
   const { t, lang } = useT();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [resetSent, setResetSent] = useState(false);
   const [birthYear, setBirthYear] = useState('');
   const [sex, setSex] = useState('');
   const [consent, setConsent] = useState(false);
   const [touched, setTouched] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  // Error de cuenta ya existente con otra contraseña: se ofrece recuperarla.
+  const [wrongPassword, setWrongPassword] = useState(false);
 
   const currentYear = new Date().getFullYear();
   const sexOpts = t('gate.sex_options');
@@ -647,6 +685,7 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
       return null;
     })(),
     sex: !sex ? t('gate.errors.sex') : null,
+    password: accountsEnabled && password.length < 8 ? t('gate.errors.password') : null,
     consent: !consent ? t('gate.errors.consent') : null,
   };
 
@@ -654,10 +693,12 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setTouched({ name: 1, email: 1, birthYear: 1, sex: 1, consent: 1 });
+    setTouched({ name: 1, email: 1, birthYear: 1, sex: 1, password: 1, consent: 1 });
     if (!isValid || submitting) return;
     setSubmitting(true);
     setSubmitError(null);
+    setWrongPassword(false);
+    setResetSent(false);
     const profile = t(`result.profiles.${profileKey}`);
     const tempInfo = t(`temperaments.${primario}`);
     const payload = {
@@ -693,22 +734,76 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
     // del gate del test (todos los campos válidos y submit lanzado), no
     // depende del resultado de Brevo. GTM levanta `fin_test_temperamento`.
     window.dataLayer = window.dataLayer || [];
+    // Sin nombre ni email: no mandamos datos personales a GTM.
     window.dataLayer.push({
       event: 'fin_test_temperamento',
-      test_nombre: payload.contact.name,
-      test_email: payload.contact.email,
       test_anio: payload.contact.birthYear,
       test_sexo: payload.contact.sex,
       test_temperamento: primario,
     });
 
+    if (!accountsEnabled) {
+      try {
+        await submitContact(payload);
+        onSubmitOk();
+      } catch (err) {
+        setSubmitError(t('gate.errors.submit_failed'));
+        console.error('submitContact error:', err);
+        setSubmitting(false);
+      }
+      return;
+    }
+
+    // Con cuentas: primero la cuenta (si la contraseña no cuadra con una
+    // cuenta existente paramos aquí, sin reenviar a Brevo). Después Brevo,
+    // que ya no bloquea: el usuario ve sus resultados en el panel igualmente.
+    try {
+      await createAccountAndSignIn({
+        email: payload.contact.email,
+        password,
+        name: payload.contact.name,
+        birthYear: payload.contact.birthYear,
+        sex,
+        language: lang,
+      });
+    } catch (err) {
+      const code = err instanceof AccountError ? err.code : 'failed';
+      if (code === 'wrong_password') setWrongPassword(true);
+      else setSubmitError(t(code === 'rate_limited' ? 'gate.errors.rate_limited' : 'gate.errors.account_failed'));
+      setSubmitting(false);
+      return;
+    }
+
     try {
       await submitContact(payload);
-      onSubmitOk();
     } catch (err) {
-      setSubmitError(t('gate.errors.submit_failed'));
       console.error('submitContact error:', err);
-      setSubmitting(false);
+    }
+
+    try {
+      await saveTemperamentResult({
+        profileKey,
+        primario,
+        secundario: decision.secundario || null,
+        isPure: decision.isPure,
+        margin: decision.margin,
+        scoreS2: decision.score_s2,
+        answers,
+        language: lang,
+      });
+    } catch (err) {
+      console.error('saveTemperamentResult error:', err);
+    }
+    onSubmitOk();
+  }
+
+  async function handleForgot() {
+    const slug = ROUTES.restablecer[lang];
+    try {
+      await sendPasswordReset(email.trim().toLowerCase(), `${window.location.origin}/${lang}/${slug}`);
+      setResetSent(true);
+    } catch {
+      setSubmitError(t('gate.errors.account_failed'));
     }
   }
 
@@ -752,8 +847,8 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
   return (
     <div style={styles.card}>
       <div style={styles.subtitle}>{t('gate.eyebrow')}</div>
-      <h2 style={{ ...styles.h1, fontSize: 28 }}>{t('gate.title')}</h2>
-      <p style={{ ...styles.para, marginTop: 12 }}>{t('gate.intro')}</p>
+      <h2 style={{ ...styles.h1, fontSize: 28 }}>{t(accountsEnabled ? 'gate.title_account' : 'gate.title')}</h2>
+      <p style={{ ...styles.para, marginTop: 12 }}>{t(accountsEnabled ? 'gate.intro_account' : 'gate.intro')}</p>
 
       <form onSubmit={handleSubmit} noValidate style={{ marginTop: 24 }}>
         <div style={{ marginBottom: 18 }}>
@@ -771,6 +866,29 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
                  style={{ ...inputBase, borderColor: showErr('email') ? '#A03434' : LINE }} />
           {showErr('email') && <div style={errStyle}>{errors.email}</div>}
         </div>
+
+        {accountsEnabled && (
+          <div style={{ marginBottom: 18 }}>
+            <label htmlFor="gate-password" style={labelStyle}>{t('gate.fields.password')}</label>
+            <input id="gate-password" type="password" autoComplete="new-password" value={password}
+                   onChange={e => { setPassword(e.target.value); setWrongPassword(false); }}
+                   onFocus={focus} onBlur={e => blur(e, 'password')}
+                   style={{ ...inputBase, borderColor: showErr('password') || wrongPassword ? '#A03434' : LINE }} />
+            <div style={{ fontSize: 12, color: MUTED, marginTop: 4 }}>{t('gate.password_hint')}</div>
+            {showErr('password') && <div style={errStyle}>{errors.password}</div>}
+            {wrongPassword && (
+              <div style={errStyle}>
+                {t('gate.errors.wrong_password')}{' '}
+                {resetSent
+                  ? <span style={{ fontStyle: 'normal', color: NAVY }}>{t('gate.reset_sent')}</span>
+                  : <button type="button" onClick={handleForgot}
+                            style={{ background: 'none', border: 'none', padding: 0, color: NAVY, textDecoration: 'underline', cursor: 'pointer', font: 'inherit', fontStyle: 'normal' }}>
+                      {t('gate.forgot')}
+                    </button>}
+              </div>
+            )}
+          </div>
+        )}
 
         <div style={{ marginBottom: 18 }}>
           <label htmlFor="gate-year" style={labelStyle}>{t('gate.fields.year')}</label>
@@ -830,7 +948,7 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
                  onChange={e => { setConsent(e.target.checked); setTouched(tt => ({ ...tt, consent: 1 })); }}
                  style={{ marginTop: 3, width: 16, height: 16, accentColor: NAVY, cursor: 'pointer', flexShrink: 0 }} />
           <span style={{ fontSize: 14, lineHeight: 1.5, color: INK }}>
-            {t('gate.consent')}
+            {t(accountsEnabled ? 'gate.consent_account' : 'gate.consent')}
             <span
               style={{ display: 'block', marginTop: 6, fontSize: 12, color: MUTED }}
               dangerouslySetInnerHTML={{ __html: t('gate.privacy') }}
@@ -866,7 +984,7 @@ function GateForm({ profileKey, primario, decision, conoceAlex, qualifySource, o
             onMouseOver={e => { if (!submitting) e.currentTarget.style.background = NAVY_SOFT; }}
             onMouseOut={e => { if (!submitting) e.currentTarget.style.background = NAVY; }}
           >
-            {submitting ? t('gate.submitting') : t('gate.submit')}
+            {submitting ? t('gate.submitting') : t(accountsEnabled ? 'gate.submit_account' : 'gate.submit')}
           </button>
         </div>
       </form>
@@ -1156,6 +1274,12 @@ export default function TestTBP() {
   }
 
   function onGateOk() {
+    // Con cuentas: el usuario ya tiene sesión y su resultado guardado; su
+    // panel es ahora la página de resultados en todos los idiomas.
+    if (accountsEnabled) {
+      navigate(lp('/mi-panel'));
+      return;
+    }
     // RU: mostramos el resultado in-page (PHASE.RESULT) tras guardar el
     // contacto en Brevo; los textos de los 12 perfiles vienen del e-book
     // «Задачи твоего темперамента» (sección «12 типов темперамента»).
@@ -1189,11 +1313,18 @@ export default function TestTBP() {
   } else if (phase === PHASE.QUALIFY2) {
     body = <QualifySource conoceAlex={conoceAlex} progress={globalIndex} total={totalQuestions} onSubmit={answerQualify2} onBack={() => { setConoceAlex(null); setPhase(PHASE.QUALIFY); }} />;
   } else if (phase === PHASE.GATE) {
-    body = <GateForm profileKey={result.key} primario={primario} decision={result} conoceAlex={conoceAlex} qualifySource={qualifySource} onSubmitOk={onGateOk} />;
+    body = <GateForm profileKey={result.key} primario={primario} decision={result}
+                     answers={{ stage1: s1Order.map((it, i) => [it.id, s1Answers[i]]), tie: tieOrder.map((it, i) => [it.id, tieAnswers[i]]), stage2: s2Order.map((it, i) => [it.id, s2Answers[i]]) }}
+                     conoceAlex={conoceAlex} qualifySource={qualifySource} onSubmitOk={onGateOk} />;
   } else if (phase === PHASE.RESULT) {
     body = <ResultScreen profileKey={result.key} primario={primario} secondaryStrength={result.isPure ? null : Math.abs(result.score_s2)} onRestart={restart} />;
   }
 
+  return <TestShell>{body}</TestShell>;
+}
+
+// Fondo, tipografías y estilos globales del test. Lo reutiliza «Mi panel».
+export function TestShell({ children }) {
   return (
     <div style={styles.app}>
       <style>{`
@@ -1205,7 +1336,7 @@ export default function TestTBP() {
           .vl-yesno-row > button { flex: 1 1 100%; min-width: 0 !important; }
         }
       `}</style>
-      {body}
+      {children}
     </div>
   );
 }

@@ -17,6 +17,8 @@ import TestCorazon from './pages/TestCorazon';
 import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
 import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
+import MiPanel from './pages/MiPanel';
+import Restablecer from './pages/Restablecer';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
 import CookieConsent from './components/CookieConsent';
@@ -41,6 +43,8 @@ const PAGE_ELEMENTS = {
   politica_privacidad:   <PoliticaPrivacidad />,
   cookies:               <Cookies />,
   contacto:              <Contacto />,
+  mi_panel:              <MiPanel />,
+  restablecer:           <Restablecer />,
 };
 
 function LayoutWithOutlet() {

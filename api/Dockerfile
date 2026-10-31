@@ -7,7 +7,7 @@ RUN npm install --omit=dev --no-fund --no-audit
 
 # Código y migraciones (las migraciones se referencian para aplicar a mano
 # con `docker compose exec api ...` o `psql` desde el host)
-COPY server.mjs db.mjs ./
+COPY server.mjs db.mjs auth.mjs ./
 COPY migrations ./migrations
 
 EXPOSE 3001

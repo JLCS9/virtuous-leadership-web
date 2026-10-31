@@ -119,9 +119,10 @@ src/
                                    Rousseau, Rudin). Mismo asset en los 4 idiomas.
 
 api/
-  server.mjs                 HTTP server. 4 endpoints: /api/submit,
+  server.mjs                 HTTP server. 5 endpoints: /api/submit,
                              /api/submit-children, /api/submit-character,
-                             /api/submit-heart.
+                             /api/submit-heart, /api/account.
+  auth.mjs                   Alta de cuentas en el Supabase de Virtus (Admin API).
   db.mjs                     pg Pool + queries de schools/parents/children/submissions.
   migrations/                001_init_children.sql (schema del test infantil).
   Dockerfile
@@ -397,6 +398,38 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
   verify-full y rechaza el cert self-signed de Supabase. `db.mjs` strippea
   sslmode del URL y fuerza `ssl: { rejectUnauthorized: false }` en Pool.
 - Tablas: `schools`, `parents`, `children`, `submissions` (`api/migrations/001_init_children.sql`).
+
+---
+
+## Cuentas de usuario y «Mi panel» (Supabase de Virtus)
+
+Al terminar el test de temperamento adulto se crea una cuenta y el usuario
+entra a `/{lang}/mi-panel` (es `mi-panel`, en `my-dashboard`, fr
+`mon-espace`, ru `kabinet`), que muestra su último resultado + la tarjeta
+«Tu virtud-desafío» (definiciones de las guías PDF por perfil, mapa en
+`src/account/challengeVirtues.js`).
+
+- **Proyecto**: el Supabase de Virtus (`~/virtus`), para que la misma cuenta
+  sirva en la app. Esquema en `~/virtus/supabase/migrations` (`profiles`,
+  `test_results`; la migración `20261031000000_web_accounts.sql` añade los
+  campos del formulario y el trigger que los copia desde user_metadata).
+- **Alta**: `POST /api/account` crea el usuario con la service role key y
+  `email_confirm: true` (acceso inmediato). 201 creada, 409 ya existía → el
+  front intenta entrar con esa contraseña; si falla, ofrece recuperarla.
+- **Resultado**: lo inserta el front con la sesión del usuario en
+  `test_results` (RLS: solo el propio usuario), con las respuestas en bruto.
+- **Brevo/Converflow** siguen igual, pero con cuentas ya no bloquean: si
+  Brevo falla, el usuario llega a su panel igualmente.
+- **Interruptor**: sin `VITE_SUPABASE_URL`/`VITE_SUPABASE_ANON_KEY` el sitio
+  funciona como antes (página de gracias / resultado in-page en RU).
+- **Contraseña olvidada**: `resetPasswordForEmail` → `/{lang}/restablecer`
+  (slugs por idioma en `routes.js`); esas URLs deben estar en las redirect
+  URLs del proyecto Supabase.
+- **Env**: build-time `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`,
+  `VITE_ACCOUNT_URL`; runtime `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`
+  (en `/opt/virtuousleadership/.env`, nunca en el front).
+- **Local**: `node api/server.mjs` (puerto 3001; Vite hace proxy de `/api`)
+  + `npm run dev` con las VITE_SUPABASE_* en `.env.development.local`.
 
 ---
 

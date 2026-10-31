@@ -39,6 +39,11 @@ export const ROUTES = {
   politica_privacidad:   { es: 'politica-de-privacidad',  en: 'privacy-policy',         fr: 'politique-de-confidentialite', ru: 'politika-konfidentsialnosti' },
   cookies:               { es: 'cookies',                  en: 'cookies',                fr: 'cookies',                       ru: 'cookies' },
   contacto:              { es: 'contacto',               en: 'contact',                 fr: 'contact',                  ru: 'kontakty' },
+  // Panel privado del usuario (cuenta creada al terminar el test de
+  // temperamento) y destino del email de recuperación de contraseña.
+  // noindex; no van al sitemap.
+  mi_panel:              { es: 'mi-panel',               en: 'my-dashboard',            fr: 'mon-espace',               ru: 'kabinet' },
+  restablecer:           { es: 'restablecer',            en: 'reset-password',          fr: 'reinitialiser',            ru: 'vosstanovlenie' },
 };
 
 // Paginas que se renderizan SIN Layout (sin header/menu/footer del sitio).
@@ -52,6 +57,8 @@ export const NO_LAYOUT_PAGES = new Set([
   'test_corazon',
   'politica_privacidad',
   'cookies',
+  'mi_panel',
+  'restablecer',
 ]);
 
 // Reverse map: cualquier slug (de cualquier idioma) -> pageId.
