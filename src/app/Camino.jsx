@@ -148,14 +148,18 @@ export default function Camino({ user }) {
   const cerrar = () => setParams({});
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <div>
+    <div className="vl-cols">
+      <div className="vl-ancho">
         <div style={eyebrow}>Tu camino</div>
         <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Un paso cada día</h1>
         <p style={{ ...parrafo, color: MUTED }}>Conversa, mira cómo vas y sigue con tu formación.</p>
       </div>
-      {conversando ? <Conversacion modo={modo} onTerminar={cerrar} /> : <Asistente abrir={abrir} />}
-      <SiguienteLeccion user={user} />
+      {conversando ? <Conversacion modo={modo} onTerminar={cerrar} /> : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+          <Asistente abrir={abrir} />
+          <SiguienteLeccion user={user} />
+        </div>
+      )}
       <Virtudes />
     </div>
   );
