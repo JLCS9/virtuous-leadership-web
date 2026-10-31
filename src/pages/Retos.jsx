@@ -144,6 +144,7 @@ function Chat({ mensajes, botones = [], onEnviar, onBoton, ocupado, cerrado, chi
 
 function useConversacion(llamar) {
   const { t } = useT();
+  const abierta = useRef(false);
   const [s, setS] = useState({ mensajes: [], botones: [], ocupado: true, cerrado: false, error: null, crisis: false });
   async function paso(entrada, etiqueta) {
     setS((x) => ({ ...x, ocupado: true, error: null, mensajes: etiqueta ? [...x.mensajes, { rol: 'usuario', texto: etiqueta }] : x.mensajes }));
@@ -158,13 +159,19 @@ function useConversacion(llamar) {
       setS((x) => ({ ...x, ocupado: false, error: mensajeError(t, e) }));
     }
   }
-  return [s, paso];
+  // Abrir una sola vez (en desarrollo React monta dos veces los efectos).
+  function abrir() {
+    if (abierta.current) return;
+    abierta.current = true;
+    paso(null);
+  }
+  return [s, paso, abrir];
 }
 
 function Onboarding({ onDone }) {
   const { t } = useT();
-  const [s, paso] = useConversacion((texto) => turnoOnboarding(texto));
-  useEffect(() => { paso(null); }, []);
+  const [s, paso, abrir] = useConversacion((texto) => turnoOnboarding(texto));
+  useEffect(abrir, []);
   return (
     <Card wide>
       <Title eyebrow={t('retos.eyebrow')}>{t('retos.onboarding_title')}</Title>
@@ -185,8 +192,8 @@ function Onboarding({ onDone }) {
 
 function Noche({ onSalir }) {
   const { t } = useT();
-  const [s, paso] = useConversacion((entrada) => turnoNoche(entrada));
-  useEffect(() => { paso(null); }, []);
+  const [s, paso, abrir] = useConversacion((entrada) => turnoNoche(entrada));
+  useEffect(abrir, []);
   return (
     <Card wide>
       <Title eyebrow={t('retos.eyebrow')}>{t('retos.night_title')}</Title>
