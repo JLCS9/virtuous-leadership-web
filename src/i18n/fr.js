@@ -625,8 +625,24 @@ export default {
   },
 
   // ──────────── MON ESPACE (compte utilisateur) ────────────
+  landing: {
+    result_heading: '{name}, ton tempérament est {temperament}',
+    strengths_title: 'Tes points forts',
+    weakness_title: 'Ce qui te coûte',
+    video_caption: 'Aime-toi tel que tu es et travaille ton caractère',
+    video_eyebrow: 'Commence ici',
+    video_title: 'Tempérament et caractère',
+    video_description: 'La première leçon du cours « Du tempérament au caractère », complète et gratuite. Vingt minutes durant lesquelles Alex Havard explique la différence entre tempérament et caractère, et parcourt les quatre tempéraments.',
+    quote_text: 'Ton tempérament réagit en premier, et tu ne le choisis pas. Mais tu peux choisir une seconde réaction. Cette seconde réaction, c\'est ton caractère.<br/><strong>Et le caractère se forge.</strong>',
+    next_step_title: 'Ta prochaine étape',
+    next_step_heading: 'Comprends-toi, comprends les autres et progresse là où c\'est le plus difficile pour toi, en 7 étapes, à ton rythme.',
+    next_step_description: 'La Formation complète de Leadership Vertueux® : 7 cours vidéo d\'Alexandre Havard et 6 cahiers de travail pour passer de la compréhension à l\'action.',
+    next_step_cta: 'Commencer la formation',
+  },
+
   panel: {
     title: 'Mon espace',
+    seo_description: 'Ton résultat du test de tempérament de Virtuous Leadership.',
     eyebrow: 'Mon espace',
     greeting: 'Bonjour, {name}',
     logout: 'Se déconnecter',

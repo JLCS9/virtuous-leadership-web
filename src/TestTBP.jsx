@@ -1277,7 +1277,7 @@ export default function TestTBP() {
     // Con cuentas: el usuario ya tiene sesión y su resultado guardado; su
     // panel es ahora la página de resultados en todos los idiomas.
     if (accountsEnabled) {
-      navigate(lp('/mi-panel'));
+      navigate(lp('/tests/temperamento/gracias'));
       return;
     }
     // RU: mostramos el resultado in-page (PHASE.RESULT) tras guardar el

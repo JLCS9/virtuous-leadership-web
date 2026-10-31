@@ -626,8 +626,24 @@ export default {
   },
 
   // ──────────── MY DASHBOARD (user account) ────────────
+  landing: {
+    result_heading: '{name}, your temperament is {temperament}',
+    strengths_title: 'Your strengths',
+    weakness_title: 'What you find difficult',
+    video_caption: 'Love yourself as you are and work on your character',
+    video_eyebrow: 'Start here',
+    video_title: 'Temperament and character',
+    video_description: 'The first lesson of the course "From Temperament to Character", complete and free. Twenty minutes in which Alex Havard explains the difference between temperament and character, and walks through the four temperaments.',
+    quote_text: 'Your temperament reacts first, and you don\'t choose it. But you can choose a second reaction. That second reaction is your character.<br/><strong>And character is forged.</strong>',
+    next_step_title: 'Your next step',
+    next_step_heading: 'Understand yourself, understand others, and grow where it\'s hardest for you — in 7 steps, at your own pace.',
+    next_step_description: 'The complete Virtuous Leadership® Training: 7 video courses by Alexandre Havard and 6 workbooks to go from understanding to action.',
+    next_step_cta: 'Start the training',
+  },
+
   panel: {
     title: 'My dashboard',
+    seo_description: 'Your Virtuous Leadership temperament test result.',
     eyebrow: 'My dashboard',
     greeting: 'Hello, {name}',
     logout: 'Log out',
