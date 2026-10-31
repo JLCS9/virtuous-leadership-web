@@ -12,6 +12,7 @@ import {
   styles,
 } from '../theme';
 import { Card, Title, Field, PrimaryButton, LinkButton, Notice } from '../account/ui';
+import RetosCard from '../account/RetosCard';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -70,15 +71,18 @@ function PanelHome({ session }) {
   }
 
   return (
-    <Card>
-      <Title eyebrow={t('panel.eyebrow')}>{t('panel.title')}</Title>
-      <p style={{ ...styles.para, marginTop: 12 }}>
-        {session.user.email}
-      </p>
-      <div style={{ marginTop: 20 }}>
-        <LinkButton onClick={logout}>{t('panel.logout')}</LinkButton>
-      </div>
-    </Card>
+    <>
+      <RetosCard />
+      <Card>
+        <Title eyebrow={t('panel.eyebrow')}>{t('panel.title')}</Title>
+        <p style={{ ...styles.para, marginTop: 12 }}>
+          {session.user.email}
+        </p>
+        <div style={{ marginTop: 20 }}>
+          <LinkButton onClick={logout}>{t('panel.logout')}</LinkButton>
+        </div>
+      </Card>
+    </>
   );
 }
 

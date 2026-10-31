@@ -13,6 +13,7 @@ import {
   styles,
 } from '../theme';
 import { Card, Title, PrimaryButton } from '../account/ui';
+import RetosCard from '../account/RetosCard';
 
 const PAGE_PATH_FALLBACK = '/tests/temperamento/gracias';
 
@@ -192,6 +193,9 @@ function ResultsLanding({ user }) {
             </div>
           </div>
         </section>
+
+        {/* Retos diarios (beta privada): solo se pinta con suscripción activa a Retos y en ES */}
+        <RetosCard />
 
         {/* 02 Tu temperamento */}
         <section style={{
