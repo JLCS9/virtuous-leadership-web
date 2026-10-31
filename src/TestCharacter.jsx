@@ -13,6 +13,7 @@
 import React, { useState, useMemo } from 'react';
 import { useT } from './i18n';
 import { scoreCharacter, toBrevoAttributes } from './lib/characterScoring.js';
+import { saveCharacterResultIfLoggedIn } from './account/account';
 import CHARACTER_TEST from './data/character-test.json';
 import CHARACTER_SUPPORT from './data/character-support-text.json';
 
@@ -914,6 +915,8 @@ export default function TestCharacter() {
     setContact(contactData);
     try {
       await submitCharacterContact(payload);
+      // Con sesión, el resultado queda también en la cuenta (alimenta «Camino» en el panel).
+      void saveCharacterResultIfLoggedIn(result);
       setPhase(PHASE.RESULT);
     } catch (err) {
       // Re-lanza para que GateForm muestre el error en su UI.

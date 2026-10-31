@@ -19,6 +19,7 @@ import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
 import MiPanel from './pages/MiPanel';
 import Retos from './pages/Retos';
+import { PanelCamino, PanelFormacion } from './pages/PanelApp';
 import Restablecer from './pages/Restablecer';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
@@ -46,6 +47,8 @@ const PAGE_ELEMENTS = {
   contacto:              <Contacto />,
   mi_panel:              <MiPanel />,
   mis_retos:             <Retos />,
+  mi_panel_camino:       <PanelCamino />,
+  mi_panel_formacion:    <PanelFormacion />,
   restablecer:           <Restablecer />,
 };
 

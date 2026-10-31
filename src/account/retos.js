@@ -5,7 +5,8 @@
 import { supabase } from './supabase';
 
 export class RetosError extends Error {
-  constructor(code) { super(code); this.code = code; }
+  // `detalle`: texto técnico del fallo; el servidor solo lo manda a las cuentas de prueba.
+  constructor(code, detalle = null) { super(code); this.code = code; this.detalle = detalle; }
 }
 
 /**
@@ -29,7 +30,9 @@ async function llamar(fn, body) {
   const { data, error } = await supabase.functions.invoke(fn, { body, headers: { 'x-virtus-cliente': 'web' } });
   if (error) {
     const status = error.context?.status;
-    throw new RetosError(status === 403 ? 'forbidden' : status === 503 ? 'unavailable' : 'failed');
+    let detalle = null;
+    try { detalle = (await error.context.json())?.detalle ?? null; } catch { /* sin cuerpo */ }
+    throw new RetosError(status === 403 ? 'forbidden' : status === 503 ? 'unavailable' : 'failed', detalle);
   }
   return data;
 }
@@ -37,3 +40,7 @@ async function llamar(fn, body) {
 export const retoDeHoy = () => llamar('retos-manana', { fecha: fechaLocal() });
 export const turnoNoche = (entrada) => llamar('retos-noche', { fecha: fechaLocal(), entrada });
 export const turnoOnboarding = (texto) => llamar('retos-onboarding', { fecha: fechaLocal(), texto });
+
+// Catálogo de Formación (cursos en vídeo). Solo con suscripción activa: lo sirve el servidor para
+// que los títulos y los vídeos no viajen en la web pública.
+export const catalogoFormacion = () => llamar('formacion-catalogo', {});

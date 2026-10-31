@@ -45,6 +45,9 @@ export const ROUTES = {
   mi_panel:              { es: 'mi-panel',               en: 'my-dashboard',            fr: 'mon-espace',               ru: 'kabinet' },
   // Retos diarios (beta privada): solo ES por ahora; noindex, fuera del sitemap.
   mis_retos:             { es: 'mi-panel/retos' },
+  // Panel con pestañas para cuentas con suscripción (solo ES; noindex, fuera del sitemap).
+  mi_panel_camino:       { es: 'mi-panel/camino' },
+  mi_panel_formacion:    { es: 'mi-panel/formacion' },
   restablecer:           { es: 'restablecer',            en: 'reset-password',          fr: 'reinitialiser',            ru: 'vosstanovlenie' },
 };
 
@@ -61,6 +64,8 @@ export const NO_LAYOUT_PAGES = new Set([
   'cookies',
   'mi_panel',
   'mis_retos',
+  'mi_panel_camino',
+  'mi_panel_formacion',
   'restablecer',
 ]);
 

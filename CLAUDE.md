@@ -452,6 +452,25 @@ Lo mismo corre en la app móvil de Virtus; **toda la lógica vive en las Edge Fu
   (una vez; reutiliza el temperamento del test) → reto de la mañana → examen de la noche.
 - Una cuenta nueva **no** tiene acceso hasta activarle la suscripción.
 
+### Panel con pestañas (Hoy · Camino · Formación)
+
+Con la suscripción activa (y en ES), `/es/mi-panel` pasa a ser una app con una burbuja de navegación
+fija abajo. Sin suscripción sigue el panel mínimo de siempre (`MiPanel.jsx`, de Alvaro). Código en
+`src/app/` (marco `AppShell`, `Hoy`, `Camino`, `Formacion`, `Conversacion`, `Radar`) y rutas
+`mi-panel`, `mi-panel/camino`, `mi-panel/formacion` (`pages/PanelApp.jsx`, con guardia de acceso).
+
+- **Hoy**: reto del día (`retos-manana`) + resultado del test de temperamento (`test_results`).
+- **Camino**: asistente (onboarding y examen de la noche), «siguiente lección» y la gráfica de las seis
+  virtudes del **test de carácter**. Ese test guarda su resultado en `test_results` (`kind='character'`)
+  solo si hay sesión (`saveCharacterResultIfLoggedIn`, en `TestCharacter.jsx`); sin él la gráfica
+  muestra una invitación a hacerlo.
+- **Formación**: 7 cursos / 56 lecciones en Vimeo. El catálogo lo sirve la función `formacion-catalogo`
+  (gated; los vídeos no viajan en el bundle público). **El progreso se guarda solo en el navegador**
+  (localStorage `vl-formacion:<id>`): web y app móvil no lo comparten todavía (haría falta una tabla).
+- Lógica pura y testeada: `src/lib/formacion.js` y `src/lib/virtudes.js` (`npm test`).
+- En desarrollo, `?demo` en la dirección pinta la gráfica y el catálogo con datos de ejemplo (el
+  catálogo, desde un `public/__dev_cursos.json` temporal sin versionar). No existe en producción.
+
 ---
 
 ## Deploy

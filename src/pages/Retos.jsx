@@ -52,7 +52,8 @@ function Puerta() {
 
 function mensajeError(t, e) {
   if (e instanceof RetosError && e.code === 'forbidden') return t('retos.no_access'); // suscripción no activa
-  return t(e instanceof RetosError && e.code === 'unavailable' ? 'retos.unavailable' : 'retos.failed');
+  const base = t(e instanceof RetosError && e.code === 'unavailable' ? 'retos.unavailable' : 'retos.failed');
+  return e instanceof RetosError && e.detalle ? `${base} [${e.detalle}]` : base; // detalle: solo cuentas de prueba
 }
 
 function RetosDelDia() {
