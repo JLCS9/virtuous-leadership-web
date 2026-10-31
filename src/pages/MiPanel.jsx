@@ -17,6 +17,7 @@ import { TestShell, ResultScreen } from '../TestTBP';
 import { supabase, accountsEnabled } from '../account/supabase';
 import { useSession } from '../account/useSession';
 import { AccountError, signIn, sendPasswordReset, fetchLatestTemperament, fetchFirstName } from '../account/account';
+import { tieneAccesoRetos } from '../account/retos';
 import { Card, Title, Field, PrimaryButton, LinkButton, Notice, TopBar } from '../account/ui';
 import { NAVY, MUTED, FONT_SANS, styles } from '../theme';
 
@@ -39,10 +40,17 @@ export default function MiPanel() {
 }
 
 function Dashboard({ user }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const lp = useLocalPath();
   const navigate = useNavigate();
   const [state, setState] = useState({ loading: true });
+  const [retos, setRetos] = useState(false);
+
+  // Retos diarios: beta privada (solo ES y solo cuentas con acceso).
+  useEffect(() => {
+    if (lang !== 'es') return;
+    tieneAccesoRetos().then(setRetos).catch(() => setRetos(false));
+  }, [user, lang]);
 
   useEffect(() => {
     let alive = true;
@@ -79,6 +87,8 @@ function Dashboard({ user }) {
           </div>
         </Card>
       ) : (
+        <>
+        {retos && <RetosCard onOpen={() => navigate(lp('/mi-panel/retos'))} />}
         <ResultScreen
           inPanel
           profileKey={r.profileKey}
@@ -86,8 +96,22 @@ function Dashboard({ user }) {
           secondaryStrength={r.isPure ? null : Math.abs(r.scoreS2)}
           onRestart={() => navigate(lp('/tests/temperamento'))}
         />
+        </>
       )}
     </>
+  );
+}
+
+function RetosCard({ onOpen }) {
+  const { t } = useT();
+  return (
+    <div style={{ marginBottom: 20 }}>
+      <Card>
+        <Title eyebrow={t('retos.eyebrow')}>{t('retos.card_title')}</Title>
+        <p style={{ ...styles.para, marginTop: 12, marginBottom: 20 }}>{t('retos.card_intro')}</p>
+        <PrimaryButton onClick={onOpen}>{t('retos.card_cta')}</PrimaryButton>
+      </Card>
+    </div>
   );
 }
 

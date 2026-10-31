@@ -43,6 +43,8 @@ export const ROUTES = {
   // temperamento) y destino del email de recuperación de contraseña.
   // noindex; no van al sitemap.
   mi_panel:              { es: 'mi-panel',               en: 'my-dashboard',            fr: 'mon-espace',               ru: 'kabinet' },
+  // Retos diarios (beta privada): solo ES por ahora; noindex, fuera del sitemap.
+  mis_retos:             { es: 'mi-panel/retos' },
   restablecer:           { es: 'restablecer',            en: 'reset-password',          fr: 'reinitialiser',            ru: 'vosstanovlenie' },
 };
 
@@ -58,6 +60,7 @@ export const NO_LAYOUT_PAGES = new Set([
   'politica_privacidad',
   'cookies',
   'mi_panel',
+  'mis_retos',
   'restablecer',
 ]);
 
