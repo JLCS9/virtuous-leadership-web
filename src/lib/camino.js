@@ -21,22 +21,22 @@ export const SEMANAS = [
   },
 ];
 
-// tipo: el componente que pinta la sesión. Los que aún no existen muestran «llega pronto».
+// tipo: el componente que pinta la sesión. Los días 5 y 12 (fichas de personas) aún muestran «llega pronto».
 export const DIAS = [
   { dia: 1, titulo: 'Vídeo 1.0 y tu resultado', tipo: 'video', leccion: '1.0', tiempo: 'Vídeo + 2 min' },
-  { dia: 2, titulo: 'Desliza: los cuatro temperamentos', tipo: 'pronto', tiempo: '4 min' },
-  { dia: 3, titulo: 'Elige tu reacción', tipo: 'pronto', tiempo: '4 min' },
+  { dia: 2, titulo: 'Desliza: los cuatro temperamentos', tipo: 'desliza', tiempo: '4 min' },
+  { dia: 3, titulo: 'Elige tu reacción', tipo: 'elige', tiempo: '4 min' },
   { dia: 4, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
   { dia: 5, titulo: 'Descubre el temperamento de X', tipo: 'pronto', tiempo: '5 min' },
   { dia: 6, titulo: 'Mi punto de partida', tipo: 'punto_partida', tiempo: '3 min' },
-  { dia: 7, titulo: 'Cierre de la semana', tipo: 'pronto', cierre: true, tiempo: '4 min' },
+  { dia: 7, titulo: 'Cierre de la semana', tipo: 'cierre', cierre: true, tiempo: '4 min' },
   { dia: 8, titulo: 'Vídeo 1.1 y reto', tipo: 'video', leccion: '1.1', tiempo: 'Vídeo + 2 min' },
   { dia: 9, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
-  { dia: 10, titulo: 'Desliza: ¿temperamento o carácter?', tipo: 'pronto', tiempo: '4 min' },
-  { dia: 11, titulo: 'Elige tu reacción: temperamento frente a carácter', tipo: 'pronto', tiempo: '4 min' },
+  { dia: 10, titulo: 'Desliza: ¿temperamento o carácter?', tipo: 'desliza', tiempo: '4 min' },
+  { dia: 11, titulo: 'Elige tu reacción: temperamento frente a carácter', tipo: 'elige', tiempo: '4 min' },
   { dia: 12, titulo: 'Mis personas', tipo: 'pronto', tiempo: '5 min' },
-  { dia: 13, titulo: 'Arrastra: no lo elegí / lo he construido', tipo: 'pronto', tiempo: '4 min' },
-  { dia: 14, titulo: 'Cierre: primer espejo', tipo: 'pronto', cierre: true, tiempo: '5 min' },
+  { dia: 13, titulo: 'Arrastra: no lo elegí / lo he construido', tipo: 'arrastra', tiempo: '4 min' },
+  { dia: 14, titulo: 'Cierre: primer espejo', tipo: 'cierre', cierre: true, tiempo: '5 min' },
 ];
 
 export const semanaDe = (dia) => SEMANAS[dia <= 7 ? 0 : 1];
@@ -83,20 +83,21 @@ export function fechaLocal(d = new Date()) {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 const diferenciaDias = (a, b) => Math.round((aFecha(b) - aFecha(a)) / DIA_MS);
+// Por calendario, no sumando milisegundos: los días del cambio de hora duran 23 o 25 horas.
+const sumarDias = (fecha, n) => { const d = aFecha(fecha); return fechaLocal(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)); };
 
 /** Día ISO de la semana (1 lunes … 7 domingo) de una fecha local. */
 export const diaIso = (fecha) => ((aFecha(fecha).getDay() + 6) % 7) + 1;
 
 /** El primer `diaVideo` (ISO) a partir de `desde`, incluido: ese es el día 1 del camino. */
 export function calcularInicio(diaVideo, desde = fechaLocal()) {
-  const salto = (diaVideo - diaIso(desde) + 7) % 7;
-  return fechaLocal(new Date(aFecha(desde).getTime() + salto * DIA_MS));
+  return sumarDias(desde, (diaVideo - diaIso(desde) + 7) % 7);
 }
 
 /** Día del camino hoy: ≤0 aún no empieza, 1…14 en curso, >14 terminado. */
 export const diaDelCamino = (inicio, hoy = fechaLocal()) => diferenciaDias(inicio, hoy) + 1;
 
-export const fechaDelDia = (inicio, dia) => fechaLocal(new Date(aFecha(inicio).getTime() + (dia - 1) * DIA_MS));
+export const fechaDelDia = (inicio, dia) => sumarDias(inicio, dia - 1);
 
 export function fechaCorta(fecha) {
   return aFecha(fecha).toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
@@ -112,10 +113,9 @@ export function racha(dias, hoy = fechaLocal()) {
     if (d.sesion_en) activos.add(fechaLocal(new Date(d.sesion_en)));
     if (d.examen_en) activos.add(fechaLocal(new Date(d.examen_en)));
   }
-  let cursor = aFecha(hoy);
-  if (!activos.has(hoy)) cursor = new Date(cursor.getTime() - DIA_MS);
+  let cursor = activos.has(hoy) ? hoy : sumarDias(hoy, -1);
   let n = 0;
-  while (activos.has(fechaLocal(cursor))) { n += 1; cursor = new Date(cursor.getTime() - DIA_MS); }
+  while (activos.has(cursor)) { n += 1; cursor = sumarDias(cursor, -1); }
   return n;
 }
 
@@ -211,4 +211,141 @@ export function siguientePaso({ diaHoy, porDia }) {
   const pendiente = DIAS.find((d) => d.dia < diaHoy && !porDia[d.dia]?.sesion_en);
   if (pendiente) return { tipo: 'sesion', dia: pendiente.dia, atrasada: true };
   return { tipo: 'hecho', dia: diaHoy };
+}
+
+// ───────────── Fase 2: juegos y cierres ─────────────
+
+// Desliza (día 2): hacia una de las cuatro esquinas, con los colores de la rueda.
+export const DESLIZA_4 = [
+  ['En el atasco, toca el claxon y busca otra ruta', 'COL', 'Reacciona rápido y con fuerza: va a la acción'],
+  ['Organiza la cena sin consultar a nadie, y sale bien', 'COL', 'Seguro de sí mismo, le cuesta pedir consejo'],
+  ['Le llevan la contraria y sube el tono hasta ganar', 'COL', 'Tiende a vivir la opinión contraria como un ataque'],
+  ['Una crítica de hace tres semanas aún le quita el sueño', 'MEL', 'Reacciona despacio, pero la impresión le dura mucho'],
+  ['Tarda en elegir restaurante porque compara todas las opciones', 'MEL', 'Profundo y reflexivo, le cuesta decidir'],
+  ['En la fiesta, pasa la noche hablando a fondo con una sola persona', 'MEL', 'Busca profundidad, no cantidad'],
+  ['Llega tarde, pero entra contando una historia y todos ríen', 'SAN', 'Vive para las personas y el momento presente'],
+  ['Empieza tres proyectos ilusionado y no termina ninguno', 'SAN', 'Le apasiona empezar; le cuesta perseverar'],
+  ['Se enfada mucho y a los cinco minutos ya está de broma', 'SAN', 'Reacciona rápido, pero se le pasa pronto'],
+  ['Le cambian el plan a última hora y dice "vale, sin problema"', 'FLE', 'Reacciona poco y despacio: busca la paz'],
+  ['En la reunión nadie sabe qué piensa hasta que se lo preguntan', 'FLE', 'Sensato, pero no toma la iniciativa'],
+  ['Hace lo mismo cada día, con calma y sin quejarse', 'FLE', 'Constante y fiel; le gusta la rutina'],
+];
+
+// Desliza (día 10): izquierda Temperamento (lo que me sale), derecha Carácter (lo que construyo).
+export const DESLIZA_2 = [
+  ['Se pone rojo cuando le critican', 'T', 'Es una primera reacción, no una elección'],
+  ['Pide perdón sin justificarse', 'C', 'Es humildad: se aprende con la práctica'],
+  ['Le cuesta decidir porque ve todos los riesgos', 'T', 'Rasgo típico del melancólico'],
+  ['Decide a tiempo aunque tenga miedo a equivocarse', 'C', 'Es prudencia: supera el miedo a equivocarse'],
+  ['Le encanta empezar cosas nuevas', 'T', 'Rasgo típico del sanguíneo'],
+  ['Termina el proyecto aunque ya no le ilusione', 'C', 'Es fortaleza: resistencia'],
+  ['Evita el conflicto por naturaleza', 'T', 'Rasgo típico del flemático'],
+  ['Tiene la conversación difícil que llevaba meses evitando', 'C', 'Es fortaleza: audacia'],
+  ['Quiere ejecutar sus ideas en el momento', 'T', 'Rasgo típico del colérico'],
+  ['Escucha hasta el final antes de responder', 'C', 'Es dominio de sí y humildad'],
+];
+
+// Elige tu reacción (día 3): cuatro escenas, cuatro reacciones sin etiqueta.
+export const ESCENAS_3 = [
+  ['Te critican delante de otros', { COL: 'Respondo en el momento y defiendo mi postura', MEL: 'Me callo, pero le doy vueltas durante días', SAN: 'Me molesta, hago una broma y se me pasa', FLE: 'Me afecta poco: escucho y sigo' }],
+  ['Alguien llega media hora tarde', { COL: 'Le digo claramente que no puede ser', MEL: 'No digo nada, pero lo guardo', SAN: 'Aprovecho para charlar con quien esté', FLE: 'Espero tranquilo: ya llegará' }],
+  ['Te cambian los planes a última hora', { COL: 'Busco enseguida un plan B y lo organizo', MEL: 'Me cuesta; me fastidia el día', SAN: '¡Genial, algo nuevo!', FLE: 'Me adapto sin problema' }],
+  ['Te proponen un proyecto nuevo y arriesgado', { COL: 'Me lanzo y lo lidero', MEL: 'Me atrae, pero veo todos los riesgos', SAN: 'Digo que sí antes de pensarlo', FLE: 'Prefiero que lo lidere otro; yo ayudo' }],
+];
+
+/** Resultado del día 3 según cuántas reacciones coinciden con el primario. */
+export function textoElige3(coincidencias, nombrePrimario) {
+  if (coincidencias >= 3) return `Tus reacciones confirman tu temperamento ${nombrePrimario}.`;
+  if (coincidencias === 2) return 'Tu primario y tu secundario se reparten tus reacciones. Es normal.';
+  return 'Puede que hayas elegido lo que haces, no lo que te sale primero. Recuerda: el test mide tu primera reacción. Esta semana, obsérvala.';
+}
+
+// Día 11: la escena 1 cambia según el momento vital.
+export function quienCorrige(momentos = []) {
+  if (momentos.includes('estudio')) return 'un profesor';
+  if (momentos.includes('trabajo')) return 'tu jefe';
+  if (momentos.includes('dirijo')) return 'un compañero';
+  if (momentos.includes('familia') || momentos.includes('jubilado')) return 'un familiar';
+  return 'alguien';
+}
+
+// Elige tu reacción (día 11): paso 1 «¿Qué te sale?», paso 2 «¿Y qué respondería la virtud?».
+// La escena, la respuesta de la virtud, los distractores y la virtud son los de la especificación.
+// BORRADOR · PENDIENTE DE REVISIÓN: las cuatro reacciones del paso 1 no están en la especificación
+// («4 opciones, como el día 3»); la escena 1 reutiliza las del día 3 y las otras dos son propuesta.
+export const ESCENAS_11 = [
+  {
+    escena: (momentos) => `Te corrige ${quienCorrige(momentos)} delante de todos`,
+    sale: ESCENAS_3[0][1],
+    virtud: 'Escucho, me quedo con lo que tenga de verdad y respondo después, con calma',
+    distractores: ['Respondo en el momento para que quede claro', 'No digo nada y me lo guardo'],
+    nombre: 'Humildad y dominio de sí',
+  },
+  {
+    escena: () => 'Tienes que decidir y te falta información',
+    sale: { COL: 'Decido ya, con lo que tengo', MEL: 'Sigo buscando datos y no me decido', SAN: 'Decido según lo que me ilusiona en ese momento', FLE: 'Lo dejo para más adelante' },
+    virtud: 'Pido consejo, miro los datos que tengo y decido sin tardar',
+    distractores: ['Decido ya y ya veré', 'Espero a tenerlo todo claro'],
+    nombre: 'Prudencia',
+  },
+  {
+    escena: () => 'Alguien cercano te pide ayuda justo cuando ibas a descansar',
+    sale: { COL: 'Le digo que ahora no, sin rodeos', MEL: 'Ayudo, pero me quedo dándole vueltas', SAN: 'Digo que sí enseguida, aunque luego me pese', FLE: 'Ayudo sin decir nada, aunque no me apetezca' },
+    virtud: 'Ayudo, y si de verdad no puedo, lo digo con cariño y propongo otro momento',
+    distractores: ['Digo que sí, pero de mala gana', 'Hago como que no lo he oído'],
+    nombre: 'Justicia y servicio',
+  },
+];
+
+export const CIERRE_11 = 'Entre lo que te sale y lo que haces hay un espacio. Ahí se construye el carácter.';
+
+// Arrastra (día 13): «No lo elegí» / «Lo he construido». No hay respuesta correcta.
+// [rasgo, le sale a, le cuesta a]
+export const RASGOS_13 = [
+  ['Tomo decisiones rápido', ['COL'], ['MEL', 'FLE']],
+  ['Pienso a fondo las cosas', ['MEL'], ['SAN']],
+  ['Me relaciono con facilidad', ['SAN'], ['MEL']],
+  ['Mantengo la calma', ['FLE'], ['COL']],
+  ['Pido perdón sin justificarme', [], ['COL']],
+  ['Termino lo que empiezo', ['MEL', 'FLE'], ['SAN']],
+  ['Escucho sin interrumpir', ['FLE'], ['COL']],
+  ['Me atrevo a arriesgar', ['COL', 'SAN'], ['MEL', 'FLE']],
+  ['Animo a los demás', ['SAN'], ['MEL']],
+  ['Propongo ideas sin que me lo pidan', ['COL'], ['FLE']],
+  ['Controlo mi genio', ['FLE'], ['COL', 'SAN']],
+  ['Profundizo en las amistades', ['MEL'], ['SAN']],
+];
+export const TEXTO_13 = 'Esto no te lo dio tu temperamento. Lo has construido tú.';
+
+// Cierres.
+// Mapa del camino (día 7): las semanas del curso 1; cada una con su lección (1.0 … 1.9).
+export const SEMANA_DEL_TEMPERAMENTO = { COL: 6, MEL: 7, SAN: 8, FLE: 9 };
+export const PALABRA_TEMPERAMENTO = Object.fromEntries(PALABRAS);
+
+export const CIERRE_7 = {
+  reacciones: 'Tus reacciones de la semana',
+  encajan: '¿Encajan con tu temperamento?',
+  encajanOpciones: [['si', 'Sí'], ['a_medias', 'A medias'], ['no', 'No']],
+  encajanNo: 'Puede que el test no acertara del todo o que ya hayas construido carácter. En la semana 9 podrás repetirlo.',
+  sobre: 'Tu virtud-desafío. Se abre en la semana 5.',
+  personas: 'La semana que viene conocerás mejor a tu gente.',
+  avance: (dia) => `Tu próximo vídeo, el ${dia}: el temperamento es biológico, el carácter espiritual.`,
+};
+
+export const CIERRE_14 = {
+  espejo: '¿Alguien te vio distinto de como tú te ves?',
+  espejoEnQue: '¿En qué?',
+  lineaBase: '¿Cuál es temperamento y cuál carácter?',
+  avance: (dia) => `Tu próximo vídeo, el ${dia}: el carácter se construye sobre la base del temperamento.`,
+};
+
+/** Resumen de la semana 1 a partir de los exámenes de los días 8 a 13. */
+export function resumenSemana1(porDia) {
+  const examenes = [8, 9, 10, 11, 12, 13].map((d) => porDia[d]?.examen).filter(Boolean);
+  const contado = examenes.filter((e) => e.reto && e.reto !== 'no' && e.con_quien && e.con_quien !== 'solo');
+  return {
+    contado: contado.length,
+    reconocieron: contado.filter((e) => e.reconocio === 'si' || e.reconocio === 'en_parte').length,
+    retos: examenes.filter((e) => e.reto === 'si' || e.reto === 'a_medias').length,
+  };
 }
