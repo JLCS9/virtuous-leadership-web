@@ -1,20 +1,16 @@
-// Pestaña «Hoy»: el reto del día en una frase y tu resultado del test de temperamento.
-import { useCallback, useEffect, useState } from 'react';
+// Pestaña «Hoy»: el reto de la semana y tu siguiente paso, tu mapa de carácter y tu resultado del test de
+// temperamento.
+import { useEffect, useState } from 'react';
 import { LocalLink as Link, useT } from '../i18n';
-import { RetosError, retoDeHoy } from '../account/retos';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento } from '../lib/virtudes.js';
 import { GOLD, GOLD_SOFT, INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../theme';
 import { botonPrimario, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
-import { IconoFlecha } from './Iconos';
-import { textoError } from './Conversacion';
-
-const VIRTUD = {
-  prudencia: 'Prudencia', fortaleza_audacia: 'Audacia', fortaleza_resistencia: 'Resistencia',
-  dominio_de_si: 'Dominio de sí', justicia: 'Justicia', magnanimidad: 'Magnanimidad',
-  humildad_fundamental: 'Humildad fundamental', humildad_fraternal: 'Humildad fraternal',
-};
+import { IconoCheck, IconoFlecha } from './Iconos';
+import { useCamino } from './useCamino';
+import { CON_QUIEN, TOTAL_DIAS, fechaCorta, semanaDe, siguientePaso } from '../lib/camino.js';
+import MapaCaracter from './MapaCaracter';
 
 function Hero({ children }) {
   return (
@@ -25,46 +21,69 @@ function Hero({ children }) {
   );
 }
 
-function RetoDelDia() {
-  const [estado, setEstado] = useState({ cargando: true });
-  const cargar = useCallback(() => {
-    setEstado({ cargando: true });
-    retoDeHoy()
-      .then((r) => setEstado({ cargando: false, ...r }))
-      .catch((e) => setEstado({ cargando: false, error: textoError(e), sinAcceso: e instanceof RetosError && e.code === 'forbidden' }));
-  }, []);
-  useEffect(cargar, [cargar]);
+const CON_QUIEN_TEXTO = Object.fromEntries(CON_QUIEN);
 
+// El reto de la semana (uno por semana; cada día cambia solo con quién) y el siguiente paso.
+function RetoDeLaSemana() {
+  const camino = useCamino();
   const etiqueta = { ...eyebrow, color: GOLD_SOFT, marginTop: 6 };
-  if (estado.cargando) {
-    return <Hero><div style={etiqueta}>Tu reto de hoy</div><p style={{ fontFamily: FONT_SERIF, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu reto…</p></Hero>;
+
+  if (camino.cargando) {
+    return <Hero><div style={etiqueta}>Tu reto de la semana</div><p style={{ fontFamily: FONT_SERIF, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu camino…</p></Hero>;
   }
-  if (estado.error) {
+  if (camino.error) {
     return (
       <Hero>
-        <div style={etiqueta}>Tu reto de hoy</div>
-        <p role="alert" style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '14px 0 18px', opacity: 0.92 }}>{estado.error}</p>
-        {!estado.sinAcceso && <button type="button" style={botonPrimario} onClick={cargar}>Reintentar</button>}
+        <div style={etiqueta}>Tu reto de la semana</div>
+        <p role="alert" style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '14px 0 18px', opacity: 0.92 }}>No he podido cargar tu camino ahora mismo.</p>
+        <button type="button" style={botonPrimario} onClick={camino.recargar}>Reintentar</button>
       </Hero>
     );
   }
-  if (!estado.perfil) {
+  if (!camino.perfil) {
     return (
       <Hero>
         <div style={etiqueta}>Antes de empezar</div>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Cuéntame tu semana y recibirás tu primer reto.</p>
-        <p style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Una conversación breve, una sola vez. Con ella tu reto de cada día se ajusta a tu vida.</p>
-        <Link to="/mi-panel/camino?conversacion=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
+        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
+        <p style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
+        <Link to="/mi-panel/camino?paso=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
       </Hero>
     );
   }
-  const r = estado.reto;
+
+  const { diaHoy } = camino;
+  if (diaHoy > TOTAL_DIAS) {
+    return (
+      <Hero>
+        <div style={etiqueta}>Tu camino</div>
+        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
+        <p style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
+      </Hero>
+    );
+  }
+
+  const empezado = diaHoy >= 1;
+  const semana = semanaDe(empezado ? diaHoy : 1);
+  const paso = siguientePaso(camino);
+  const conQuien = empezado ? camino.porDia[diaHoy]?.con_quien : null;
+  const destino = !paso || paso.tipo === 'hecho' ? null
+    : paso.tipo === 'examen' ? `/mi-panel/camino?examen=${paso.dia}` : `/mi-panel/camino?dia=${paso.dia}`;
   return (
     <Hero>
-      <div style={etiqueta}>Tu reto de hoy · {VIRTUD[r.virtud] ?? r.virtud}</div>
-      <p style={{ fontFamily: FONT_SERIF, fontSize: 29, lineHeight: 1.22, margin: '16px 0 12px', fontWeight: 600 }}>{r.reto}</p>
-      <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.78, fontStyle: 'italic' }}>{r.porque}</p>
-      <Link to="/mi-panel/camino?conversacion=noche" style={botonPrimario}>Hacer el examen de la noche <IconoFlecha width={18} height={18} /></Link>
+      <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
+      <p style={{ fontFamily: FONT_SERIF, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
+      <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
+      <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
+      {conQuien && <p style={{ fontFamily: FONT_SANS, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{CON_QUIEN_TEXTO[conQuien]?.toLowerCase()}</strong></p>}
+      {destino ? (
+        <Link to={destino} style={botonPrimario}>
+          {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
+        </Link>
+      ) : empezado && (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_SANS, fontSize: 14.5, fontWeight: 600, color: GOLD_SOFT }}>
+          <IconoCheck width={18} height={18} /> Hoy está hecho
+        </span>
+      )}
     </Hero>
   );
 }
@@ -137,7 +156,8 @@ function MiResultado() {
 export default function Hoy() {
   return (
     <div className="vl-cols">
-      <RetoDelDia />
+      <RetoDeLaSemana />
+      <MapaCaracter />
       <MiResultado />
     </div>
   );

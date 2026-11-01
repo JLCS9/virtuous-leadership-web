@@ -35,7 +35,7 @@ function Miniatura({ leccion, ancho = 132 }) {
 
 // Reproductor de Vimeo. Avisa del progreso por el canal de mensajes del propio reproductor
 // (sin librerías): al llegar al 90 % la lección se da por vista.
-function Reproductor({ leccion, onProgreso }) {
+export function Reproductor({ leccion, onProgreso }) {
   const ref = useRef(null);
   const aviso = useRef(onProgreso);
   aviso.current = onProgreso;
