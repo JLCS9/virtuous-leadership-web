@@ -15,6 +15,8 @@ import { Reproductor } from '../Formacion';
 import { useCatalogo, useProgreso } from '../useFormacion';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 import Rueda from './Rueda';
+import { Arrastra, DeslizaTemperamentoCaracter, DeslizaTemperamentos, EligeReaccion, EligeVirtud } from './Juegos';
+import { Cierre14, Cierre7 } from './Cierres';
 
 const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const Continuar = ({ onClick, children = 'Continuar', disabled }) => (
@@ -302,6 +304,10 @@ export default function Sesion({ dia, user, camino, onCerrar, onExamen }) {
     if (info.tipo === 'video') return <DiaVideo dia={dia} user={user} onFin={finJuego} />;
     if (info.tipo === 'verdad_mito') return <VerdadMito dia={dia} onFin={finJuego} />;
     if (info.tipo === 'punto_partida') return <PuntoPartida dia={dia} user={user} lineaBase={camino.lineaBase} onFin={finJuego} />;
+    if (info.tipo === 'desliza') return dia === 2 ? <DeslizaTemperamentos dia={dia} onFin={finJuego} /> : <DeslizaTemperamentoCaracter dia={dia} onFin={finJuego} />;
+    if (info.tipo === 'elige') return dia === 3 ? <EligeReaccion dia={dia} onFin={finJuego} /> : <EligeVirtud dia={dia} momentos={camino.perfil?.momentos} onFin={finJuego} />;
+    if (info.tipo === 'arrastra') return <Arrastra dia={dia} onFin={finJuego} />;
+    if (info.tipo === 'cierre') return dia === 7 ? <Cierre7 camino={camino} onFin={finJuego} /> : <Cierre14 camino={camino} onFin={finJuego} />;
     return <Pronto dia={dia} onFin={finJuego} />;
   }
 
@@ -332,7 +338,7 @@ export default function Sesion({ dia, user, camino, onCerrar, onExamen }) {
         <p style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Sesión hecha</p>
       </div>
       {tieneExamen(dia) && <p style={{ ...parrafo, color: INK, marginBottom: 6 }}>Esta noche, 45 segundos para mirar tu día.</p>}
-      {siguiente && <p style={{ ...parrafo, marginBottom: 20 }}>Mañana: {conPunto(siguiente.titulo)}</p>}
+      <p style={{ ...parrafo, marginBottom: 20 }}>{siguiente ? `Mañana: ${conPunto(siguiente.titulo)}` : 'Has completado tus dos primeras semanas.'}</p>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         {tieneExamen(dia) && !camino.porDia[dia]?.examen_en && <button type="button" style={botonSobreClaro} onClick={onExamen}>Hacer el examen ahora</button>}
         <button type="button" style={botonContorno} onClick={onCerrar}>Volver a mi camino</button>
