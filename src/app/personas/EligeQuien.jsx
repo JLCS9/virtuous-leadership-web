@@ -15,7 +15,7 @@ export function textoConQuien(clave, porId = {}) {
   return TEXTO_CON_QUIEN[clave] ?? clave;
 }
 
-export default function EligeQuien({ personas = [], valor, onElegir, extra = [], conmutar = false }) {
+export default function EligeQuien({ personas = [], valor, onElegir, extra = [], conmutar = false, sugerida = null }) {
   const elegir = (v) => onElegir(conmutar && valor === v ? null : v);
   return (
     <div style={{ display: 'grid', gap: 10 }}>
@@ -32,6 +32,7 @@ export default function EligeQuien({ personas = [], valor, onElegir, extra = [],
                         fontFamily: FONT_SANS, fontSize: 15, fontWeight: 600,
                       }}>
                 <Avatar persona={p} tam={32} />{p.nombre}
+                {p.id === sugerida && <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: activa ? PAPER : '#9D8240' }}>· sugerida</span>}
               </button>
             );
           })}
