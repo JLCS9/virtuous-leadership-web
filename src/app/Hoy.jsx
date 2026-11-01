@@ -9,7 +9,10 @@ import { GOLD, GOLD_SOFT, INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_
 import { botonPrimario, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha } from './Iconos';
 import { useCamino } from './useCamino';
-import { CON_QUIEN, TOTAL_DIAS, fechaCorta, semanaDe, siguientePaso } from '../lib/camino.js';
+import { usePersonas } from './usePersonas';
+import { textoConQuien } from './personas/EligeQuien';
+import { idDeClave } from '../lib/personas.js';
+import { TOTAL_DIAS, fechaCorta, semanaDe, siguientePaso } from '../lib/camino.js';
 import MapaCaracter from './MapaCaracter';
 
 function Hero({ children }) {
@@ -21,11 +24,10 @@ function Hero({ children }) {
   );
 }
 
-const CON_QUIEN_TEXTO = Object.fromEntries(CON_QUIEN);
-
 // El reto de la semana (uno por semana; cada día cambia solo con quién) y el siguiente paso.
 function RetoDeLaSemana() {
   const camino = useCamino();
+  const personas = usePersonas();
   const etiqueta = { ...eyebrow, color: GOLD_SOFT, marginTop: 6 };
 
   if (camino.cargando) {
@@ -74,7 +76,7 @@ function RetoDeLaSemana() {
       <p style={{ fontFamily: FONT_SERIF, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
       <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
       <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
-      {conQuien && <p style={{ fontFamily: FONT_SANS, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{CON_QUIEN_TEXTO[conQuien]?.toLowerCase()}</strong></p>}
+      {conQuien && <p style={{ fontFamily: FONT_SANS, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>}
       {destino ? (
         <Link to={destino} style={botonPrimario}>
           {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
