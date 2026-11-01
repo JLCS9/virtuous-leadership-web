@@ -1,10 +1,11 @@
 // Catálogo de Formación (lo sirve el servidor, solo con suscripción activa) y progreso de la persona.
 //
-// PROGRESO: de momento se guarda SOLO en este navegador (localStorage, por cuenta). La app móvil de
-// Virtus lo guarda también solo en el dispositivo, así que web y app no comparten progreso todavía.
-// Para compartirlo hace falta una tabla en el servidor (pendiente de decisión).
+// PROGRESO: se guarda en el navegador (rápido, sin conexión) y se sincroniza con la cuenta en
+// Supabase (tablas formacion_progreso y formacion_estado), de modo que la app móvil y la web
+// muestran lo mismo. Al unirse local y servidor gana la unión: nunca se pierde una lección vista.
 import { useCallback, useEffect, useState } from 'react';
 import { catalogoFormacion } from '../account/retos';
+import { supabase } from '../account/supabase';
 
 let cache = null; // el catálogo no cambia durante la visita
 export function olvidarCatalogo() { cache = null; }
@@ -44,23 +45,71 @@ function leer(userId) {
   } catch { return vacio(); }
 }
 
+// Segundo plano: los fallos de red no deben romper nada (el progreso local sigue valiendo).
+const enSegundoPlano = (p) => { Promise.resolve(p).catch(() => {}); };
+
 export function useProgreso(userId) {
   const [estado, setEstado] = useState(() => leer(userId));
-  useEffect(() => { setEstado(leer(userId)); }, [userId]);
+
+  const guardar = useCallback((nuevo) => {
+    try { localStorage.setItem(clave(userId), JSON.stringify(nuevo)); } catch { /* sin almacenamiento */ }
+  }, [userId]);
+
+  // Al abrir: trae lo del servidor, lo une con lo local y sube lo que solo estaba aquí.
+  useEffect(() => {
+    const local = leer(userId);
+    setEstado(local);
+    if (!supabase || !userId) return undefined;
+    let vivo = true;
+    (async () => {
+      const [{ data: filas, error: e1 }, { data: est }] = await Promise.all([
+        supabase.from('formacion_progreso').select('leccion_id, visto_en'),
+        supabase.from('formacion_estado').select('ultima').maybeSingle(),
+      ]);
+      if (e1 || !vivo) return;
+      const remotas = Object.fromEntries((filas ?? []).map((f) => [f.leccion_id, f.visto_en]));
+      const unidas = { ...remotas, ...local.vistas };
+      const nuevo = { vistas: unidas, ultima: local.ultima ?? est?.ultima ?? null };
+      guardar(nuevo);
+      setEstado(nuevo);
+      const soloLocales = Object.keys(local.vistas).filter((id) => !remotas[id]);
+      if (soloLocales.length) {
+        enSegundoPlano(supabase.from('formacion_progreso').upsert(soloLocales.map((id) => ({ user_id: userId, leccion_id: id, visto_en: local.vistas[id] }))));
+      }
+    })().catch(() => {});
+    return () => { vivo = false; };
+  }, [userId, guardar]);
 
   const cambiar = useCallback((f) => {
     setEstado((previo) => {
       const nuevo = f(previo);
-      try { localStorage.setItem(clave(userId), JSON.stringify(nuevo)); } catch { /* sin almacenamiento */ }
+      guardar(nuevo);
       return nuevo;
     });
-  }, [userId]);
+  }, [guardar]);
+
+  const subirEstado = (id) => {
+    if (supabase && userId) enSegundoPlano(supabase.from('formacion_estado').upsert({ user_id: userId, ultima: id, actualizado_en: new Date().toISOString() }));
+  };
 
   return {
     vistas: estado.vistas,
     ultima: estado.ultima,
-    abrir: (id) => cambiar((p) => (p.ultima === id ? p : { ...p, ultima: id })),
-    marcarVista: (id) => cambiar((p) => (p.vistas[id] ? p : { vistas: { ...p.vistas, [id]: new Date().toISOString() }, ultima: id })),
-    desmarcar: (id) => cambiar((p) => { const { [id]: _quitada, ...resto } = p.vistas; return { ...p, vistas: resto }; }),
+    abrir: (id) => {
+      if (estado.ultima === id) return;
+      cambiar((p) => ({ ...p, ultima: id }));
+      subirEstado(id);
+    },
+    marcarVista: (id) => {
+      if (estado.vistas[id]) return;
+      const cuando = new Date().toISOString();
+      cambiar((p) => (p.vistas[id] ? p : { vistas: { ...p.vistas, [id]: cuando }, ultima: id }));
+      if (supabase && userId) enSegundoPlano(supabase.from('formacion_progreso').upsert({ user_id: userId, leccion_id: id, visto_en: cuando }));
+      subirEstado(id);
+    },
+    desmarcar: (id) => {
+      cambiar((p) => { const { [id]: _quitada, ...resto } = p.vistas; return { ...p, vistas: resto }; });
+      if (supabase && userId) enSegundoPlano(supabase.from('formacion_progreso').delete().eq('user_id', userId).eq('leccion_id', id));
+    },
   };
 }

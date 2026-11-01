@@ -465,8 +465,10 @@ fija abajo. Sin suscripción sigue el panel mínimo de siempre (`MiPanel.jsx`, d
   solo si hay sesión (`saveCharacterResultIfLoggedIn`, en `TestCharacter.jsx`); sin él la gráfica
   muestra una invitación a hacerlo.
 - **Formación**: 7 cursos / 56 lecciones en Vimeo. El catálogo lo sirve la función `formacion-catalogo`
-  (gated; los vídeos no viajan en el bundle público). **El progreso se guarda solo en el navegador**
-  (localStorage `vl-formacion:<id>`): web y app móvil no lo comparten todavía (haría falta una tabla).
+  (gated; los vídeos no viajan en el bundle público). **El progreso se guarda en la cuenta**
+  (tablas `formacion_progreso` y `formacion_estado`, migración `20261101100000` de `~/virtus`) y se
+  copia a localStorage (`vl-formacion:<id>`); al abrir se unen servidor y local, y la app móvil
+  usa las mismas tablas.
 - Lógica pura y testeada: `src/lib/formacion.js` y `src/lib/virtudes.js` (`npm test`).
 - En desarrollo, `?demo` en la dirección pinta la gráfica y el catálogo con datos de ejemplo (el
   catálogo, desde un `public/__dev_cursos.json` temporal sin versionar). No existe en producción.

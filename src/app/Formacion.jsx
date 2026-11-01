@@ -182,7 +182,7 @@ function Listado({ cursos, progreso, abrirLeccion }) {
                alternar={() => setAbiertos((a) => ({ ...a, [c.id]: !a[c.id] }))} abrirLeccion={abrirLeccion} />
       ))}
 
-      <p className="vl-ancho" style={{ ...parrafo, fontSize: 12.5, textAlign: 'center' }}>Tu progreso se guarda en este navegador.</p>
+      <p className="vl-ancho" style={{ ...parrafo, fontSize: 12.5, textAlign: 'center' }}>Tu progreso se guarda en tu cuenta y es el mismo en la app.</p>
     </div>
   );
 }
