@@ -1,8 +1,9 @@
 // Cierres de semana: día 7 (tus reacciones, mapa del camino, sobre sellado) y día 14 (primer espejo,
-// tu semana, con quién has hecho el reto y relectura de tu punto de partida). Resumen + 1 pregunta.
+// tu semana, con quién has hecho el reto, mapa de mis personas y relectura de tu punto de partida).
+// Resumen + 1 pregunta.
 import { useState } from 'react';
 import {
-  CIERRE_14, CIERRE_7, CON_QUIEN, PALABRA_TEMPERAMENTO, PUNTO_PARTIDA, SEMANA_DEL_TEMPERAMENTO,
+  CIERRE_14, CIERRE_7, PALABRA_TEMPERAMENTO, PUNTO_PARTIDA, SEMANA_DEL_TEMPERAMENTO,
   fechaCorta, fechaDelDia, resumenSemana1,
 } from '../../lib/camino.js';
 import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
@@ -10,6 +11,9 @@ import { eyebrow, parrafo } from '../estilos';
 import { useCatalogo } from '../useFormacion';
 import { Continuar, useNombres, useTemperamento } from './Juegos';
 import { Opcion, Opciones, Pantalla } from './ui';
+import { idDeClave } from '../../lib/personas.js';
+import { MapaPersonas } from '../personas/comun';
+import { textoConQuien } from '../personas/EligeQuien';
 
 function Bloque({ titulo, children }) {
   return (
@@ -35,7 +39,7 @@ const cifra = (n, texto) => (
 
 // ───────────── Día 7 ─────────────
 
-export function Cierre7({ camino, onFin }) {
+export function Cierre7({ camino, personas, onFin }) {
   const temp = useTemperamento();
   const nombres = useNombres();
   const cat = useCatalogo();
@@ -95,7 +99,9 @@ export function Cierre7({ camino, onFin }) {
       </Bloque>
 
       <Bloque titulo="Tus personas">
-        <p style={{ ...parrafo, color: INK }}>{CIERRE_7.personas}</p>
+        <p style={{ ...parrafo, color: INK }}>
+          Llevas {personas?.lista.length ?? 0} {personas?.lista.length === 1 ? 'ficha' : 'fichas'}. {CIERRE_7.personas}
+        </p>
       </Bloque>
 
       <Bloque titulo="Próximo paso">
@@ -107,9 +113,7 @@ export function Cierre7({ camino, onFin }) {
 
 // ───────────── Día 14 ─────────────
 
-const TEXTO_GRUPO = Object.fromEntries(CON_QUIEN);
-
-export function Cierre14({ camino, onFin }) {
+export function Cierre14({ camino, personas, onFin }) {
   const { porDia, perfil, lineaBase, racha } = camino;
   const [espejo, setEspejo] = useState(null);
   const [enQue, setEnQue] = useState('');
@@ -159,10 +163,15 @@ export function Cierre14({ camino, onFin }) {
           <p style={parrafo}>Esta semana no has anotado con quién hiciste el reto.</p>
         ) : (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {Object.entries(grupos).map(([g, n]) => chip(NAVY, `${TEXTO_GRUPO[g] ?? g} · ${n}`))}
+            {Object.entries(grupos).map(([g, n]) => chip(TEMP_COLORS[personas?.porId[idDeClave(g)]?.primario] ?? NAVY, `${textoConQuien(g, personas?.porId)} · ${n}`))}
           </div>
         )}
-        <p style={{ ...parrafo, fontSize: 13.5, marginTop: 10 }}>Pronto podrás crear la ficha de cada persona y ver aquí el mapa de tus personas.</p>
+      </Bloque>
+
+      <Bloque titulo="El mapa de mis personas">
+        {personas?.lista.length ? <MapaPersonas personas={personas.lista} /> : (
+          <p style={parrafo}>Aún no tienes fichas. Crea la de alguien cercano desde «Mis personas», en tu camino.</p>
+        )}
       </Bloque>
 
       {respuestasBase.length > 0 && (

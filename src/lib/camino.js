@@ -21,20 +21,20 @@ export const SEMANAS = [
   },
 ];
 
-// tipo: el componente que pinta la sesión. Los días 5 y 12 (fichas de personas) aún muestran «llega pronto».
+// tipo: el componente que pinta la sesión.
 export const DIAS = [
   { dia: 1, titulo: 'Vídeo 1.0 y tu resultado', tipo: 'video', leccion: '1.0', tiempo: 'Vídeo + 2 min' },
   { dia: 2, titulo: 'Desliza: los cuatro temperamentos', tipo: 'desliza', tiempo: '4 min' },
   { dia: 3, titulo: 'Elige tu reacción', tipo: 'elige', tiempo: '4 min' },
   { dia: 4, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
-  { dia: 5, titulo: 'Descubre el temperamento de X', tipo: 'pronto', tiempo: '5 min' },
+  { dia: 5, titulo: 'Descubre el temperamento de X', tipo: 'ficha', tiempo: '5 min' },
   { dia: 6, titulo: 'Mi punto de partida', tipo: 'punto_partida', tiempo: '3 min' },
   { dia: 7, titulo: 'Cierre de la semana', tipo: 'cierre', cierre: true, tiempo: '4 min' },
   { dia: 8, titulo: 'Vídeo 1.1 y reto', tipo: 'video', leccion: '1.1', tiempo: 'Vídeo + 2 min' },
   { dia: 9, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
   { dia: 10, titulo: 'Desliza: ¿temperamento o carácter?', tipo: 'desliza', tiempo: '4 min' },
   { dia: 11, titulo: 'Elige tu reacción: temperamento frente a carácter', tipo: 'elige', tiempo: '4 min' },
-  { dia: 12, titulo: 'Mis personas', tipo: 'pronto', tiempo: '5 min' },
+  { dia: 12, titulo: 'Mis personas', tipo: 'mis_personas', tiempo: '5 min' },
   { dia: 13, titulo: 'Arrastra: no lo elegí / lo he construido', tipo: 'arrastra', tiempo: '4 min' },
   { dia: 14, titulo: 'Cierre: primer espejo', tipo: 'cierre', cierre: true, tiempo: '5 min' },
 ];

@@ -1,6 +1,5 @@
 // «Personaliza tu camino»: unas preguntas con botones, una vez, antes del día 1. Todo se puede
-// cambiar después. La pantalla «¿Hay alguien cuyo temperamento te gustaría descubrir?» llega con las
-// fichas de personas.
+// cambiar después. La primera vez pregunta también si quieres crear ya la primera ficha de persona.
 import { useState } from 'react';
 import { guardarPerfil } from '../../account/camino';
 import { DIAS_SEMANA, ONBOARDING, calcularInicio, diaIso, fechaCorta, fechaLocal, textoCierreOnboarding } from '../../lib/camino.js';
@@ -9,7 +8,7 @@ import { botonPrimario, botonSobreClaro, parrafo } from '../estilos';
 import { IconoFlecha } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 
-const PASOS = ['entrada', 'momentos', 'estado_vida', 'objetivo', 'vida_interior', 'agenda'];
+const PASOS = ['entrada', 'momentos', 'estado_vida', 'objetivo', 'vida_interior', 'ficha', 'agenda'];
 
 export default function Onboarding({ user, perfil, onHecho, onSalir }) {
   const [paso, setPaso] = useState(0);
@@ -21,7 +20,10 @@ export default function Onboarding({ user, perfil, onHecho, onSalir }) {
     dia_video: perfil?.dia_video ?? diaIso(fechaLocal()),
     hora_examen: (perfil?.hora_examen ?? '21:30').slice(0, 5),
   }));
+  const [quiereFicha, setQuiereFicha] = useState(null);
   const [guardado, setGuardado] = useState(null);
+  // Al editar el perfil ya creado no se vuelve a preguntar por la primera ficha.
+  const pasos = perfil ? PASOS.filter((x) => x !== 'ficha') : PASOS;
   const [ocupado, setOcupado] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,14 +50,14 @@ export default function Onboarding({ user, perfil, onHecho, onSalir }) {
         <p style={{ fontFamily: FONT_SERIF, fontSize: 26, lineHeight: 1.3, color: INK, margin: '10px 0 22px' }}>
           {textoCierreOnboarding(empiezaHoy ? 'hoy' : `el ${fechaCorta(guardado.inicio)}`)}
         </p>
-        <button type="button" style={botonSobreClaro} onClick={() => onHecho(guardado)}>
-          {empiezaHoy ? 'Empezar el día 1' : 'Ver mi camino'} <IconoFlecha width={18} height={18} />
+        <button type="button" style={botonSobreClaro} onClick={() => onHecho(guardado, quiereFicha === true)}>
+          {quiereFicha === true ? 'Crear la ficha' : empiezaHoy ? 'Empezar el día 1' : 'Ver mi camino'} <IconoFlecha width={18} height={18} />
         </button>
       </Pantalla>
     );
   }
 
-  const clave = PASOS[paso];
+  const clave = pasos[paso];
   const volver = paso > 0 ? <button type="button" onClick={() => setPaso((p) => p - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
 
   if (clave === 'entrada') {
@@ -68,7 +70,7 @@ export default function Onboarding({ user, perfil, onHecho, onSalir }) {
     );
   }
 
-  const cabecera = <Puntos total={PASOS.length - 1} actual={paso - 1} />;
+  const cabecera = <Puntos total={pasos.length - 1} actual={paso - 1} />;
 
   if (clave === 'momentos') {
     const q = ONBOARDING.momentos;
@@ -81,6 +83,20 @@ export default function Onboarding({ user, perfil, onHecho, onSalir }) {
         <p style={{ ...parrafo, fontSize: 14, marginBottom: 16 }}>{q.ayuda}</p>
         <Opciones columnas={2}>
           {q.opciones.map(([v, texto]) => <Opcion key={v} activa={r.momentos.includes(v)} onClick={() => cambiar(v)}>{texto}</Opcion>)}
+        </Opciones>
+      </Pantalla>
+    );
+  }
+
+  if (clave === 'ficha') {
+    return (
+      <Pantalla etiqueta="Personaliza tu camino" onVolver={onSalir} pie={volver}>
+        {cabecera}
+        <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 8px' }}>¿Hay alguien cuyo temperamento te gustaría descubrir?</h2>
+        <p style={{ ...parrafo, fontSize: 14, marginBottom: 16 }}>Ocho preguntas sobre cómo reacciona. Lo harás al terminar.</p>
+        <Opciones>
+          <Opcion activa={quiereFicha === true} onClick={() => { setQuiereFicha(true); setTimeout(siguiente, 180); }}>Crear ficha</Opcion>
+          <Opcion activa={quiereFicha === false} onClick={() => { setQuiereFicha(false); setTimeout(siguiente, 180); }}>Ahora no</Opcion>
         </Opciones>
       </Pantalla>
     );

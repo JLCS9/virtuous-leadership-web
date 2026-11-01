@@ -6,7 +6,7 @@ import { guardarLineaBase, guardarSesion } from '../../account/camino';
 import { fetchLatestTemperament } from '../../account/account';
 import { buscarLeccion } from '../../lib/formacion.js';
 import {
-  CON_QUIEN, EJEMPLO_CUATRO, conPunto, LEMA, PUNTO_PARTIDA, RETO_PRESENTACION, VERDAD_MITO, infoDia, semanaDe, tieneExamen,
+  EJEMPLO_CUATRO, conPunto, LEMA, PUNTO_PARTIDA, RETO_PRESENTACION, VERDAD_MITO, infoDia, semanaDe, tieneExamen,
 } from '../../lib/camino.js';
 import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
 import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo } from '../estilos';
@@ -17,6 +17,8 @@ import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 import Rueda from './Rueda';
 import { Arrastra, DeslizaTemperamentoCaracter, DeslizaTemperamentos, EligeReaccion, EligeVirtud } from './Juegos';
 import { Cierre14, Cierre7 } from './Cierres';
+import { Dia12, Dia5 } from '../personas/DiasPersonas';
+import EligeQuien from '../personas/EligeQuien';
 
 const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const Continuar = ({ onClick, children = 'Continuar', disabled }) => (
@@ -250,7 +252,7 @@ function Pronto({ dia, onFin }) {
 
 // ───────────── La sesión ─────────────
 
-export default function Sesion({ dia, user, camino, onCerrar, onExamen }) {
+export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen }) {
   const info = infoDia(dia);
   const semana = semanaDe(dia);
   const hecha = Boolean(camino.porDia[dia]?.sesion_en);
@@ -307,7 +309,9 @@ export default function Sesion({ dia, user, camino, onCerrar, onExamen }) {
     if (info.tipo === 'desliza') return dia === 2 ? <DeslizaTemperamentos dia={dia} onFin={finJuego} /> : <DeslizaTemperamentoCaracter dia={dia} onFin={finJuego} />;
     if (info.tipo === 'elige') return dia === 3 ? <EligeReaccion dia={dia} onFin={finJuego} /> : <EligeVirtud dia={dia} momentos={camino.perfil?.momentos} onFin={finJuego} />;
     if (info.tipo === 'arrastra') return <Arrastra dia={dia} onFin={finJuego} />;
-    if (info.tipo === 'cierre') return dia === 7 ? <Cierre7 camino={camino} onFin={finJuego} /> : <Cierre14 camino={camino} onFin={finJuego} />;
+    if (info.tipo === 'cierre') return dia === 7 ? <Cierre7 camino={camino} personas={personas} onFin={finJuego} /> : <Cierre14 camino={camino} personas={personas} onFin={finJuego} />;
+    if (info.tipo === 'ficha') return <Dia5 dia={dia} user={user} personas={personas} estadoVida={camino.perfil?.estado_vida} onFin={finJuego} />;
+    if (info.tipo === 'mis_personas') return <Dia12 dia={dia} user={user} camino={camino} personas={personas} onFin={finJuego} />;
     return <Pronto dia={dia} onFin={finJuego} />;
   }
 
@@ -323,9 +327,7 @@ export default function Sesion({ dia, user, camino, onCerrar, onExamen }) {
             </div>
           </>
         )}>
-        <Opciones>
-          {CON_QUIEN.map(([v, texto]) => <Opcion key={v} activa={conQuien === v} onClick={() => setConQuien(conQuien === v ? null : v)}>{texto}</Opcion>)}
-        </Opciones>
+        <EligeQuien personas={personas.lista} valor={conQuien} onElegir={setConQuien} conmutar />
       </Pantalla>
     );
   }

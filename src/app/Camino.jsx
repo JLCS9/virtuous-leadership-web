@@ -1,6 +1,7 @@
 // Pestaña «Camino»: tu siguiente paso. Los 14 primeros días (semanas 0 y 1): en qué día estás, la
 // sesión de hoy, el examen de la noche y la siguiente lección. Sin perfil, «Personaliza tu camino».
-// Las pantallas se abren con ?paso=onboarding · ?dia=N (sesión) · ?examen=N.
+// Las pantallas se abren con ?paso=onboarding · ?dia=N (sesión) · ?examen=N, y las fichas de personas
+// con ?personas · ?persona=id · ?nueva · ?observar=id · ?rehacer=id.
 import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { continuar, formatoDuracion } from '../lib/formacion.js';
@@ -13,6 +14,10 @@ import { useCamino } from './useCamino';
 import Onboarding from './camino/Onboarding';
 import Sesion from './camino/Sesion';
 import Examen from './camino/Examen';
+import { usePersonas } from './usePersonas';
+import CrearFicha from './personas/CrearFicha';
+import Observacion from './personas/Observacion';
+import { Ficha, MisPersonas, TarjetaPersonas } from './personas/MisPersonas';
 
 function Progreso({ camino }) {
   const { diaHoy, racha, porDia } = camino;
@@ -176,6 +181,7 @@ function SiguienteLeccion({ user }) {
 export default function Camino({ user }) {
   const [params, setParams] = useSearchParams();
   const camino = useCamino();
+  const personas = usePersonas();
   const cerrar = () => setParams({});
 
   if (camino.cargando) return <p style={{ ...parrafo, textAlign: 'center', padding: 40 }}>Cargando tu camino…</p>;
@@ -196,15 +202,49 @@ export default function Camino({ user }) {
     return unaColumna(
       <Onboarding user={user} perfil={camino.perfil}
                   onSalir={camino.perfil ? cerrar : undefined}
-                  onHecho={(p) => { camino.recargar(); setParams(p.inicio <= fechaLocal() ? { dia: '1' } : {}); }} />,
+                  onHecho={(p, quiereFicha) => {
+                    camino.recargar();
+                    const empieza = p.inicio <= fechaLocal();
+                    setParams(quiereFicha ? { nueva: '1', ...(empieza ? { luego: 'dia1' } : {}) } : empieza ? { dia: '1' } : {});
+                  }} />,
+    );
+  }
+
+  // Fichas de personas.
+  const estadoVida = camino.perfil.estado_vida;
+  if (params.has('nueva') || params.get('rehacer')) {
+    const rehacer = params.get('rehacer') ? personas.porId[params.get('rehacer')] : null;
+    if (params.get('rehacer') && !rehacer) return unaColumna(<p style={{ ...parrafo, textAlign: 'center', padding: 40 }}>Cargando…</p>);
+    return unaColumna(
+      <CrearFicha key={params.get('rehacer') ?? 'nueva'} user={user} estadoVida={estadoVida} menor={personas.menor} persona={rehacer}
+                  onSalir={() => setParams(rehacer ? { persona: rehacer.id } : params.get('luego') === 'dia1' ? { dia: '1' } : {})}
+                  onHecho={(p) => { personas.recargar(); setParams(params.get('luego') === 'dia1' ? { dia: '1' } : { persona: p.id }); }} />,
+    );
+  }
+  if (params.get('observar')) {
+    const p = personas.porId[params.get('observar')];
+    if (!p) return unaColumna(<p style={{ ...parrafo, textAlign: 'center', padding: 40 }}>Cargando…</p>);
+    return unaColumna(<Observacion key={p.id} user={user} persona={p} onSalir={() => setParams({ persona: p.id })} onHecho={() => { personas.recargar(); setParams({ persona: p.id }); }} />);
+  }
+  if (params.get('persona')) {
+    return unaColumna(
+      <Ficha key={params.get('persona')} id={params.get('persona')} menor={personas.menor}
+             onVolver={() => setParams({ personas: '1' })} onCambio={personas.recargar}
+             onObservar={(p) => setParams({ observar: p.id })} onRehacer={(p) => setParams({ rehacer: p.id })} />,
+    );
+  }
+  if (params.has('personas')) {
+    return unaColumna(
+      <MisPersonas user={user} personas={personas.lista} onVolver={cerrar} onCambio={personas.recargar}
+                   onAbrir={(id) => setParams({ persona: id })} onCrear={() => setParams({ nueva: '1' })} />,
     );
   }
   if (abierto(n('dia'))) {
     const dia = n('dia');
-    return unaColumna(<Sesion key={dia} dia={dia} user={user} camino={camino} onCerrar={cerrar} onExamen={() => setParams({ examen: String(dia) })} />);
+    return unaColumna(<Sesion key={dia} dia={dia} user={user} camino={camino} personas={personas} onCerrar={cerrar} onExamen={() => setParams({ examen: String(dia) })} />);
   }
   if (abierto(n('examen')) && tieneExamen(n('examen'))) {
-    return unaColumna(<Examen key={n('examen')} dia={n('examen')} user={user} camino={camino} onCerrar={cerrar} />);
+    return unaColumna(<Examen key={n('examen')} dia={n('examen')} user={user} camino={camino} personas={personas} onCerrar={cerrar} />);
   }
 
   const { diaHoy } = camino;
@@ -221,7 +261,13 @@ export default function Camino({ user }) {
           <SiguienteLeccion user={user} />
         </div>
       )}
-      {diaHoy >= 1 && <Progreso camino={camino} />}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+        {diaHoy >= 1 && <Progreso camino={camino} />}
+        {!personas.cargando && (
+          <TarjetaPersonas personas={personas.lista} onCrear={() => setParams({ nueva: '1' })}
+                           onVer={(id) => setParams(id ? { persona: id } : { personas: '1' })} />
+        )}
+      </div>
     </div>
   );
 }

@@ -4,10 +4,13 @@
 import { useState } from 'react';
 import { guardarExamen } from '../../account/camino';
 import { EXAMEN, PALABRAS, semanaDe } from '../../lib/camino.js';
-import { INK, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../../theme';
 import { botonContorno, botonSobreClaro, parrafo } from '../estilos';
 import { IconoCheck } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
+import { idDeClave } from '../../lib/personas.js';
+import EligeQuien from '../personas/EligeQuien';
+import Observacion from '../personas/Observacion';
 
 function pasosDe(semana, r, vidaInterior) {
   const p = ['reto'];
@@ -18,12 +21,13 @@ function pasosDe(semana, r, vidaInterior) {
   return p;
 }
 
-export default function Examen({ dia, user, camino, onCerrar }) {
+export default function Examen({ dia, user, camino, personas, onCerrar }) {
   const semana = semanaDe(dia).numero;
   const vidaInterior = camino.perfil?.vida_interior === 'si';
   const [r, setR] = useState({});
   const [i, setI] = useState(0);
   const [estado, setEstado] = useState(null); // null · 'guardando' · 'hecho' · 'error'
+  const [observando, setObservando] = useState(false);
 
   const pasos = pasosDe(semana, r, vidaInterior);
   const clave = pasos[i];
@@ -50,6 +54,11 @@ export default function Examen({ dia, user, camino, onCerrar }) {
     else guardar(nuevo);
   }
 
+  // Si lo hizo con alguien que tiene ficha: «¿Quieres anotar cómo reaccionó?».
+  const ficha = personas?.porId[idDeClave(r.con_quien)] ?? null;
+  if (estado === 'hecho' && observando && ficha) {
+    return <Observacion user={user} persona={ficha} onSalir={() => setObservando(false)} onHecho={() => { personas.recargar(); setObservando('hecho'); }} />;
+  }
   if (estado === 'hecho') {
     return (
       <Pantalla etiqueta={`Día ${dia} · Examen de la noche`}>
@@ -58,6 +67,12 @@ export default function Examen({ dia, user, camino, onCerrar }) {
           <p style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Buenas noches</p>
         </div>
         <p style={{ ...parrafo, marginBottom: 20 }}>Has mirado tu día. Mañana, un paso más.</p>
+        {ficha && observando !== 'hecho' && (
+          <div style={{ borderTop: `1px solid ${LINE}`, padding: '16px 0 18px' }}>
+            <p style={{ ...parrafo, color: INK, marginBottom: 12 }}>¿Quieres anotar cómo reaccionó {ficha.nombre}?</p>
+            <button type="button" style={botonSobreClaro} onClick={() => setObservando(true)}>Anotar su reacción</button>
+          </div>
+        )}
         <button type="button" style={botonContorno} onClick={onCerrar}>Volver a mi camino</button>
       </Pantalla>
     );
@@ -80,12 +95,18 @@ export default function Examen({ dia, user, camino, onCerrar }) {
     <Pantalla etiqueta={`Día ${dia} · Examen de la noche`} onVolver={onCerrar} pie={pie}>
       {i === 0 && <p style={{ fontFamily: FONT_SERIF, fontSize: 20, fontStyle: 'italic', color: INK, margin: '10px 0 4px' }}>{EXAMEN.intro}</p>}
       <Puntos total={pasos.length} actual={i} />
-      {(clave === 'reto' || clave === 'con_quien' || clave === 'reconocio') && (
+      {clave === 'con_quien' && (
+        <>
+          {titulo(EXAMEN.con_quien.pregunta)}
+          <EligeQuien personas={personas?.lista} valor={r.con_quien} onElegir={(v) => responder('con_quien', v)} extra={[['solo', 'Solo']]} />
+        </>
+      )}
+      {(clave === 'reto' || clave === 'reconocio') && (
         <>
           {titulo(EXAMEN[clave].pregunta)}
-          <Opciones columnas={clave === 'con_quien' ? 1 : 3}>
+          <Opciones columnas={3}>
             {EXAMEN[clave].opciones.map(([v, texto]) => (
-              <Opcion key={v} compacta={clave !== 'con_quien'} activa={r[clave] === v} onClick={() => responder(clave, v)}>{texto}</Opcion>
+              <Opcion key={v} compacta activa={r[clave] === v} onClick={() => responder(clave, v)}>{texto}</Opcion>
             ))}
           </Opciones>
         </>
