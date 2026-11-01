@@ -1,4 +1,4 @@
-// Juegos de la fase 2: desliza (días 2 y 10), elige tu reacción (días 3 y 11) y arrastra (día 13).
+// Juegos de la fase 2: desliza (días 3 y 10), elige tu reacción (días 4 y 11) y arrastra (día 13).
 // Todo con el dedo: la tarjeta se puede arrastrar hacia su destino o tocar el destino.
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '../../i18n';
@@ -158,7 +158,7 @@ export function DeslizaTemperamentoCaracter({ dia, onFin }) {
   return <Desliza etiqueta={`Día ${dia} · ¿Temperamento o carácter?`} tarjetas={DESLIZA_2} destinos={destinos} onFin={onFin} />;
 }
 
-// ───────────── Elige tu reacción (día 3) ─────────────
+// ───────────── Elige tu reacción (día 4) ─────────────
 
 export function EligeReaccion({ dia, onFin }) {
   const temp = useTemperamento();

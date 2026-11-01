@@ -4,7 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   NO_SE, PREGUNTAS, combinacion, esMenorDe18, idDeClave, claveFicha, necesitaDesempate, ordenAleatorio,
-  propuestaPorObservaciones, puntuar,
+  propuestaPorObservaciones, puntuar, sugerenciaDelDia,
 } from './personas.js';
 
 const N = NO_SE;
@@ -76,4 +76,21 @@ test('menores de 18 y claves de ficha', () => {
   assert.equal(esMenorDe18(null, hoy), false);
   assert.equal(idDeClave(claveFicha('abc')), 'abc');
   assert.equal(idDeClave('familia'), null);
+});
+
+test('sugerencia del día: primero quien no ha salido esta semana y, entre ellos, la estrella', () => {
+  const ana = { id: 'a', nombre: 'Ana', estrella: false, primario: 'FLE', creado_en: '1' };
+  const marta = { id: 'm', nombre: 'Marta', estrella: true, primario: 'MEL', creado_en: '2' };
+  const luis = { id: 'l', nombre: 'Luis', estrella: true, primario: null, creado_en: '3' };
+  assert.equal(sugerenciaDelDia([], {}, 3), null);
+  assert.equal(sugerenciaDelDia([ana, marta, luis], {}, 3).persona.nombre, 'Marta');
+  // Marta ya salió esta semana: toca Luis (también con estrella), sin consejo porque no tiene temperamento.
+  const s = sugerenciaDelDia([ana, marta, luis], { 2: { con_quien: 'p:m' } }, 3);
+  assert.equal(s.persona.nombre, 'Luis');
+  assert.equal(s.consejo, null);
+  // Lo de la semana pasada no cuenta.
+  assert.equal(sugerenciaDelDia([ana, marta, luis], { 2: { con_quien: 'p:m' } }, 9).persona.nombre, 'Marta');
+  assert.ok(sugerenciaDelDia([ana], {}, 4).consejo);
+  // Ya salieron las dos con estrella: toca Ana, aunque no tenga estrella.
+  assert.equal(sugerenciaDelDia([ana, marta, luis], { 2: { con_quien: 'p:m' }, 3: { examen: { con_quien: 'p:l' } } }, 4).persona.nombre, 'Ana');
 });

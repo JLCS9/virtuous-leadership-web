@@ -17,8 +17,9 @@ import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 import Rueda from './Rueda';
 import { Arrastra, DeslizaTemperamentoCaracter, DeslizaTemperamentos, EligeReaccion, EligeVirtud } from './Juegos';
 import { Cierre14, Cierre7 } from './Cierres';
-import { Dia12, Dia5 } from '../personas/DiasPersonas';
+import { Dia12, DiaFicha } from '../personas/DiasPersonas';
 import EligeQuien from '../personas/EligeQuien';
+import { sugerenciaDelDia } from '../../lib/personas.js';
 
 const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const Continuar = ({ onClick, children = 'Continuar', disabled }) => (
@@ -257,6 +258,8 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
   const semana = semanaDe(dia);
   const hecha = Boolean(camino.porDia[dia]?.sesion_en);
   const [paso, setPaso] = useState('recuerda');
+  // Los cierres no tienen «¿con quién?»: sin sugerencia.
+  const sugerencia = info.cierre ? null : sugerenciaDelDia(personas.lista, camino.porDia, dia);
   const [juego, setJuego] = useState(null);
   const [conQuien, setConQuien] = useState(camino.porDia[dia]?.con_quien ?? null);
   const [error, setError] = useState(null);
@@ -293,6 +296,11 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.18)', paddingTop: 14, marginBottom: 22 }}>
           <div style={{ fontFamily: FONT_SANS, fontSize: 12, opacity: 0.7, marginBottom: 4 }}>Tu reto de la semana</div>
           <div style={{ fontFamily: FONT_SANS, fontSize: 16, fontWeight: 600 }}>{semana.reto}</div>
+          {sugerencia && (
+            <div style={{ fontFamily: FONT_SANS, fontSize: 14, marginTop: 10, opacity: 0.9 }}>
+              Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
+            </div>
+          )}
         </div>
         {hecha && <p style={{ fontFamily: FONT_SANS, fontSize: 13.5, opacity: 0.8, margin: '0 0 14px' }}>Ya hiciste esta sesión. Puedes repetirla.</p>}
         <button type="button" style={botonPrimario} onClick={() => setPaso('juega')}>
@@ -306,11 +314,11 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
     if (info.tipo === 'video') return <DiaVideo dia={dia} user={user} onFin={finJuego} />;
     if (info.tipo === 'verdad_mito') return <VerdadMito dia={dia} onFin={finJuego} />;
     if (info.tipo === 'punto_partida') return <PuntoPartida dia={dia} user={user} lineaBase={camino.lineaBase} onFin={finJuego} />;
-    if (info.tipo === 'desliza') return dia === 2 ? <DeslizaTemperamentos dia={dia} onFin={finJuego} /> : <DeslizaTemperamentoCaracter dia={dia} onFin={finJuego} />;
-    if (info.tipo === 'elige') return dia === 3 ? <EligeReaccion dia={dia} onFin={finJuego} /> : <EligeVirtud dia={dia} momentos={camino.perfil?.momentos} onFin={finJuego} />;
+    if (info.tipo === 'desliza') return dia <= 7 ? <DeslizaTemperamentos dia={dia} onFin={finJuego} /> : <DeslizaTemperamentoCaracter dia={dia} onFin={finJuego} />;
+    if (info.tipo === 'elige') return dia <= 7 ? <EligeReaccion dia={dia} onFin={finJuego} /> : <EligeVirtud dia={dia} momentos={camino.perfil?.momentos} onFin={finJuego} />;
     if (info.tipo === 'arrastra') return <Arrastra dia={dia} onFin={finJuego} />;
     if (info.tipo === 'cierre') return dia === 7 ? <Cierre7 camino={camino} personas={personas} onFin={finJuego} /> : <Cierre14 camino={camino} personas={personas} onFin={finJuego} />;
-    if (info.tipo === 'ficha') return <Dia5 dia={dia} user={user} personas={personas} estadoVida={camino.perfil?.estado_vida} onFin={finJuego} />;
+    if (info.tipo === 'ficha') return <DiaFicha dia={dia} user={user} personas={personas} estadoVida={camino.perfil?.estado_vida} onFin={finJuego} />;
     if (info.tipo === 'mis_personas') return <Dia12 dia={dia} user={user} camino={camino} personas={personas} onFin={finJuego} />;
     return <Pronto dia={dia} onFin={finJuego} />;
   }
@@ -327,7 +335,7 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
             </div>
           </>
         )}>
-        <EligeQuien personas={personas.lista} valor={conQuien} onElegir={setConQuien} conmutar />
+        <EligeQuien personas={personas.lista} valor={conQuien} onElegir={setConQuien} conmutar sugerida={sugerencia?.persona.id} />
       </Pantalla>
     );
   }
