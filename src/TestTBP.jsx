@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT, useLocalPath, ROUTES } from './i18n';
 import { accountsEnabled } from './account/supabase';
-import { AccountError, createAccountAndSignIn, saveTemperamentResult, sendPasswordReset } from './account/account';
+import { AccountError, createAccountAndSignIn, recordFormConsents, saveTemperamentResult, sendPasswordReset } from './account/account';
 import { CHALLENGE_VIRTUE } from './account/challengeVirtues';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
 // el texto traducido en la propia imagen.
@@ -662,6 +662,13 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
   const [birthYear, setBirthYear] = useState('');
   const [sex, setSex] = useState('');
   const [consent, setConsent] = useState(false);
+  // Boletín: casilla aparte y opcional (RGPD). Desmarcada por defecto.
+  const [newsletter, setNewsletter] = useState(false);
+  // Menores de 14 (LOPDGDD art. 7): necesitan la autorización de un tutor.
+  // Con solo el año, quien cumple 14 este año contesta si ya los ha cumplido.
+  const [turned14, setTurned14] = useState(null);
+  const [guardianEmail, setGuardianEmail] = useState('');
+  const [guardianError, setGuardianError] = useState(null);
   const [touched, setTouched] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
@@ -675,6 +682,10 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
     { value: 'hombre', label: sexOpts.hombre },
   ];
 
+  const age = /^\d{4}$/.test(birthYear) ? currentYear - Number(birthYear) : null;
+  const askTurned14 = accountsEnabled && age === 14;
+  const minor = accountsEnabled && age !== null && (age < 14 || (age === 14 && turned14 === false));
+
   const errors = {
     name: name.trim().length < 2 ? t('gate.errors.name') : null,
     email: !EMAIL_RE.test(email.trim()) ? t('gate.errors.email') : null,
@@ -686,6 +697,9 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
     })(),
     sex: !sex ? t('gate.errors.sex') : null,
     password: accountsEnabled && password.length < 8 ? t('gate.errors.password') : null,
+    turned14: askTurned14 && turned14 === null ? t('gate.errors.turned14') : null,
+    guardianEmail: minor && (!EMAIL_RE.test(guardianEmail.trim()) || guardianEmail.trim().toLowerCase() === email.trim().toLowerCase())
+      ? t('gate.errors.guardian_email') : null,
     consent: !consent ? t('gate.errors.consent') : null,
   };
 
@@ -693,11 +707,12 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setTouched({ name: 1, email: 1, birthYear: 1, sex: 1, password: 1, consent: 1 });
+    setTouched({ name: 1, email: 1, birthYear: 1, sex: 1, password: 1, turned14: 1, guardianEmail: 1, consent: 1 });
     if (!isValid || submitting) return;
     setSubmitting(true);
     setSubmitError(null);
     setWrongPassword(false);
+    setGuardianError(null);
     setResetSent(false);
     const profile = t(`result.profiles.${profileKey}`);
     const tempInfo = t(`temperaments.${primario}`);
@@ -712,6 +727,8 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
         language: lang,
         conoceAlex: conoceAlex === true,
         qualifySource: qualifySource || '',
+        // Sin cuentas (formulario antiguo) la casilla única incluye el boletín.
+        ...(accountsEnabled ? { newsletter: !minor && newsletter } : {}),
       },
       result: {
         profileKey,
@@ -754,6 +771,47 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
       return;
     }
 
+    const resultToSave = {
+      profileKey,
+      primario,
+      secundario: decision.secundario || null,
+      isPure: decision.isPure,
+      margin: decision.margin,
+      scoreS2: decision.score_s2,
+      answers,
+      language: lang,
+    };
+
+    // Menor de 14: la cuenta queda pendiente del tutor y el servidor guarda el
+    // resultado. No va a Brevo ni a Converflow (sin comunicaciones comerciales).
+    if (minor) {
+      try {
+        await createAccountAndSignIn({
+          email: payload.contact.email,
+          password,
+          name: payload.contact.name,
+          birthYear: payload.contact.birthYear,
+          sex,
+          language: lang,
+          turned14: turned14 === true,
+          guardianEmail: guardianEmail.trim().toLowerCase(),
+          result: resultToSave,
+        });
+        onSubmitOk({ pendingGuardian: true });
+      } catch (err) {
+        const code = err instanceof AccountError ? err.code : 'failed';
+        if (code === 'pending_guardian') setGuardianError(t('gate.errors.pending_guardian'));
+        else if (code === 'wrong_password') setWrongPassword(true);
+        else setSubmitError(t({
+          guardian_required: 'gate.errors.guardian_email',
+          guardian_unavailable: 'gate.errors.guardian_unavailable',
+          rate_limited: 'gate.errors.rate_limited',
+        }[code] || 'gate.errors.account_failed'));
+        setSubmitting(false);
+      }
+      return;
+    }
+
     // Con cuentas: primero la cuenta (si la contraseña no cuadra con una
     // cuenta existente paramos aquí, sin reenviar a Brevo). Después Brevo,
     // que ya no bloquea: el usuario ve sus resultados en el panel igualmente.
@@ -769,10 +827,13 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
     } catch (err) {
       const code = err instanceof AccountError ? err.code : 'failed';
       if (code === 'wrong_password') setWrongPassword(true);
+      else if (code === 'pending_guardian') setGuardianError(t('gate.errors.pending_guardian'));
       else setSubmitError(t(code === 'rate_limited' ? 'gate.errors.rate_limited' : 'gate.errors.account_failed'));
       setSubmitting(false);
       return;
     }
+
+    await recordFormConsents({ newsletter, language: lang });
 
     try {
       await submitContact(payload);
@@ -781,16 +842,7 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
     }
 
     try {
-      await saveTemperamentResult({
-        profileKey,
-        primario,
-        secundario: decision.secundario || null,
-        isPure: decision.isPure,
-        margin: decision.margin,
-        scoreS2: decision.score_s2,
-        answers,
-        language: lang,
-      });
+      await saveTemperamentResult(resultToSave);
     } catch (err) {
       console.error('saveTemperamentResult error:', err);
     }
@@ -900,6 +952,40 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
           {showErr('birthYear') && <div style={errStyle}>{errors.birthYear}</div>}
         </div>
 
+        {askTurned14 && (
+          <div style={{ marginBottom: 18 }}>
+            <span style={labelStyle}>{t('gate.fields.turned14')}</span>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {[true, false].map(v => {
+                const active = turned14 === v;
+                return (
+                  <button key={String(v)} type="button"
+                          onClick={() => { setTurned14(v); setTouched(tt => ({ ...tt, turned14: 1 })); }}
+                          style={{
+                            fontFamily: fontSans, fontSize: 14, padding: '10px 18px', borderRadius: 2,
+                            border: `1px solid ${active ? NAVY : LINE}`, background: active ? NAVY : PAPER,
+                            color: active ? PAPER : NAVY, cursor: 'pointer', fontWeight: active ? 600 : 400,
+                          }}>
+                    {t(v ? 'gate.turned14_yes' : 'gate.turned14_no')}
+                  </button>
+                );
+              })}
+            </div>
+            {showErr('turned14') && <div style={errStyle}>{errors.turned14}</div>}
+          </div>
+        )}
+
+        {minor && (
+          <div style={{ marginBottom: 18, padding: '14px 16px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 2 }}>
+            <p style={{ fontSize: 14, lineHeight: 1.5, color: INK, margin: '0 0 12px 0' }}>{t('gate.minor_intro')}</p>
+            <label htmlFor="gate-guardian" style={labelStyle}>{t('gate.fields.guardian_email')}</label>
+            <input id="gate-guardian" type="email" autoComplete="off" value={guardianEmail}
+                   onChange={e => setGuardianEmail(e.target.value)} onFocus={focus} onBlur={e => blur(e, 'guardianEmail')}
+                   style={{ ...inputBase, borderColor: showErr('guardianEmail') ? '#A03434' : LINE }} />
+            {showErr('guardianEmail') && <div style={errStyle}>{errors.guardianEmail}</div>}
+          </div>
+        )}
+
         <div style={{ marginBottom: 18 }}>
           <span style={labelStyle}>{t('gate.fields.sex')}</span>
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -948,7 +1034,7 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
                  onChange={e => { setConsent(e.target.checked); setTouched(tt => ({ ...tt, consent: 1 })); }}
                  style={{ marginTop: 3, width: 16, height: 16, accentColor: NAVY, cursor: 'pointer', flexShrink: 0 }} />
           <span style={{ fontSize: 14, lineHeight: 1.5, color: INK }}>
-            {t(accountsEnabled ? 'gate.consent_account' : 'gate.consent')}
+            {t(!accountsEnabled ? 'gate.consent' : minor ? 'gate.consent_minor' : 'gate.consent_terms')}
             <span
               style={{ display: 'block', marginTop: 6, fontSize: 12, color: MUTED }}
               dangerouslySetInnerHTML={{ __html: t('gate.privacy') }}
@@ -956,6 +1042,19 @@ function GateForm({ profileKey, primario, decision, answers, conoceAlex, qualify
           </span>
         </label>
         {showErr('consent') && <div style={errStyle}>{errors.consent}</div>}
+
+        {accountsEnabled && !minor && (
+          <label style={{
+            display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 16px',
+            background: PAPER, border: `1px solid ${LINE}`, borderRadius: 2, cursor: 'pointer', marginTop: 10,
+          }}>
+            <input type="checkbox" checked={newsletter} onChange={e => setNewsletter(e.target.checked)}
+                   style={{ marginTop: 3, width: 16, height: 16, accentColor: NAVY, cursor: 'pointer', flexShrink: 0 }} />
+            <span style={{ fontSize: 14, lineHeight: 1.5, color: INK }}>{t('gate.consent_newsletter')}</span>
+          </label>
+        )}
+
+        {guardianError && <div style={{ ...errStyle, marginTop: 12 }}>{guardianError}</div>}
 
         {submitError && (
           <div style={{
@@ -1153,6 +1252,7 @@ export default function TestTBP() {
   const [result, setResult] = useState(null);
   const [conoceAlex, setConoceAlex] = useState(null);
   const [qualifySource, setQualifySource] = useState('');
+  const [guardianPending, setGuardianPending] = useState(false);
 
   const totalQuestions = useMemo(() => 16 + tieOrder.length + 6 + 1 + 1, [tieOrder]);
 
@@ -1273,7 +1373,14 @@ export default function TestTBP() {
     setPhase(PHASE.GATE);
   }
 
-  function onGateOk() {
+  function onGateOk(opts = {}) {
+    // Menor de 14: su cuenta espera al tutor. Ve el resultado aquí mismo.
+    if (opts.pendingGuardian) {
+      setGuardianPending(true);
+      setPhase(PHASE.RESULT);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
     // Con cuentas: el usuario ya tiene sesión y su resultado guardado; su
     // panel es ahora la página de resultados en todos los idiomas.
     if (accountsEnabled) {
@@ -1317,7 +1424,17 @@ export default function TestTBP() {
                      answers={{ stage1: s1Order.map((it, i) => [it.id, s1Answers[i]]), tie: tieOrder.map((it, i) => [it.id, tieAnswers[i]]), stage2: s2Order.map((it, i) => [it.id, s2Answers[i]]) }}
                      conoceAlex={conoceAlex} qualifySource={qualifySource} onSubmitOk={onGateOk} />;
   } else if (phase === PHASE.RESULT) {
-    body = <ResultScreen profileKey={result.key} primario={primario} secondaryStrength={result.isPure ? null : Math.abs(result.score_s2)} onRestart={restart} />;
+    body = (
+      <>
+        {guardianPending && (
+          <div role="status" style={{ ...styles.card, maxWidth: 980, marginBottom: 20, background: GOLD_SOFT, border: `1px solid ${GOLD}` }}>
+            <div style={styles.subtitle}>{t('gate.pending.eyebrow')}</div>
+            <p style={{ ...styles.para, margin: 0 }}>{t('gate.pending.text')}</p>
+          </div>
+        )}
+        <ResultScreen profileKey={result.key} primario={primario} secondaryStrength={result.isPure ? null : Math.abs(result.score_s2)} onRestart={restart} inPanel={guardianPending} />
+      </>
+    );
   }
 
   return <TestShell>{body}</TestShell>;

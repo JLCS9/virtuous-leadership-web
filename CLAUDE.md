@@ -431,6 +431,24 @@ entra a `/{lang}/mi-panel` (es `mi-panel`, en `my-dashboard`, fr
 - **Local**: `node api/server.mjs` (puerto 3001; Vite hace proxy de `/api`)
   + `npm run dev` con las VITE_SUPABASE_* en `.env.development.local`.
 
+### Consentimientos y menores de 14
+
+- **Casillas del formulario**: una obligatoria (cuenta + resultados por email) y otra **opcional y
+  desmarcada** para el boletín. Sin boletín: el contacto se crea en Brevo **sin lista** (recibe el
+  email de resultados por el evento) y **no** se envía a Converflow.
+- **Registro**: `public.consents` (append-only: finalidad `cuenta`/`newsletter`/`tutor`, sí/no,
+  `text_version`, idioma, fecha). Lo escribe solo el servidor: `POST /api/consents` (con el token de
+  sesión) tras iniciar sesión. Vista `consents_current` = estado vigente. Si cambias la redacción de
+  las casillas, sube `CONSENT_TEXT_VERSION` en `api/auth.mjs`.
+- **Menores de 14** (LOPDGDD art. 7; la edad la decide el servidor con `isUnder14`): si el año da
+  justo 14, el formulario pregunta si ya los ha cumplido. Menor → pide el email del tutor, la cuenta
+  nace **bloqueada** (ban en Auth), el servidor guarda el resultado, crea `guardian_requests` (token
+  con hash, caduca a 30 días) y envía el email al tutor con Brevo (`BREVO_SENDER_EMAIL`). El tutor
+  autoriza en `/{lang}/consentimiento-tutor` → `POST /api/guardian/confirm` desbloquea la cuenta.
+  Si el email falla, se borra el alta. Los menores no van a Brevo ni a Converflow.
+- **Pendiente**: borrar a los 30 días las cuentas no autorizadas (no hay tarea programada).
+- Para probar en local sin enviar emails: `BREVO_API_URL` apunta el envío a un simulador.
+
 ---
 
 ## Retos diarios (beta privada, solo ES)

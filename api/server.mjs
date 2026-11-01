@@ -25,13 +25,19 @@
 //   SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
 //                      → proyecto Supabase de Virtus. Opcional: si faltan,
 //                        POST /api/account responde 503 (ver api/auth.mjs).
+//   BREVO_SENDER_EMAIL, BREVO_SENDER_NAME
+//                      → remitente verificado en Brevo para el email que pide
+//                        autorización al tutor de un menor de 14 (api/auth.mjs).
 //   PORT               → puerto donde escucha (default 3001)
 
 import http from 'http';
 import {
   withTx, upsertSchool, upsertParent, upsertChild, insertSubmission, ping,
 } from './db.mjs';
-import { accountsEnabled, createAccount, rateLimited } from './auth.mjs';
+import {
+  accountsEnabled, createAccount, rateLimited, isUnder14, recordConsents, userFromToken,
+  guardianEmailEnabled, requestGuardianConsent, confirmGuardianConsent, saveResultAsServer, deleteAccount,
+} from './auth.mjs';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 // Listas por idioma. parseInt('') o '0' → 0, lo tratamos como "no configurado".
@@ -489,7 +495,10 @@ async function handleSubmitAdult(req, res) {
       ...(c.conoceAlex === true  && c.qualifySource ? { COMO_CONOCE_AH: c.qualifySource } : {}),
       ...(c.conoceAlex === false && c.qualifySource ? { FUENTE_TEST_NO_CONOCE: c.qualifySource } : {}),
     },
-    listIds: [listId],
+    // Solo entra en la lista (boletín) quien lo ha marcado. Sin boletín, el
+    // contacto existe igual para el email de resultados (evento), sin lista.
+    // c.newsletter undefined = formulario antiguo sin cuentas: casilla agrupada.
+    ...(c.newsletter === false ? {} : { listIds: [listId] }),
     updateEnabled: true,
   };
 
@@ -525,9 +534,12 @@ async function handleSubmitAdult(req, res) {
     }).catch(e => {
       console.error('[evento] error:', e?.name === 'AbortError' ? 'timeout' : e);
     });
-    sendToConverflow(brevoBody, c.language).catch(e => {
-      console.error('[converflow] error:', e?.name === 'AbortError' ? 'timeout' : e);
-    });
+    // Converflow es el CRM comercial: solo con consentimiento de boletín.
+    if (c.newsletter !== false) {
+      sendToConverflow(brevoBody, c.language).catch(e => {
+        console.error('[converflow] error:', e?.name === 'AbortError' ? 'timeout' : e);
+      });
+    }
     return;
   } catch (e) {
     console.error('[brevo] fetch error:', e);
@@ -552,27 +564,125 @@ async function handleAccount(req, res) {
   const email = String(data.email || '').trim().toLowerCase();
   const password = typeof data.password === 'string' ? data.password : '';
   const name = String(data.name || '').trim().slice(0, 80);
-  if (!EMAIL_RE.test(email) || password.length < 8 || password.length > 72 || !name || data.consent !== true) {
+  const language = String(data.language || 'es').toLowerCase();
+  const birthYear = Number.isInteger(data.birthYear) ? data.birthYear : null;
+  if (!EMAIL_RE.test(email) || password.length < 8 || password.length > 72 || !name || !birthYear || data.consent !== true) {
     return sendJson(res, 400, { error: 'Invalid account data' });
+  }
+
+  // Menor de 14: la cuenta nace bloqueada y pedimos autorización al tutor.
+  // La edad la decide el servidor, no el front.
+  const minor = isUnder14(birthYear, data.turned14);
+  const guardianEmail = String(data.guardianEmail || '').trim().toLowerCase();
+  if (minor) {
+    if (!EMAIL_RE.test(guardianEmail) || guardianEmail === email) {
+      return sendJson(res, 400, { error: 'Guardian email required', minor: true });
+    }
+    if (!guardianEmailEnabled) {
+      console.error('[account] BREVO_SENDER_EMAIL not set — cannot request guardian consent');
+      return sendJson(res, 503, { error: 'Guardian consent unavailable', minor: true });
+    }
   }
 
   const r = await createAccount({
     email,
     password,
     name,
-    birthYear: Number.isInteger(data.birthYear) ? data.birthYear : null,
+    birthYear,
     sex: data.sex,
-    language: String(data.language || 'es').toLowerCase(),
+    language,
     consentAt: new Date().toISOString(),
+    pendingGuardian: minor,
   });
 
-  if (r.status === 'created') {
-    console.log(`[account] created lang=${data.language || 'es'}`);
+  if (r.status === 'exists') return sendJson(res, 409, { ok: false, account: 'exists' });
+  if (r.status !== 'created') {
+    console.error('[account] error:', r.detail);
+    return sendJson(res, 502, { error: 'Account service error' });
+  }
+
+  if (!minor) {
+    console.log(`[account] created lang=${language}`);
     return sendJson(res, 201, { ok: true, account: 'created' });
   }
-  if (r.status === 'exists') return sendJson(res, 409, { ok: false, account: 'exists' });
-  console.error('[account] error:', r.detail);
-  return sendJson(res, 502, { error: 'Account service error' });
+
+  // Menor: queda registrado su propio consentimiento (pendiente del tutor) y el
+  // resultado lo guarda el servidor, porque el menor no tiene sesión.
+  try {
+    await recordConsents(r.userId, [{ purpose: 'cuenta', granted: true }], { locale: language, source: 'web-test-temperamento-menor' });
+    if (data.result && typeof data.result === 'object') await saveResultAsServer(r.userId, data.result);
+    await requestGuardianConsent({
+      userId: r.userId,
+      guardianEmail,
+      childName: name,
+      lang: language,
+      siteOrigin: siteOrigin(req),
+      brevoApiKey: BREVO_API_KEY,
+    });
+  } catch (err) {
+    // Sin email al tutor la cuenta quedaría bloqueada para siempre: se deshace
+    // el alta para que el menor pueda volver a intentarlo.
+    console.error('[account] guardian request error:', err.message);
+    await deleteAccount(r.userId).catch(e => console.error('[account] rollback failed:', e.message));
+    return sendJson(res, 502, { error: 'Guardian request failed', minor: true });
+  }
+  console.log(`[account] created pending-guardian lang=${language}`);
+  return sendJson(res, 202, { ok: true, account: 'pending_guardian' });
+}
+
+// Origen para los enlaces de los emails: el de la web si viene de un origen
+// conocido (producción o desarrollo local); si no, producción.
+function siteOrigin(req) {
+  const o = String(req.headers.origin || '');
+  if (/^https:\/\/(www\.)?virtuousleadership\.com$/.test(o) || /^http:\/\/localhost:\d+$/.test(o)) return o;
+  return 'https://virtuousleadership.com';
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// HANDLER — Consentimientos del formulario del test (usuario con sesión).
+// Se llama tras iniciar sesión, en cuentas nuevas y existentes, para registrar
+// lo que ha marcado en ESTA ocasión (cuenta + boletín sí/no).
+// ════════════════════════════════════════════════════════════════════════════
+async function handleConsents(req, res) {
+  if (!accountsEnabled) return sendJson(res, 503, { error: 'Accounts disabled' });
+  const token = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  const user = await userFromToken(token);
+  if (!user?.id) return sendJson(res, 401, { error: 'Unauthorized' });
+
+  let data;
+  try { data = JSON.parse(await readBody(req)); }
+  catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+  if (typeof data.newsletter !== 'boolean') return sendJson(res, 400, { error: 'newsletter must be boolean' });
+
+  try {
+    await recordConsents(user.id, [
+      { purpose: 'cuenta', granted: true },
+      { purpose: 'newsletter', granted: data.newsletter },
+    ], { locale: String(data.language || 'es').toLowerCase(), source: 'web-test-temperamento' });
+  } catch (err) {
+    console.error('[consents] error:', err.message);
+    return sendJson(res, 502, { error: 'Consent service error' });
+  }
+  return sendJson(res, 201, { ok: true });
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// HANDLER — El tutor autoriza la cuenta de un menor de 14 (enlace del email).
+// ════════════════════════════════════════════════════════════════════════════
+async function handleGuardianConfirm(req, res) {
+  if (!accountsEnabled) return sendJson(res, 503, { error: 'Accounts disabled' });
+  if (rateLimited(clientIp(req) || 'unknown')) return sendJson(res, 429, { error: 'Too many requests' });
+  let data;
+  try { data = JSON.parse(await readBody(req)); }
+  catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+  try {
+    const status = await confirmGuardianConsent(data.token);
+    console.log(`[guardian] confirm → ${status}`);
+    return sendJson(res, status === 'ok' || status === 'already' ? 200 : 400, { status });
+  } catch (err) {
+    console.error('[guardian] error:', err.message);
+    return sendJson(res, 502, { error: 'Guardian service error' });
+  }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -995,7 +1105,7 @@ const server = http.createServer(async (req, res) => {
   // CORS — siempre devolvemos cabeceras.
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS, GET');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') return res.writeHead(204).end();
 
@@ -1009,6 +1119,14 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/account') {
     return handleAccount(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/consents') {
+    return handleConsents(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/guardian/confirm') {
+    return handleGuardianConfirm(req, res);
   }
 
   if (req.method === 'POST' && req.url === '/api/submit-children') {

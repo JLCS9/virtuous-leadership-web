@@ -120,7 +120,8 @@ function LoginForm() {
     try {
       await signIn(email.trim().toLowerCase(), password);
     } catch (err) {
-      setError(t(err instanceof AccountError && err.code === 'invalid' ? 'panel.errors.invalid' : 'panel.errors.generic'));
+      const code = err instanceof AccountError ? err.code : 'failed';
+      setError(t(code === 'invalid' ? 'panel.errors.invalid' : code === 'pending_guardian' ? 'panel.errors.pending_guardian' : 'panel.errors.generic'));
       setBusy(false);
     }
   }

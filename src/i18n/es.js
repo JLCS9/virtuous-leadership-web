@@ -989,6 +989,16 @@ export default {
 
   // ──────────── GATE FORM ────────────
   gate: {
+    consent_terms: 'Acepto crear mi cuenta para ver y guardar mis resultados, y recibirlos por email.',
+    consent_minor: 'Acepto crear mi cuenta para ver y guardar mis resultados. Sé que no estará activa hasta que mi padre, madre o tutor la autorice.',
+    consent_newsletter: 'Quiero recibir el boletín mensual: un correo al mes sobre temperamento y desarrollo personal. Opcional; puedes darte de baja con un clic.',
+    turned14_yes: 'Sí',
+    turned14_no: 'Todavía no',
+    minor_intro: 'Como tienes menos de 14 años, necesitamos que tu padre, madre o tutor autorice tu cuenta. Le enviaremos un email; mientras tanto podrás ver tu resultado aquí.',
+    pending: {
+      eyebrow: 'Cuenta pendiente de autorización',
+      text: 'Hemos enviado un email a tu padre, madre o tutor. Cuando autorice tu cuenta podrás entrar en tu panel con tu email y tu contraseña. Mientras tanto, este es tu resultado.',
+    },
     title_account: 'Crea tu cuenta y descubre tu perfil',
     intro_account: 'Con tu cuenta verás ahora mismo tu resultado completo en tu panel personal, y podrás volver a él cuando quieras.',
     password_hint: 'Mínimo 8 caracteres. La usarás para entrar en tu panel.',
@@ -1000,6 +1010,8 @@ export default {
     title: 'Recibe tus resultados',
     intro: 'Recibirás un informe personalizado con tus resultados y algunas claves prácticas para entender tu temperamento y desarrollar tu carácter.',
     fields: {
+      turned14: '¿Has cumplido ya 14 años?',
+      guardian_email: 'Email de tu padre, madre o tutor',
       password: 'Contraseña',
       name: 'Nombre',
       email: 'Email',
@@ -1010,6 +1022,10 @@ export default {
     consent: 'Sí, envíame mis resultados por email y suscríbeme al boletín mensual: un correo al mes con contenido sobre temperamento y desarrollo personal. Cero spam, baja con un clic cuando quieras.',
     privacy: 'Al suscribirte aceptas nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
     errors: {
+      turned14: 'Indica si ya has cumplido 14 años.',
+      guardian_email: 'Escribe un email válido de tu padre, madre o tutor (distinto del tuyo).',
+      pending_guardian: 'Esta cuenta está pendiente de que tu padre, madre o tutor la autorice desde el email que le enviamos.',
+      guardian_unavailable: 'Ahora mismo no podemos pedir la autorización de tu tutor. Inténtalo más tarde.',
       password: 'La contraseña debe tener al menos 8 caracteres.',
       wrong_password: 'Ya tienes una cuenta con este email y la contraseña no coincide.',
       account_failed: 'No hemos podido crear tu cuenta. Reintenta en unos segundos.',
@@ -1043,6 +1059,27 @@ export default {
     next_step_cta: 'Empezar la formación',
   },
 
+  // ──────────── AUTORIZACIÓN DEL TUTOR (menores de 14) ────────────
+  guardian: {
+    privacy: 'Más información en nuestra <a href="/es/politica-de-privacidad" target="_blank" rel="noopener noreferrer">política de privacidad</a>.',
+    eyebrow: 'Autorización del tutor',
+    title: 'Autorizar la cuenta de un menor',
+    intro: 'Una persona menor de 14 años ha hecho el test de temperamento en Virtuous Leadership y ha indicado tu email como el de su padre, madre o tutor. Si la autorizas:',
+    points: [
+      'Se activará su cuenta para que pueda ver y guardar sus resultados.',
+      'Guardaremos su nombre, año de nacimiento, sexo, idioma y sus respuestas al test.',
+      'No recibirá comunicaciones comerciales ni boletines.',
+      'Puedes pedir en cualquier momento que borremos su cuenta y sus datos.',
+    ],
+    submit: 'Autorizo la cuenta',
+    decline: 'Si no la autorizas, no hagas nada: borraremos la cuenta y sus datos en 30 días.',
+    done: 'Gracias. La cuenta ya está activa y puede entrar con su email y su contraseña.',
+    go_panel: 'Ir a la página de acceso',
+    invalid: 'El enlace no es válido. Revisa que lo has copiado entero desde el email.',
+    expired: 'El enlace ha caducado y la solicitud ya no está activa.',
+    failed: 'No hemos podido completar la autorización. Inténtalo de nuevo en unos minutos.',
+  },
+
   panel: {
     title: 'Mi panel',
     seo_description: 'Tu resultado del test de temperamento de Virtuous Leadership.',
@@ -1064,6 +1101,7 @@ export default {
     no_account: '¿Aún no tienes cuenta? Haz el test',
     reset_sent: 'Si existe una cuenta con ese email, te hemos enviado un enlace para restablecer la contraseña.',
     errors: {
+      pending_guardian: 'Tu cuenta está pendiente de que tu padre, madre o tutor la autorice desde el email que le enviamos.',
       invalid: 'Email o contraseña incorrectos.',
       generic: 'Algo ha fallado. Reintenta en unos segundos.',
       email_for_reset: 'Escribe tu email y vuelve a pulsar «¿Has olvidado tu contraseña?».',

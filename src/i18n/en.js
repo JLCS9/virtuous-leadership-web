@@ -588,6 +588,16 @@ export default {
   },
 
   gate: {
+    consent_terms: 'I agree to create my account to see and keep my results, and to receive them by email.',
+    consent_minor: 'I agree to create my account to see and keep my results. I understand it will not be active until my parent or guardian authorises it.',
+    consent_newsletter: 'I would like the monthly newsletter: one email a month about temperament and personal growth. Optional; unsubscribe in one click.',
+    turned14_yes: 'Yes',
+    turned14_no: 'Not yet',
+    minor_intro: 'As you are under 14, your parent or guardian needs to authorise your account. We will email them; in the meantime you can see your result here.',
+    pending: {
+      eyebrow: 'Account awaiting authorisation',
+      text: 'We have emailed your parent or guardian. Once they authorise your account you can log in to your dashboard with your email and password. In the meantime, here is your result.',
+    },
     title_account: 'Create your account and discover your profile',
     intro_account: 'With your account you will see your full result right now in your personal dashboard, and you can come back to it whenever you like.',
     password_hint: 'At least 8 characters. You will use it to log in to your dashboard.',
@@ -599,6 +609,8 @@ export default {
     title: 'Receive your results',
     intro: 'You will receive a personalized report with your results and practical keys to understand your temperament and develop your character.',
     fields: {
+      turned14: 'Have you already turned 14?',
+      guardian_email: 'Your parent or guardian’s email',
       password: 'Password',
       name: 'Name',
       email: 'Email',
@@ -609,6 +621,10 @@ export default {
     consent: 'Yes, send me my results by email and subscribe me to the monthly newsletter: one email a month with content about temperament and personal development. No spam, unsubscribe with one click whenever you want.',
     privacy: 'By subscribing you accept our <a href="/en/privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a>.',
     errors: {
+      turned14: 'Tell us whether you have turned 14 yet.',
+      guardian_email: 'Enter a valid email for your parent or guardian (different from yours).',
+      pending_guardian: 'This account is waiting for your parent or guardian to authorise it from the email we sent them.',
+      guardian_unavailable: 'We cannot request your guardian’s authorisation right now. Please try again later.',
       password: 'Your password must be at least 8 characters long.',
       wrong_password: 'You already have an account with this email and the password does not match.',
       account_failed: 'We could not create your account. Please try again in a few seconds.',
@@ -641,6 +657,27 @@ export default {
     next_step_cta: 'Start the training',
   },
 
+  // ──────────── GUARDIAN AUTHORISATION (under 14) ────────────
+  guardian: {
+    privacy: 'More information in our <a href="/en/privacy-policy" target="_blank" rel="noopener noreferrer">privacy policy</a>.',
+    eyebrow: 'Guardian authorisation',
+    title: 'Authorise a child’s account',
+    intro: 'Someone under 14 has taken the temperament test on Virtuous Leadership and gave your email as their parent or guardian. If you authorise it:',
+    points: [
+      'Their account will be activated so they can see and keep their results.',
+      'We will store their name, year of birth, sex, language and test answers.',
+      'They will not receive marketing emails or newsletters.',
+      'You can ask us to delete their account and data at any time.',
+    ],
+    submit: 'I authorise the account',
+    decline: 'If you do not authorise it, do nothing: we will delete the account and its data within 30 days.',
+    done: 'Thank you. The account is now active and they can log in with their email and password.',
+    go_panel: 'Go to the login page',
+    invalid: 'This link is not valid. Check you copied it in full from the email.',
+    expired: 'This link has expired and the request is no longer active.',
+    failed: 'We could not complete the authorisation. Please try again in a few minutes.',
+  },
+
   panel: {
     title: 'My dashboard',
     seo_description: 'Your Virtuous Leadership temperament test result.',
@@ -662,6 +699,7 @@ export default {
     no_account: 'No account yet? Take the test',
     reset_sent: 'If an account exists for that email, we have sent you a link to reset your password.',
     errors: {
+      pending_guardian: 'Your account is waiting for your parent or guardian to authorise it from the email we sent them.',
       invalid: 'Incorrect email or password.',
       generic: 'Something went wrong. Please try again in a few seconds.',
       email_for_reset: 'Enter your email and click “Forgot your password?” again.',

@@ -49,6 +49,8 @@ export const ROUTES = {
   mi_panel_camino:       { es: 'mi-panel/camino' },
   mi_panel_formacion:    { es: 'mi-panel/formacion' },
   restablecer:           { es: 'restablecer',            en: 'reset-password',          fr: 'reinitialiser',            ru: 'vosstanovlenie' },
+  // Autorización del padre, madre o tutor de un menor de 14 (enlace del email). noindex.
+  consentimiento_tutor:  { es: 'consentimiento-tutor',   en: 'guardian-consent',        fr: 'consentement-parental',    ru: 'soglasie-roditelya' },
 };
 
 // Paginas que se renderizan SIN Layout (sin header/menu/footer del sitio).
@@ -67,6 +69,7 @@ export const NO_LAYOUT_PAGES = new Set([
   'mi_panel_camino',
   'mi_panel_formacion',
   'restablecer',
+  'consentimiento_tutor',
 ]);
 
 // Reverse map: cualquier slug (de cualquier idioma) -> pageId.
