@@ -1,47 +1,124 @@
-// Pestaña «Camino»: tu asistente (conversación), la siguiente lección y la gráfica de tus virtudes
-// según el test de carácter.
-import { useEffect, useState } from 'react';
+// Pestaña «Camino»: tu siguiente paso. Los 14 primeros días (semanas 0 y 1): en qué día estás, la
+// sesión de hoy, el examen de la noche y la siguiente lección. Sin perfil, «Personaliza tu camino».
+// Las pantallas se abren con ?paso=onboarding · ?dia=N (sesión) · ?examen=N.
 import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
-import { retoDeHoy } from '../account/retos';
-import { fetchLatestCharacter } from '../account/account';
-import { extremos, resultadoCaracter } from '../lib/virtudes.js';
 import { continuar, formatoDuracion } from '../lib/formacion.js';
-import { GOLD_SOFT, INK, MUTED, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../theme';
-import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
-import { IconoFlecha, IconoPlay } from './Iconos';
+import { DIAS, TOTAL_DIAS, conPunto, fechaCorta, fechaLocal, infoDia, semanaDe, siguientePaso, tieneExamen } from '../lib/camino.js';
+import { GOLD, GOLD_SOFT, INK, LINE, MUTED, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../theme';
+import { barraFondo, botonContorno, botonPrimario, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
+import { IconoCheck, IconoFlecha, IconoPlay } from './Iconos';
 import { useCatalogo, useProgreso } from './useFormacion';
-import Conversacion from './Conversacion';
-import { VirtudesBarras, VirtudesRadar } from './Radar';
+import { useCamino } from './useCamino';
+import Onboarding from './camino/Onboarding';
+import Sesion from './camino/Sesion';
+import Examen from './camino/Examen';
 
-// Solo en desarrollo: ?demo=1 pinta la gráfica con datos de ejemplo (en producción no existe).
-const DEMO = { self: { magnanimidad: 72, humildad: 55, prudencia: 63, fortaleza: 48, dominio: 60, justicia: 70 } };
-
-function Asistente({ abrir }) {
-  const [estado, setEstado] = useState({ cargando: true });
-  useEffect(() => {
-    let vivo = true;
-    retoDeHoy().then((r) => { if (vivo) setEstado({ perfil: r.perfil }); }).catch(() => { if (vivo) setEstado({ error: true }); });
-    return () => { vivo = false; };
-  }, []);
-
-  const configurado = estado.perfil === true;
+function Progreso({ camino }) {
+  const { diaHoy, racha, porDia } = camino;
+  const hechas = Object.values(porDia).filter((d) => d.sesion_en).length;
+  const semana = semanaDe(Math.min(diaHoy, TOTAL_DIAS));
   return (
-    <section style={tarjeta} aria-label="Tu asistente">
-      <div style={eyebrow}>Tu asistente</div>
-      <h2 style={{ ...titulo(26), margin: '10px 0 8px' }}>{configurado ? 'Conversa cada noche' : 'Conoce a tu asistente'}</h2>
-      <p style={{ ...parrafo, marginBottom: 18 }}>
-        {configurado
-          ? 'Cinco minutos para mirar el día y preparar el reto de mañana. Respondes con tus palabras, sin prisa.'
-          : 'Una conversación breve, una sola vez, para conocer tu semana. Con ella tu reto de cada día se ajusta a tu vida.'}
-      </p>
-      {estado.cargando && <span style={{ ...parrafo, fontSize: 14 }}>Un momento…</span>}
-      {estado.error && <span style={{ ...parrafo, fontSize: 14 }}>No he podido comprobar tu asistente ahora mismo. Recarga la página en unos minutos.</span>}
-      {!estado.cargando && !estado.error && (
-        <button type="button" style={botonPrimario} onClick={() => abrir(configurado ? 'noche' : 'onboarding')}>
-          {configurado ? 'Hacer el examen de la noche' : 'Empezar'} <IconoFlecha width={18} height={18} />
-        </button>
-      )}
+    <section style={tarjeta} aria-label="Tu progreso">
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
+        <div style={eyebrow}>Semana {semana.numero} · {semana.titulo}</div>
+        {racha > 0 && <div style={{ fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: INK }}>🔥 {racha} {racha === 1 ? 'día seguido' : 'días seguidos'}</div>}
+      </div>
+      <h2 style={{ ...titulo(30), margin: '10px 0 12px' }}>Día {Math.min(diaHoy, TOTAL_DIAS)} de {TOTAL_DIAS}</h2>
+      <div style={barraFondo}><div style={{ width: `${(hechas / TOTAL_DIAS) * 100}%`, height: '100%', background: GOLD, transition: 'width 500ms ease' }} /></div>
+      <p style={{ ...parrafo, fontSize: 13.5, marginTop: 8 }}>{hechas} de {TOTAL_DIAS} sesiones hechas</p>
+      <Tira camino={camino} />
+    </section>
+  );
+}
+
+function Tira({ camino }) {
+  const { diaHoy, porDia } = camino;
+  const [, setParams] = useSearchParams();
+  return (
+    <div style={{ marginTop: 18 }}>
+      {[0, 1].map((s) => (
+        <div key={s} style={{ marginTop: s ? 14 : 0 }}>
+          <div style={{ fontFamily: FONT_SANS, fontSize: 11.5, fontWeight: 600, color: MUTED, marginBottom: 8 }}>Semana {s}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: 6 }}>
+            {DIAS.slice(s * 7, s * 7 + 7).map((d) => {
+              const hecho = Boolean(porDia[d.dia]?.sesion_en);
+              const abierto = d.dia <= diaHoy;
+              const esHoy = d.dia === diaHoy;
+              return (
+                <button key={d.dia} type="button" disabled={!abierto} onClick={() => setParams({ dia: String(d.dia) })}
+                        title={`Día ${d.dia} · ${d.titulo}`} aria-label={`Día ${d.dia}: ${d.titulo}${hecho ? ' (hecho)' : ''}`}
+                        style={{
+                          aspectRatio: '1', borderRadius: 12, cursor: abierto ? 'pointer' : 'default', padding: 0,
+                          display: 'grid', placeItems: 'center', fontFamily: FONT_SANS, fontSize: 14, fontWeight: 700,
+                          background: hecho ? NAVY : esHoy ? 'rgba(197,165,90,0.16)' : 'transparent',
+                          color: hecho ? PAPER : abierto ? NAVY : 'rgba(27,42,74,0.35)',
+                          border: esHoy ? `2px solid ${GOLD}` : `1px solid ${hecho ? NAVY : LINE}`,
+                        }}>
+                  {hecho ? <IconoCheck width={18} height={18} /> : d.tipo === 'video' ? <IconoPlay width={15} height={15} /> : d.cierre ? '★' : d.dia}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SiguientePaso({ camino }) {
+  const [, setParams] = useSearchParams();
+  const paso = siguientePaso(camino);
+  const etiqueta = { ...eyebrow, color: GOLD_SOFT };
+  const hero = { background: heroFondo, color: PAPER, borderRadius: 22, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' };
+  if (!paso) return null;
+
+  if (paso.tipo === 'hecho') {
+    const manana = infoDia(paso.dia + 1);
+    return (
+      <section style={hero}>
+        <div style={etiqueta}>Tu siguiente paso</div>
+        <p style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '14px 0 8px' }}>Hoy está hecho.</p>
+        <p style={{ fontFamily: FONT_SANS, fontSize: 15, opacity: 0.82, margin: 0 }}>
+          {manana ? `Mañana, día ${manana.dia}: ${conPunto(manana.titulo)}` : 'Has llegado al final de tus dos primeras semanas.'}
+        </p>
+      </section>
+    );
+  }
+
+  const info = infoDia(paso.dia);
+  const examen = paso.tipo === 'examen';
+  return (
+    <section style={hero}>
+      <div style={etiqueta}>{paso.atrasada ? 'Te quedó pendiente' : examen ? 'Esta noche' : 'Tu siguiente paso'}</div>
+      <p style={{ fontFamily: FONT_SANS, fontSize: 13, opacity: 0.72, margin: '14px 0 4px' }}>Día {paso.dia}{examen ? '' : ` · ${info.tiempo}`}</p>
+      <p style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '0 0 20px' }}>{examen ? 'Examen de la noche' : info.titulo}</p>
+      <button type="button" style={botonPrimario} onClick={() => setParams(examen ? { examen: String(paso.dia) } : { dia: String(paso.dia) })}>
+        {examen ? 'Mirar mi día · 45 s' : paso.atrasada ? 'Hacerla ahora' : 'Empezar'} <IconoFlecha width={18} height={18} />
+      </button>
+    </section>
+  );
+}
+
+function AunNo({ camino }) {
+  const [, setParams] = useSearchParams();
+  return (
+    <section style={tarjeta}>
+      <div style={eyebrow}>Tu camino</div>
+      <h2 style={{ ...titulo(28), margin: '10px 0 8px' }}>Empieza el {fechaCorta(camino.perfil.inicio)}</h2>
+      <p style={{ ...parrafo, marginBottom: 6 }}>Ese día verás tu primer vídeo y empezará tu primer reto: <strong style={{ color: INK }}>{semanaDe(1).reto.toLowerCase()}</strong>.</p>
+      <p style={{ ...parrafo, marginBottom: 18 }}>Cada semana, un vídeo. Cada día, cinco minutos. Cada noche, un momento para mirar tu día.</p>
+      <button type="button" style={botonContorno} onClick={() => setParams({ paso: 'onboarding' })}>Cambiar el día del vídeo</button>
+    </section>
+  );
+}
+
+function Terminado() {
+  return (
+    <section style={tarjeta}>
+      <div style={eyebrow}>Tu camino</div>
+      <h2 style={{ ...titulo(28), margin: '10px 0 8px' }}>Has completado tus dos primeras semanas</h2>
+      <p style={parrafo}>Tu próximo vídeo: el carácter se construye sobre la base del temperamento. La semana 2 llega muy pronto.</p>
     </section>
   );
 }
@@ -96,72 +173,55 @@ function SiguienteLeccion({ user }) {
   );
 }
 
-function Virtudes() {
-  const [params] = useSearchParams();
-  const [fila, setFila] = useState(undefined);
-  useEffect(() => {
-    let vivo = true;
-    fetchLatestCharacter().then((r) => { if (vivo) setFila(r ?? null); }).catch(() => { if (vivo) setFila(null); });
-    return () => { vivo = false; };
-  }, []);
+export default function Camino({ user }) {
+  const [params, setParams] = useSearchParams();
+  const camino = useCamino();
+  const cerrar = () => setParams({});
 
-  const demo = import.meta.env.DEV && params.has('demo');
-  const resultado = resultadoCaracter(demo ? DEMO : fila?.result);
-  if (fila === undefined && !demo) return null;
-
-  if (!resultado) {
+  if (camino.cargando) return <p style={{ ...parrafo, textAlign: 'center', padding: 40 }}>Cargando tu camino…</p>;
+  if (camino.error) {
     return (
-      <section style={tarjeta} aria-label="Tus virtudes">
-        <div style={eyebrow}>Tus virtudes</div>
-        <h2 style={{ ...titulo(26), margin: '10px 0 8px' }}>Descubre qué virtudes has construido</h2>
-        <p style={{ ...parrafo, marginBottom: 6 }}>El test de carácter mide las seis virtudes y dibuja aquí tu punto de partida. Son 68 preguntas y se hace una sola vez.</p>
-        <p style={{ ...parrafo, fontSize: 13.5, marginBottom: 18 }}>Hazlo con tu sesión iniciada: así el resultado se guarda en tu cuenta.</p>
-        <Link to="/tests/caracter" style={botonSobreClaro}>Hacer el test de carácter <IconoFlecha width={18} height={18} /></Link>
+      <section style={tarjeta}>
+        <p style={{ ...parrafo, marginBottom: 14 }}>No he podido cargar tu camino ahora mismo.</p>
+        <button type="button" style={botonContorno} onClick={camino.recargar}>Reintentar</button>
       </section>
     );
   }
 
-  const { valores } = resultado;
-  const { mayor, menor } = extremos(valores);
-  const fecha = fila?.taken_at ? new Date(fila.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : null;
-  return (
-    <section style={tarjeta} aria-label="Tus virtudes">
-      <div style={eyebrow}>Tus virtudes{fecha ? ` · medido el ${fecha}` : ''}</div>
-      <h2 style={{ ...titulo(26), margin: '10px 0 14px' }}>Tu mapa de carácter</h2>
-      <VirtudesRadar valores={valores} />
-      <p style={{ ...parrafo, margin: '14px 0 20px', color: INK, textAlign: 'center' }}>
-        Tu virtud más presente es <strong>{mayor.nombre}</strong> ({Math.round(mayor.valor)} %). La que más puedes cultivar ahora es <strong>{menor.nombre}</strong> ({Math.round(menor.valor)} %).
-      </p>
-      <VirtudesBarras valores={valores} />
-      <div style={{ marginTop: 18 }}>
-        <Link to="/tests/caracter" style={{ fontFamily: FONT_SANS, fontSize: 14, color: NAVY, fontWeight: 600 }}>Repetir el test →</Link>
-      </div>
-    </section>
-  );
-}
+  const unaColumna = (hijo) => <div style={{ maxWidth: 640, margin: '0 auto' }}>{hijo}</div>;
+  const n = (k) => Number(params.get(k));
+  const abierto = (d) => Number.isInteger(d) && d >= 1 && d <= Math.min(camino.diaHoy ?? 0, TOTAL_DIAS);
 
-export default function Camino({ user }) {
-  const [params, setParams] = useSearchParams();
-  const modo = params.get('conversacion');
-  const conversando = modo === 'onboarding' || modo === 'noche';
-  const abrir = (m) => setParams({ conversacion: m });
-  const cerrar = () => setParams({});
+  if (!camino.perfil || params.get('paso') === 'onboarding') {
+    return unaColumna(
+      <Onboarding user={user} perfil={camino.perfil}
+                  onSalir={camino.perfil ? cerrar : undefined}
+                  onHecho={(p) => { camino.recargar(); setParams(p.inicio <= fechaLocal() ? { dia: '1' } : {}); }} />,
+    );
+  }
+  if (abierto(n('dia'))) {
+    const dia = n('dia');
+    return unaColumna(<Sesion key={dia} dia={dia} user={user} camino={camino} onCerrar={cerrar} onExamen={() => setParams({ examen: String(dia) })} />);
+  }
+  if (abierto(n('examen')) && tieneExamen(n('examen'))) {
+    return unaColumna(<Examen key={n('examen')} dia={n('examen')} user={user} camino={camino} onCerrar={cerrar} />);
+  }
 
+  const { diaHoy } = camino;
   return (
     <div className="vl-cols">
       <div className="vl-ancho">
         <div style={eyebrow}>Tu camino</div>
-        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Un paso cada día</h1>
-        <p style={{ ...parrafo, color: MUTED }}>Conversa, mira cómo vas y sigue con tu formación.</p>
+        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Tu siguiente paso</h1>
+        <p style={{ ...parrafo, color: MUTED }}>Cada semana, un vídeo. Cada día, cinco minutos. Cada noche, un momento para mirar tu día.</p>
       </div>
-      {conversando ? <Conversacion modo={modo} onTerminar={cerrar} /> : (
+      {diaHoy < 1 ? <AunNo camino={camino} /> : diaHoy > TOTAL_DIAS ? <Terminado /> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
-          <Asistente abrir={abrir} />
+          <SiguientePaso camino={camino} />
           <SiguienteLeccion user={user} />
         </div>
       )}
-      <Virtudes />
+      {diaHoy >= 1 && <Progreso camino={camino} />}
     </div>
   );
 }
-
