@@ -21,6 +21,7 @@ import MiPanel from './pages/MiPanel';
 import Retos from './pages/Retos';
 import { PanelCamino, PanelFormacion } from './pages/PanelApp';
 import Restablecer from './pages/Restablecer';
+import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
 import CookieConsent from './components/CookieConsent';
@@ -50,6 +51,7 @@ const PAGE_ELEMENTS = {
   mi_panel_camino:       <PanelCamino />,
   mi_panel_formacion:    <PanelFormacion />,
   restablecer:           <Restablecer />,
+  consentimiento_tutor:  <ConsentimientoTutor />,
 };
 
 function LayoutWithOutlet() {

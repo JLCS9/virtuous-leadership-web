@@ -63,6 +63,9 @@ services:
       # Cuentas (Supabase de Virtus). Si faltan, /api/account responde 503.
       SUPABASE_URL:              ${SUPABASE_URL:-}
       SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      # Remitente verificado en Brevo para el email al tutor de menores de 14.
+      BREVO_SENDER_EMAIL: ${BREVO_SENDER_EMAIL:-}
+      BREVO_SENDER_NAME:  ${BREVO_SENDER_NAME:-Virtuous Leadership}
       PORT: 3001
     ports:
       - "127.0.0.1:3001:3001"

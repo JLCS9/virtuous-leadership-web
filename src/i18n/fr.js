@@ -587,6 +587,16 @@ export default {
   },
 
   gate: {
+    consent_terms: 'J’accepte de créer mon compte pour voir et conserver mes résultats, et les recevoir par email.',
+    consent_minor: 'J’accepte de créer mon compte pour voir et conserver mes résultats. Je sais qu’il ne sera actif qu’après l’autorisation de mon parent ou tuteur.',
+    consent_newsletter: 'Je souhaite recevoir la newsletter mensuelle : un email par mois sur le tempérament et le développement personnel. Facultatif ; désinscription en un clic.',
+    turned14_yes: 'Oui',
+    turned14_no: 'Pas encore',
+    minor_intro: 'Comme tu as moins de 14 ans, ton parent ou tuteur doit autoriser ton compte. Nous lui enverrons un email ; en attendant, tu peux voir ton résultat ici.',
+    pending: {
+      eyebrow: 'Compte en attente d’autorisation',
+      text: 'Nous avons envoyé un email à ton parent ou tuteur. Dès qu’il autorisera ton compte, tu pourras accéder à ton espace avec ton email et ton mot de passe. En attendant, voici ton résultat.',
+    },
     title_account: 'Créez votre compte et découvrez votre profil',
     intro_account: 'Avec votre compte, vous verrez tout de suite votre résultat complet dans votre espace personnel, et vous pourrez y revenir quand vous le souhaitez.',
     password_hint: '8 caractères minimum. Vous l’utiliserez pour accéder à votre espace.',
@@ -598,6 +608,8 @@ export default {
     title: 'Reçois tes résultats',
     intro: 'Tu recevras un rapport personnalisé avec tes résultats et des clés pratiques pour comprendre ton tempérament et développer ton caractère.',
     fields: {
+      turned14: 'As-tu déjà eu 14 ans ?',
+      guardian_email: 'Email de ton parent ou tuteur',
       password: 'Mot de passe',
       name: 'Prénom',
       email: 'E-mail',
@@ -608,6 +620,10 @@ export default {
     consent: 'Oui, envoyez-moi mes résultats par e-mail et abonnez-moi à la lettre mensuelle : un e-mail par mois avec du contenu sur le tempérament et le développement personnel. Zéro spam, désinscription en un clic à tout moment.',
     privacy: 'En t\'abonnant, tu acceptes notre <a href="/fr/politique-de-confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.',
     errors: {
+      turned14: 'Indique si tu as déjà eu 14 ans.',
+      guardian_email: 'Saisis un email valide de ton parent ou tuteur (différent du tien).',
+      pending_guardian: 'Ce compte attend l’autorisation de ton parent ou tuteur depuis l’email que nous lui avons envoyé.',
+      guardian_unavailable: 'Nous ne pouvons pas demander l’autorisation de ton tuteur pour le moment. Réessaie plus tard.',
       password: 'Le mot de passe doit comporter au moins 8 caractères.',
       wrong_password: 'Vous avez déjà un compte avec cet email et le mot de passe ne correspond pas.',
       account_failed: 'Nous n’avons pas pu créer votre compte. Réessayez dans quelques secondes.',
@@ -640,6 +656,27 @@ export default {
     next_step_cta: 'Commencer la formation',
   },
 
+  // ──────────── AUTORISATION DU TUTEUR (moins de 14 ans) ────────────
+  guardian: {
+    privacy: 'Plus d’informations dans notre <a href="/fr/politique-de-confidentialite" target="_blank" rel="noopener noreferrer">politique de confidentialité</a>.',
+    eyebrow: 'Autorisation du tuteur',
+    title: 'Autoriser le compte d’un mineur',
+    intro: 'Une personne de moins de 14 ans a passé le test de tempérament sur Virtuous Leadership et a indiqué votre email comme celui de son parent ou tuteur. Si vous l’autorisez :',
+    points: [
+      'Son compte sera activé pour qu’elle puisse voir et conserver ses résultats.',
+      'Nous conserverons son prénom, son année de naissance, son sexe, sa langue et ses réponses au test.',
+      'Elle ne recevra ni communications commerciales ni newsletter.',
+      'Vous pouvez à tout moment demander la suppression de son compte et de ses données.',
+    ],
+    submit: 'J’autorise le compte',
+    decline: 'Si vous ne l’autorisez pas, ne faites rien : nous supprimerons le compte et ses données sous 30 jours.',
+    done: 'Merci. Le compte est actif et la personne peut se connecter avec son email et son mot de passe.',
+    go_panel: 'Aller à la page de connexion',
+    invalid: 'Ce lien n’est pas valide. Vérifiez qu’il a été copié en entier depuis l’email.',
+    expired: 'Ce lien a expiré et la demande n’est plus active.',
+    failed: 'Nous n’avons pas pu finaliser l’autorisation. Réessayez dans quelques minutes.',
+  },
+
   panel: {
     title: 'Mon espace',
     seo_description: 'Ton résultat du test de tempérament de Virtuous Leadership.',
@@ -661,6 +698,7 @@ export default {
     no_account: 'Pas encore de compte ? Faites le test',
     reset_sent: 'Si un compte existe avec cet email, nous vous avons envoyé un lien pour réinitialiser votre mot de passe.',
     errors: {
+      pending_guardian: 'Ton compte attend l’autorisation de ton parent ou tuteur depuis l’email que nous lui avons envoyé.',
       invalid: 'Email ou mot de passe incorrect.',
       generic: 'Une erreur est survenue. Réessayez dans quelques secondes.',
       email_for_reset: 'Saisissez votre email puis cliquez à nouveau sur « Mot de passe oublié ? ».',

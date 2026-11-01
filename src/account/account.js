@@ -8,31 +8,78 @@ export class AccountError extends Error {
   constructor(code) { super(code); this.code = code; }
 }
 
+const API_BASE = ACCOUNT_URL.replace(/\/account$/, '');
+
+// Supabase devuelve 'user_banned' a las cuentas de menores de 14 que aún no ha
+// autorizado su tutor (la cuenta nace bloqueada hasta entonces).
+const isPendingGuardian = error => error?.code === 'user_banned' || /banned/i.test(error?.message || '');
+
 // Crea la cuenta (o detecta que ya existe) e inicia sesión con la contraseña.
+// Menor de 14 (guardianEmail): la cuenta queda pendiente del tutor, no se inicia
+// sesión y el servidor guarda el resultado → { pendingGuardian: true }.
 // Errores: 'wrong_password' (la cuenta ya existía y la contraseña no coincide),
+// 'pending_guardian', 'guardian_required', 'guardian_unavailable',
 // 'rate_limited', 'failed'.
-export async function createAccountAndSignIn({ email, password, name, birthYear, sex, language }) {
+export async function createAccountAndSignIn({ email, password, name, birthYear, sex, language, turned14, guardianEmail, result }) {
   let res;
   try {
     res = await fetch(ACCOUNT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password, name, birthYear, sex, language, consent: true }),
+      body: JSON.stringify({ email, password, name, birthYear, sex, language, consent: true, turned14, guardianEmail, result }),
     });
   } catch {
     throw new AccountError('failed');
   }
   if (res.status === 429) throw new AccountError('rate_limited');
+  if (res.status === 202) return { pendingGuardian: true };
+  if (res.status === 400 && guardianEmail !== undefined) throw new AccountError('guardian_required');
+  if (res.status === 503 && guardianEmail !== undefined) throw new AccountError('guardian_unavailable');
   if (res.status !== 201 && res.status !== 409) throw new AccountError('failed');
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error && isPendingGuardian(error)) throw new AccountError('pending_guardian');
   if (error) throw new AccountError(res.status === 409 ? 'wrong_password' : 'failed');
   return { existed: res.status === 409 };
 }
 
 export async function signIn(email, password) {
   const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error && isPendingGuardian(error)) throw new AccountError('pending_guardian');
   if (error) throw new AccountError(error.status === 400 ? 'invalid' : 'failed');
+}
+
+// Registra en el servidor lo que el usuario ha aceptado en el formulario del
+// test (cuenta + boletín sí/no). Requiere sesión. No rompe el flujo si falla.
+export async function recordFormConsents({ newsletter, language }) {
+  try {
+    const { data } = await supabase.auth.getSession();
+    const token = data.session?.access_token;
+    if (!token) return false;
+    const res = await fetch(`${API_BASE}/consents`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ newsletter, language }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+// El tutor autoriza la cuenta del menor. Devuelve 'ok' | 'already' | 'invalid' | 'expired' | 'failed'.
+export async function confirmGuardian(token) {
+  try {
+    const res = await fetch(`${API_BASE}/guardian/confirm`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token }),
+    });
+    const data = await res.json().catch(() => ({}));
+    return data.status || 'failed';
+  } catch {
+    return 'failed';
+  }
 }
 
 export async function sendPasswordReset(email, redirectTo) {
