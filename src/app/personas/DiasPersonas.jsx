@@ -1,4 +1,4 @@
-// Sesiones de los días 5 («Descubre el temperamento de X») y 12 («Mis personas»). Las fichas y las
+// Sesiones de los días 2 («Descubre el temperamento de X») y 12 («Mis personas»). Las fichas y las
 // observaciones se hacen aquí mismo, sin salir de la sesión.
 import { useState } from 'react';
 import { combinacion, idDeClave } from '../../lib/personas.js';
@@ -15,7 +15,7 @@ import { textoConQuien } from './EligeQuien';
 const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const RECONOCIO = { si: 'Sí', en_parte: 'En parte', no: 'No' };
 
-export function Dia5({ dia, user, personas, estadoVida, onFin }) {
+export function DiaFicha({ dia, user, personas, estadoVida, onFin }) {
   const [creando, setCreando] = useState(false);
   const lista = personas.lista;
   if (creando) {
@@ -26,7 +26,8 @@ export function Dia5({ dia, user, personas, estadoVida, onFin }) {
   }
   return (
     <Pantalla etiqueta={`Día ${dia} · Descubre el temperamento de X`}>
-      <p style={fraseGrande}>Ya sabes reconocer los cuatro temperamentos. ¿Te atreves con alguien que conoces bien?</p>
+      <p style={fraseGrande}>Ya conoces tu temperamento. ¿Te atreves con el de alguien que conoces bien?</p>
+      <p style={{ ...parrafo, marginBottom: 18 }}>Con tus personas en la app, cada día te propondremos con quién hacer el reto.</p>
       {lista.length > 0 && (
         <div style={{ marginBottom: 18 }}>
           <div style={{ ...eyebrow, color: MUTED, marginBottom: 4 }}>Tu primera ficha</div>

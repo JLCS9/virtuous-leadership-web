@@ -21,13 +21,14 @@ export const SEMANAS = [
   },
 ];
 
-// tipo: el componente que pinta la sesión.
+// tipo: el componente que pinta la sesión. La primera ficha de persona va el día 2 (en la
+// especificación, el 5): así los días siguientes ya pueden sugerir con quién hacer el reto.
 export const DIAS = [
   { dia: 1, titulo: 'Vídeo 1.0 y tu resultado', tipo: 'video', leccion: '1.0', tiempo: 'Vídeo + 2 min' },
-  { dia: 2, titulo: 'Desliza: los cuatro temperamentos', tipo: 'desliza', tiempo: '4 min' },
-  { dia: 3, titulo: 'Elige tu reacción', tipo: 'elige', tiempo: '4 min' },
-  { dia: 4, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
-  { dia: 5, titulo: 'Descubre el temperamento de X', tipo: 'ficha', tiempo: '5 min' },
+  { dia: 2, titulo: 'Descubre el temperamento de X', tipo: 'ficha', tiempo: '5 min' },
+  { dia: 3, titulo: 'Desliza: los cuatro temperamentos', tipo: 'desliza', tiempo: '4 min' },
+  { dia: 4, titulo: 'Elige tu reacción', tipo: 'elige', tiempo: '4 min' },
+  { dia: 5, titulo: 'Verdad o mito', tipo: 'verdad_mito', tiempo: '3 min' },
   { dia: 6, titulo: 'Mi punto de partida', tipo: 'punto_partida', tiempo: '3 min' },
   { dia: 7, titulo: 'Cierre de la semana', tipo: 'cierre', cierre: true, tiempo: '4 min' },
   { dia: 8, titulo: 'Vídeo 1.1 y reto', tipo: 'video', leccion: '1.1', tiempo: 'Vídeo + 2 min' },
@@ -142,7 +143,7 @@ export const RETO_PRESENTACION = {
 };
 
 export const VERDAD_MITO = {
-  4: [
+  5: [
     ['El temperamento se elige', false, 'Nacemos con un temperamento y no podemos cambiarlo'],
     ['Moriré con las cualidades y los defectos de mi temperamento', true, 'El temperamento no cambia; lo que crece es el carácter'],
     ['Si me veo de los cuatro temperamentos, el test está mal', false, 'Confundes temperamento y carácter: has desarrollado virtudes'],
@@ -215,7 +216,7 @@ export function siguientePaso({ diaHoy, porDia }) {
 
 // ───────────── Fase 2: juegos y cierres ─────────────
 
-// Desliza (día 2): hacia una de las cuatro esquinas, con los colores de la rueda.
+// Desliza (día 3): hacia una de las cuatro esquinas, con los colores de la rueda.
 export const DESLIZA_4 = [
   ['En el atasco, toca el claxon y busca otra ruta', 'COL', 'Reacciona rápido y con fuerza: va a la acción'],
   ['Organiza la cena sin consultar a nadie, y sale bien', 'COL', 'Seguro de sí mismo, le cuesta pedir consejo'],
@@ -245,7 +246,7 @@ export const DESLIZA_2 = [
   ['Escucha hasta el final antes de responder', 'C', 'Es dominio de sí y humildad'],
 ];
 
-// Elige tu reacción (día 3): cuatro escenas, cuatro reacciones sin etiqueta.
+// Elige tu reacción (día 4): cuatro escenas, cuatro reacciones sin etiqueta.
 export const ESCENAS_3 = [
   ['Te critican delante de otros', { COL: 'Respondo en el momento y defiendo mi postura', MEL: 'Me callo, pero le doy vueltas durante días', SAN: 'Me molesta, hago una broma y se me pasa', FLE: 'Me afecta poco: escucho y sigo' }],
   ['Alguien llega media hora tarde', { COL: 'Le digo claramente que no puede ser', MEL: 'No digo nada, pero lo guardo', SAN: 'Aprovecho para charlar con quien esté', FLE: 'Espero tranquilo: ya llegará' }],
@@ -253,7 +254,7 @@ export const ESCENAS_3 = [
   ['Te proponen un proyecto nuevo y arriesgado', { COL: 'Me lanzo y lo lidero', MEL: 'Me atrae, pero veo todos los riesgos', SAN: 'Digo que sí antes de pensarlo', FLE: 'Prefiero que lo lidere otro; yo ayudo' }],
 ];
 
-/** Resultado del día 3 según cuántas reacciones coinciden con el primario. */
+/** Resultado del día 4 según cuántas reacciones coinciden con el primario. */
 export function textoElige3(coincidencias, nombrePrimario) {
   if (coincidencias >= 3) return `Tus reacciones confirman tu temperamento ${nombrePrimario}.`;
   if (coincidencias === 2) return 'Tu primario y tu secundario se reparten tus reacciones. Es normal.';
@@ -272,7 +273,7 @@ export function quienCorrige(momentos = []) {
 // Elige tu reacción (día 11): paso 1 «¿Qué te sale?», paso 2 «¿Y qué respondería la virtud?».
 // La escena, la respuesta de la virtud, los distractores y la virtud son los de la especificación.
 // BORRADOR · PENDIENTE DE REVISIÓN: las cuatro reacciones del paso 1 no están en la especificación
-// («4 opciones, como el día 3»); la escena 1 reutiliza las del día 3 y las otras dos son propuesta.
+// («4 opciones, como el día 3»); la escena 1 reutiliza las del día 4 y las otras dos son propuesta.
 export const ESCENAS_11 = [
   {
     escena: (momentos) => `Te corrige ${quienCorrige(momentos)} delante de todos`,

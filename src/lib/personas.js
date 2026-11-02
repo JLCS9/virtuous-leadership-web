@@ -173,3 +173,28 @@ export const esMenorDe18 = (anioNacimiento, hoy = new Date()) =>
 // En camino_dias.con_quien y en examen.con_quien: un grupo ('familia'…), 'solo', o 'p:<id de ficha>'.
 export const claveFicha = (id) => `p:${id}`;
 export const idDeClave = (clave) => (typeof clave === 'string' && clave.startsWith('p:') ? clave.slice(2) : null);
+
+// ───────────── Sugerencia del día ─────────────
+
+/**
+ * Con quién hacer hoy el reto: UNA persona de tus fichas, primero las que aún no han aparecido esta
+ * semana (en «¿con quién?» de la sesión o del examen) y, entre ellas, las de estrella. Con un consejo
+ * de «cómo tratarle» si tiene temperamento. Es solo una sugerencia: elige siempre el usuario.
+ */
+export function sugerenciaDelDia(personas, porDia, dia) {
+  if (!personas?.length || !dia) return null;
+  const semana = dia <= 7 ? [1, 2, 3, 4, 5, 6, 7] : [8, 9, 10, 11, 12, 13, 14];
+  const usadas = new Set();
+  for (const d of semana) {
+    if (d === dia) continue;
+    for (const clave of [porDia[d]?.con_quien, porDia[d]?.examen?.con_quien]) {
+      const id = idDeClave(clave);
+      if (id) usadas.add(id);
+    }
+  }
+  const orden = [...personas].sort((a, b) =>
+    (usadas.has(a.id) - usadas.has(b.id)) || (b.estrella - a.estrella) || (a.creado_en < b.creado_en ? -1 : 1));
+  const persona = orden[0];
+  const consejos = FICHA[persona.primario]?.tratar;
+  return { persona, consejo: consejos ? consejos[dia % consejos.length] : null };
+}
