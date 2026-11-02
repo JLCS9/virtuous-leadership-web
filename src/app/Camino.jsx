@@ -6,11 +6,11 @@ import { LocalLink as Link } from '../i18n';
 import { retoDeHoy } from '../account/retos';
 import { fetchLatestCharacter } from '../account/account';
 import { extremos, resultadoCaracter } from '../lib/virtudes.js';
-import { continuar, formatoDuracion } from '../lib/formacion.js';
+import { continuar, formatoDuracion } from '../formacion/cursos.js';
 import { GOLD_SOFT, INK, MUTED, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../theme';
 import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoFlecha, IconoPlay } from './Iconos';
-import { useCatalogo, useProgreso } from './useFormacion';
+import { useCatalogo, useProgreso } from '../formacion/useFormacion';
 import Conversacion from './Conversacion';
 import { VirtudesBarras, VirtudesRadar } from './Radar';
 

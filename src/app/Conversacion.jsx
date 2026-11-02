@@ -31,6 +31,7 @@ function useConversacion(llamar) {
     setS((x) => ({ ...x, ocupado: true, error: null, mensajes: etiqueta ? [...x.mensajes, { rol: 'usuario', texto: etiqueta }] : x.mensajes }));
     try {
       const r = await llamarRef.current(entrada);
+      if (!r || typeof r !== 'object') throw new Error('empty');
       setS((x) => ({
         ...x, ocupado: false, botones: r.botones ?? [], crisis: Boolean(r.crisis),
         cerrado: Boolean(r.cerrada || r.terminado || r.crisis),
@@ -151,7 +152,7 @@ export default function Conversacion({ modo, onTerminar }) {
             {s.botones.length > 0 && (
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
                 {s.botones.map((b) => (
-                  <button key={b} type="button" disabled={s.ocupado} onClick={() => paso({ tipo: 'boton', valor: b }, ETIQUETAS[b] ?? b)} style={{
+                  <button key={b} type="button" disabled={s.ocupado} onClick={() => paso(onboarding ? (ETIQUETAS[b] ?? b) : { tipo: 'boton', valor: b }, ETIQUETAS[b] ?? b)} style={{
                     fontFamily: FONT_SANS, fontSize: 14, padding: '9px 16px', borderRadius: 999, cursor: s.ocupado ? 'wait' : 'pointer',
                     background: PAPER, color: NAVY, border: `1px solid ${b === 'prisa' ? LINE : NAVY}`,
                   }}>{ETIQUETAS[b] ?? b}</button>
