@@ -4,12 +4,12 @@
 // con ?personas · ?persona=id · ?nueva · ?observar=id · ?rehacer=id.
 import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
-import { continuar, formatoDuracion } from '../lib/formacion.js';
+import { continuar, formatoDuracion } from '../formacion/cursos.js';
 import { DIAS, TOTAL_DIAS, conPunto, fechaCorta, fechaLocal, infoDia, semanaDe, siguientePaso, tieneExamen } from '../lib/camino.js';
 import { GOLD, GOLD_SOFT, INK, LINE, MUTED, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha, IconoPlay } from './Iconos';
-import { useCatalogo, useProgreso } from './useFormacion';
+import { useCatalogo, useProgreso } from '../formacion/useFormacion';
 import { useCamino } from './useCamino';
 import Onboarding from './camino/Onboarding';
 import Sesion from './camino/Sesion';
