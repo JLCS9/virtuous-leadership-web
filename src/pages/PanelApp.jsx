@@ -9,7 +9,7 @@ import { useAcceso } from '../account/useAcceso';
 import AppShell, { Cargando } from '../app/AppShell';
 import Hoy from '../app/Hoy';
 import Camino from '../app/Camino';
-import Formacion from '../app/Formacion';
+import Formacion from '../formacion/Formacion';
 
 function Pestana({ nombre, ruta, children }) {
   const session = useSession();

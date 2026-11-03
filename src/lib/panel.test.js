@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 
 import {
   progresoCurso, siguienteLeccion, continuar, resumenGlobal, formatoDuracion, buscarLeccion, urlVimeo,
-} from './formacion.js';
+} from '../formacion/cursos.js';
 import {
   VIRTUDES, etapa, resultadoCaracter, extremos, geometriaRadar, claveTemperamento, resultadoParaGuardar,
 } from './virtudes.js';

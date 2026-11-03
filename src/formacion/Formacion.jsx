@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useOutletContext } from 'react-router-dom';
 import {
   UMBRAL_VISTA, buscarLeccion, continuar, duracionCurso, formatoDuracion, progresoCurso, resumenGlobal, urlVimeo,
-} from '../lib/formacion.js';
+} from './cursos.js';
 import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT } from '../theme';
-import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
-import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from './Iconos';
+import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
+import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
 import { useCatalogo, useProgreso } from './useFormacion';
 
 function Anillo({ valor, tam = 84 }) {

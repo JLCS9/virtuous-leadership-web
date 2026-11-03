@@ -4,15 +4,15 @@ import { useEffect, useState } from 'react';
 import { useT } from '../../i18n';
 import { guardarLineaBase, guardarSesion } from '../../account/camino';
 import { fetchLatestTemperament } from '../../account/account';
-import { buscarLeccion } from '../../lib/formacion.js';
+import { buscarLeccion } from '../../formacion/cursos.js';
 import {
   EJEMPLO_CUATRO, conPunto, LEMA, PUNTO_PARTIDA, RETO_PRESENTACION, VERDAD_MITO, infoDia, semanaDe, tieneExamen,
 } from '../../lib/camino.js';
 import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB, GOLD_REF } from '../../theme';
 import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo } from '../estilos';
 import { IconoCheck, IconoFlecha } from '../Iconos';
-import { Reproductor } from '../Formacion';
-import { useCatalogo, useProgreso } from '../useFormacion';
+import { Reproductor } from '../../formacion/Formacion';
+import { useCatalogo, useProgreso } from '../../formacion/useFormacion';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 import Rueda from './Rueda';
 import { Arrastra, DeslizaTemperamentoCaracter, DeslizaTemperamentos, EligeReaccion, EligeVirtud } from './Juegos';
