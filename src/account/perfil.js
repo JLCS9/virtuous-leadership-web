@@ -22,3 +22,14 @@ export async function cambiarPassword(newPassword) {
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
 }
+
+export async function actualizarPerfil(userId, campos) {
+  const { error } = await supabase.from('profiles').update(campos).eq('id', userId);
+  if (error) throw error;
+}
+
+export async function borrarCuenta() {
+  const { error } = await supabase.rpc('delete_own_account');
+  if (error) throw error;
+  await supabase.auth.signOut({ scope: 'local' });
+}

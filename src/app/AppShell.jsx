@@ -8,13 +8,12 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
-import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado, IconoPerfil } from './Iconos';
+import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado } from './Iconos';
 
 const PESTANAS = [
   { ruta: '/app', etiqueta: 'Hoy', Icono: IconoHoy },
   { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCandado, bloqueada: true },
   { ruta: '/app/formacion', etiqueta: 'Formación', Icono: IconoFormacion },
-  { ruta: '/app/perfil', etiqueta: null, Icono: IconoPerfil },
 ];
 
 function indicePestana(pathname, lp) {
@@ -103,9 +102,22 @@ export default function AppShell({ user }) {
               {nombre ? `Hola, ${nombre}` : 'Hola'}
             </div>
           </div>
-          <button type="button" onClick={salir} style={{ background: 'none', border: 'none', color: MUTED, fontFamily: FONT_BODY, fontSize: 13, textDecoration: 'underline', cursor: 'pointer', padding: 6 }}>
-            Salir
-          </button>
+          <Link to="/app/perfil" style={{
+            display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
+            color: pathname.startsWith(lp('/app/perfil')) ? NAVY : MUTED,
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, padding: '6px 10px',
+            borderRadius: 999, background: pathname.startsWith(lp('/app/perfil')) ? 'rgba(165,139,38,0.12)' : 'transparent',
+            transition: 'background 200ms ease, color 200ms ease',
+          }}>
+            <span style={{
+              width: 32, height: 32, borderRadius: '50%', background: NAVY,
+              display: 'grid', placeItems: 'center', color: '#fff', fontSize: 14, fontWeight: 700,
+              flexShrink: 0,
+            }}>
+              {nombre ? nombre[0].toUpperCase() : '?'}
+            </span>
+            <span style={{ whiteSpace: 'nowrap' }}>Mi cuenta</span>
+          </Link>
         </header>
 
         <main className={`vl-main ${dir ? `vl-entra-${dir}` : 'vl-entra'}`} key={pathname}
@@ -113,13 +125,13 @@ export default function AppShell({ user }) {
           <Outlet context={{ user }} />
         </main>
 
-        <NavBurbuja pathname={pathname} lp={lp} nombre={nombre} />
+        <NavBurbuja pathname={pathname} lp={lp} />
       </div>
     </div>
   );
 }
 
-function NavBurbuja({ pathname, lp, nombre }) {
+function NavBurbuja({ pathname, lp }) {
   const contenedorRef = useRef(null);
   const [pill, setPill] = useState({ left: 0, width: 0 });
   const [toast, setToast] = useState(false);
@@ -171,7 +183,6 @@ function NavBurbuja({ pathname, lp, nombre }) {
           }} />
         )}
         {PESTANAS.map(({ ruta, etiqueta, Icono, bloqueada }) => {
-          const label = etiqueta ?? nombre ?? 'Perfil';
           const activa = !bloqueada && pathname === lp(ruta);
           if (bloqueada) {
             return (
@@ -183,7 +194,7 @@ function NavBurbuja({ pathname, lp, nombre }) {
                 position: 'relative', zIndex: 1,
               }}>
                 <Icono />
-                {label}
+                {etiqueta}
               </button>
             );
           }
@@ -196,7 +207,7 @@ function NavBurbuja({ pathname, lp, nombre }) {
               transition: 'color 200ms ease', position: 'relative', zIndex: 1,
             }}>
               <Icono />
-              {label}
+              {etiqueta}
             </Link>
           );
         })}
