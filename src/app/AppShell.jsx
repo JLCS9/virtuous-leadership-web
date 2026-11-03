@@ -8,13 +8,12 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
-import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado, IconoPerfil } from './Iconos';
+import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado } from './Iconos';
 
 const PESTANAS = [
   { ruta: '/app', etiqueta: 'Hoy', Icono: IconoHoy },
-  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCamino, bloqueada: true },
+  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCandado, bloqueada: true },
   { ruta: '/app/formacion', etiqueta: 'Formación', Icono: IconoFormacion },
-  { ruta: '/app/perfil', etiqueta: 'Perfil', Icono: IconoPerfil },
 ];
 
 function indicePestana(pathname, lp) {
@@ -103,9 +102,22 @@ export default function AppShell({ user }) {
               {nombre ? `Hola, ${nombre}` : 'Hola'}
             </div>
           </div>
-          <button type="button" onClick={salir} style={{ background: 'none', border: 'none', color: MUTED, fontFamily: FONT_BODY, fontSize: 13, textDecoration: 'underline', cursor: 'pointer', padding: 6 }}>
-            Salir
-          </button>
+          <Link to="/app/perfil" style={{
+            display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
+            color: pathname.startsWith(lp('/app/perfil')) ? NAVY : MUTED,
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, padding: '6px 10px',
+            borderRadius: 999, background: pathname.startsWith(lp('/app/perfil')) ? 'rgba(165,139,38,0.12)' : 'transparent',
+            transition: 'background 200ms ease, color 200ms ease',
+          }}>
+            <span style={{
+              width: 32, height: 32, borderRadius: '50%', background: NAVY,
+              display: 'grid', placeItems: 'center', color: '#fff', fontSize: 14, fontWeight: 700,
+              flexShrink: 0,
+            }}>
+              {nombre ? nombre[0].toUpperCase() : '?'}
+            </span>
+            <span style={{ whiteSpace: 'nowrap' }}>Mi cuenta</span>
+          </Link>
         </header>
 
         <main className={`vl-main ${dir ? `vl-entra-${dir}` : 'vl-entra'}`} key={pathname}
@@ -122,6 +134,7 @@ export default function AppShell({ user }) {
 function NavBurbuja({ pathname, lp }) {
   const contenedorRef = useRef(null);
   const [pill, setPill] = useState({ left: 0, width: 0 });
+  const [toast, setToast] = useState(false);
   const indiceActivo = indicePestana(pathname, lp);
 
   useEffect(() => {
@@ -133,11 +146,27 @@ function NavBurbuja({ pathname, lp }) {
     setPill({ left: el.offsetLeft, width: el.offsetWidth });
   }, [indiceActivo]);
 
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(false), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   return (
     <nav aria-label="Navegación principal" style={{
       position: 'fixed', left: 0, right: 0, bottom: 'max(16px, env(safe-area-inset-bottom))',
-      display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 50,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none', zIndex: 50, gap: 10,
     }}>
+      {toast && (
+        <div role="status" style={{
+          pointerEvents: 'none', fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600,
+          color: NAVY, background: 'rgba(255,255,255,0.92)', padding: '10px 20px',
+          borderRadius: 999, boxShadow: '0 2px 12px rgba(15,29,56,0.15)',
+          backdropFilter: 'blur(8px)', animation: 'vl-entra 280ms ease both',
+        }}>
+          Próximamente
+        </div>
+      )}
       <div ref={contenedorRef} style={{
         pointerEvents: 'auto', display: 'flex', gap: 4, padding: 6, borderRadius: 999,
         background: 'rgba(255,255,255,0.82)', boxShadow: '0 4px 24px rgba(15,29,56,0.18)',
@@ -154,28 +183,27 @@ function NavBurbuja({ pathname, lp }) {
           }} />
         )}
         {PESTANAS.map(({ ruta, etiqueta, Icono, bloqueada }) => {
-          const activa = pathname === lp(ruta);
-          const estiloBase = {
-            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
-            padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
-            fontFamily: FONT_BODY, fontSize: 11.5, letterSpacing: '0.02em',
-            position: 'relative', zIndex: 1,
-          };
+          const activa = !bloqueada && pathname === lp(ruta);
           if (bloqueada) {
             return (
-              <span key={ruta} data-tab style={{ ...estiloBase, color: MUTED, opacity: 0.55, cursor: 'default' }}>
-                <span style={{ position: 'relative', display: 'inline-flex' }}>
-                  <Icono />
-                  <IconoCandado style={{ width: 11, height: 11, position: 'absolute', right: -5, bottom: -2, strokeWidth: 2.2 }} />
-                </span>
-                <span style={{ fontSize: 10 }}>{etiqueta}</span>
-                <span style={{ fontSize: 8.5, fontWeight: 600, letterSpacing: '0.05em', lineHeight: 1, marginTop: -2, color: MUTED }}>Próximamente</span>
-              </span>
+              <button key={ruta} type="button" data-tab onClick={() => setToast(true)} style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
+                padding: '9px 14px 8px', borderRadius: 999, border: 'none', cursor: 'pointer',
+                color: MUTED, background: 'transparent', opacity: 0.55,
+                fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 500, letterSpacing: '0.02em',
+                position: 'relative', zIndex: 1,
+              }}>
+                <Icono />
+                {etiqueta}
+              </button>
             );
           }
           return (
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
-              ...estiloBase,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
+              padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
+              fontFamily: FONT_BODY, fontSize: 11.5, letterSpacing: '0.02em',
+              position: 'relative', zIndex: 1,
               color: activa ? NAVY : MUTED, background: 'transparent',
               fontWeight: activa ? 700 : 500,
               transition: 'color 200ms ease',
