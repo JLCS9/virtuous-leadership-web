@@ -21,7 +21,7 @@ import Login from './pages/Login';
 import PortalGuard from './app/PortalGuard';
 import Hoy from './app/Hoy';
 import Camino from './app/Camino';
-import Formacion from './app/Formacion';
+import Formacion from './formacion/Formacion';
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
