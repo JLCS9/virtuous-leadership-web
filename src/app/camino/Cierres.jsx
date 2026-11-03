@@ -8,7 +8,7 @@ import {
 } from '../../lib/camino.js';
 import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
 import { eyebrow, parrafo } from '../estilos';
-import { useCatalogo } from '../useFormacion';
+import { useCatalogo } from '../../formacion/useFormacion';
 import { Continuar, useNombres, useTemperamento } from './Juegos';
 import { Opcion, Opciones, Pantalla } from './ui';
 import { idDeClave } from '../../lib/personas.js';

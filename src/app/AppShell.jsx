@@ -6,7 +6,7 @@ import { LocalLink as Link, useLocalPath } from '../i18n';
 import { supabase } from '../account/supabase';
 import { fetchFirstName } from '../account/account';
 import { olvidarAcceso } from '../account/useAcceso';
-import { olvidarCatalogo } from './useFormacion';
+import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, GOLD, GOLD_SOFT, BEIGE, INK, MUTED, FONT_SERIF, FONT_SANS } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
