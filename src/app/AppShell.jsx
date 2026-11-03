@@ -8,12 +8,13 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
-import { IconoHoy, IconoCamino, IconoFormacion } from './Iconos';
+import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado, IconoPerfil } from './Iconos';
 
 const PESTANAS = [
   { ruta: '/app', etiqueta: 'Hoy', Icono: IconoHoy },
-  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCamino },
+  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCandado, bloqueada: true },
   { ruta: '/app/formacion', etiqueta: 'Formación', Icono: IconoFormacion },
+  { ruta: '/app/perfil', etiqueta: null, Icono: IconoPerfil },
 ];
 
 function indicePestana(pathname, lp) {
@@ -112,15 +113,16 @@ export default function AppShell({ user }) {
           <Outlet context={{ user }} />
         </main>
 
-        <NavBurbuja pathname={pathname} lp={lp} />
+        <NavBurbuja pathname={pathname} lp={lp} nombre={nombre} />
       </div>
     </div>
   );
 }
 
-function NavBurbuja({ pathname, lp }) {
+function NavBurbuja({ pathname, lp, nombre }) {
   const contenedorRef = useRef(null);
   const [pill, setPill] = useState({ left: 0, width: 0 });
+  const [toast, setToast] = useState(false);
   const indiceActivo = indicePestana(pathname, lp);
 
   useEffect(() => {
@@ -132,11 +134,27 @@ function NavBurbuja({ pathname, lp }) {
     setPill({ left: el.offsetLeft, width: el.offsetWidth });
   }, [indiceActivo]);
 
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(false), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   return (
     <nav aria-label="Navegación principal" style={{
       position: 'fixed', left: 0, right: 0, bottom: 'max(16px, env(safe-area-inset-bottom))',
-      display: 'flex', justifyContent: 'center', pointerEvents: 'none', zIndex: 50,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none', zIndex: 50, gap: 10,
     }}>
+      {toast && (
+        <div role="status" style={{
+          pointerEvents: 'none', fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600,
+          color: NAVY, background: 'rgba(255,255,255,0.92)', padding: '10px 20px',
+          borderRadius: 999, boxShadow: '0 2px 12px rgba(15,29,56,0.15)',
+          backdropFilter: 'blur(8px)', animation: 'vl-entra 280ms ease both',
+        }}>
+          Próximamente
+        </div>
+      )}
       <div ref={contenedorRef} style={{
         pointerEvents: 'auto', display: 'flex', gap: 4, padding: 6, borderRadius: 999,
         background: 'rgba(255,255,255,0.82)', boxShadow: '0 4px 24px rgba(15,29,56,0.18)',
@@ -152,8 +170,23 @@ function NavBurbuja({ pathname, lp }) {
             pointerEvents: 'none',
           }} />
         )}
-        {PESTANAS.map(({ ruta, etiqueta, Icono }) => {
-          const activa = pathname === lp(ruta);
+        {PESTANAS.map(({ ruta, etiqueta, Icono, bloqueada }) => {
+          const label = etiqueta ?? nombre ?? 'Perfil';
+          const activa = !bloqueada && pathname === lp(ruta);
+          if (bloqueada) {
+            return (
+              <button key={ruta} type="button" data-tab onClick={() => setToast(true)} style={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
+                padding: '9px 14px 8px', borderRadius: 999, border: 'none', cursor: 'pointer',
+                color: MUTED, background: 'transparent', opacity: 0.55,
+                fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 500, letterSpacing: '0.02em',
+                position: 'relative', zIndex: 1,
+              }}>
+                <Icono />
+                {label}
+              </button>
+            );
+          }
           return (
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
@@ -163,7 +196,7 @@ function NavBurbuja({ pathname, lp }) {
               transition: 'color 200ms ease', position: 'relative', zIndex: 1,
             }}>
               <Icono />
-              {etiqueta}
+              {label}
             </Link>
           );
         })}

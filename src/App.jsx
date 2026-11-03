@@ -22,6 +22,7 @@ import PortalGuard from './app/PortalGuard';
 import Hoy from './app/Hoy';
 import Camino from './app/Camino';
 import Formacion from './formacion/Formacion';
+import Perfil from './app/Perfil';
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
@@ -98,8 +99,9 @@ export default function App() {
         return (
           <Route key={`portal-${lang}`} path={`/${lang}/${appSlug}`} element={<PortalGuard />}>
             <Route index element={<Hoy />} />
-            <Route path="camino" element={<Camino />} />
+            <Route path="camino" element={<Navigate to=".." replace />} />
             <Route path="formacion" element={<Formacion />} />
+            <Route path="perfil" element={<Perfil />} />
           </Route>
         );
       })}
