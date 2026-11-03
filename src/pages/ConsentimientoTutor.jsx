@@ -41,7 +41,7 @@ export default function ConsentimientoTutor() {
           ) : done ? (
             <>
               <Notice tone="ok">{t('guardian.done')}</Notice>
-              <Link to="/mi-panel" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('guardian.go_panel')} →</Link>
+              <Link to="/app" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('guardian.go_panel')} →</Link>
             </>
           ) : (
             <>

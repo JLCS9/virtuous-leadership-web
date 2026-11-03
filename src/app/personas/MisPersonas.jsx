@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { borrarObservacion, borrarPersona, borrarTodasLasPersonas, actualizarPersona, leerPersona } from '../../account/personas';
 import { GRUPOS, TEXTO_GRUPO, TEXTO_SITUACION, textoSinResultado } from '../../lib/personas.js';
-import { INK, LINE, MUTED, NAVY, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
 import { IconoFlecha } from '../Iconos';
 import { useTemperamento } from '../camino/Juegos';
@@ -12,16 +12,16 @@ import { Avatar, EtiquetaEstado, FichaContenido, MapaPersonas } from './comun';
 
 const ROJO = '#9C3A3A';
 const volverBtn = (onVolver, texto = '← Mi camino') => (
-  <button type="button" onClick={onVolver} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: NAVY, padding: 0, fontWeight: 600 }}>{texto}</button>
+  <button type="button" onClick={onVolver} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: NAVY, padding: 0, fontWeight: 600 }}>{texto}</button>
 );
 
 /** Botón de borrar en dos pasos: «Borrar» → «¿Seguro? Sí, borrar». */
 function BorrarConfirmando({ texto, confirmar, onBorrar }) {
   const [seguro, setSeguro] = useState(false);
-  const estilo = { background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 13.5, color: ROJO, padding: 4 };
+  const estilo = { background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: ROJO, padding: 4 };
   if (!seguro) return <button type="button" style={estilo} onClick={() => setSeguro(true)}>{texto}</button>;
   return (
-    <span style={{ fontFamily: FONT_SANS, fontSize: 13.5, color: INK }}>
+    <span style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: INK }}>
       {confirmar}{' '}
       <button type="button" style={{ ...estilo, fontWeight: 700 }} onClick={onBorrar}>Sí, borrar</button>
       <button type="button" style={{ ...estilo, color: MUTED }} onClick={() => setSeguro(false)}>No</button>
@@ -38,7 +38,7 @@ export function ListaPersonas({ personas, onAbrir, compacta = false }) {
                 style={{ display: 'flex', alignItems: 'center', gap: 12, padding: compacta ? '8px 4px' : '10px 4px', background: 'none', border: 'none', borderTop: `1px solid ${LINE}`, cursor: 'pointer', textAlign: 'left' }}>
           <Avatar persona={p} tam={compacta ? 36 : 42} />
           <span style={{ flex: 1, minWidth: 0 }}>
-            <span style={{ display: 'block', fontFamily: FONT_SANS, fontSize: 15.5, fontWeight: 600, color: INK }}>
+            <span style={{ display: 'block', fontFamily: FONT_BODY, fontSize: 15.5, fontWeight: 600, color: INK }}>
               {p.nombre}{p.estrella ? ' ★' : ''}{p.relacion ? <span style={{ fontWeight: 400, color: MUTED }}> · {p.relacion}</span> : null}
             </span>
             <EtiquetaEstado persona={p} />
@@ -124,7 +124,7 @@ export function Ficha({ id, menor, onVolver, onObservar, onRehacer, onCambio }) 
         <Avatar persona={p} tam={60} />
         <div>
           <h1 style={{ ...titulo(30), margin: 0 }}>{p.nombre}</h1>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 13.5, color: MUTED, margin: '2px 0' }}>{TEXTO_GRUPO[p.grupo]}{p.relacion ? ` · ${p.relacion}` : ''}</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '2px 0' }}>{TEXTO_GRUPO[p.grupo]}{p.relacion ? ` · ${p.relacion}` : ''}</div>
           <EtiquetaEstado persona={p} />
         </div>
       </div>
@@ -143,10 +143,10 @@ export function Ficha({ id, menor, onVolver, onObservar, onRehacer, onCambio }) 
         {observaciones.length === 0 && <p style={{ ...parrafo, fontSize: 14 }}>Aún no has anotado ninguna reacción.</p>}
         {observaciones.map((o) => (
           <div key={o.id} style={{ display: 'flex', gap: 10, alignItems: 'baseline', padding: '8px 0', borderTop: `1px dashed ${LINE}` }}>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED, minWidth: 64 }}>{new Date(o.creado_en).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</span>
-            <span style={{ flex: 1, fontFamily: FONT_SANS, fontSize: 14.5, color: INK }}>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED, minWidth: 64 }}>{new Date(o.creado_en).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}</span>
+            <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14.5, color: INK }}>
               {TEXTO_SITUACION[o.situacion]}: <strong>{o.palabra.toLowerCase()}</strong>
-              {o.linea && <span style={{ display: 'block', fontFamily: FONT_SERIF, fontStyle: 'italic', fontSize: 16, color: MUTED }}>«{o.linea}»</span>}
+              {o.linea && <span style={{ display: 'block', fontFamily: FONT_SLAB, fontStyle: 'italic', fontSize: 16, color: MUTED }}>«{o.linea}»</span>}
             </span>
             <BorrarConfirmando texto="Borrar" confirmar="" onBorrar={() => borrarObs(o.id)} />
           </div>

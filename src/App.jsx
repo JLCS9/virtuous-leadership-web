@@ -17,9 +17,11 @@ import TestCorazon from './pages/TestCorazon';
 import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
 import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
-import MiPanel from './pages/MiPanel';
-import Retos from './pages/Retos';
-import { PanelCamino, PanelFormacion } from './pages/PanelApp';
+import Login from './pages/Login';
+import PortalGuard from './app/PortalGuard';
+import Hoy from './app/Hoy';
+import Camino from './app/Camino';
+import Formacion from './app/Formacion';
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
@@ -27,8 +29,6 @@ import PageTracker from './components/PageTracker';
 import CookieConsent from './components/CookieConsent';
 import { SUPPORTED_LANGS, detectInitialLang, ROUTES, NO_LAYOUT_PAGES } from './i18n';
 
-// Mapeo pageId -> componente. Si añades una pagina aqui, añade tambien su
-// entrada en src/i18n/routes.js para definir su slug por idioma.
 const PAGE_ELEMENTS = {
   home:                  <Home />,
   acreditacion_landing:  <Acreditacion />,
@@ -46,10 +46,8 @@ const PAGE_ELEMENTS = {
   politica_privacidad:   <PoliticaPrivacidad />,
   cookies:               <Cookies />,
   contacto:              <Contacto />,
-  mi_panel:              <MiPanel />,
-  mis_retos:             <Retos />,
-  mi_panel_camino:       <PanelCamino />,
-  mi_panel_formacion:    <PanelFormacion />,
+  login:                 <Login />,
+  mi_panel:              <LegacyRedirect to="/app" />,
   restablecer:           <Restablecer />,
   consentimiento_tutor:  <ConsentimientoTutor />,
 };
@@ -58,28 +56,29 @@ function LayoutWithOutlet() {
   return <Layout><Outlet /></Layout>;
 }
 
-// LegacyRedirect: cualquier path que no empiece por /:lang valido (incluido
-// la raiz '/') se redirige a /{idiomaDetectado}{path}. Esto cubre paths
-// legacy indexados antes de la migracion a URLs con prefijo de idioma.
-function LegacyRedirect() {
+function LegacyRedirect({ to }) {
   const { pathname, search, hash } = useLocation();
+
+  if (to) {
+    const detected = detectInitialLang();
+    return <Navigate to={`/${detected}${to}${search}${hash}`} replace />;
+  }
+
   const detected = detectInitialLang();
   const target = `/${detected}${pathname === '/' ? '' : pathname}${search}${hash}`;
   return <Navigate to={target} replace />;
 }
 
-// El test de temperamento se renderiza SIN Layout (sin header, sin footer):
-// experiencia enfocada como un mini-app dentro del sitio.
-// El resto de paginas comparten el mismo Layout.
 export default function App() {
   return (
     <>
       <PageTracker />
       <CookieConsent />
       <Routes>
-      {/* Test temperamento sin Layout — uno por idioma */}
+      {/* Páginas sin Layout (tests, legales, login, etc.) */}
       {SUPPORTED_LANGS.flatMap(lang =>
         Array.from(NO_LAYOUT_PAGES).map(pageId => {
+          if (pageId === 'app') return null;
           const slug = ROUTES[pageId]?.[lang];
           if (slug === undefined) return null;
           return (
@@ -92,9 +91,34 @@ export default function App() {
         })
       )}
 
-      {/* Paginas con Layout — una rama por idioma, hijos con slug localizado.
-          La rama por idioma evita remount de Layout al cambiar de pagina
-          dentro del mismo idioma. */}
+      {/* Portal /app — ruta padre con AppShell compartido, hijas como pestañas */}
+      {SUPPORTED_LANGS.map(lang => {
+        const appSlug = ROUTES.app?.[lang];
+        if (!appSlug) return null;
+        return (
+          <Route key={`portal-${lang}`} path={`/${lang}/${appSlug}`} element={<PortalGuard />}>
+            <Route index element={<Hoy />} />
+            <Route path="camino" element={<Camino />} />
+            <Route path="formacion" element={<Formacion />} />
+          </Route>
+        );
+      })}
+
+      {/* Legacy redirects: /mi-panel/camino → /app/camino, /mi-panel/formacion → /app/formacion */}
+      {SUPPORTED_LANGS.map(lang => {
+        const panelSlug = ROUTES.mi_panel?.[lang];
+        if (!panelSlug) return null;
+        return [
+          <Route key={`legacy-camino-${lang}`} path={`/${lang}/${panelSlug}/camino`}
+                 element={<LegacyRedirect to="/app/camino" />} />,
+          <Route key={`legacy-formacion-${lang}`} path={`/${lang}/${panelSlug}/formacion`}
+                 element={<LegacyRedirect to="/app/formacion" />} />,
+          <Route key={`legacy-retos-${lang}`} path={`/${lang}/${panelSlug}/retos`}
+                 element={<LegacyRedirect to="/app" />} />,
+        ];
+      })}
+
+      {/* Páginas con Layout (header + footer del sitio) */}
       {SUPPORTED_LANGS.map(lang => (
         <Route key={`layout-${lang}`} path={`/${lang}`} element={<LayoutWithOutlet />}>
           <Route index element={PAGE_ELEMENTS.home} />
@@ -108,8 +132,6 @@ export default function App() {
         </Route>
       ))}
 
-      {/* Cualquier path sin prefijo de idioma valido (root o legacy)
-          -> redirigir conservando el path original. */}
       <Route path="*" element={<LegacyRedirect />} />
     </Routes>
     </>

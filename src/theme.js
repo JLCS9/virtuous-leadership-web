@@ -17,6 +17,15 @@ export const FONT_SERIF = "'Cormorant Garamond', 'Playfair Display', Georgia, 'T
 export const FONT_SANS  = "'Inter', 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif";
 export const FONT_MONO  = "ui-monospace, SFMono-Regular, Menlo, monospace";
 
+// Portal — fuentes y gold de la referencia (ColegiosCertificacion / EmpresasCertificacion).
+// Las de arriba (FONT_SERIF, FONT_SANS) siguen para las páginas públicas.
+export const FONT_SLAB = "'Roboto Slab', Georgia, serif";
+export const FONT_BODY = "'Roboto', system-ui, sans-serif";
+export const GOLD_REF     = '#a58b26';
+export const GOLD_REF_LT  = '#c9ab42';
+export const GOLD_REF_DK  = '#786622';
+export const BRUMA         = '#e0e5ee';
+
 export const MAX_WIDTH = 1100;
 
 // Etiquetas de los 4 temperamentos (compartidas con el test).

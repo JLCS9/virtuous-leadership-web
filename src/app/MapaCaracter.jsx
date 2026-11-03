@@ -5,7 +5,7 @@ import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { fetchLatestCharacter } from '../account/account';
 import { extremos, resultadoCaracter } from '../lib/virtudes.js';
-import { INK, NAVY, FONT_SANS } from '../theme';
+import { INK, NAVY, FONT_BODY } from '../theme';
 import { botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { IconoFlecha } from './Iconos';
 import { VirtudesBarras, VirtudesRadar } from './Radar';
@@ -51,7 +51,7 @@ export default function MapaCaracter() {
       </p>
       <VirtudesBarras valores={valores} />
       <div style={{ marginTop: 18 }}>
-        <Link to="/tests/caracter" style={{ fontFamily: FONT_SANS, fontSize: 14, color: NAVY, fontWeight: 600 }}>Repetir el test →</Link>
+        <Link to="/tests/caracter" style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, fontWeight: 600 }}>Repetir el test →</Link>
       </div>
     </section>
   );

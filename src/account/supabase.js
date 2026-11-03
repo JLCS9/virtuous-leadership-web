@@ -1,6 +1,6 @@
 // Cliente de Supabase (proyecto de Virtus: la misma cuenta sirve en la app).
 // Si faltan las VITE_SUPABASE_* el sitio funciona como antes, sin cuentas:
-// el test vuelve a la página de gracias y /mi-panel no ofrece login.
+// el test vuelve a la página de gracias y /app no ofrece login.
 import { createClient } from '@supabase/supabase-js';
 
 const url = import.meta.env.VITE_SUPABASE_URL;

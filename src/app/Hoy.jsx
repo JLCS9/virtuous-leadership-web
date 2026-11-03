@@ -1,11 +1,9 @@
-// Pestaña «Hoy»: el reto de la semana y tu siguiente paso, tu mapa de carácter y tu resultado del test de
-// temperamento.
 import { useEffect, useState } from 'react';
 import { LocalLink as Link, useT } from '../i18n';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento } from '../lib/virtudes.js';
-import { GOLD, GOLD_SOFT, INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../theme';
+import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_LT } from '../theme';
 import { botonPrimario, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha } from './Iconos';
 import { useCamino } from './useCamino';
@@ -17,27 +15,26 @@ import MapaCaracter from './MapaCaracter';
 
 function Hero({ children }) {
   return (
-    <section style={{ background: heroFondo, color: PAPER, borderRadius: 22, padding: '28px 24px 26px', position: 'relative', overflow: 'hidden', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' }}>
-      <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD }} />
+    <section style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: '28px 24px 26px', position: 'relative', overflow: 'hidden', boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
+      <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
       {children}
     </section>
   );
 }
 
-// El reto de la semana (uno por semana; cada día cambia solo con quién) y el siguiente paso.
 function RetoDeLaSemana() {
   const camino = useCamino();
   const personas = usePersonas();
-  const etiqueta = { ...eyebrow, color: GOLD_SOFT, marginTop: 6 };
+  const etiqueta = { ...eyebrow, color: GOLD_REF_LT, marginTop: 6 };
 
   if (camino.cargando) {
-    return <Hero><div style={etiqueta}>Tu reto de la semana</div><p style={{ fontFamily: FONT_SERIF, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu camino…</p></Hero>;
+    return <Hero><div style={etiqueta}>Tu reto de la semana</div><p style={{ fontFamily: FONT_SLAB, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu camino…</p></Hero>;
   }
   if (camino.error) {
     return (
       <Hero>
         <div style={etiqueta}>Tu reto de la semana</div>
-        <p role="alert" style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '14px 0 18px', opacity: 0.92 }}>No he podido cargar tu camino ahora mismo.</p>
+        <p role="alert" style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '14px 0 18px', opacity: 0.92 }}>No he podido cargar tu camino ahora mismo.</p>
         <button type="button" style={botonPrimario} onClick={camino.recargar}>Reintentar</button>
       </Hero>
     );
@@ -46,9 +43,9 @@ function RetoDeLaSemana() {
     return (
       <Hero>
         <div style={etiqueta}>Antes de empezar</div>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
-        <p style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
-        <Link to="/mi-panel/camino?paso=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
+        <Link to="/app/camino?paso=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
       </Hero>
     );
   }
@@ -58,8 +55,8 @@ function RetoDeLaSemana() {
     return (
       <Hero>
         <div style={etiqueta}>Tu camino</div>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
-        <p style={{ fontFamily: FONT_SANS, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
       </Hero>
     );
   }
@@ -70,17 +67,17 @@ function RetoDeLaSemana() {
   const conQuien = empezado ? camino.porDia[diaHoy]?.con_quien : null;
   const sugerencia = empezado && !infoDia(diaHoy)?.cierre ? sugerenciaDelDia(personas.lista, camino.porDia, diaHoy) : null;
   const destino = !paso || paso.tipo === 'hecho' ? null
-    : paso.tipo === 'examen' ? `/mi-panel/camino?examen=${paso.dia}` : `/mi-panel/camino?dia=${paso.dia}`;
+    : paso.tipo === 'examen' ? `/app/camino?examen=${paso.dia}` : `/app/camino?dia=${paso.dia}`;
   return (
     <Hero>
       <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
-      <p style={{ fontFamily: FONT_SERIF, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
-      <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
-      <p style={{ fontFamily: FONT_SANS, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
+      <p style={{ fontFamily: FONT_SLAB, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
       {conQuien ? (
-        <p style={{ fontFamily: FONT_SANS, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
       ) : sugerencia && (
-        <p style={{ fontFamily: FONT_SANS, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
           Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
         </p>
       )}
@@ -89,7 +86,7 @@ function RetoDeLaSemana() {
           {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
         </Link>
       ) : empezado && (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_SANS, fontSize: 14.5, fontWeight: 600, color: GOLD_SOFT }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: GOLD_REF_LT }}>
           <IconoCheck width={18} height={18} /> Hoy está hecho
         </span>
       )}
@@ -131,32 +128,32 @@ function MiResultado() {
       <h2 style={{ ...titulo(30), margin: '10px 0 6px', letterSpacing: '-0.005em' }}>{perfil?.name ?? clave}</h2>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center', margin: '4px 0 16px', flexWrap: 'wrap' }}>
         {nombres.map((n, i) => (
-          <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: INK, padding: '5px 12px 5px 10px', borderRadius: 999, background: 'rgba(27,42,74,0.06)' }}>
+          <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, padding: '5px 12px 5px 10px', borderRadius: 0, background: 'rgba(27,42,74,0.06)' }}>
             <span style={{ width: 9, height: 9, borderRadius: '50%', background: i === 0 ? color1 : color2 }} />
             {n}
           </span>
         ))}
       </div>
-      <div style={{ display: 'flex', height: 4, borderRadius: 999, overflow: 'hidden', maxWidth: 160, marginBottom: 20 }} aria-hidden>
+      <div style={{ display: 'flex', height: 4, borderRadius: 0, overflow: 'hidden', maxWidth: 160, marginBottom: 20 }} aria-hidden>
         <div style={{ flex: 1, background: color1 }} />{color2 && <div style={{ flex: 1, background: color2 }} />}
       </div>
 
       {desafio?.name && (
-        <div style={{ borderLeft: `3px solid ${GOLD}`, paddingLeft: 14, marginBottom: 18 }}>
+        <div style={{ borderLeft: `3px solid ${GOLD_REF}`, paddingLeft: 14, marginBottom: 18 }}>
           <div style={{ ...eyebrow, color: MUTED }}>Tu virtud-desafío</div>
-          <div style={{ fontFamily: FONT_SERIF, fontSize: 22, fontWeight: 700, color: NAVY, margin: '4px 0 4px' }}>{desafio.name}</div>
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '4px 0 4px' }}>{desafio.name}</div>
           <p style={{ ...parrafo, fontSize: 14.5 }}>{desafio.def}</p>
         </div>
       )}
 
       {[['Tu fortaleza', perfil?.fortaleza], ['Tu punto débil', perfil?.debilidad]].map(([titulillo, texto]) => texto && (
         <details key={titulillo} style={{ borderTop: '1px solid rgba(27,42,74,0.10)', padding: '12px 0' }}>
-          <summary style={{ cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600, color: NAVY, listStyle: 'none' }}>{titulillo}</summary>
+          <summary style={{ cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, listStyle: 'none' }}>{titulillo}</summary>
           <p style={{ ...parrafo, marginTop: 10, fontSize: 14.5 }}>{texto}</p>
         </details>
       ))}
       <div style={{ marginTop: 6 }}>
-        <Link to="/tests/temperamento/gracias" style={{ fontFamily: FONT_SANS, fontSize: 14, color: NAVY, fontWeight: 600 }}>Ver mi resultado completo →</Link>
+        <Link to="/tests/temperamento/gracias" style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, fontWeight: 600 }}>Ver mi resultado completo →</Link>
       </div>
     </section>
   );
@@ -164,10 +161,19 @@ function MiResultado() {
 
 export default function Hoy() {
   return (
-    <div className="vl-cols">
-      <RetoDeLaSemana />
+    <div className="vl-hoy">
+      <style>{`
+        .vl-hoy { display: flex; flex-direction: column; gap: 18px; }
+        @media (min-width: 860px) {
+          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+          .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
+        }
+      `}</style>
+      <div className="vl-hoy-izq">
+        <RetoDeLaSemana />
+        <MiResultado />
+      </div>
       <MapaCaracter />
-      <MiResultado />
     </div>
   );
 }

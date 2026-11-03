@@ -1,7 +1,7 @@
 // La rueda de los cuatro temperamentos con tu posición (C, CM, MC, M…): se ilumina tu cuadrante y
 // aparece tu punto. Se usa en el día 1.
 import { RUEDA } from '../../lib/camino.js';
-import { PAPER, TEMP_COLORS, FONT_SANS } from '../../theme';
+import { PAPER, TEMP_COLORS, FONT_BODY } from '../../theme';
 
 const T = 240;
 const C = T / 2;
@@ -44,7 +44,7 @@ export default function Rueda({ primario, secundario, nombres }) {
             <path d={sector(i)} fill={TEMP_COLORS[k]} stroke={PAPER} strokeWidth="2"
                   className={activo ? 'vl-rueda-anim' : undefined}
                   style={{ opacity: activo ? (k === primario ? 1 : 0.7) : 0.18, animation: activo ? 'vl-ilumina 900ms ease both' : undefined }} />
-            <text x={lx} y={ly} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SANS} fontSize="10.5" fontWeight="700" fill={activo ? PAPER : TEMP_COLORS[k]}>
+            <text x={lx} y={ly} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_BODY} fontSize="10.5" fontWeight="700" fill={activo ? PAPER : TEMP_COLORS[k]}>
               {nombres[k]}
             </text>
           </g>

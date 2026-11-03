@@ -30,11 +30,11 @@ export default function Retos() {
   const session = useSession();
   return (
     <>
-      <SEO title={`${t('retos.title')} | Virtuous Leadership`} description={t('retos.title')} path="/mi-panel/retos" noindex={true} />
+      <SEO title={`${t('retos.title')} | Virtuous Leadership`} description={t('retos.title')} path="/app" noindex={true} />
       <TestShell>
-        <TopBar><Link to="/mi-panel" style={{ color: NAVY }}>{t('retos.back')}</Link></TopBar>
+        <TopBar><Link to="/app" style={{ color: NAVY }}>{t('retos.back')}</Link></TopBar>
         {session === undefined ? null : session ? <Puerta /> : (
-          <Card><Notice>{t('retos.no_access')}</Notice><Link to="/mi-panel" style={{ color: NAVY }}>{t('retos.back')}</Link></Card>
+          <Card><Notice>{t('retos.no_access')}</Notice><Link to="/app" style={{ color: NAVY }}>{t('retos.back')}</Link></Card>
         )}
       </TestShell>
     </>

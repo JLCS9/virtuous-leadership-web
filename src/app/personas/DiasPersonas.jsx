@@ -2,7 +2,7 @@
 // observaciones se hacen aquí mismo, sin salir de la sesión.
 import { useState } from 'react';
 import { combinacion, idDeClave } from '../../lib/personas.js';
-import { INK, LINE, MUTED, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, MUTED, FONT_SLAB, FONT_BODY } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo } from '../estilos';
 import { Continuar, useTemperamento } from '../camino/Juegos';
 import { Pantalla } from '../camino/ui';
@@ -12,7 +12,7 @@ import { ListaPersonas } from './MisPersonas';
 import { Avatar, useNombresTemp } from './comun';
 import { textoConQuien } from './EligeQuien';
 
-const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
+const fraseGrande = { fontFamily: FONT_SLAB, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const RECONOCIO = { si: 'Sí', en_parte: 'En parte', no: 'No' };
 
 export function DiaFicha({ dia, user, personas, estadoVida, onFin }) {
@@ -36,7 +36,7 @@ export function DiaFicha({ dia, user, personas, estadoVida, onFin }) {
       )}
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center' }}>
         <button type="button" style={botonSobreClaro} onClick={() => setCreando(true)}>{lista.length ? 'Descubre el de otra persona' : 'Crear ficha'}</button>
-        <button type="button" onClick={() => onFin({ ficha: null })} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: MUTED }}>Ahora no</button>
+        <button type="button" onClick={() => onFin({ ficha: null })} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>Ahora no</button>
       </div>
     </Pantalla>
   );
@@ -82,14 +82,14 @@ export function Dia12({ dia, user, camino, personas, onFin }) {
   return (
     <Pantalla etiqueta={`Día ${dia} · Mis personas`}
       pie={<Continuar onClick={() => onFin({ contados: contados.length, observadas: observadas.length })}>Continuar</Continuar>}>
-      <h2 style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: '#1B2A4A', margin: '12px 0 14px' }}>Aprender a leer a los demás</h2>
+      <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: '#1B2A4A', margin: '12px 0 14px' }}>Aprender a leer a los demás</h2>
 
       {bloque('A quién se lo has contado', contados.length === 0 ? (
         <p style={parrafo}>Esta semana no has anotado a quién se lo contaste. Puedes hacerlo en el examen de la noche.</p>
       ) : (
         <div style={{ display: 'grid', gap: 6 }}>
           {contados.map((e) => (
-            <div key={e.dia} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontFamily: FONT_SANS, fontSize: 15, color: INK }}>
+            <div key={e.dia} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, fontFamily: FONT_BODY, fontSize: 15, color: INK }}>
               <span>{textoConQuien(e.con_quien, porId)}</span>
               <span style={{ color: MUTED }}>¿Te reconoció? <strong style={{ color: INK }}>{RECONOCIO[e.reconocio] ?? '—'}</strong></span>
             </div>
@@ -109,9 +109,9 @@ export function Dia12({ dia, user, camino, personas, onFin }) {
           {paraObservar.map((p) => (
             <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <Avatar persona={p} tam={36} />
-              <span style={{ flex: 1, fontFamily: FONT_SANS, fontSize: 15, fontWeight: 600, color: INK }}>{p.nombre}</span>
+              <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: INK }}>{p.nombre}</span>
               {observadas.includes(p.id)
-                ? <span style={{ fontFamily: FONT_SANS, fontSize: 13.5, color: '#3F7A56', fontWeight: 600 }}>Anotado ✓</span>
+                ? <span style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: '#3F7A56', fontWeight: 600 }}>Anotado ✓</span>
                 : <button type="button" style={{ ...botonContorno, padding: '8px 14px', fontSize: 13 }} onClick={() => setSub({ observar: p })}>Anotar</button>}
             </div>
           ))}
@@ -124,7 +124,7 @@ export function Dia12({ dia, user, camino, personas, onFin }) {
             <div key={p.id} style={{ display: 'flex', gap: 10 }}>
               <Avatar persona={p} tam={36} />
               <div>
-                <div style={{ fontFamily: FONT_SANS, fontSize: 13, color: MUTED }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>
                   Tú, {nombres[temp.primario].toLowerCase()} · {p.nombre}, {nombres[p.primario].toLowerCase()}{p.estado === 'confirmado' ? '' : ' (estimado)'}
                 </div>
                 <p style={{ ...parrafo, color: INK, marginTop: 2 }}>{combinacion(temp.primario, p.primario)}</p>
