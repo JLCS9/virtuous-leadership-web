@@ -3,6 +3,7 @@
 // solo en este navegador (ver useFormacion.js).
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useOutletContext } from 'react-router-dom';
+import { LocalLink as Link } from '../i18n';
 import {
   UMBRAL_VISTA, buscarLeccion, continuar, duracionCurso, formatoDuracion, progresoCurso, resumenGlobal, urlVimeo,
 } from './cursos.js';
@@ -176,6 +177,17 @@ function Listado({ cursos, progreso, abrirLeccion }) {
           </button>
         </section>
       )}
+
+      <Link to="/app/formacion/modulo1" style={{ textDecoration: 'none', display: 'block' }} className="vl-ancho">
+        <section style={{ ...tarjeta, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 16, transition: 'box-shadow 200ms ease' }}>
+          <span style={{ flex: '0 0 48px', height: 48, borderRadius: '50%', display: 'grid', placeItems: 'center', background: 'rgba(165,139,38,0.12)', color: GOLD_REF_DK, fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700 }}>1</span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 700, color: NAVY, lineHeight: 1.2 }}>Del temperamento al carácter</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 3 }}>Módulo interactivo · Vídeos, quizzes y actividades</div>
+          </div>
+          <IconoChevron style={{ color: MUTED, transform: 'rotate(-90deg)', flex: '0 0 24px' }} />
+        </section>
+      </Link>
 
       {cursos.map((c) => (
         <Curso key={c.id} curso={c} vistas={progreso.vistas} abierto={Boolean(abiertos[c.id])}
