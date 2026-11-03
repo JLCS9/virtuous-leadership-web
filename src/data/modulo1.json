@@ -8,6 +8,7 @@
       "num": 1,
       "tipo": "video",
       "titulo": "El temperamento es biológico, el carácter espiritual",
+      "vimeoId": "922865851",
       "visible": true,
       "leccion": 1
     },
@@ -20,28 +21,83 @@
       "conceptos": [
         {
           "concepto": "Temperamento",
-          "correctas": ["Predisposición innata", "Biológico", "Modo de reaccionar", "Recibido al nacer", "No se puede cambiar"],
-          "distractores": ["Hábito moral", "Se construye con la práctica", "Fortaleza espiritual", "Fruto de la libertad"]
+          "correctas": [
+            "Predisposición innata",
+            "Biológico",
+            "Modo de reaccionar",
+            "Recibido al nacer",
+            "No se puede cambiar"
+          ],
+          "distractores": [
+            "Hábito moral",
+            "Se construye con la práctica",
+            "Fortaleza espiritual",
+            "Fruto de la libertad"
+          ]
         },
         {
           "concepto": "Colérico",
-          "correctas": ["La acción", "Manager nacido", "Energía", "Conseguir metas", "Confianza en sí mismo"],
-          "distractores": ["La contemplación", "Las personas", "Voluntad oculta", "Perfeccionista"]
+          "correctas": [
+            "La acción",
+            "Manager nacido",
+            "Energía",
+            "Conseguir metas",
+            "Confianza en sí mismo"
+          ],
+          "distractores": [
+            "La contemplación",
+            "Las personas",
+            "Voluntad oculta",
+            "Perfeccionista"
+          ]
         },
         {
           "concepto": "Melancólico",
-          "correctas": ["Las ideas", "Contemplación", "Perfeccionista", "Independiente", "Creador"],
-          "distractores": ["La acción", "Comunicador nacido", "La alegría", "Manager nacido"]
+          "correctas": [
+            "Las ideas",
+            "Contemplación",
+            "Perfeccionista",
+            "Independiente",
+            "Creador"
+          ],
+          "distractores": [
+            "La acción",
+            "Comunicador nacido",
+            "La alegría",
+            "Manager nacido"
+          ]
         },
         {
           "concepto": "Sanguíneo",
-          "correctas": ["Las personas", "Comunicador nacido", "La alegría", "Sentidos siempre despiertos", "Le encanta la aventura"],
-          "distractores": ["La paz", "Desapasionado", "Voluntad de hierro", "Las ideas"]
+          "correctas": [
+            "Las personas",
+            "Comunicador nacido",
+            "La alegría",
+            "Sentidos siempre despiertos",
+            "Le encanta la aventura"
+          ],
+          "distractores": [
+            "La paz",
+            "Desapasionado",
+            "Voluntad de hierro",
+            "Las ideas"
+          ]
         },
         {
           "concepto": "Flemático",
-          "correctas": ["La paz", "Desapasionado y científico", "Voluntad de hierro oculta", "Constante y perseverante", "Racional"],
-          "distractores": ["Emprendedor nato", "Sentidos siempre despiertos", "La aventura", "Creador"]
+          "correctas": [
+            "La paz",
+            "Desapasionado y científico",
+            "Voluntad de hierro oculta",
+            "Constante y perseverante",
+            "Racional"
+          ],
+          "distractores": [
+            "Emprendedor nato",
+            "Sentidos siempre despiertos",
+            "La aventura",
+            "Creador"
+          ]
         }
       ]
     },
@@ -100,7 +156,8 @@
       "tipo": "video",
       "titulo": "El carácter se construye sobre la base del temperamento",
       "visible": true,
-      "leccion": 2
+      "leccion": 2,
+      "vimeoId": "922878435"
     },
     {
       "id": "m1-05",
@@ -160,33 +217,95 @@
       "conceptos": [
         {
           "concepto": "Carácter",
-          "correctas": ["Virtudes", "Hábitos morales", "Predisposición adquirida", "Crecimiento personal", "Se construye"],
-          "distractores": ["Predisposición innata", "Biológico", "Reactividad", "Nacemos con él"]
+          "correctas": [
+            "Virtudes",
+            "Hábitos morales",
+            "Predisposición adquirida",
+            "Crecimiento personal",
+            "Se construye"
+          ],
+          "distractores": [
+            "Predisposición innata",
+            "Biológico",
+            "Reactividad",
+            "Nacemos con él"
+          ]
         },
         {
           "concepto": "Prudencia",
-          "correctas": ["Tomar buenas decisiones", "Madre de todas las virtudes", "Sabiduría práctica", "Tomar decisiones"],
-          "distractores": ["Mantener el rumbo", "Controlarse", "Dar a cada uno lo suyo", "Ir hacia las cosas grandes"]
+          "correctas": [
+            "Tomar buenas decisiones",
+            "Madre de todas las virtudes",
+            "Sabiduría práctica",
+            "Tomar decisiones"
+          ],
+          "distractores": [
+            "Mantener el rumbo",
+            "Controlarse",
+            "Dar a cada uno lo suyo",
+            "Ir hacia las cosas grandes"
+          ]
         },
         {
           "concepto": "Fortaleza",
-          "correctas": ["Mantener el rumbo", "Asumir riesgos", "Ser fuerte en el plan espiritual", "Resistencia", "Audacia"],
-          "distractores": ["Tomar buenas decisiones", "Control de las pasiones", "Servicio a los otros", "Soñar con cosas grandes"]
+          "correctas": [
+            "Mantener el rumbo",
+            "Asumir riesgos",
+            "Ser fuerte en el plan espiritual",
+            "Resistencia",
+            "Audacia"
+          ],
+          "distractores": [
+            "Tomar buenas decisiones",
+            "Control de las pasiones",
+            "Servicio a los otros",
+            "Soñar con cosas grandes"
+          ]
         },
         {
           "concepto": "Dominio de sí",
-          "correctas": ["Capacidad de controlarse", "Control de las emociones", "Control de sus pasiones", "Disciplina interior"],
-          "distractores": ["Asumir riesgos", "Tomar buenas decisiones", "Vivir en la verdad", "La acción"]
+          "correctas": [
+            "Capacidad de controlarse",
+            "Control de las emociones",
+            "Control de sus pasiones",
+            "Disciplina interior"
+          ],
+          "distractores": [
+            "Asumir riesgos",
+            "Tomar buenas decisiones",
+            "Vivir en la verdad",
+            "La acción"
+          ]
         },
         {
           "concepto": "Justicia",
-          "correctas": ["Dar a cada uno lo suyo", "Hábito de dar a cada uno su derecho", "Relación con los demás"],
-          "distractores": ["Capacidad de controlarse", "Mantener el rumbo", "Verdad sobre sí mismo", "Sueños y acción"]
+          "correctas": [
+            "Dar a cada uno lo suyo",
+            "Hábito de dar a cada uno su derecho",
+            "Relación con los demás"
+          ],
+          "distractores": [
+            "Capacidad de controlarse",
+            "Mantener el rumbo",
+            "Verdad sobre sí mismo",
+            "Sueños y acción"
+          ]
         },
         {
           "concepto": "Magnanimidad",
-          "correctas": ["Ir hacia las cosas grandes", "Luchar por cosas grandes", "Sueño y acción", "Los que sueñan y actúan", "Grandeza de alma"],
-          "distractores": ["Capacidad de controlarse", "Dar a cada uno lo suyo", "Predisposición innata", "Hábito del servicio"]
+          "correctas": [
+            "Ir hacia las cosas grandes",
+            "Luchar por cosas grandes",
+            "Sueño y acción",
+            "Los que sueñan y actúan",
+            "Grandeza de alma"
+          ],
+          "distractores": [
+            "Capacidad de controlarse",
+            "Dar a cada uno lo suyo",
+            "Predisposición innata",
+            "Hábito del servicio"
+          ]
         }
       ]
     },
@@ -196,7 +315,8 @@
       "tipo": "video",
       "titulo": "Cada temperamento posee valores concretos",
       "visible": true,
-      "leccion": 3
+      "leccion": 3,
+      "vimeoId": "922881313"
     },
     {
       "id": "m1-08",
@@ -207,22 +327,42 @@
       "preguntas": [
         {
           "texto": "Identifica los principales valores del temperamento colérico",
-          "opciones": ["Acción", "Ideas", "Personas", "Paz"],
+          "opciones": [
+            "Acción",
+            "Ideas",
+            "Personas",
+            "Paz"
+          ],
           "correcta": 0
         },
         {
           "texto": "Identifica los principales valores del temperamento sanguíneo",
-          "opciones": ["Acción", "Ideas", "Personas", "Paz"],
+          "opciones": [
+            "Acción",
+            "Ideas",
+            "Personas",
+            "Paz"
+          ],
           "correcta": 2
         },
         {
           "texto": "Identifica los principales valores del temperamento flemático",
-          "opciones": ["Acción", "Ideas", "Personas", "Paz"],
+          "opciones": [
+            "Acción",
+            "Ideas",
+            "Personas",
+            "Paz"
+          ],
           "correcta": 3
         },
         {
           "texto": "Identifica los principales valores del temperamento melancólico",
-          "opciones": ["Acción", "Ideas", "Personas", "Paz"],
+          "opciones": [
+            "Acción",
+            "Ideas",
+            "Personas",
+            "Paz"
+          ],
           "correcta": 1
         }
       ],
@@ -240,7 +380,8 @@
       "tipo": "video",
       "titulo": "Cada temperamento se distingue por su reactividad a los estímulos",
       "visible": true,
-      "leccion": 4
+      "leccion": 4,
+      "vimeoId": "922883783"
     },
     {
       "id": "m1-11",
@@ -252,32 +393,62 @@
         {
           "texto": "En una reunión surge un problema urgente. Alguien se levanta y dice: «Yo me encargo. Esto es lo que haremos...»",
           "respuesta": "COL",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         },
         {
           "texto": "Antes de aceptar un proyecto nuevo, pide tres días para analizar todas las opciones y los posibles riesgos.",
           "respuesta": "MEL",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         },
         {
           "texto": "Llega a una fiesta y en diez minutos ya conoce a todos y ha montado un plan para el fin de semana.",
           "respuesta": "SAN",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         },
         {
           "texto": "Todos discuten acaloradamente. Espera en silencio. Cuando habla, resume la situación con calma y todos se tranquilizan.",
           "respuesta": "FLE",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         },
         {
           "texto": "Le asignan un proyecto complejo. Trabaja sin parar hasta terminarlo, sin pedir ayuda a nadie.",
           "respuesta": "COL",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         },
         {
           "texto": "Le proponen liderar un equipo nuevo. Responde: «Necesito pensarlo... no estoy seguro de estar preparado.»",
           "respuesta": "MEL",
-          "opciones": ["COL", "MEL", "SAN", "FLE"]
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         }
       ]
     },
@@ -293,7 +464,8 @@
       "tipo": "video",
       "titulo": "Temperamento dominante y temperamento secundario",
       "visible": true,
-      "leccion": 5
+      "leccion": 5,
+      "vimeoId": "924563637"
     },
     {
       "id": "m1-14",
@@ -315,7 +487,12 @@
         },
         {
           "texto": "¿Cuántos temperamentos puede combinar una persona?",
-          "opciones": ["1", "2", "3", "4"],
+          "opciones": [
+            "1",
+            "2",
+            "3",
+            "4"
+          ],
           "correcta": 1
         },
         {
@@ -346,7 +523,8 @@
       "tipo": "video",
       "titulo": "El Colérico",
       "visible": true,
-      "leccion": 6
+      "leccion": 6,
+      "vimeoId": "924566128"
     },
     {
       "id": "m1-16",
@@ -357,7 +535,12 @@
       "preguntas": [
         {
           "texto": "¿Qué personaje famoso de Shakespeare es colérico?",
-          "opciones": ["Hamlet", "Romeo", "Otelo", "Macbeth"],
+          "opciones": [
+            "Hamlet",
+            "Romeo",
+            "Otelo",
+            "Macbeth"
+          ],
           "correcta": 2
         },
         {
@@ -408,7 +591,8 @@
       "tipo": "video",
       "titulo": "El Melancólico",
       "visible": true,
-      "leccion": 7
+      "leccion": 7,
+      "vimeoId": "924571431"
     },
     {
       "id": "m1-19",
@@ -419,7 +603,12 @@
       "preguntas": [
         {
           "texto": "¿Qué personaje famoso de Shakespeare es melancólico?",
-          "opciones": ["Otelo", "Hamlet", "Romeo", "Próspero"],
+          "opciones": [
+            "Otelo",
+            "Hamlet",
+            "Romeo",
+            "Próspero"
+          ],
           "correcta": 1
         },
         {
@@ -470,7 +659,8 @@
       "tipo": "video",
       "titulo": "El Sanguíneo",
       "visible": true,
-      "leccion": 8
+      "leccion": 8,
+      "vimeoId": "924568703"
     },
     {
       "id": "m1-22",
@@ -537,7 +727,8 @@
       "tipo": "video",
       "titulo": "El Flemático",
       "visible": true,
-      "leccion": 9
+      "leccion": 9,
+      "vimeoId": "924568973"
     },
     {
       "id": "m1-25",
