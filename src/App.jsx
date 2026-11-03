@@ -23,6 +23,7 @@ import Hoy from './app/Hoy';
 import Camino from './app/Camino';
 import Formacion from './formacion/Formacion';
 import Modulo from './formacion/Modulo';
+import Perfil from './app/Perfil';
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
@@ -102,6 +103,7 @@ export default function App() {
             <Route path="camino" element={<Camino />} />
             <Route path="formacion" element={<Formacion />} />
             <Route path="formacion/modulo1" element={<Modulo />} />
+            <Route path="perfil" element={<Perfil />} />
           </Route>
         );
       })}

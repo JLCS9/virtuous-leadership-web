@@ -22,3 +22,9 @@ export const IconoFlecha = (p) => (
 export const IconoChevron = (p) => (
   <svg {...base} {...p}><path d="m6 9 6 6 6-6" /></svg>
 );
+export const IconoCandado = (p) => (
+  <svg {...base} {...p}><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+);
+export const IconoPerfil = (p) => (
+  <svg {...base} {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 16 0v1" /></svg>
+);

@@ -8,16 +8,17 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
-import { IconoHoy, IconoCamino, IconoFormacion } from './Iconos';
+import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado, IconoPerfil } from './Iconos';
 
 const PESTANAS = [
   { ruta: '/app', etiqueta: 'Hoy', Icono: IconoHoy },
-  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCamino },
+  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCamino, bloqueada: true },
   { ruta: '/app/formacion', etiqueta: 'Formación', Icono: IconoFormacion },
+  { ruta: '/app/perfil', etiqueta: 'Perfil', Icono: IconoPerfil },
 ];
 
 function indicePestana(pathname, lp) {
-  return PESTANAS.findIndex(({ ruta }) => pathname === lp(ruta));
+  return PESTANAS.findIndex(({ ruta, bloqueada }) => !bloqueada && pathname === lp(ruta));
 }
 
 export default function AppShell({ user }) {
@@ -152,15 +153,32 @@ function NavBurbuja({ pathname, lp }) {
             pointerEvents: 'none',
           }} />
         )}
-        {PESTANAS.map(({ ruta, etiqueta, Icono }) => {
+        {PESTANAS.map(({ ruta, etiqueta, Icono, bloqueada }) => {
           const activa = pathname === lp(ruta);
+          const estiloBase = {
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
+            padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
+            fontFamily: FONT_BODY, fontSize: 11.5, letterSpacing: '0.02em',
+            position: 'relative', zIndex: 1,
+          };
+          if (bloqueada) {
+            return (
+              <span key={ruta} data-tab style={{ ...estiloBase, color: MUTED, opacity: 0.55, cursor: 'default' }}>
+                <span style={{ position: 'relative', display: 'inline-flex' }}>
+                  <Icono />
+                  <IconoCandado style={{ width: 11, height: 11, position: 'absolute', right: -5, bottom: -2, strokeWidth: 2.2 }} />
+                </span>
+                <span style={{ fontSize: 10 }}>{etiqueta}</span>
+                <span style={{ fontSize: 8.5, fontWeight: 600, letterSpacing: '0.05em', lineHeight: 1, marginTop: -2, color: MUTED }}>Próximamente</span>
+              </span>
+            );
+          }
           return (
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
-              padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
+              ...estiloBase,
               color: activa ? NAVY : MUTED, background: 'transparent',
-              fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: activa ? 700 : 500, letterSpacing: '0.02em',
-              transition: 'color 200ms ease', position: 'relative', zIndex: 1,
+              fontWeight: activa ? 700 : 500,
+              transition: 'color 200ms ease',
             }}>
               <Icono />
               {etiqueta}
