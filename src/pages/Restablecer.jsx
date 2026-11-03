@@ -31,7 +31,7 @@ export default function Restablecer() {
     setError(null);
     const { error: err } = await supabase.auth.updateUser({ password });
     if (err) { setError(t('reset.errors.generic')); setBusy(false); return; }
-    navigate(lp('/mi-panel'));
+    navigate(lp('/app'));
   }
 
   return (
@@ -45,7 +45,7 @@ export default function Restablecer() {
           ) : !session ? (
             <>
               <p style={{ ...styles.para, marginTop: 12 }}>{t('reset.invalid_link')}</p>
-              <Link to="/mi-panel" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('reset.back')} →</Link>
+              <Link to="/login" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('reset.back')} →</Link>
             </>
           ) : (
             <>

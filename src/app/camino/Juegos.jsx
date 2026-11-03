@@ -6,7 +6,7 @@ import { fetchLatestTemperament } from '../../account/account';
 import {
   CIERRE_11, DESLIZA_2, DESLIZA_4, ESCENAS_11, ESCENAS_3, RASGOS_13, TEXTO_13, textoElige3,
 } from '../../lib/camino.js';
-import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
+import { GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
 import { botonSobreClaro, parrafo } from '../estilos';
 import { IconoFlecha } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
@@ -42,7 +42,7 @@ export function useNombres() {
 /** Orden fijo pero distinto en cada escena, para que la reacción no esté siempre en el mismo sitio. */
 const barajar = (lista, semilla) => lista.map((x, i) => [x, (i * 7 + semilla * 5) % 11]).sort((a, b) => a[1] - b[1]).map(([x]) => x);
 
-const titular = { fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' };
+const titular = { fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' };
 
 // ───────────── Desliza ─────────────
 
@@ -67,7 +67,7 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
   if (i >= tarjetas.length) {
     return (
       <Pantalla etiqueta={etiqueta} pie={<Continuar onClick={() => onFin({ respuestas, aciertos })} />}>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 700, color: NAVY, margin: '16px 0 0' }}>Has acertado {aciertos} de {tarjetas.length}.</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: NAVY, margin: '16px 0 0' }}>Has acertado {aciertos} de {tarjetas.length}.</p>
       </Pantalla>
     );
   }
@@ -88,10 +88,10 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
   const boton = (d) => (
     <button key={d.clave} type="button" onClick={() => responder(d.clave)} disabled={respondida}
             style={{
-              fontFamily: FONT_SANS, fontSize: 13.5, fontWeight: 700, color: PAPER, background: d.color,
-              border: 'none', borderRadius: 12, padding: '12px 8px', cursor: respondida ? 'default' : 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 700, color: PAPER, background: d.color,
+              border: 'none', borderRadius: 0, padding: '12px 8px', cursor: respondida ? 'default' : 'pointer',
               opacity: respondida && elegida !== d.clave && correcta !== d.clave ? 0.35 : 1,
-              outline: apuntado === d.clave ? `3px solid ${GOLD}` : 'none', outlineOffset: 2,
+              outline: apuntado === d.clave ? `3px solid ${GOLD_REF}` : 'none', outlineOffset: 2,
               transform: apuntado === d.clave ? 'scale(1.04)' : 'none', transition: 'transform 120ms ease, opacity 200ms ease',
             }}>
       {d.etiqueta}
@@ -118,14 +118,14 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
             onPointerUp={soltar}
             onPointerCancel={() => setArrastre(null)}
             style={{
-              background: PAPER, border: `1px solid ${respondida ? (elegida === correcta ? VERDE : ROJO) : LINE}`, borderRadius: 18,
+              background: PAPER, border: `1px solid ${respondida ? (elegida === correcta ? VERDE : ROJO) : LINE}`, borderRadius: 0,
               padding: '28px 20px', minHeight: 150, display: 'grid', placeItems: 'center', textAlign: 'center',
               boxShadow: '0 10px 28px rgba(27,42,74,0.12)', touchAction: 'none', userSelect: 'none',
               cursor: respondida ? 'default' : 'grab',
               transform: arrastre ? `translate(${arrastre.dx}px, ${arrastre.dy}px) rotate(${arrastre.dx / 18}deg)` : 'none',
               transition: arrastre ? 'none' : 'transform 220ms ease',
             }}>
-            <p style={{ fontFamily: FONT_SERIF, fontSize: 23, lineHeight: 1.3, color: INK, margin: 0 }}>{texto}</p>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 23, lineHeight: 1.3, color: INK, margin: 0 }}>{texto}</p>
           </div>
           {!cuatro && boton(destinos[1])}
         </div>
@@ -133,7 +133,7 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
       </div>
       {respondida && (
         <div className="vl-entra" style={{ marginTop: 18 }}>
-          <p style={{ fontFamily: FONT_SANS, fontSize: 15, fontWeight: 700, color: elegida === correcta ? VERDE : ROJO, margin: '0 0 4px' }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 700, color: elegida === correcta ? VERDE : ROJO, margin: '0 0 4px' }}>
             {elegida === correcta ? '¡Bien!' : `Era: ${destinoDe(correcta).etiqueta.toLowerCase()}.`}
           </p>
           <p style={{ ...parrafo, color: INK }}>{explicacion}.</p>
@@ -193,14 +193,14 @@ export function EligeReaccion({ dia, onFin }) {
         <div key={escena} style={{ display: 'flex', gap: 12, padding: '12px 0', borderTop: `1px solid ${LINE}` }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: TEMP_COLORS[elecciones[k]], flex: '0 0 10px', marginTop: 6 }} />
           <div>
-            <div style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED }}>{escena}</div>
-            <div style={{ fontFamily: FONT_SANS, fontSize: 15, color: INK, margin: '2px 0' }}>{opciones[elecciones[k]]}</div>
-            <div style={{ fontFamily: FONT_SANS, fontSize: 13, fontWeight: 700, color: TEMP_COLORS[elecciones[k]] }}>{nombres[elecciones[k]]}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>{escena}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: INK, margin: '2px 0' }}>{opciones[elecciones[k]]}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: TEMP_COLORS[elecciones[k]] }}>{nombres[elecciones[k]]}</div>
           </div>
         </div>
       ))}
       {primario && (
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 21, lineHeight: 1.35, color: NAVY, margin: '16px 0 0', borderLeft: `3px solid ${GOLD}`, paddingLeft: 14 }}>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 21, lineHeight: 1.35, color: NAVY, margin: '16px 0 0', borderLeft: `3px solid ${GOLD_REF}`, paddingLeft: 14 }}>
           {textoElige3(coincidencias, nombres[primario].toLowerCase())}
         </p>
       )}
@@ -221,7 +221,7 @@ export function EligeVirtud({ dia, momentos, onFin }) {
     const aciertos = virtud.filter(Boolean).length;
     return (
       <Pantalla etiqueta={etiqueta} pie={<Continuar onClick={() => onFin({ sale, aciertos })} />}>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.3, color: NAVY, fontWeight: 600, margin: '14px 0 0' }}>{CIERRE_11}</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.3, color: NAVY, fontWeight: 600, margin: '14px 0 0' }}>{CIERRE_11}</p>
       </Pantalla>
     );
   }
@@ -259,7 +259,7 @@ export function EligeVirtud({ dia, momentos, onFin }) {
       </Opciones>
       {respondida && (
         <div className="vl-entra" style={{ marginTop: 18 }}>
-          <p style={{ fontFamily: FONT_SANS, fontSize: 15, fontWeight: 700, color: elegida ? VERDE : ROJO, margin: '0 0 4px' }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 700, color: elegida ? VERDE : ROJO, margin: '0 0 4px' }}>
             {elegida ? '¡Bien!' : 'La virtud respondería lo que está marcado.'}
           </p>
           <p style={{ ...parrafo, color: INK }}>Virtud: <strong>{e.nombre}</strong>.</p>
@@ -293,9 +293,9 @@ export function Arrastra({ dia, onFin }) {
           {construidos.map(([r]) => {
             const destacado = destacados.includes(r);
             return (
-              <div key={r} style={{ padding: '12px 14px', borderRadius: 12, background: destacado ? 'rgba(197,165,90,0.16)' : 'transparent', border: `1px solid ${destacado ? GOLD : LINE}` }}>
-                <div style={{ fontFamily: FONT_SANS, fontSize: 15, fontWeight: destacado ? 700 : 500, color: INK }}>{r}</div>
-                {destacado && <div style={{ fontFamily: FONT_SERIF, fontSize: 17, fontStyle: 'italic', color: NAVY, marginTop: 4 }}>{TEXTO_13}</div>}
+              <div key={r} style={{ padding: '12px 14px', borderRadius: 0, background: destacado ? 'rgba(197,165,90,0.16)' : 'transparent', border: `1px solid ${destacado ? GOLD_REF : LINE}` }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: destacado ? 700 : 500, color: INK }}>{r}</div>
+                {destacado && <div style={{ fontFamily: FONT_SLAB, fontSize: 17, fontStyle: 'italic', color: NAVY, marginTop: 4 }}>{TEXTO_13}</div>}
               </div>
             );
           })}
@@ -317,12 +317,12 @@ export function Arrastra({ dia, onFin }) {
       <div style={{ display: 'grid', gap: 8 }}>
         {RASGOS_13.map(([r]) => (
           <div key={r} style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 10, alignItems: 'center', padding: '8px 0', borderTop: `1px solid ${LINE}` }}>
-            <span style={{ fontFamily: FONT_SANS, fontSize: 15, color: INK }}>{r}</span>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 15, color: INK }}>{r}</span>
             <div style={{ display: 'flex', gap: 6 }}>
               {[['no_elegi', 'No lo elegí'], ['construido', 'Lo he construido']].map(([v, texto]) => (
                 <button key={v} type="button" aria-pressed={sitio[r] === v} onClick={() => poner(r, v)}
                         style={{
-                          fontFamily: FONT_SANS, fontSize: 12.5, fontWeight: 600, borderRadius: 999, padding: '8px 11px', cursor: 'pointer',
+                          fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 600, borderRadius: 0, padding: '8px 11px', cursor: 'pointer',
                           border: `1px solid ${sitio[r] === v ? NAVY : LINE}`, background: sitio[r] === v ? NAVY : PAPER, color: sitio[r] === v ? PAPER : INK,
                         }}>
                   {texto}

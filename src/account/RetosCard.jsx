@@ -27,7 +27,7 @@ export default function RetosCard() {
       <Card>
         <Title eyebrow={t('retos.eyebrow')}>{t('retos.card_title')}</Title>
         <p style={{ ...styles.para, marginTop: 12, marginBottom: 20 }}>{t('retos.card_intro')}</p>
-        <PrimaryButton onClick={() => navigate(lp('/mi-panel/retos'))}>{t('retos.card_cta')}</PrimaryButton>
+        <PrimaryButton onClick={() => navigate(lp('/app'))}>{t('retos.card_cta')}</PrimaryButton>
       </Card>
     </div>
   );

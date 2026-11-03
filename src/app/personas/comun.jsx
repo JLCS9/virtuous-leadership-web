@@ -2,7 +2,7 @@
 // el temperamento y el mapa de mis personas.
 import { useT } from '../../i18n';
 import { FICHA, TEMPS, TEXTO_CONFIANZA, combinacion } from '../../lib/personas.js';
-import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF } from '../../theme';
 import { eyebrow, parrafo } from '../estilos';
 
 export function useNombresTemp() {
@@ -16,7 +16,7 @@ export function Avatar({ persona, tam = 44 }) {
   return (
     <span aria-hidden style={{
       width: tam, height: tam, flex: `0 0 ${tam}px`, borderRadius: '50%', display: 'grid', placeItems: 'center',
-      background: PAPER, border: `3px solid ${color}`, fontFamily: FONT_SANS, fontWeight: 700, color: NAVY,
+      background: PAPER, border: `3px solid ${color}`, fontFamily: FONT_BODY, fontWeight: 700, color: NAVY,
       fontSize: persona.avatar ? tam * 0.5 : tam * 0.4,
     }}>{contenido}</span>
   );
@@ -24,9 +24,9 @@ export function Avatar({ persona, tam = 44 }) {
 
 export function EtiquetaEstado({ persona }) {
   const nombres = useNombresTemp();
-  if (!persona.primario) return <span style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED }}>Sin estimar</span>;
+  if (!persona.primario) return <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>Sin estimar</span>;
   return (
-    <span style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED }}>
+    <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>
       <strong style={{ color: TEMP_COLORS[persona.primario] }}>{nombres[persona.primario]}</strong>
       {' · '}{persona.estado === 'confirmado' ? 'Confirmado' : `Estimado${persona.confianza ? ` (${TEXTO_CONFIANZA[persona.confianza].toLowerCase()})` : ''}`}
     </span>
@@ -48,17 +48,17 @@ export function FichaContenido({ persona, miPrimario }) {
   const combo = combinacion(miPrimario, persona.primario);
   return (
     <div>
-      {fila('Lema', <p style={{ fontFamily: FONT_SERIF, fontSize: 22, color: NAVY, margin: 0 }}>{f.lema.charAt(0).toUpperCase() + f.lema.slice(1)}</p>)}
+      {fila('Lema', <p style={{ fontFamily: FONT_SLAB, fontSize: 22, color: NAVY, margin: 0 }}>{f.lema.charAt(0).toUpperCase() + f.lema.slice(1)}</p>)}
       {fila('Le sale fácil', <p style={{ ...parrafo, color: INK }}>{f.facil}</p>)}
       {fila('Le cuesta', <p style={{ ...parrafo, color: INK }}>{f.cuesta}</p>)}
       {fila('Cómo tratarle', <ul style={{ ...parrafo, color: INK, paddingLeft: 18, margin: 0 }}>{f.tratar.map((t) => <li key={t}>{t}</li>)}</ul>)}
-      {fila('Su virtud-desafío', <p style={{ fontFamily: FONT_SERIF, fontSize: 20, fontWeight: 700, color: NAVY, margin: 0 }}>{f.virtud}</p>)}
+      {fila('Su virtud-desafío', <p style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, margin: 0 }}>{f.virtud}</p>)}
       {combo && fila(`Tú y ${persona.nombre}`, (
         <>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED, marginBottom: 4 }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED, marginBottom: 4 }}>
             {nombres[miPrimario]} y {nombres[persona.primario].toLowerCase()}
           </div>
-          <p style={{ ...parrafo, color: INK, borderLeft: `3px solid ${GOLD}`, paddingLeft: 12 }}>{combo}</p>
+          <p style={{ ...parrafo, color: INK, borderLeft: `3px solid ${GOLD_REF}`, paddingLeft: 12 }}>{combo}</p>
         </>
       ))}
     </div>
@@ -101,16 +101,16 @@ export function MapaPersonas({ personas, nombreTu = 'Tú' }) {
       })}
       {puntos.map(({ p, x, y }) => <line key={`l${p.id}`} x1={C} y1={C} x2={x} y2={y} stroke="rgba(27,42,74,0.12)" />)}
       <circle cx={C} cy={C} r="26" fill={NAVY} />
-      <text x={C} y={C} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SANS} fontSize="11" fontWeight="700" fill={PAPER}>{nombreTu}</text>
+      <text x={C} y={C} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_BODY} fontSize="11" fontWeight="700" fill={PAPER}>{nombreTu}</text>
       {puntos.map(({ p, x, y }) => (
         <g key={p.id}>
           <circle cx={x} cy={y} r="17" fill={TEMP_COLORS[p.primario] ?? '#B9B3A5'} stroke={PAPER} strokeWidth="2" strokeDasharray={p.estado === 'confirmado' ? undefined : '0'} />
-          <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SANS} fontSize="12" fontWeight="700" fill={PAPER}>{p.nombre.trim().charAt(0).toUpperCase()}</text>
-          <text x={x} y={y + 27} textAnchor="middle" fontFamily={FONT_SANS} fontSize="10.5" fill={INK}>{p.nombre.length > 12 ? `${p.nombre.slice(0, 11)}…` : p.nombre}</text>
+          <text x={x} y={y} textAnchor="middle" dominantBaseline="central" fontFamily={FONT_BODY} fontSize="12" fontWeight="700" fill={PAPER}>{p.nombre.trim().charAt(0).toUpperCase()}</text>
+          <text x={x} y={y + 27} textAnchor="middle" fontFamily={FONT_BODY} fontSize="10.5" fill={INK}>{p.nombre.length > 12 ? `${p.nombre.slice(0, 11)}…` : p.nombre}</text>
         </g>
       ))}
       {etiquetas.map(({ g, x, y, ancla }) => (
-        <text key={g} x={x} y={y} textAnchor={ancla} dominantBaseline="central" fontFamily={FONT_SANS} fontSize="10" fontWeight="700" letterSpacing="0.08em" fill={MUTED}>
+        <text key={g} x={x} y={y} textAnchor={ancla} dominantBaseline="central" fontFamily={FONT_BODY} fontSize="10" fontWeight="700" letterSpacing="0.08em" fill={MUTED}>
           {ETIQUETA_MAPA[g] ?? g.toUpperCase()}
         </text>
       ))}

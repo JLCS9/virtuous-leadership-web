@@ -2,11 +2,11 @@
 // sesión de hoy, el examen de la noche y la siguiente lección. Sin perfil, «Personaliza tu camino».
 // Las pantallas se abren con ?paso=onboarding · ?dia=N (sesión) · ?examen=N, y las fichas de personas
 // con ?personas · ?persona=id · ?nueva · ?observar=id · ?rehacer=id.
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useOutletContext } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { continuar, formatoDuracion } from '../formacion/cursos.js';
 import { DIAS, TOTAL_DIAS, conPunto, fechaCorta, fechaLocal, infoDia, semanaDe, siguientePaso, tieneExamen } from '../lib/camino.js';
-import { GOLD, GOLD_SOFT, INK, LINE, MUTED, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../theme';
+import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_LT } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha, IconoPlay } from './Iconos';
 import { useCatalogo, useProgreso } from '../formacion/useFormacion';
@@ -27,10 +27,10 @@ function Progreso({ camino }) {
     <section style={tarjeta} aria-label="Tu progreso">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
         <div style={eyebrow}>Semana {semana.numero} · {semana.titulo}</div>
-        {racha > 0 && <div style={{ fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: INK }}>🔥 {racha} {racha === 1 ? 'día seguido' : 'días seguidos'}</div>}
+        {racha > 0 && <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK }}>🔥 {racha} {racha === 1 ? 'día seguido' : 'días seguidos'}</div>}
       </div>
       <h2 style={{ ...titulo(30), margin: '10px 0 12px' }}>Día {Math.min(diaHoy, TOTAL_DIAS)} de {TOTAL_DIAS}</h2>
-      <div style={barraFondo}><div style={{ width: `${(hechas / TOTAL_DIAS) * 100}%`, height: '100%', background: GOLD, transition: 'width 500ms ease' }} /></div>
+      <div style={barraFondo}><div style={{ width: `${(hechas / TOTAL_DIAS) * 100}%`, height: '100%', background: GOLD_REF, transition: 'width 500ms ease' }} /></div>
       <p style={{ ...parrafo, fontSize: 13.5, marginTop: 8 }}>{hechas} de {TOTAL_DIAS} sesiones hechas</p>
       <Tira camino={camino} />
     </section>
@@ -44,7 +44,7 @@ function Tira({ camino }) {
     <div style={{ marginTop: 18 }}>
       {[0, 1].map((s) => (
         <div key={s} style={{ marginTop: s ? 14 : 0 }}>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 11.5, fontWeight: 600, color: MUTED, marginBottom: 8 }}>Semana {s}</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, color: MUTED, marginBottom: 8 }}>Semana {s}</div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, minmax(0, 1fr))', gap: 6 }}>
             {DIAS.slice(s * 7, s * 7 + 7).map((d) => {
               const hecho = Boolean(porDia[d.dia]?.sesion_en);
@@ -54,11 +54,11 @@ function Tira({ camino }) {
                 <button key={d.dia} type="button" disabled={!abierto} onClick={() => setParams({ dia: String(d.dia) })}
                         title={`Día ${d.dia} · ${d.titulo}`} aria-label={`Día ${d.dia}: ${d.titulo}${hecho ? ' (hecho)' : ''}`}
                         style={{
-                          aspectRatio: '1', borderRadius: 12, cursor: abierto ? 'pointer' : 'default', padding: 0,
-                          display: 'grid', placeItems: 'center', fontFamily: FONT_SANS, fontSize: 14, fontWeight: 700,
+                          aspectRatio: '1', borderRadius: 0, cursor: abierto ? 'pointer' : 'default', padding: 0,
+                          display: 'grid', placeItems: 'center', fontFamily: FONT_BODY, fontSize: 14, fontWeight: 700,
                           background: hecho ? NAVY : esHoy ? 'rgba(197,165,90,0.16)' : 'transparent',
                           color: hecho ? PAPER : abierto ? NAVY : 'rgba(27,42,74,0.35)',
-                          border: esHoy ? `2px solid ${GOLD}` : `1px solid ${hecho ? NAVY : LINE}`,
+                          border: esHoy ? `2px solid ${GOLD_REF}` : `1px solid ${hecho ? NAVY : LINE}`,
                         }}>
                   {hecho ? <IconoCheck width={18} height={18} /> : d.tipo === 'video' ? <IconoPlay width={15} height={15} /> : d.cierre ? '★' : d.dia}
                 </button>
@@ -74,8 +74,8 @@ function Tira({ camino }) {
 function SiguientePaso({ camino }) {
   const [, setParams] = useSearchParams();
   const paso = siguientePaso(camino);
-  const etiqueta = { ...eyebrow, color: GOLD_SOFT };
-  const hero = { background: heroFondo, color: PAPER, borderRadius: 22, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' };
+  const etiqueta = { ...eyebrow, color: GOLD_REF_LT };
+  const hero = { background: heroFondo, color: PAPER, borderRadius: 0, padding: '26px 22px 24px', boxShadow: '0 8px 24px rgba(15,29,56,0.22)' };
   if (!paso) return null;
 
   if (paso.tipo === 'hecho') {
@@ -83,8 +83,8 @@ function SiguientePaso({ camino }) {
     return (
       <section style={hero}>
         <div style={etiqueta}>Tu siguiente paso</div>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '14px 0 8px' }}>Hoy está hecho.</p>
-        <p style={{ fontFamily: FONT_SANS, fontSize: 15, opacity: 0.82, margin: 0 }}>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '14px 0 8px' }}>Hoy está hecho.</p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 15, opacity: 0.82, margin: 0 }}>
           {manana ? `Mañana, día ${manana.dia}: ${conPunto(manana.titulo)}` : 'Has llegado al final de tus dos primeras semanas.'}
         </p>
       </section>
@@ -96,8 +96,8 @@ function SiguientePaso({ camino }) {
   return (
     <section style={hero}>
       <div style={etiqueta}>{paso.atrasada ? 'Te quedó pendiente' : examen ? 'Esta noche' : 'Tu siguiente paso'}</div>
-      <p style={{ fontFamily: FONT_SANS, fontSize: 13, opacity: 0.72, margin: '14px 0 4px' }}>Día {paso.dia}{examen ? '' : ` · ${info.tiempo}`}</p>
-      <p style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '0 0 20px' }}>{examen ? 'Examen de la noche' : info.titulo}</p>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 13, opacity: 0.72, margin: '14px 0 4px' }}>Día {paso.dia}{examen ? '' : ` · ${info.tiempo}`}</p>
+      <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 600, lineHeight: 1.2, margin: '0 0 20px' }}>{examen ? 'Examen de la noche' : info.titulo}</p>
       <button type="button" style={botonPrimario} onClick={() => setParams(examen ? { examen: String(paso.dia) } : { dia: String(paso.dia) })}>
         {examen ? 'Mirar mi día · 45 s' : paso.atrasada ? 'Hacerla ahora' : 'Empezar'} <IconoFlecha width={18} height={18} />
       </button>
@@ -131,10 +131,10 @@ function Terminado() {
 function SiguienteLeccion({ user }) {
   const cat = useCatalogo();
   const progreso = useProgreso(user.id);
-  const eyebrowClaro = { ...eyebrow, color: GOLD_SOFT };
+  const eyebrowClaro = { ...eyebrow, color: GOLD_REF_LT };
 
   if (cat.cargando) {
-    return <section style={{ ...tarjeta, background: heroFondo, color: PAPER, border: 'none' }}><div style={eyebrowClaro}>Siguiente lección</div><p style={{ margin: '12px 0 0', opacity: 0.75, fontFamily: FONT_SERIF, fontSize: 20 }}>Cargando tu formación…</p></section>;
+    return <section style={{ ...tarjeta, background: heroFondo, color: PAPER, border: 'none' }}><div style={eyebrowClaro}>Siguiente lección</div><p style={{ margin: '12px 0 0', opacity: 0.75, fontFamily: FONT_SLAB, fontSize: 20 }}>Cargando tu formación…</p></section>;
   }
   if (cat.error) {
     return (
@@ -152,33 +152,34 @@ function SiguienteLeccion({ user }) {
         <div style={eyebrow}>Formación</div>
         <h2 style={{ ...titulo(24), margin: '10px 0 6px' }}>Has completado toda la formación</h2>
         <p style={parrafo}>Puedes repasar cualquier lección cuando quieras.</p>
-        <div style={{ marginTop: 14 }}><Link to="/mi-panel/formacion" style={botonContorno}>Ver la formación</Link></div>
+        <div style={{ marginTop: 14 }}><Link to="/app/formacion" style={botonContorno}>Ver la formación</Link></div>
       </section>
     );
   }
   const { curso, leccion, retomada } = siguiente;
   return (
-    <section style={{ background: heroFondo, color: PAPER, borderRadius: 22, padding: 18, boxShadow: '0 18px 40px rgba(15,29,56,0.26)' }}>
+    <section style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: 18, boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
       <div style={{ ...eyebrowClaro, padding: '4px 6px 12px' }}>{retomada ? 'Continúa donde lo dejaste' : 'Siguiente lección'}</div>
-      <Link to={`/mi-panel/formacion?leccion=${leccion.id}`} style={{ display: 'flex', gap: 14, alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ position: 'relative', flex: '0 0 132px', aspectRatio: '16 / 9', borderRadius: 12, overflow: 'hidden', background: 'rgba(255,255,255,0.08)' }}>
+      <Link to={`/app/formacion?leccion=${leccion.id}`} style={{ display: 'flex', gap: 14, alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
+        <div style={{ position: 'relative', flex: '0 0 132px', aspectRatio: '16 / 9', borderRadius: 0, overflow: 'hidden', background: 'rgba(255,255,255,0.08)' }}>
           {leccion.miniatura && <img src={leccion.miniatura} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
           <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: PAPER, background: 'rgba(15,29,56,0.30)' }}><IconoPlay width={30} height={30} /></span>
         </div>
         <div style={{ minWidth: 0 }}>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 12, opacity: 0.72, marginBottom: 3 }}>Curso {curso.numero} · {curso.titulo}</div>
-          <div style={{ fontFamily: FONT_SERIF, fontSize: 21, fontWeight: 600, lineHeight: 1.2 }}>{leccion.titulo}</div>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 12.5, opacity: 0.72, marginTop: 6 }}>{formatoDuracion(leccion.duracion)}</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12, opacity: 0.72, marginBottom: 3 }}>Curso {curso.numero} · {curso.titulo}</div>
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 21, fontWeight: 600, lineHeight: 1.2 }}>{leccion.titulo}</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, opacity: 0.72, marginTop: 6 }}>{formatoDuracion(leccion.duracion)}</div>
         </div>
       </Link>
       <div style={{ padding: '14px 4px 2px' }}>
-        <Link to={`/mi-panel/formacion?leccion=${leccion.id}`} style={botonPrimario}>Ver lección <IconoFlecha width={18} height={18} /></Link>
+        <Link to={`/app/formacion?leccion=${leccion.id}`} style={botonPrimario}>Ver lección <IconoFlecha width={18} height={18} /></Link>
       </div>
     </section>
   );
 }
 
-export default function Camino({ user }) {
+export default function Camino() {
+  const { user } = useOutletContext();
   const [params, setParams] = useSearchParams();
   const camino = useCamino();
   const personas = usePersonas();

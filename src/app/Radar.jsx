@@ -1,5 +1,5 @@
 // Gráfica de las seis virtudes a partir del test de carácter: radar + barras. SVG, sin librerías.
-import { GOLD_DEEP, INK, LINE, MUTED, FONT_SANS } from '../theme';
+import { GOLD_DEEP, INK, LINE, MUTED, FONT_BODY } from '../theme';
 import { VIRTUDES, etapa, geometriaRadar } from '../lib/virtudes.js';
 
 const TAMANO = 400;
@@ -22,7 +22,7 @@ export function VirtudesRadar({ valores }) {
         const ancla = x < g.centro - 8 ? 'end' : x > g.centro + 8 ? 'start' : 'middle';
         const v = VIRTUDES[i];
         return (
-          <text key={e.clave} x={x} y={y} textAnchor={ancla} fontFamily={FONT_SANS} fill={INK}>
+          <text key={e.clave} x={x} y={y} textAnchor={ancla} fontFamily={FONT_BODY} fill={INK}>
             <tspan x={x} dy="-0.2em" fontSize="13" fontWeight="600">{v.corta}</tspan>
             <tspan x={x} dy="1.35em" fontSize="12" fill={MUTED}>{Math.round(valores[v.clave])} %</tspan>
           </text>
@@ -40,12 +40,12 @@ export function VirtudesBarras({ valores }) {
         const e = etapa(valor);
         return (
           <div key={v.clave}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontFamily: FONT_SANS, fontSize: 14, color: INK, marginBottom: 6 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontFamily: FONT_BODY, fontSize: 14, color: INK, marginBottom: 6 }}>
               <span style={{ fontWeight: 600 }}>{v.nombre}</span>
               <span style={{ color: MUTED, fontSize: 13 }}>{e.texto} · {valor} %</span>
             </div>
-            <div style={{ height: 8, borderRadius: 999, background: 'rgba(27,42,74,0.09)', overflow: 'hidden' }} role="presentation">
-              <div style={{ width: `${valor}%`, height: '100%', borderRadius: 999, background: v.color, transition: 'width 600ms ease' }} />
+            <div style={{ height: 8, borderRadius: 0, background: 'rgba(27,42,74,0.09)', overflow: 'hidden' }} role="presentation">
+              <div style={{ width: `${valor}%`, height: '100%', borderRadius: 0, background: v.color, transition: 'width 600ms ease' }} />
             </div>
           </div>
         );

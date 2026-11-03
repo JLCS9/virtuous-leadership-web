@@ -6,21 +6,21 @@ import {
   AVATARES, DESEMPATE, FICHA, INTRO, NO_SE, PREGUNTAS, RELACIONES, TEXTO_CONFIANZA, gruposPara, necesitaDesempate,
   ordenAleatorio, puntuar, textoResultado, textoSinResultado,
 } from '../../lib/personas.js';
-import { INK, LINE, MUTED, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, MUTED, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
 import { parrafo } from '../estilos';
 import { Continuar, useTemperamento } from '../camino/Juegos';
 import { Opcion, Opciones, Pantalla, Puntos } from '../camino/ui';
 import { FichaContenido, useNombresTemp } from './comun';
 
-const titular = { fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' };
-const etiquetaCampo = { display: 'block', fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: INK, margin: '18px 0 8px' };
+const titular = { fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' };
+const etiquetaCampo = { display: 'block', fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, margin: '18px 0 8px' };
 const ROJO = '#9C3A3A';
 
 function Datos({ estadoVida, menor, inicial, onListo, onSalir }) {
   const [d, setD] = useState(inicial ?? { nombre: '', grupo: null, relacion: null, avatar: null, estrella: false, me_cuesta: false });
   const valido = d.nombre.trim().length > 0 && d.grupo;
   const chipActivo = (activo) => ({
-    fontFamily: FONT_SANS, fontSize: 14, borderRadius: 999, padding: '8px 13px', cursor: 'pointer',
+    fontFamily: FONT_BODY, fontSize: 14, borderRadius: 0, padding: '8px 13px', cursor: 'pointer',
     border: `1px solid ${activo ? '#1B2A4A' : LINE}`, background: activo ? '#1B2A4A' : '#FBF8F1', color: activo ? '#FBF8F1' : INK,
   });
   return (
@@ -28,7 +28,7 @@ function Datos({ estadoVida, menor, inicial, onListo, onSalir }) {
       <h2 style={titular}>¿De quién quieres descubrir el temperamento?</h2>
       <label htmlFor="ficha-nombre" style={{ ...etiquetaCampo, marginTop: 0 }}>Nombre o apodo</label>
       <input id="ficha-nombre" value={d.nombre} maxLength={40} autoComplete="off" onChange={(e) => setD({ ...d, nombre: e.target.value })}
-             style={{ width: '100%', fontFamily: FONT_SANS, fontSize: 17, padding: '12px 14px', borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
+             style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 17, padding: '12px 14px', borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
       <p style={{ ...parrafo, fontSize: 12.5, marginTop: 6 }}>Sin apellidos. Solo tú verás esta ficha.</p>
 
       <span style={etiquetaCampo}>Grupo</span>
@@ -77,7 +77,7 @@ export default function CrearFicha({ user, estadoVida, menor, persona = null, on
   if (paso === 'intro') {
     return (
       <Pantalla etiqueta={etiqueta} onVolver={onSalir} pie={<Continuar onClick={() => setPaso(0)}>Empezar · 8 preguntas</Continuar>}>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 0' }}>{INTRO(nombre)}</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 0' }}>{INTRO(nombre)}</p>
       </Pantalla>
     );
   }
@@ -92,7 +92,7 @@ export default function CrearFicha({ user, estadoVida, menor, persona = null, on
         else setPaso(necesitaDesempate(nuevas) ? 'rapidez' : 'resultado');
       }, 160);
     };
-    const atras = paso > 0 ? <button type="button" onClick={() => setPaso(paso - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
+    const atras = paso > 0 ? <button type="button" onClick={() => setPaso(paso - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
     return (
       <Pantalla etiqueta={etiqueta} onVolver={onSalir} pie={atras}>
         <Puntos total={PREGUNTAS.length} actual={paso} />
@@ -150,7 +150,7 @@ export default function CrearFicha({ user, estadoVida, menor, persona = null, on
   if (!r.primario) {
     return (
       <Pantalla etiqueta={etiqueta} pie={pie}>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 10px' }}>{textoSinResultado(nombre)}</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 10px' }}>{textoSinResultado(nombre)}</p>
         <p style={parrafo}>Guardamos la ficha sin temperamento. Cuando le observes, podrás anotar sus reacciones o volver a hacer el test.</p>
       </Pantalla>
     );
@@ -160,10 +160,10 @@ export default function CrearFicha({ user, estadoVida, menor, persona = null, on
     <Pantalla etiqueta={etiqueta} pie={pie}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px 0 4px' }}>
         <span style={{ width: 14, height: 14, borderRadius: '50%', background: TEMP_COLORS[r.primario] }} />
-        <span style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 700, color: TEMP_COLORS[r.primario] }}>{nombres[r.primario]}</span>
-        {r.secundario && <span style={{ fontFamily: FONT_SANS, fontSize: 14, color: MUTED }}>· secundario {nombres[r.secundario].toLowerCase()}</span>}
+        <span style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: TEMP_COLORS[r.primario] }}>{nombres[r.primario]}</span>
+        {r.secundario && <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>· secundario {nombres[r.secundario].toLowerCase()}</span>}
       </div>
-      <div style={{ fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 12 }}>{TEXTO_CONFIANZA[r.confianza]}</div>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 12 }}>{TEXTO_CONFIANZA[r.confianza]}</div>
       <p style={{ ...parrafo, color: INK, fontSize: 16, marginBottom: 14 }}>{textoResultado(nombre, nombres[r.primario].toLowerCase(), f.lema)}</p>
       <FichaContenido persona={{ nombre, primario: r.primario }} miPrimario={temp?.primario} />
       <p style={{ ...parrafo, fontSize: 13.5, marginTop: 12 }}>Solo {nombre} puede confirmarlo. Pronto podrás invitarle a hacer el test.</p>

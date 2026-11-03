@@ -43,7 +43,7 @@ export default function Header() {
     { to: '/empresas',              label: t('nav.businesses') },
     { to: '/acreditacion/colegios', label: t('nav.accreditation') },
     { to: '/tests',                  label: t('nav.tests') },
-    ...(accountsEnabled ? [{ to: '/mi-panel', label: session ? t('nav.my_panel') : t('nav.login') }] : []),
+    ...(accountsEnabled ? [{ to: session ? '/app' : '/login', label: session ? t('nav.my_panel') : t('nav.login') }] : []),
   ];
 
   return (

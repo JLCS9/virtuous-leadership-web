@@ -39,15 +39,12 @@ export const ROUTES = {
   politica_privacidad:   { es: 'politica-de-privacidad',  en: 'privacy-policy',         fr: 'politique-de-confidentialite', ru: 'politika-konfidentsialnosti' },
   cookies:               { es: 'cookies',                  en: 'cookies',                fr: 'cookies',                       ru: 'cookies' },
   contacto:              { es: 'contacto',               en: 'contact',                 fr: 'contact',                  ru: 'kontakty' },
-  // Panel privado del usuario (cuenta creada al terminar el test de
-  // temperamento) y destino del email de recuperación de contraseña.
-  // noindex; no van al sitemap.
+  // Portal privado — noindex, fuera del sitemap. /app es la ruta padre
+  // (las pestañas Camino y Formación se montan como rutas hijas en App.jsx).
+  app:                   { es: 'app' },
+  login:                 { es: 'login',                  en: 'login',                   fr: 'connexion',                ru: 'vkhod' },
+  // Redirects legacy: las URLs antiguas /mi-panel/* redirigen a /app/*.
   mi_panel:              { es: 'mi-panel',               en: 'my-dashboard',            fr: 'mon-espace',               ru: 'kabinet' },
-  // Retos diarios (beta privada): solo ES por ahora; noindex, fuera del sitemap.
-  mis_retos:             { es: 'mi-panel/retos' },
-  // Panel con pestañas para cuentas con suscripción (solo ES; noindex, fuera del sitemap).
-  mi_panel_camino:       { es: 'mi-panel/camino' },
-  mi_panel_formacion:    { es: 'mi-panel/formacion' },
   restablecer:           { es: 'restablecer',            en: 'reset-password',          fr: 'reinitialiser',            ru: 'vosstanovlenie' },
   // Autorización del padre, madre o tutor de un menor de 14 (enlace del email). noindex.
   consentimiento_tutor:  { es: 'consentimiento-tutor',   en: 'guardian-consent',        fr: 'consentement-parental',    ru: 'soglasie-roditelya' },
@@ -64,10 +61,9 @@ export const NO_LAYOUT_PAGES = new Set([
   'test_corazon',
   'politica_privacidad',
   'cookies',
+  'app',
+  'login',
   'mi_panel',
-  'mis_retos',
-  'mi_panel_camino',
-  'mi_panel_formacion',
   'restablecer',
   'consentimiento_tutor',
 ]);

@@ -8,7 +8,7 @@ import { buscarLeccion } from '../../formacion/cursos.js';
 import {
   EJEMPLO_CUATRO, conPunto, LEMA, PUNTO_PARTIDA, RETO_PRESENTACION, VERDAD_MITO, infoDia, semanaDe, tieneExamen,
 } from '../../lib/camino.js';
-import { GOLD, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB, GOLD_REF } from '../../theme';
 import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo } from '../estilos';
 import { IconoCheck, IconoFlecha } from '../Iconos';
 import { Reproductor } from '../../formacion/Formacion';
@@ -21,7 +21,7 @@ import { Dia12, DiaFicha } from '../personas/DiasPersonas';
 import EligeQuien from '../personas/EligeQuien';
 import { sugerenciaDelDia } from '../../lib/personas.js';
 
-const fraseGrande = { fontFamily: FONT_SERIF, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
+const fraseGrande = { fontFamily: FONT_SLAB, fontSize: 25, lineHeight: 1.3, color: INK, margin: '12px 0 16px' };
 const Continuar = ({ onClick, children = 'Continuar', disabled }) => (
   <button type="button" style={{ ...botonSobreClaro, opacity: disabled ? 0.45 : 1 }} disabled={disabled} onClick={onClick}>
     {children} <IconoFlecha width={18} height={18} />
@@ -66,14 +66,14 @@ function DiaVideo({ dia, user, onFin }) {
         {encontrada && (
           <>
             <Reproductor leccion={encontrada.leccion} onProgreso={(f) => { if (f >= 0.9) progreso.marcarVista(info.leccion); }} />
-            <p style={{ fontFamily: FONT_SANS, fontSize: 13.5, color: MUTED, margin: '10px 0 0' }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '10px 0 0' }}>
               Vídeo {encontrada.leccion.id} · {encontrada.leccion.titulo}
             </p>
           </>
         )}
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginTop: 20 }}>
           <Continuar onClick={() => { progreso.marcarVista(info.leccion); avanzar(); }}>{visto ? 'Continuar' : 'Ya lo he visto'}</Continuar>
-          {!visto && <button type="button" onClick={avanzar} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: MUTED }}>Lo veré después</button>}
+          {!visto && <button type="button" onClick={avanzar} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>Lo veré después</button>}
         </div>
       </Pantalla>
     );
@@ -96,14 +96,14 @@ function DiaVideo({ dia, user, onFin }) {
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, padding: '10px 0', borderTop: `1px solid ${LINE}` }}>
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: TEMP_COLORS[k], flex: '0 0 10px', transform: 'translateY(-1px)' }} />
         <div>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 12.5, color: MUTED }}>Tu temperamento {cual}</div>
-          <div style={{ fontFamily: FONT_SERIF, fontSize: 22, fontWeight: 700, color: NAVY }}>{nombres[k]} <span style={{ fontWeight: 500, fontStyle: 'italic', fontSize: 18, color: MUTED }}>· {LEMA[k]}</span></div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>Tu temperamento {cual}</div>
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY }}>{nombres[k]} <span style={{ fontWeight: 500, fontStyle: 'italic', fontSize: 18, color: MUTED }}>· {LEMA[k]}</span></div>
         </div>
       </div>
     );
     return (
       <Pantalla etiqueta={etiqueta} pie={<Continuar onClick={avanzar} />}>
-        <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '12px 0 16px' }}>Tu punto de partida</h2>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '12px 0 16px' }}>Tu punto de partida</h2>
         <Rueda primario={primario} secundario={secundario} nombres={nombres} />
         <div style={{ marginTop: 18 }}>
           {fila(primario, 'primario')}
@@ -119,7 +119,7 @@ function DiaVideo({ dia, user, onFin }) {
       <Pantalla etiqueta={etiqueta} pie={<Continuar onClick={avanzar} />}>
         <p style={fraseGrande}>¿Te parece que tienes los cuatro? Es un error con una vertiente positiva: significa que has estado desarrollando tu carácter.</p>
         {EJEMPLO_CUATRO[primario] && (
-          <p style={{ ...parrafo, borderLeft: `3px solid ${GOLD}`, paddingLeft: 14, color: INK, fontStyle: 'italic' }}>{EJEMPLO_CUATRO[primario]}</p>
+          <p style={{ ...parrafo, borderLeft: `3px solid ${GOLD_REF}`, paddingLeft: 14, color: INK, fontStyle: 'italic' }}>{EJEMPLO_CUATRO[primario]}</p>
         )}
       </Pantalla>
     );
@@ -127,7 +127,7 @@ function DiaVideo({ dia, user, onFin }) {
 
   return (
     <Pantalla etiqueta={`Reto de la semana ${semanaDe(dia).numero}`} pie={<Continuar onClick={avanzar} />}>
-      <h2 style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 12px' }}>{semanaDe(dia).reto}</h2>
+      <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 12px' }}>{semanaDe(dia).reto}</h2>
       <p style={{ ...parrafo, color: INK, fontSize: 16.5 }}>{RETO_PRESENTACION[dia]}</p>
     </Pantalla>
   );
@@ -164,7 +164,7 @@ function VerdadMito({ dia, onFin }) {
       </Opciones>
       {respondida && (
         <div className="vl-entra" style={{ marginTop: 18 }}>
-          <p style={{ fontFamily: FONT_SANS, fontSize: 15, fontWeight: 700, color: acierto ? '#3F7A56' : '#9C3A3A', margin: '0 0 4px' }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 700, color: acierto ? '#3F7A56' : '#9C3A3A', margin: '0 0 4px' }}>
             {acierto ? '¡Bien!' : 'No exactamente.'} Es {verdad ? 'verdad' : 'un mito'}.
           </p>
           <p style={{ ...parrafo, color: INK }}>{explicacion}.</p>
@@ -201,7 +201,7 @@ function PuntoPartida({ dia, user, lineaBase, onFin }) {
     return (
       <Pantalla etiqueta={etiqueta}>
         <Puntos total={4} actual={0} />
-        <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' }}>{q.pregunta}</h2>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' }}>{q.pregunta}</h2>
         <Opciones>{q.opciones.map(([v, texto]) => <Opcion key={v} activa={r.fallo === v} onClick={() => { setR((x) => ({ ...x, fallo: v })); setTimeout(() => setPaso(1), 180); }}>{texto}</Opcion>)}</Opciones>
       </Pantalla>
     );
@@ -218,7 +218,7 @@ function PuntoPartida({ dia, user, lineaBase, onFin }) {
     return (
       <Pantalla etiqueta={etiqueta} pie={<Continuar disabled={!elegidos.length} onClick={() => setPaso(paso + 1)} />}>
         <Puntos total={4} actual={paso} />
-        <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 4px' }}>{q.pregunta}</h2>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 4px' }}>{q.pregunta}</h2>
         <p style={{ ...parrafo, fontSize: 14, marginBottom: 16 }}>Elige hasta 3.</p>
         <Opciones columnas={3}>{q.opciones.map((v) => <Opcion key={v} compacta activa={elegidos.includes(v)} onClick={() => cambiar(v)}>{v}</Opcion>)}</Opciones>
       </Pantalla>
@@ -233,10 +233,10 @@ function PuntoPartida({ dia, user, lineaBase, onFin }) {
       </>
     )}>
       <Puntos total={4} actual={3} />
-      <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 6px' }}>{PUNTO_PARTIDA.linea}</h2>
+      <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 6px' }}>{PUNTO_PARTIDA.linea}</h2>
       <p style={{ ...parrafo, fontSize: 14, marginBottom: 14 }}>Es opcional. Solo lo ves tú; lo releerás al final de la semana 1.</p>
       <textarea value={r.linea} maxLength={280} rows={3} onChange={(e) => setR((x) => ({ ...x, linea: e.target.value }))}
-                style={{ width: '100%', fontFamily: FONT_SANS, fontSize: 16, padding: 12, borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
+                style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
     </Pantalla>
   );
 }
@@ -269,7 +269,7 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
     setOcupado(true);
     setError(null);
     try {
-      await guardarSesion(user.id, dia, { juego: j, conQuien: quien });
+      await guardarSesion(user.id, dia, { juego: j, conQuien: quien }, camino.perfil.inicio);
       camino.recargar();
       setPaso('fin');
     } catch {
@@ -287,22 +287,22 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
 
   if (paso === 'recuerda') {
     return (
-      <section className="vl-entra" style={{ background: heroFondo, color: PAPER, borderRadius: 22, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' }}>
+      <section className="vl-entra" style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ ...eyebrow, color: GOLD }}>Día {dia} · Semana {semana.numero}</div>
-          <button type="button" onClick={onCerrar} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 13.5, color: PAPER, opacity: 0.7 }}>Salir</button>
+          <div style={{ ...eyebrow, color: GOLD_REF }}>Día {dia} · Semana {semana.numero}</div>
+          <button type="button" onClick={onCerrar} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: PAPER, opacity: 0.7 }}>Salir</button>
         </div>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 27, lineHeight: 1.28, fontStyle: 'italic', margin: '18px 0 18px' }}>«{semana.frase}»</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.28, fontStyle: 'italic', margin: '18px 0 18px' }}>«{semana.frase}»</p>
         <div style={{ borderTop: '1px solid rgba(255,255,255,0.18)', paddingTop: 14, marginBottom: 22 }}>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 12, opacity: 0.7, marginBottom: 4 }}>Tu reto de la semana</div>
-          <div style={{ fontFamily: FONT_SANS, fontSize: 16, fontWeight: 600 }}>{semana.reto}</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12, opacity: 0.7, marginBottom: 4 }}>Tu reto de la semana</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600 }}>{semana.reto}</div>
           {sugerencia && (
-            <div style={{ fontFamily: FONT_SANS, fontSize: 14, marginTop: 10, opacity: 0.9 }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 14, marginTop: 10, opacity: 0.9 }}>
               Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
             </div>
           )}
         </div>
-        {hecha && <p style={{ fontFamily: FONT_SANS, fontSize: 13.5, opacity: 0.8, margin: '0 0 14px' }}>Ya hiciste esta sesión. Puedes repetirla.</p>}
+        {hecha && <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, opacity: 0.8, margin: '0 0 14px' }}>Ya hiciste esta sesión. Puedes repetirla.</p>}
         <button type="button" style={botonPrimario} onClick={() => setPaso('juega')}>
           {info.titulo} · {info.tiempo} <IconoFlecha width={18} height={18} />
         </button>
@@ -331,7 +331,7 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
             {error && <p role="alert" style={{ ...parrafo, color: '#9C3A3A', marginBottom: 12 }}>{error}</p>}
             <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
               <Continuar disabled={ocupado} onClick={() => guardar(juego, conQuien)}>{ocupado ? 'Guardando…' : 'Terminar la sesión'}</Continuar>
-              {!conQuien && <span style={{ fontFamily: FONT_SANS, fontSize: 13.5, color: MUTED }}>No es obligatorio.</span>}
+              {!conQuien && <span style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED }}>No es obligatorio.</span>}
             </div>
           </>
         )}>
@@ -345,7 +345,7 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
     <Pantalla etiqueta={`Día ${dia} · Hecho`}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '12px 0 14px' }}>
         <span style={{ width: 44, height: 44, borderRadius: '50%', background: NAVY, color: PAPER, display: 'grid', placeItems: 'center' }}><IconoCheck width={24} height={24} /></span>
-        <p style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Sesión hecha</p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Sesión hecha</p>
       </div>
       {tieneExamen(dia) && <p style={{ ...parrafo, color: INK, marginBottom: 6 }}>Esta noche, 45 segundos para mirar tu día.</p>}
       <p style={{ ...parrafo, marginBottom: 20 }}>{siguiente ? `Mañana: ${conPunto(siguiente.titulo)}` : 'Has completado tus dos primeras semanas.'}</p>

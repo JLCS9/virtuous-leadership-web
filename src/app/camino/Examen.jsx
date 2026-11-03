@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { guardarExamen } from '../../account/camino';
 import { EXAMEN, PALABRAS, semanaDe } from '../../lib/camino.js';
-import { INK, LINE, NAVY, PAPER, FONT_SANS, FONT_SERIF } from '../../theme';
+import { INK, LINE, NAVY, PAPER, FONT_BODY, FONT_SLAB } from '../../theme';
 import { botonContorno, botonSobreClaro, parrafo } from '../estilos';
 import { IconoCheck } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
@@ -35,7 +35,7 @@ export default function Examen({ dia, user, camino, personas, onCerrar }) {
   async function guardar(final) {
     setEstado('guardando');
     try {
-      await guardarExamen(user.id, dia, final);
+      await guardarExamen(user.id, dia, final, camino.perfil.inicio);
       camino.recargar();
       setEstado('hecho');
     } catch {
@@ -64,7 +64,7 @@ export default function Examen({ dia, user, camino, personas, onCerrar }) {
       <Pantalla etiqueta={`Día ${dia} · Examen de la noche`}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '12px 0 14px' }}>
           <span style={{ width: 44, height: 44, borderRadius: '50%', background: NAVY, color: PAPER, display: 'grid', placeItems: 'center' }}><IconoCheck width={24} height={24} /></span>
-          <p style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Buenas noches</p>
+          <p style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: 0 }}>Buenas noches</p>
         </div>
         <p style={{ ...parrafo, marginBottom: 20 }}>Has mirado tu día. Mañana, un paso más.</p>
         {ficha && observando !== 'hecho' && (
@@ -78,7 +78,7 @@ export default function Examen({ dia, user, camino, personas, onCerrar }) {
     );
   }
 
-  const atras = i > 0 ? <button type="button" onClick={() => setI(i - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
+  const atras = i > 0 ? <button type="button" onClick={() => setI(i - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
   const pie = (
     <>
       {estado === 'error' && (
@@ -89,11 +89,11 @@ export default function Examen({ dia, user, camino, personas, onCerrar }) {
       {estado === 'guardando' ? <span style={parrafo}>Guardando…</span> : atras}
     </>
   );
-  const titulo = (texto) => <h2 style={{ fontFamily: FONT_SERIF, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' }}>{texto}</h2>;
+  const titulo = (texto) => <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' }}>{texto}</h2>;
 
   return (
     <Pantalla etiqueta={`Día ${dia} · Examen de la noche`} onVolver={onCerrar} pie={pie}>
-      {i === 0 && <p style={{ fontFamily: FONT_SERIF, fontSize: 20, fontStyle: 'italic', color: INK, margin: '10px 0 4px' }}>{EXAMEN.intro}</p>}
+      {i === 0 && <p style={{ fontFamily: FONT_SLAB, fontSize: 20, fontStyle: 'italic', color: INK, margin: '10px 0 4px' }}>{EXAMEN.intro}</p>}
       <Puntos total={pasos.length} actual={i} />
       {clave === 'con_quien' && (
         <>
