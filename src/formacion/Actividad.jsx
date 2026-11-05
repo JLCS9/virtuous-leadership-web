@@ -218,12 +218,13 @@ export function Quiz({ paso, onComplete, modulo }) {
   const [revelada, setRevelada] = useState(false);
   const [aciertos, setAciertos] = useState(0);
   const ordenRef = useRef({});
+  const respuestasRef = useRef([]);
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="quiz" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
   if (fase === 'conclusion') return <Conclusion
     titulo="cuestionario" aciertos={aciertos} total={preguntas.length} requiereAprobado
-    onReintentar={() => { setFase('ejercicio'); setIdx(0); setSeleccion(null); setRevelada(false); setAciertos(0); ordenRef.current = {}; }}
+    onReintentar={() => { setFase('ejercicio'); setIdx(0); setSeleccion(null); setRevelada(false); setAciertos(0); ordenRef.current = {}; respuestasRef.current = []; }}
     onContinuar={() => onComplete({ aciertos, total: preguntas.length })}
   />;
 
@@ -235,17 +236,32 @@ export function Quiz({ paso, onComplete, modulo }) {
     if (revelada) return;
     setSeleccion(originalIdx);
     setRevelada(true);
+    respuestasRef.current[idx] = originalIdx;
     if (originalIdx === preg.correcta) setAciertos((a) => a + 1);
   }
 
   function avanzar() {
     if (idx + 1 < preguntas.length) {
-      setIdx((i) => i + 1);
-      setSeleccion(null);
-      setRevelada(false);
+      const next = idx + 1;
+      setIdx(next);
+      const prev = respuestasRef.current[next];
+      if (prev != null) {
+        setSeleccion(prev);
+        setRevelada(true);
+      } else {
+        setSeleccion(null);
+        setRevelada(false);
+      }
     } else {
       setFase('conclusion');
     }
+  }
+
+  function retroceder() {
+    const prev = idx - 1;
+    setIdx(prev);
+    setSeleccion(respuestasRef.current[prev]);
+    setRevelada(true);
   }
 
   return (
@@ -264,7 +280,15 @@ export function Quiz({ paso, onComplete, modulo }) {
           ))}
         </div>
         {revelada && (
-          <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {idx > 0 ? (
+              <button type="button" onClick={retroceder} style={{
+                fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: MUTED,
+                background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 24px', cursor: 'pointer',
+              }}>
+                ← Anterior
+              </button>
+            ) : <span />}
             <button type="button" onClick={avanzar} style={{
               fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '17px 38px', cursor: 'pointer',
