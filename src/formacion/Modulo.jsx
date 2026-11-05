@@ -112,9 +112,10 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
                   {['Colérico', 'Melancólico', 'Sanguíneo', 'Flemático'].map((t, i) => (
                     <span key={t} className="vl-chip-anim" style={{
                       animationDelay: `${i * 160}ms`,
-                      fontFamily: FONT_BODY, fontSize: 17, fontWeight: 600, color: NAVY,
-                      background: BEIGE, border: `1.5px solid ${LINE}`, borderRadius: 0,
-                      padding: '10px 20px', display: 'inline-block',
+                      fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: GOLD_REF_DK,
+                      background: 'rgba(165,139,38,0.08)', borderRadius: 20,
+                      padding: '8px 18px', display: 'inline-block',
+                      letterSpacing: '0.01em',
                     }}>
                       {t}
                     </span>
@@ -136,9 +137,10 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
                   {['Prudencia', 'Valor', 'Autocontrol', 'Justicia', 'Magnanimidad', 'Humildad'].map((v, i) => (
                     <span key={v} className="vl-chip-anim" style={{
                       animationDelay: `${i * 160}ms`,
-                      fontFamily: FONT_BODY, fontSize: 17, fontWeight: 600, color: NAVY,
-                      background: BEIGE, border: `1.5px solid ${LINE}`, borderRadius: 0,
-                      padding: '10px 20px', display: 'inline-block',
+                      fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: GOLD_REF_DK,
+                      background: 'rgba(165,139,38,0.08)', borderRadius: 20,
+                      padding: '8px 18px', display: 'inline-block',
+                      letterSpacing: '0.01em',
                     }}>
                       {v}
                     </span>

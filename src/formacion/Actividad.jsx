@@ -17,6 +17,12 @@ import retratoTEMP from './assets/retrato-TEMP.jpg';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 
 const DIAGRAMA_TEMP = { COL: diagramaCOL, MEL: diagramaMEL, SAN: diagramaSAN, FLE: diagramaFLE };
+
+const IconoLupa = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <circle cx="10.5" cy="10.5" r="7" /><path d="m21 21-5.2-5.2" />
+  </svg>
+);
 const TEMP_SUBTITULO = { COL: 'la acción', MEL: 'las ideas', SAN: 'las personas', FLE: 'la paz' };
 const RETRATO_TEMP = { COL: retratoCOL, MEL: retratoMEL, SAN: retratoSAN, FLE: retratoFLE };
 const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Colérico': retratoCOL, 'Melancólico': retratoMEL, 'Sanguíneo': retratoSAN, 'Flemático': retratoFLE };
@@ -488,6 +494,7 @@ export function Desliza({ paso, onComplete, modulo }) {
   const [seleccion, setSeleccion] = useState(null);
   const [revelada, setRevelada] = useState(false);
   const [aciertos, setAciertos] = useState(0);
+  const [ordenEscenas] = useState(() => escenas.map(e => shuffle([...e.opciones])));
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="desliza" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
@@ -526,7 +533,7 @@ export function Desliza({ paso, onComplete, modulo }) {
           ¿Qué temperamento describe esta escena?
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-          {escena.opciones.map((t) => {
+          {ordenEscenas[idx].map((t) => {
             const sel = seleccion === t;
             const esCorrecto = t === escena.respuesta;
             let bg = BEIGE;
@@ -720,9 +727,12 @@ export function Identifica({ paso, onComplete, modulo }) {
             {v.nombre}
           </h3>
           <button type="button" onClick={() => setLightbox(true)} style={{
-            background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '6px 14px',
-            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK, cursor: 'pointer',
+            background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+            display: 'flex', alignItems: 'center', gap: 5,
+            textDecoration: 'underline', textUnderlineOffset: 3,
           }}>
+            <IconoLupa />
             Ver diagrama
           </button>
         </div>
@@ -734,10 +744,11 @@ export function Identifica({ paso, onComplete, modulo }) {
               <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, pasivo: !prev.pasivo }))} style={{
                 background: 'none', border: 'none', padding: '8px 0 0', cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 4,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                <span style={{ transition: 'transform 150ms ease', transform: ejemploAbierto.pasivo ? 'rotate(90deg)' : 'rotate(0deg)', display: 'inline-block' }}>▸</span>
-                Ejemplo
+                <IconoLupa />
+                Ver ejemplo
               </button>
             )}
             {ejemploAbierto.pasivo && v.ejemploPasivo && (
@@ -752,10 +763,11 @@ export function Identifica({ paso, onComplete, modulo }) {
               <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, activo: !prev.activo }))} style={{
                 background: 'none', border: 'none', padding: '8px 0 0', cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 4,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                <span style={{ transition: 'transform 150ms ease', transform: ejemploAbierto.activo ? 'rotate(90deg)' : 'rotate(0deg)', display: 'inline-block' }}>▸</span>
-                Ejemplo
+                <IconoLupa />
+                Ver ejemplo
               </button>
             )}
             {ejemploAbierto.activo && v.ejemploActivo && (
@@ -900,9 +912,11 @@ function TempCard({ codigo, tipo, onVerDiagrama }) {
         <button type="button" onClick={() => onVerDiagrama(DIAGRAMA_TEMP[codigo])} style={{
           background: 'none', border: 'none', padding: 0, marginTop: 10, cursor: 'pointer',
           fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-          display: 'flex', alignItems: 'center', gap: 6,
+          display: 'flex', alignItems: 'center', gap: 5,
+          textDecoration: 'underline', textUnderlineOffset: 3,
         }}>
-          Ver diagrama del temperamento →
+          <IconoLupa />
+          Ver diagrama del temperamento
         </button>
       )}
     </div>
@@ -969,10 +983,11 @@ function EjemploColapsable({ texto, abierto, onToggle }) {
       <button type="button" onClick={onToggle} style={{
         background: 'none', border: 'none', padding: 0, cursor: 'pointer',
         fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-        display: 'flex', alignItems: 'center', gap: 4,
+        display: 'flex', alignItems: 'center', gap: 5,
+        textDecoration: 'underline', textUnderlineOffset: 3,
       }}>
-        <span style={{ transition: 'transform 200ms ease', display: 'inline-block', transform: abierto ? 'rotate(90deg)' : 'rotate(0deg)' }}>▸</span>
-        Ejemplo
+        <IconoLupa />
+        Ver ejemplo
       </button>
       {abierto && (
         <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '6px 0 0', paddingLeft: 16, borderLeft: `2px solid ${LINE}`, fontStyle: 'italic' }}>
@@ -1051,9 +1066,11 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
               <button type="button" onClick={() => setLbSrc(DIAGRAMA_TEMP[p])} style={{
                 background: 'none', border: 'none', padding: 0, cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 6,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                Ver diagrama de {TEMP_NOMBRE[p]} →
+                <IconoLupa />
+                Ver diagrama de {TEMP_NOMBRE[p]}
               </button>
             </div>
           )}
@@ -1221,9 +1238,11 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
             <button type="button" onClick={() => setLbSrc(DIAGRAMA_TEMP[s])} style={{
               background: 'none', border: 'none', padding: 0, cursor: 'pointer',
               fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-              display: 'flex', alignItems: 'center', gap: 6,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
             }}>
-              Ver diagrama de {TEMP_NOMBRE[s]} →
+              <IconoLupa />
+              Ver diagrama de {TEMP_NOMBRE[s]}
             </button>
           </div>
         )}
@@ -1389,10 +1408,11 @@ export function CirculoPersonas({ paso, user, onComplete }) {
       setPreguntaIdx(0);
       setNotas('');
       setFase('datos');
-    } catch {
-      // silently continue
+    } catch (err) {
+      console.error('Error al guardar persona:', err);
+    } finally {
+      setGuardando(false);
     }
-    setGuardando(false);
   }
 
   const preguntaActual = fase === 'test' ? PREGUNTAS[MINI_PREGUNTAS_IDX[preguntaIdx]] : null;
