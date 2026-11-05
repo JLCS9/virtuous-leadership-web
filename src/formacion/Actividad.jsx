@@ -218,6 +218,7 @@ export function Quiz({ paso, onComplete, modulo }) {
   const [seleccion, setSeleccion] = useState(null);
   const [revelada, setRevelada] = useState(false);
   const [aciertos, setAciertos] = useState(0);
+  const [verRueda, setVerRueda] = useState(false);
   const ordenRef = useRef({});
   const respuestasRef = useRef([]);
 
@@ -281,8 +282,21 @@ export function Quiz({ paso, onComplete, modulo }) {
           ))}
         </div>
         {paso.diagrama_temperamentos && (
-          <div style={{ marginTop: 20, textAlign: 'center' }}>
-            <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
+          <div style={{ marginTop: 20 }}>
+            <button type="button" onClick={() => setVerRueda(v => !v)} style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa />
+              {verRueda ? 'Ocultar rueda de temperamentos' : 'Ver rueda de los temperamentos'}
+            </button>
+            {verRueda && (
+              <div style={{ marginTop: 14, textAlign: 'center' }}>
+                <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
+              </div>
+            )}
           </div>
         )}
         {revelada && (
