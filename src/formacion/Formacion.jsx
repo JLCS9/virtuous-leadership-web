@@ -10,7 +10,7 @@ import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF
 import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
 import { useCatalogo, useProgreso } from './useFormacion';
-import { CuadernoPersonal } from './CuadernoPersonal';
+
 
 import img01 from '../assets/formacion/escultura-01-atleta.jpg';
 import img07 from '../assets/formacion/escultura-07-hercules.jpg';
@@ -377,10 +377,6 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
           </div>
         </div>
       </section>
-
-      <div className="vl-ancho">
-        <CuadernoPersonal userId={userId} pasos={moduloData.pasos} />
-      </div>
 
       <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
         <CtaFormacion prog={m1ProgVid} />
