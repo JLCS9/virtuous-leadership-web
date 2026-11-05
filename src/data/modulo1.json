@@ -42,7 +42,7 @@
           ]
         },
         {
-          "concepto": "Colérico",
+          "concepto": "Temperamento colérico",
           "definicion": "Temperamento orientado a la acción. Manager nacido, enérgico y decidido, con confianza natural en sí mismo.",
           "correctas": [
             "La acción",
@@ -59,7 +59,7 @@
           ]
         },
         {
-          "concepto": "Melancólico",
+          "concepto": "Temperamento melancólico",
           "definicion": "Temperamento orientado a las ideas. Contemplativo, perfeccionista, independiente y creador por naturaleza.",
           "correctas": [
             "Las ideas",
@@ -76,7 +76,7 @@
           ]
         },
         {
-          "concepto": "Sanguíneo",
+          "concepto": "Temperamento sanguíneo",
           "definicion": "Temperamento orientado a las personas. Comunicador nacido, con los sentidos despiertos y pasión por la aventura.",
           "correctas": [
             "Las personas",
@@ -93,7 +93,7 @@
           ]
         },
         {
-          "concepto": "Flemático",
+          "concepto": "Temperamento flemático",
           "definicion": "Temperamento orientado a la paz. Desapasionado y científico, con una voluntad de hierro oculta bajo su calma exterior.",
           "correctas": [
             "La paz",
@@ -168,7 +168,7 @@
       "modulo_numero": 0,
       "modulo_titulo": "Introducción: educación del carácter",
       "aprendizajes": [
-        "Qué es el liderazgo virtuoso según Alexandre Havard",
+        "Qué es el liderazgo virtuoso",
         "Diferencia entre temperamento (biológico) y carácter (espiritual)"
       ],
       "ejercicios_evaluables": [
@@ -436,7 +436,7 @@
       "modulo_numero": 2,
       "modulo_titulo": "El carácter se construye sobre la base del temperamento",
       "aprendizajes": [
-        "Las seis virtudes del líder según Havard",
+        "Las seis virtudes del líder",
         "Aspecto pasivo y activo de cada virtud"
       ],
       "ejercicios_evaluables": []
@@ -510,6 +510,26 @@
         {
           "texto": "Le proponen liderar un equipo nuevo. Responde: «Necesito pensarlo... no estoy seguro de estar preparado.»",
           "respuesta": "MEL",
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
+        },
+        {
+          "texto": "Organiza una cena improvisada para animar a un amigo que está pasándolo mal. En media hora ha llamado a diez personas y montado el plan.",
+          "respuesta": "SAN",
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
+        },
+        {
+          "texto": "El equipo cambia de estrategia a mitad de proyecto. Mientras otros protestan, acepta el cambio sin alterarse y se adapta al nuevo plan sin perder la calma.",
+          "respuesta": "FLE",
           "opciones": [
             "COL",
             "MEL",
@@ -641,6 +661,7 @@
       "titulo": "Los desafíos de mi temperamento",
       "visible": false,
       "personalizado": true,
+      "diagrama_temperamentos": true,
       "preguntas": [
         {
           "texto": "¿Cuál es la traducción de temperamentum?",
@@ -1181,6 +1202,13 @@
           "texto": "Desarrolla un plan concreto de desarrollo personal basado en estos retos."
         }
       ]
+    },
+    {
+      "id": "m1-test-caracter",
+      "tipo": "test_caracter",
+      "titulo": "Test de carácter",
+      "visible": false,
+      "descripcion": "Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, fortaleza, dominio de sí, justicia, magnanimidad y humildad. Responde con sinceridad — este test es para ti."
     },
     {
       "id": "m1-27",

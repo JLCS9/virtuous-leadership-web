@@ -1,25 +1,59 @@
 // Componentes interactivos para las actividades entre vídeos del módulo.
 // Quiz, Define, Desliza, Identifica — todos comparten el mismo shell (título + barra progreso).
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
 import { barraFondo, eyebrow, tarjeta } from '../app/estilos';
 import diagramaVirtudesImg from './diagrama-virtudes.png';
 import diagramaCOL from './diagrama-COL.png';
 import diagramaMEL from './diagrama-MEL.png';
 import diagramaSAN from './diagrama-SAN.png';
 import diagramaFLE from './diagrama-FLE.png';
+import diagramaTemperamentosImg from './diagrama-temperamentos.webp';
 import retratoCOL from './assets/retrato-COL.jpg';
 import retratoMEL from './assets/retrato-MEL.jpg';
 import retratoSAN from './assets/retrato-SAN.jpg';
 import retratoFLE from './assets/retrato-FLE.jpg';
 import retratoTEMP from './assets/retrato-TEMP.jpg';
+import retratoCaracter from './assets/retrato-caracter.jpg';
+import retratoPrudencia from './assets/retrato-prudencia.jpg';
+import retratoFortaleza from './assets/retrato-fortaleza.jpg';
+import retratoDominio from './assets/retrato-dominio.jpg';
+import retratoJusticia from './assets/retrato-justicia.jpg';
+import retratoMagnanimidad from './assets/retrato-magnanimidad.jpg';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
+import CHARACTER_TEST from '../data/character-test.json';
+import CHARACTER_SUPPORT from '../data/character-support-text.json';
+import { scoreCharacter } from '../lib/characterScoring';
+import HEART_TEST from '../data/heart-test.json';
+import HEART_SUPPORT from '../data/heart-support-text.json';
+import { scoreHeart, HEART_DISORDER_CODES } from '../lib/heartScoring';
+import { saveCharacterResultIfLoggedIn, saveHeartResultIfLoggedIn } from '../account/account';
+import heartFaceR from '../assets/heart-disorder-R.jpeg';
+import heartFaceVR from '../assets/heart-disorder-VR.jpeg';
+import heartFaceVM from '../assets/heart-disorder-VM.jpeg';
+import heartFaceVI from '../assets/heart-disorder-VI.jpeg';
+import heartFaceVC from '../assets/heart-disorder-VC.jpeg';
+import heartFaceSV from '../assets/heart-disorder-SV.jpeg';
+import heartFaceSI from '../assets/heart-disorder-SI.jpeg';
+import heartFaceSC from '../assets/heart-disorder-SC.jpeg';
+import faceP from '../assets/Pastorelle.jpg.jpeg';
+import faceC from '../assets/Courage.jpg.jpeg';
+import faceS from '../assets/Judith.jpg.jpeg';
+import faceJ from '../assets/Judith.jpg.jpeg';
+import faceM from '../assets/Paul.jpg.jpeg';
+import faceH from '../assets/Jean.jpg.jpeg';
 
 const DIAGRAMA_TEMP = { COL: diagramaCOL, MEL: diagramaMEL, SAN: diagramaSAN, FLE: diagramaFLE };
+
+const IconoLupa = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <circle cx="10.5" cy="10.5" r="7" /><path d="m21 21-5.2-5.2" />
+  </svg>
+);
 const TEMP_SUBTITULO = { COL: 'la acción', MEL: 'las ideas', SAN: 'las personas', FLE: 'la paz' };
 const RETRATO_TEMP = { COL: retratoCOL, MEL: retratoMEL, SAN: retratoSAN, FLE: retratoFLE };
-const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Colérico': retratoCOL, 'Melancólico': retratoMEL, 'Sanguíneo': retratoSAN, 'Flemático': retratoFLE };
+const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Temperamento colérico': retratoCOL, 'Temperamento melancólico': retratoMEL, 'Temperamento sanguíneo': retratoSAN, 'Temperamento flemático': retratoFLE, 'Carácter': retratoCaracter, 'Prudencia': retratoPrudencia, 'Fortaleza': retratoFortaleza, 'Dominio de sí': retratoDominio, 'Justicia': retratoJusticia, 'Magnanimidad': retratoMagnanimidad };
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
@@ -66,11 +100,13 @@ function shuffleIndices(n) {
 
 const CARATULA_TEXTOS = {
   quiz: { icono: '?', tipo: 'Cuestionario', desc: 'Responde a unas preguntas para poner a prueba lo que has aprendido en este módulo y afianzar los conceptos clave.' },
-  define: { icono: '✦', tipo: 'Definiciones y conceptos', desc: 'Selecciona todas las palabras que definen cada concepto según Alexandre Havard. Para conseguir la máxima puntuación, debes escoger todas las palabras correctas.' },
+  define: { icono: '✦', tipo: 'Definiciones y conceptos', desc: 'Selecciona todas las palabras que definen cada concepto. Para conseguir la máxima puntuación, debes escoger todas las palabras correctas.' },
   desliza: { icono: '↔', tipo: 'Identifica temperamentos', desc: 'Lee cada escena y asocia el temperamento que mejor encaja.' },
   identifica: { icono: '◉', tipo: 'Diagrama de virtudes', desc: 'Reflexiona sobre las virtudes y cómo se manifiestan en tu vida.' },
   test_profundo: { icono: '◇', tipo: 'Autoexamen profundo', desc: 'Reflexiona con sinceridad sobre estas preguntas. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.' },
   retos_temperamento: { icono: '✶', tipo: 'Los retos de mi temperamento', desc: 'Descubre qué aspectos de las virtudes te facilita y te dificulta tu temperamento, y cuál es tu virtud-desafío: la virtud que más necesitas trabajar a lo largo de tu vida.' },
+  test_caracter: { icono: '◈', tipo: 'Test de carácter', desc: 'Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, fortaleza, dominio de sí, justicia, magnanimidad y humildad.' },
+  test_corazon: { icono: '♡', tipo: 'Test del corazón', desc: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -131,14 +167,14 @@ function Conclusion({ titulo, aciertos, total, onReintentar, onContinuar, nota, 
           </span>
         </div>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 8px', textAlign: 'center', lineHeight: 1.3 }}>
-          {perfecto ? '¡Perfecto!' : bueno ? '¡Buen trabajo!' : 'Sigue practicando'}
+          {perfecto ? 'Perfecto' : bueno ? 'Buen trabajo' : 'Sigue practicando'}
         </h2>
         <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.6, textAlign: 'center', margin: '0 auto 6px', maxWidth: 480 }}>
           Has acertado <strong style={{ color: NAVY }}>{aciertos} de {total}</strong> en {titulo}.
         </p>
         {bloqueado && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', textAlign: 'center', margin: '8px 0 0', lineHeight: 1.5 }}>
-            Necesitas al menos un 70% de aciertos para continuar. ¡Inténtalo de nuevo!
+            Necesitas al menos un 70% de aciertos para continuar. Inténtalo de nuevo.
           </p>
         )}
         {!perfecto && !bloqueado && (
@@ -182,13 +218,15 @@ export function Quiz({ paso, onComplete, modulo }) {
   const [seleccion, setSeleccion] = useState(null);
   const [revelada, setRevelada] = useState(false);
   const [aciertos, setAciertos] = useState(0);
+  const [verRueda, setVerRueda] = useState(false);
   const ordenRef = useRef({});
+  const respuestasRef = useRef([]);
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="quiz" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
   if (fase === 'conclusion') return <Conclusion
     titulo="cuestionario" aciertos={aciertos} total={preguntas.length} requiereAprobado
-    onReintentar={() => { setFase('ejercicio'); setIdx(0); setSeleccion(null); setRevelada(false); setAciertos(0); ordenRef.current = {}; }}
+    onReintentar={() => { setFase('ejercicio'); setIdx(0); setSeleccion(null); setRevelada(false); setAciertos(0); ordenRef.current = {}; respuestasRef.current = []; }}
     onContinuar={() => onComplete({ aciertos, total: preguntas.length })}
   />;
 
@@ -200,17 +238,32 @@ export function Quiz({ paso, onComplete, modulo }) {
     if (revelada) return;
     setSeleccion(originalIdx);
     setRevelada(true);
+    respuestasRef.current[idx] = originalIdx;
     if (originalIdx === preg.correcta) setAciertos((a) => a + 1);
   }
 
   function avanzar() {
     if (idx + 1 < preguntas.length) {
-      setIdx((i) => i + 1);
-      setSeleccion(null);
-      setRevelada(false);
+      const next = idx + 1;
+      setIdx(next);
+      const prev = respuestasRef.current[next];
+      if (prev != null) {
+        setSeleccion(prev);
+        setRevelada(true);
+      } else {
+        setSeleccion(null);
+        setRevelada(false);
+      }
     } else {
       setFase('conclusion');
     }
+  }
+
+  function retroceder() {
+    const prev = idx - 1;
+    setIdx(prev);
+    setSeleccion(respuestasRef.current[prev]);
+    setRevelada(true);
   }
 
   return (
@@ -228,8 +281,34 @@ export function Quiz({ paso, onComplete, modulo }) {
               correcta={origIdx === preg.correcta} revelada={revelada} onClick={() => elegir(origIdx)} />
           ))}
         </div>
+        {paso.diagrama_temperamentos && (
+          <div style={{ marginTop: 20 }}>
+            <button type="button" onClick={() => setVerRueda(v => !v)} style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa />
+              {verRueda ? 'Ocultar rueda de temperamentos' : 'Ver rueda de los temperamentos'}
+            </button>
+            {verRueda && (
+              <div style={{ marginTop: 14, textAlign: 'center' }}>
+                <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
+              </div>
+            )}
+          </div>
+        )}
         {revelada && (
-          <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+          <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {idx > 0 ? (
+              <button type="button" onClick={retroceder} style={{
+                fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: MUTED,
+                background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 24px', cursor: 'pointer',
+              }}>
+                ← Anterior
+              </button>
+            ) : <span />}
             <button type="button" onClick={avanzar} style={{
               fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '17px 38px', cursor: 'pointer',
@@ -306,13 +385,13 @@ export function Define({ paso, onComplete, modulo }) {
             })}
           </div>
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '18px 0 8px', color: perfecto ? '#065f46' : '#92400e' }}>
-            {perfecto ? '¡Correcto!' : faltantesH.length > 0
+            {perfecto ? 'Correcto.' : faltantesH.length > 0
               ? <>Te ha faltado: <strong>{faltantesH.join(', ')}</strong>.</>
               : 'Has marcado alguna palabra de más.'}
           </p>
           {cpt.definicion && (
             <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6 }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición según Havard</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
               <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.concepto}:</strong> {cpt.definicion}</p>
             </div>
           )}
@@ -423,7 +502,7 @@ export function Define({ paso, onComplete, modulo }) {
         {feedbackActual && (
           <div style={{ margin: '18px 0 8px' }}>
             <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '0 0 6px', color: feedbackActual.perfecto ? '#065f46' : '#92400e' }}>
-              {feedbackActual.perfecto ? '¡Correcto!' : feedbackActual.faltantes.length > 0
+              {feedbackActual.perfecto ? 'Correcto.' : feedbackActual.faltantes.length > 0
                 ? <>Te ha faltado: <strong>{feedbackActual.faltantes.join(', ')}</strong>.</>
                 : null}
             </p>
@@ -488,6 +567,7 @@ export function Desliza({ paso, onComplete, modulo }) {
   const [seleccion, setSeleccion] = useState(null);
   const [revelada, setRevelada] = useState(false);
   const [aciertos, setAciertos] = useState(0);
+  const [ordenEscenas] = useState(() => escenas.map(e => shuffle([...e.opciones])));
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="desliza" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
@@ -526,7 +606,7 @@ export function Desliza({ paso, onComplete, modulo }) {
           ¿Qué temperamento describe esta escena?
         </p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
-          {escena.opciones.map((t) => {
+          {ordenEscenas[idx].map((t) => {
             const sel = seleccion === t;
             const esCorrecto = t === escena.respuesta;
             let bg = BEIGE;
@@ -652,6 +732,9 @@ export function Identifica({ paso, onComplete, modulo }) {
     return (
       <Shell titulo={paso.titulo} actual={1} total={total}>
         <div style={tarjeta}>
+          <h3 style={{ fontFamily: FONT_BODY, fontSize: 20, fontWeight: 700, color: NAVY, margin: '0 0 14px', lineHeight: 1.4 }}>
+            Analiza la foto y entiende el diagrama de virtudes
+          </h3>
           <div style={{ marginBottom: 18, cursor: 'zoom-in' }} onClick={() => setLightbox(true)}>
             <img src={diagramaVirtudesImg} alt="Diagrama de las 6 virtudes del líder" style={{ width: '100%', height: 'auto' }} />
           </div>
@@ -720,9 +803,12 @@ export function Identifica({ paso, onComplete, modulo }) {
             {v.nombre}
           </h3>
           <button type="button" onClick={() => setLightbox(true)} style={{
-            background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '6px 14px',
-            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK, cursor: 'pointer',
+            background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+            display: 'flex', alignItems: 'center', gap: 5,
+            textDecoration: 'underline', textUnderlineOffset: 3,
           }}>
+            <IconoLupa />
             Ver diagrama
           </button>
         </div>
@@ -734,10 +820,11 @@ export function Identifica({ paso, onComplete, modulo }) {
               <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, pasivo: !prev.pasivo }))} style={{
                 background: 'none', border: 'none', padding: '8px 0 0', cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 4,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                <span style={{ transition: 'transform 150ms ease', transform: ejemploAbierto.pasivo ? 'rotate(90deg)' : 'rotate(0deg)', display: 'inline-block' }}>▸</span>
-                Ejemplo
+                <IconoLupa />
+                Ver ejemplo
               </button>
             )}
             {ejemploAbierto.pasivo && v.ejemploPasivo && (
@@ -752,10 +839,11 @@ export function Identifica({ paso, onComplete, modulo }) {
               <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, activo: !prev.activo }))} style={{
                 background: 'none', border: 'none', padding: '8px 0 0', cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 4,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                <span style={{ transition: 'transform 150ms ease', transform: ejemploAbierto.activo ? 'rotate(90deg)' : 'rotate(0deg)', display: 'inline-block' }}>▸</span>
-                Ejemplo
+                <IconoLupa />
+                Ver ejemplo
               </button>
             )}
             {ejemploAbierto.activo && v.ejemploActivo && (
@@ -900,9 +988,11 @@ function TempCard({ codigo, tipo, onVerDiagrama }) {
         <button type="button" onClick={() => onVerDiagrama(DIAGRAMA_TEMP[codigo])} style={{
           background: 'none', border: 'none', padding: 0, marginTop: 10, cursor: 'pointer',
           fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-          display: 'flex', alignItems: 'center', gap: 6,
+          display: 'flex', alignItems: 'center', gap: 5,
+          textDecoration: 'underline', textUnderlineOffset: 3,
         }}>
-          Ver diagrama del temperamento →
+          <IconoLupa />
+          Ver diagrama del temperamento
         </button>
       )}
     </div>
@@ -969,10 +1059,11 @@ function EjemploColapsable({ texto, abierto, onToggle }) {
       <button type="button" onClick={onToggle} style={{
         background: 'none', border: 'none', padding: 0, cursor: 'pointer',
         fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-        display: 'flex', alignItems: 'center', gap: 4,
+        display: 'flex', alignItems: 'center', gap: 5,
+        textDecoration: 'underline', textUnderlineOffset: 3,
       }}>
-        <span style={{ transition: 'transform 200ms ease', display: 'inline-block', transform: abierto ? 'rotate(90deg)' : 'rotate(0deg)' }}>▸</span>
-        Ejemplo
+        <IconoLupa />
+        Ver ejemplo
       </button>
       {abierto && (
         <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '6px 0 0', paddingLeft: 16, borderLeft: `2px solid ${LINE}`, fontStyle: 'italic' }}>
@@ -999,7 +1090,6 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
   const [textoFacilita, setTextoFacilita] = useState('');
   const [textoDificulta, setTextoDificulta] = useState('');
   const [textoDefectos, setTextoDefectos] = useState('');
-  const [respAyuda, setRespAyuda] = useState(null);
   const [lbSrc, setLbSrc] = useState(null);
   const [ejemploAbierto, setEjemploAbierto] = useState({});
 
@@ -1009,7 +1099,7 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
   const virtudDesafio = paso.virtud_desafio_map?.[perfil] ?? paso.virtud_desafio_map?.[p] ?? '—';
   const fd = paso.facilita_dificulta?.[p];
   const compensa = paso.secundario_compensa?.[perfil];
-  const ayudaVirtud = paso.secundario_ayuda_virtud?.[perfil];
+
 
   if (fase === -1) {
     return <Caratula paso={paso} tipo="retos_temperamento" onEmpezar={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
@@ -1052,9 +1142,11 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
               <button type="button" onClick={() => setLbSrc(DIAGRAMA_TEMP[p])} style={{
                 background: 'none', border: 'none', padding: 0, cursor: 'pointer',
                 fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-                display: 'flex', alignItems: 'center', gap: 6,
+                display: 'flex', alignItems: 'center', gap: 5,
+                textDecoration: 'underline', textUnderlineOffset: 3,
               }}>
-                Ver diagrama de {TEMP_NOMBRE[p]} →
+                <IconoLupa />
+                Ver diagrama de {TEMP_NOMBRE[p]}
               </button>
             </div>
           )}
@@ -1122,21 +1214,6 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
     return (
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <div style={tarjeta}>
-          <div style={{ textAlign: 'center', marginBottom: 24 }}>
-            {RETRATO_TEMP[p] ? (
-              <img src={RETRATO_TEMP[p]} alt={TEMP_NOMBRE[p]} style={{ width: 130, height: 130, objectFit: 'cover', mixBlendMode: 'multiply', borderRadius: 6 }} />
-            ) : (
-              <span style={{
-                display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: '50%',
-                background: TEMP_COLORS[p] ? `${TEMP_COLORS[p]}22` : BEIGE,
-                border: `2px solid ${TEMP_COLORS[p] ?? GOLD_REF}`,
-                fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: TEMP_COLORS[p] ?? NAVY,
-              }}>
-                {TEMP_NOMBRE[p]?.[0]}
-              </span>
-            )}
-          </div>
-
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 14px', textAlign: 'center' }}>
             Tu virtud-desafío
           </h2>
@@ -1222,9 +1299,11 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
             <button type="button" onClick={() => setLbSrc(DIAGRAMA_TEMP[s])} style={{
               background: 'none', border: 'none', padding: 0, cursor: 'pointer',
               fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-              display: 'flex', alignItems: 'center', gap: 6,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
             }}>
-              Ver diagrama de {TEMP_NOMBRE[s]} →
+              <IconoLupa />
+              Ver diagrama de {TEMP_NOMBRE[s]}
             </button>
           </div>
         )}
@@ -1253,42 +1332,14 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
           />
         </div>
 
-        <div style={{ borderTop: `1.5px solid ${GOLD_REF}`, paddingTop: 18, marginBottom: 24 }}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: '0 0 14px' }}>
-            Tu temperamento secundario te ayuda a practicar tu virtud-desafío (<strong>{virtudDesafio}</strong>):
-          </p>
-          <div style={{ display: 'flex', gap: 12 }}>
-            {['Sí', 'No'].map((opcion) => (
-              <button key={opcion} type="button" onClick={() => setRespAyuda(opcion)} style={{
-                flex: 1, padding: '14px 20px',
-                fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
-                color: respAyuda === opcion ? '#fff' : NAVY,
-                background: respAyuda === opcion ? GOLD_REF : PAPER,
-                border: `1.5px solid ${respAyuda === opcion ? GOLD_REF : LINE}`,
-                borderRadius: 0, cursor: 'pointer',
-                transition: 'all 150ms ease',
-              }}>
-                {opcion}
-              </button>
-            ))}
-          </div>
-          {ayudaVirtud != null && respAyuda && (
-            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.55, margin: '12px 0 0', fontStyle: 'italic' }}>
-              {ayudaVirtud
-                ? `Efectivamente, tu combinación ${TEMP_NOMBRE[p]}/${TEMP_NOMBRE[s]} te facilita la práctica de la ${virtudDesafio}.`
-                : `Tu combinación ${TEMP_NOMBRE[p]}/${TEMP_NOMBRE[s]} no compensa directamente tu virtud-desafío, pero eso no significa que no puedas trabajarla.`}
-            </p>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
           <button type="button" onClick={() => { setLbSrc(null); setFase(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
             fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY,
             background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
           }}>
             ← Atrás
           </button>
-          <button type="button" onClick={() => onComplete({ visto: true })} style={{
+          <button type="button" onClick={() => onComplete({ visto: true, textoFacilita, textoDificulta, textoDefectos })} style={{
             fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
             background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
           }}>
@@ -1311,6 +1362,8 @@ const GRUPOS_SIMPLE = [
 
 const MINI_PREGUNTAS_IDX = [0, 1, 2, 3, 5, 7];
 
+const DIAG_IMPOSIBLE = new Set(['COL-FLE', 'FLE-COL', 'MEL-SAN', 'SAN-MEL']);
+
 export function CirculoPersonas({ paso, user, onComplete }) {
   const [fase, setFase] = useState('intro');
   const [nombre, setNombre] = useState('');
@@ -1320,6 +1373,7 @@ export function CirculoPersonas({ paso, user, onComplete }) {
   const [notas, setNotas] = useState('');
   const [guardando, setGuardando] = useState(false);
   const [personas, setPersonas] = useState([]);
+  const [copiado, setCopiado] = useState(false);
   const temp = paso.temperamento_tema;
 
   const [ordenOpciones] = useState(() =>
@@ -1370,10 +1424,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
     const puntos = { COL: 0, MEL: 0, SAN: 0, FLE: 0 };
     for (const r of respuestas) if (puntos[r] !== undefined) puntos[r] += 1;
     const resto = TEMPS.filter(k => k !== temp).sort((a, b) => puntos[b] - puntos[a]);
-    const secundario = puntos[resto[0]] >= 2 ? resto[0] : null;
+    let secundario = puntos[resto[0]] >= 2 ? resto[0] : null;
     const noSe = respuestas.filter(r => r === NO_SE).length;
     const confianza = noSe <= 1 ? 'media' : 'baja';
-    return { puntos, secundario, confianza };
+    const imposible = secundario && DIAG_IMPOSIBLE.has(`${temp}-${secundario}`);
+    if (imposible) secundario = null;
+    return { puntos, secundario, confianza, imposible, indeterminado: !secundario && !imposible };
   }
 
   function responder(tempCode) {
@@ -1411,17 +1467,18 @@ export function CirculoPersonas({ paso, user, onComplete }) {
           situacion: 'nota_formacion', palabra: null, temperamento: null, linea: notas.trim(),
         });
       }
-      setPersonas(prev => [...prev, { nombre: n, grupo, secundario }]);
+      setPersonas(prev => [...prev, { nombre: n, grupo, primario: temp, secundario }]);
       setNombre('');
       setGrupo(null);
       setRespuestas([]);
       setPreguntaIdx(0);
       setNotas('');
-      setFase('datos');
-    } catch {
-      // silently continue
+      setFase('listado');
+    } catch (err) {
+      console.error('Error al guardar persona:', err);
+    } finally {
+      setGuardando(false);
     }
-    setGuardando(false);
   }
 
   const preguntaActual = fase === 'test' ? PREGUNTAS[MINI_PREGUNTAS_IDX[preguntaIdx]] : null;
@@ -1508,6 +1565,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
             </div>
           </div>
 
+          {nombre.trim() && grupo && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic' }}>
+              A continuación harás un breve test (6 preguntas) para estimar qué temperamento secundario tiene {nombre.trim()}.
+            </p>
+          )}
+
           <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
             <button type="button" onClick={() => { setFase('test'); setPreguntaIdx(0); setRespuestas([]); }} disabled={!nombre.trim() || !grupo} style={{
               fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
@@ -1526,6 +1589,64 @@ export function CirculoPersonas({ paso, user, onComplete }) {
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
             }}>
               {personas.length > 0 ? 'Continuar →' : 'Saltar →'}
+            </button>
+          </div>
+        </>}
+
+        {/* ── FASE LISTADO ── */}
+        {fase === 'listado' && <>
+          <h3 style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 6px', textAlign: 'center' }}>
+            Personas añadidas
+          </h3>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, textAlign: 'center', margin: '0 0 20px' }}>
+            {personas.length === 1 ? '1 persona' : `${personas.length} personas`}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+            {personas.map((p, i) => {
+              const grupoLabel = GRUPOS_SIMPLE.find(([k]) => k === p.grupo)?.[1] ?? p.grupo;
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '14px 18px', background: PAPER,
+                  borderLeft: `4px solid ${TEMP_COLORS[p.primario] ?? GOLD_REF}`,
+                  border: `1px solid ${LINE}`, borderLeftWidth: 4, borderLeftColor: TEMP_COLORS[p.primario] ?? GOLD_REF,
+                }}>
+                  <span style={{
+                    display: 'inline-grid', placeItems: 'center', width: 38, height: 38, borderRadius: '50%',
+                    background: TEMP_COLORS[p.primario] ? `${TEMP_COLORS[p.primario]}22` : BEIGE,
+                    fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: TEMP_COLORS[p.primario] ?? NAVY,
+                    flexShrink: 0,
+                  }}>
+                    {i + 1}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY }}>
+                      {p.nombre}
+                    </div>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>
+                      {grupoLabel} · {TEMP_NOMBRE[p.primario]}{p.secundario ? ` / ${TEMP_NOMBRE[p.secundario]}` : ''}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <button type="button" onClick={() => setFase('datos')} style={{
+              fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY,
+              background: PAPER, border: `1.5px solid ${LINE}`, borderRadius: 0,
+              padding: '14px 24px', cursor: 'pointer', flex: 1, minWidth: 160,
+            }}>
+              + Añadir otra persona
+            </button>
+            <button type="button" onClick={() => onComplete({ personas: personas.length })} style={{
+              fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0,
+              padding: '14px 24px', cursor: 'pointer', flex: 1, minWidth: 160,
+            }}>
+              Continuar →
             </button>
           </div>
         </>}
@@ -1577,7 +1698,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
         </>}
 
         {/* ── FASE RESUMEN + NOTAS ── */}
-        {fase === 'resumen' && resultado && <>
+        {fase === 'resumen' && resultado && (() => {
+          const sinResultado = resultado.imposible || !resultado.secundario;
+          const urlTest = 'https://virtuousleadership.com/es/tests/temperamento?utm_source=portal&utm_medium=referral&utm_campaign=conoces_alguien';
+          const textoWa = `Hola, te invito a hacer este test de temperamento para conocerte mejor: ${urlTest}`;
+          const urlWa = `https://wa.me/?text=${encodeURIComponent(textoWa)}`;
+          return <>
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, textAlign: 'center', margin: '0 0 20px', lineHeight: 1.6 }}>
             Resultado estimado para <strong style={{ color: NAVY }}>{nombre.trim()}</strong>
           </p>
@@ -1595,9 +1721,47 @@ export function CirculoPersonas({ paso, user, onComplete }) {
             </div>
           </div>
 
-          <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textAlign: 'center', fontStyle: 'italic', margin: '0 0 20px' }}>
-            Es una estimación tuya — solo {nombre.trim()} puede confirmarlo haciendo el test.
-          </p>
+          {sinResultado ? (
+            <div style={{ textAlign: 'center', padding: '16px 20px', background: '#fef9ee', border: `1px solid ${GOLD_REF_LT}`, marginBottom: 20 }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', lineHeight: 1.6 }}>
+                {resultado.imposible
+                  ? `La combinación ${TEMP_NOMBRE[temp]} con el secundario estimado no es posible según el modelo de temperamentos.`
+                  : 'Las respuestas no son suficientes para determinar un temperamento secundario.'}
+              </p>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: 0, lineHeight: 1.5 }}>
+                Lo mejor es que {nombre.trim()} haga el test de temperamento completo.
+              </p>
+            </div>
+          ) : (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textAlign: 'center', fontStyle: 'italic', margin: '0 0 20px' }}>
+              Es una estimación tuya — solo {nombre.trim()} puede confirmarlo haciendo el test.
+            </p>
+          )}
+
+          {/* ── COMPARTIR TEST ── */}
+          <div style={{ borderTop: `1px solid ${LINE}`, margin: '0 0 20px', paddingTop: 16 }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, margin: '0 0 10px', textAlign: 'center' }}>
+              Invita a {nombre.trim()} a hacer el test completo
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button type="button" onClick={() => { navigator.clipboard.writeText(urlTest).then(() => { setCopiado(true); setTimeout(() => setCopiado(false), 2000); }); }} style={{
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, padding: '10px 20px',
+                border: `1.5px solid ${NAVY}`, background: copiado ? NAVY : PAPER,
+                color: copiado ? PAPER : NAVY, borderRadius: 0, cursor: 'pointer',
+                transition: 'all 150ms ease', minWidth: 140,
+              }}>
+                {copiado ? 'Enlace copiado' : 'Copiar enlace'}
+              </button>
+              <a href={urlWa} target="_blank" rel="noopener noreferrer" style={{
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, padding: '10px 20px',
+                border: `1.5px solid #25d366`, background: '#25d366', color: '#fff',
+                borderRadius: 0, textDecoration: 'none', textAlign: 'center', minWidth: 140,
+                display: 'inline-block',
+              }}>
+                Compartir por WhatsApp
+              </a>
+            </div>
+          </div>
 
           <div style={{ marginBottom: 20 }}>
             <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
@@ -1632,7 +1796,8 @@ export function CirculoPersonas({ paso, user, onComplete }) {
               {guardando ? 'Guardando…' : 'Guardar persona'}
             </button>
           </div>
-        </>}
+        </>;
+        })()}
       </div>
     </div>
   );
@@ -1822,6 +1987,331 @@ export function ReflexionGuiada({ paso, temperamento, onComplete }) {
   );
 }
 
+/* ─── TEST DE CARÁCTER (E2) — embebido en formación ─── */
+
+const CHAR_VIRTUE_ORDER = ['P', 'C', 'S', 'J', 'M', 'H'];
+const CHAR_FACES = { P: faceP, C: faceC, S: faceS, J: faceJ, M: faceM, H: faceH };
+const CHAR_COLORS = {
+  P: { color: '#5B8C5A' }, C: { color: '#C0392B' }, S: { color: '#2980B9' },
+  J: { color: '#8E44AD' }, M: { color: '#D4A017' }, H: { color: '#16A085' },
+};
+
+const { order: CHAR_CANONICAL, groups: CHAR_GROUPS } = (() => {
+  const groups = Object.fromEntries(CHAR_VIRTUE_ORDER.map(v => [v, []]));
+  CHARACTER_TEST.questions.forEach((q, i) => {
+    const v = q.code && q.code[0];
+    if (groups[v]) groups[v].push(i);
+    else groups[CHAR_VIRTUE_ORDER[0]].push(i);
+  });
+  const order = [];
+  for (const v of CHAR_VIRTUE_ORDER) order.push(...groups[v]);
+  return { order, groups };
+})();
+
+const CHAR_CUMULATIVE = (() => {
+  const cum = [];
+  let acc = 0;
+  for (const v of CHAR_VIRTUE_ORDER) {
+    acc += CHAR_GROUPS[v].length;
+    cum.push(acc);
+  }
+  return cum;
+})();
+
+function resolveCharSupport(supportObj, key) {
+  const entry = supportObj?.[key];
+  if (!entry) return '';
+  return entry.es || entry.en || '';
+}
+
+function CharMilestoneModal({ virtueCode, pct, onContinue }) {
+  const face = CHAR_FACES[virtueCode];
+  const c = CHAR_COLORS[virtueCode];
+  const virtueName = resolveCharSupport(CHARACTER_SUPPORT.labels, `chResult${virtueCode}`);
+
+  return (
+    <div role="dialog" aria-modal="true" style={{
+      position: 'fixed', inset: 0, zIndex: 1000,
+      background: 'rgba(27, 42, 74, 0.55)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    }}>
+      <div style={{
+        background: PAPER, maxWidth: 440, width: '100%', borderRadius: 4,
+        borderTop: `4px solid ${c.color}`,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+        padding: '32px 28px', textAlign: 'center',
+      }}>
+        <div style={{ ...eyebrow, marginBottom: 4 }}>Virtud completada</div>
+        <div style={{
+          margin: '4px auto 20px', width: 120, height: 120, borderRadius: '50%',
+          border: `3px solid ${c.color}`, overflow: 'hidden', background: BEIGE,
+        }}>
+          <img src={face} alt={virtueName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+        <h3 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+          {virtueName}
+        </h3>
+        <div style={{ fontFamily: FONT_SLAB, fontSize: 48, fontWeight: 600, color: c.color, lineHeight: 1, margin: '12px 0 20px' }}>
+          {Math.round(pct)}%
+        </div>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.5, margin: '0 0 24px' }}>
+          Esta puntuación refleja tu estado actual en esta virtud. Las virtudes se desarrollan con la práctica.
+        </p>
+        <button onClick={onContinue} style={{
+          fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+          background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px',
+          cursor: 'pointer', width: '100%',
+        }}>
+          Continuar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function CharResultSummary({ scoreResult, onContinue }) {
+  return (
+    <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <div style={tarjeta}>
+        <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
+          <span style={{
+            display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+            background: BEIGE, border: `2px solid ${GOLD_REF}`,
+            fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: GOLD_REF_DK,
+          }}>&#x2726;</span>
+        </div>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 8px', textAlign: 'center' }}>
+          Tu perfil de carácter
+        </h2>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, textAlign: 'center', margin: '0 0 24px', lineHeight: 1.6 }}>
+          Aquí tienes tu resultado en las seis virtudes del liderazgo. Podrás consultarlo en tu panel.
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 24 }}>
+          {CHAR_VIRTUE_ORDER.map(code => {
+            const s = scoreResult[code];
+            const c = CHAR_COLORS[code];
+            const virtueName = resolveCharSupport(CHARACTER_SUPPORT.labels, s.virtue_label_key);
+            return (
+              <div key={code} style={{
+                background: PAPER, border: `1px solid ${LINE}`, borderTop: `3px solid ${c.color}`,
+                padding: '18px 14px', textAlign: 'center',
+              }}>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 32, fontWeight: 600, color: c.color, lineHeight: 1 }}>
+                  {Math.round(s.global ?? 0)}%
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: NAVY, textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: 8, fontWeight: 600 }}>
+                  {virtueName}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {CHAR_VIRTUE_ORDER.map(code => {
+          const s = scoreResult[code];
+          const c = CHAR_COLORS[code];
+          const face = CHAR_FACES[code];
+          const virtueName = resolveCharSupport(CHARACTER_SUPPORT.labels, s.virtue_label_key);
+          const passiveName = resolveCharSupport(CHARACTER_SUPPORT.labels, s.passive_facet_key);
+          const activeName = resolveCharSupport(CHARACTER_SUPPORT.labels, s.active_facet_key);
+          return (
+            <div key={code} style={{
+              background: PAPER, border: `1px solid ${LINE}`, borderLeft: `4px solid ${c.color}`,
+              marginBottom: 12, padding: '16px 20px',
+              display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap',
+            }}>
+              <div style={{
+                width: 48, height: 48, borderRadius: '50%', overflow: 'hidden', flexShrink: 0,
+                border: `2px solid ${c.color}`, background: BEIGE,
+              }}>
+                <img src={face} alt={virtueName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              </div>
+              <div style={{ flex: '1 1 140px', minWidth: 120 }}>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{virtueName}</div>
+              </div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: c.color }}>
+                {Math.round(s.global ?? 0)}%
+              </div>
+              <div style={{ width: '100%', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div style={{ padding: '8px 12px', background: BEIGE }}>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Aspecto pasivo</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, fontWeight: 500 }}>{passiveName} — {Math.round(s.passive ?? 0)}%</div>
+                </div>
+                <div style={{ padding: '8px 12px', background: BEIGE }}>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Aspecto activo</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, fontWeight: 500 }}>{activeName} — {Math.round(s.active ?? 0)}%</div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24, marginBottom: 8 }}>
+          <button type="button" onClick={onContinue} style={{
+            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 40px', cursor: 'pointer',
+          }}>
+            Continuar →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function TestCaracterFormacion({ paso, onComplete }) {
+  const [fase, setFase] = useState('caratula');
+  const [answers, setAnswers] = useState([]);
+  const [idx, setIdx] = useState(0);
+  const [milestone, setMilestone] = useState(null);
+
+  const scoreResult = useMemo(() => {
+    if (fase !== 'resultado') return null;
+    const canonical = new Array(CHARACTER_TEST.questions.length).fill(0);
+    for (let i = 0; i < CHAR_CANONICAL.length; i++) {
+      canonical[CHAR_CANONICAL[i]] = answers[i] ?? 0;
+    }
+    return scoreCharacter(canonical, CHARACTER_TEST);
+  }, [fase, answers]);
+
+  function handleStart() {
+    setAnswers([]);
+    setIdx(0);
+    setMilestone(null);
+    setFase('preguntas');
+  }
+
+  function handleAnswer(value) {
+    const next = [...answers];
+    next[idx] = value;
+    setAnswers(next);
+
+    const total = CHAR_CANONICAL.length;
+    const nextIdx = idx + 1;
+
+    const cutoffIdx = CHAR_CUMULATIVE.indexOf(nextIdx);
+    if (cutoffIdx >= 0 && cutoffIdx < CHAR_CUMULATIVE.length - 1) {
+      const virtueCode = CHAR_VIRTUE_ORDER[cutoffIdx];
+      const canonical = new Array(CHARACTER_TEST.questions.length).fill(0);
+      for (let i = 0; i < next.length; i++) {
+        canonical[CHAR_CANONICAL[i]] = next[i] ?? 0;
+      }
+      const res = scoreCharacter(canonical, CHARACTER_TEST);
+      const pct = res?.[virtueCode]?.global ?? 0;
+      setMilestone({ virtueCode, pct });
+      return;
+    }
+
+    if (nextIdx < total) {
+      setIdx(nextIdx);
+    } else {
+      setFase('resultado');
+      const canonical = new Array(CHARACTER_TEST.questions.length).fill(0);
+      for (let i = 0; i < next.length; i++) {
+        canonical[CHAR_CANONICAL[i]] = next[i] ?? 0;
+      }
+      const result = scoreCharacter(canonical, CHARACTER_TEST);
+      void saveCharacterResultIfLoggedIn(result);
+    }
+  }
+
+  function handleMilestoneContinue() {
+    setMilestone(null);
+    setIdx(idx + 1);
+  }
+
+  function handleBack() {
+    if (idx > 0 && !milestone) setIdx(idx - 1);
+  }
+
+  if (fase === 'caratula') {
+    return (
+      <Caratula
+        paso={{ ...paso, descripcion: paso.descripcion }}
+        tipo="test_caracter"
+        modulo={null}
+        onEmpezar={handleStart}
+      />
+    );
+  }
+
+  if (fase === 'resultado' && scoreResult) {
+    return <CharResultSummary scoreResult={scoreResult} onContinue={() => onComplete({ scoreResult })} />;
+  }
+
+  const itemIdx = CHAR_CANONICAL[idx];
+  const item = CHARACTER_TEST.questions[itemIdx];
+  const text = item.text?.es || item.text?.en || '';
+  const total = CHAR_CANONICAL.length;
+  const pct = total > 0 ? Math.round(((idx + 1) / total) * 100) : 0;
+
+  const LIKERT = [
+    { key: 'sa', value: 1, label: 'Totalmente de acuerdo' },
+    { key: 'a', value: 0.5, label: 'De acuerdo' },
+    { key: 'n', value: 0, label: 'Neutral' },
+    { key: 'd', value: -0.5, label: 'En desacuerdo' },
+    { key: 'sd', value: -1, label: 'Totalmente en desacuerdo' },
+  ];
+
+  return (
+    <>
+      <Shell titulo="Test de carácter" actual={idx + 1} total={total}>
+        <div style={tarjeta}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>{idx + 1} de {total}</span>
+            <button
+              type="button"
+              disabled={idx === 0 || !!milestone}
+              onClick={handleBack}
+              style={{
+                background: 'none', border: 'none', padding: 0,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                cursor: idx > 0 && !milestone ? 'pointer' : 'default',
+                opacity: idx > 0 && !milestone ? 1 : 0.3,
+              }}
+            >
+              ← Anterior
+            </button>
+          </div>
+
+          <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 500, color: NAVY, margin: '20px 0 24px', lineHeight: 1.45 }}>
+            {text}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {LIKERT.map(opt => (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => handleAnswer(opt.value)}
+                style={{
+                  fontFamily: FONT_BODY, fontSize: 17, lineHeight: 1.5,
+                  padding: '16px 20px', border: `1.5px solid ${LINE}`,
+                  background: PAPER, color: NAVY, borderRadius: 0,
+                  cursor: 'pointer', textAlign: 'left',
+                  transition: 'all 160ms ease',
+                }}
+                onMouseOver={e => { e.currentTarget.style.background = GOLD_REF; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = GOLD_REF; }}
+                onMouseOut={e => { e.currentTarget.style.background = PAPER; e.currentTarget.style.color = NAVY; e.currentTarget.style.borderColor = LINE; }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Shell>
+      {milestone && (
+        <CharMilestoneModal
+          virtueCode={milestone.virtueCode}
+          pct={milestone.pct}
+          onContinue={handleMilestoneContinue}
+        />
+      )}
+    </>
+  );
+}
+
 export function Sintesis({ paso, temperamento, onComplete }) {
   const map = paso.sintesis?.virtud_desafio_map ?? {};
   const p = temperamento?.primary;
@@ -1916,5 +2406,278 @@ export function Sintesis({ paso, temperamento, onComplete }) {
         </div>
       </div>
     </div>
+  );
+}
+
+/* ─── TEST DEL CORAZÓN (inline en formación, curso 5) ─── */
+
+const HEART_FACES = { R: heartFaceR, VR: heartFaceVR, VM: heartFaceVM, VI: heartFaceVI, VC: heartFaceVC, SV: heartFaceSV, SI: heartFaceSI, SC: heartFaceSC };
+const HEART_STAGE_COLORS = { none: '#10b981', stage1: '#f59e0b', stage2: '#ef4444' };
+const HEART_STAGE_LABELS = { none: 'Sin inclinación', stage1: 'Cierta inclinación', stage2: 'Fuerte inclinación' };
+
+function resolveHeartLabel(key) {
+  const entry = HEART_SUPPORT?.labels?.[key];
+  if (!entry) return '';
+  return entry.es || entry.en || '';
+}
+
+function HeartMilestoneModal({ disorderCode, pct, onContinue }) {
+  const face = HEART_FACES[disorderCode];
+  const name = resolveHeartLabel(`hResult${disorderCode}`);
+  const stageColor = pct >= 66 ? HEART_STAGE_COLORS.stage2 : pct >= 33 ? HEART_STAGE_COLORS.stage1 : HEART_STAGE_COLORS.none;
+
+  return (
+    <div role="dialog" aria-modal="true" style={{
+      position: 'fixed', inset: 0, zIndex: 1000,
+      background: 'rgba(27, 42, 74, 0.55)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16,
+    }}>
+      <div style={{
+        background: PAPER, maxWidth: 440, width: '100%', borderRadius: 4,
+        borderTop: `4px solid ${stageColor}`,
+        boxShadow: '0 20px 60px rgba(0,0,0,0.25)',
+        padding: '32px 28px', textAlign: 'center',
+      }}>
+        <div style={{ ...eyebrow, marginBottom: 4 }}>Bloque completado</div>
+        <div style={{
+          margin: '4px auto 20px', width: 120, height: 120, borderRadius: '50%',
+          border: `3px solid ${stageColor}`, overflow: 'hidden', background: BEIGE,
+        }}>
+          <img src={face} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </div>
+        <h3 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+          {name}
+        </h3>
+        <div style={{ fontFamily: FONT_SLAB, fontSize: 48, fontWeight: 600, color: stageColor, lineHeight: 1, margin: '12px 0 20px' }}>
+          {Math.round(pct)}%
+        </div>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.5, margin: '0 0 24px' }}>
+          Al finalizar el test podrás ver el diagnóstico y remedio de cada enfermedad.
+        </p>
+        <button type="button" onClick={onContinue} style={{
+          fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+          background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px',
+          cursor: 'pointer', width: '100%',
+        }}>
+          Continuar
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function HeartResultSummary({ scoreResult, onContinue }) {
+  const balanced = scoreResult.verdict === 'balanced';
+
+  return (
+    <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <div style={tarjeta}>
+        <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
+          <span style={{
+            display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+            background: balanced ? '#ecfdf5' : BEIGE, border: `2px solid ${balanced ? '#10b981' : GOLD_REF}`,
+            fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: balanced ? '#065f46' : GOLD_REF_DK,
+          }}>♡</span>
+        </div>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 8px', textAlign: 'center' }}>
+          {balanced ? 'Corazón equilibrado' : 'Tu perfil del corazón'}
+        </h2>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, textAlign: 'center', margin: '0 0 24px', lineHeight: 1.6 }}>
+          {balanced
+            ? 'No se detectan inclinaciones marcadas hacia ninguna enfermedad espiritual. Podrás consultarlo en tu panel.'
+            : 'Aquí tienes tu resultado en las ocho enfermedades espirituales. Podrás consultarlo en tu panel.'}
+        </p>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: 12, marginBottom: 24 }}>
+          {HEART_DISORDER_CODES.map(code => {
+            const d = scoreResult.disorders[code];
+            const stageColor = HEART_STAGE_COLORS[d.stage];
+            const name = resolveHeartLabel(d.label_key);
+            return (
+              <div key={code} style={{
+                background: PAPER, border: `1px solid ${LINE}`, borderTop: `3px solid ${stageColor}`,
+                padding: '18px 14px', textAlign: 'center',
+              }}>
+                <div style={{
+                  width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', margin: '0 auto 10px',
+                  border: `2px solid ${stageColor}`, background: BEIGE,
+                }}>
+                  <img src={HEART_FACES[code]} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                </div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 600, color: stageColor, lineHeight: 1 }}>
+                  {Math.round(d.pct)}%
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: NAVY, textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: 8, fontWeight: 600 }}>
+                  {name}
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, marginTop: 4 }}>
+                  {HEART_STAGE_LABELS[d.stage]}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 24, marginBottom: 8 }}>
+          <button type="button" onClick={onContinue} style={{
+            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 40px', cursor: 'pointer',
+          }}>
+            Continuar →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function TestCorazonFormacion({ paso, onComplete }) {
+  const [fase, setFase] = useState('caratula');
+  const [answers, setAnswers] = useState([]);
+  const [idx, setIdx] = useState(0);
+  const [milestone, setMilestone] = useState(null);
+
+  const questions = HEART_TEST.questions;
+  const total = questions.length;
+
+  const scoreResult = useMemo(() => {
+    if (fase !== 'resultado') return null;
+    return scoreHeart(answers, HEART_TEST);
+  }, [fase, answers]);
+
+  function handleStart() {
+    setAnswers([]);
+    setIdx(0);
+    setMilestone(null);
+    setFase('preguntas');
+  }
+
+  function handleAnswer(value) {
+    const next = [...answers];
+    next[idx] = value;
+    setAnswers(next);
+
+    const nextIdx = idx + 1;
+
+    if (nextIdx % 4 === 0 && nextIdx < total) {
+      const disorderIdx = Math.floor(idx / 4);
+      const disorder = HEART_TEST.disorders[disorderIdx];
+      if (disorder) {
+        let score = 0;
+        for (let i = disorderIdx * 4; i < disorderIdx * 4 + 4; i++) {
+          score += next[i] ?? 0;
+        }
+        const pct = Math.round((score / 16) * 100);
+        setMilestone({ disorderCode: disorder.code, pct });
+        return;
+      }
+    }
+
+    if (nextIdx < total) {
+      setIdx(nextIdx);
+    } else {
+      setFase('resultado');
+      const result = scoreHeart(next, HEART_TEST);
+      void saveHeartResultIfLoggedIn(result);
+    }
+  }
+
+  function handleMilestoneContinue() {
+    setMilestone(null);
+    const nextIdx = idx + 1;
+    if (nextIdx < total) {
+      setIdx(nextIdx);
+    } else {
+      const result = scoreHeart(answers, HEART_TEST);
+      void saveHeartResultIfLoggedIn(result);
+      setFase('resultado');
+    }
+  }
+
+  function handleBack() {
+    if (idx > 0 && !milestone) setIdx(idx - 1);
+  }
+
+  if (fase === 'caratula') {
+    return (
+      <Caratula
+        paso={{ ...paso, descripcion: paso.descripcion }}
+        tipo="test_corazon"
+        modulo={null}
+        onEmpezar={handleStart}
+      />
+    );
+  }
+
+  if (fase === 'resultado' && scoreResult) {
+    return <HeartResultSummary scoreResult={scoreResult} onContinue={() => onComplete({ scoreResult })} />;
+  }
+
+  const item = questions[idx];
+  const text = item.text?.es || item.text?.en || '';
+
+  const LIKERT = [
+    { key: 'sa', value: 4, label: 'Totalmente de acuerdo' },
+    { key: 'a', value: 3, label: 'De acuerdo' },
+    { key: 'n', value: 2, label: 'Neutral' },
+    { key: 'd', value: 1, label: 'En desacuerdo' },
+    { key: 'sd', value: 0, label: 'Totalmente en desacuerdo' },
+  ];
+
+  return (
+    <>
+      <Shell titulo="Test del corazón" actual={idx + 1} total={total}>
+        <div style={tarjeta}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+            <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>{idx + 1} de {total}</span>
+            <button
+              type="button"
+              disabled={idx === 0 || !!milestone}
+              onClick={handleBack}
+              style={{
+                background: 'none', border: 'none', padding: 0,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                cursor: idx > 0 && !milestone ? 'pointer' : 'default',
+                opacity: idx > 0 && !milestone ? 1 : 0.3,
+              }}
+            >
+              ← Anterior
+            </button>
+          </div>
+
+          <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 500, color: NAVY, margin: '20px 0 24px', lineHeight: 1.45 }}>
+            {text}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {LIKERT.map(opt => (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => handleAnswer(opt.value)}
+                style={{
+                  fontFamily: FONT_BODY, fontSize: 17, lineHeight: 1.5,
+                  padding: '16px 20px', border: `1.5px solid ${LINE}`,
+                  background: PAPER, color: NAVY, borderRadius: 0,
+                  cursor: 'pointer', textAlign: 'left',
+                  transition: 'all 160ms ease',
+                }}
+                onMouseOver={e => { e.currentTarget.style.background = GOLD_REF; e.currentTarget.style.color = '#fff'; e.currentTarget.style.borderColor = GOLD_REF; }}
+                onMouseOut={e => { e.currentTarget.style.background = PAPER; e.currentTarget.style.color = NAVY; e.currentTarget.style.borderColor = LINE; }}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </Shell>
+      {milestone && (
+        <HeartMilestoneModal
+          disorderCode={milestone.disorderCode}
+          pct={milestone.pct}
+          onContinue={handleMilestoneContinue}
+        />
+      )}
+    </>
   );
 }

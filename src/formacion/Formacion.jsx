@@ -11,6 +11,7 @@ import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, her
 import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
 import { useCatalogo, useProgreso } from './useFormacion';
 
+
 import img01 from '../assets/formacion/escultura-01-atleta.jpg';
 import img07 from '../assets/formacion/escultura-07-hercules.jpg';
 import img09 from '../assets/formacion/escultura-09-apolo-bn.jpg';
@@ -50,12 +51,14 @@ function leerModulo1Progreso(userId) {
 function Anillo({ valor, tam = 84 }) {
   const r = (tam - 10) / 2;
   const c = 2 * Math.PI * r;
+  const sw = tam < 60 ? 3.5 : 5;
+  const fs = tam < 60 ? 12 : 22;
   return (
     <svg width={tam} height={tam} viewBox={`0 0 ${tam} ${tam}`} role="img" aria-label={`${valor} % completado`}>
-      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke="rgba(27,42,74,0.10)" strokeWidth="5" />
-      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke={GOLD_REF_DK} strokeWidth="5" strokeLinecap="round"
+      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke="rgba(27,42,74,0.10)" strokeWidth={sw} />
+      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke={GOLD_REF_DK} strokeWidth={sw} strokeLinecap="round"
               strokeDasharray={`${(c * valor) / 100} ${c}`} transform={`rotate(-90 ${tam / 2} ${tam / 2})`} style={{ transition: 'stroke-dasharray 600ms ease' }} />
-      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize="22" fontWeight="700" fill={NAVY}>{valor}%</text>
+      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize={fs} fontWeight="700" fill={NAVY}>{valor}%</text>
     </svg>
   );
 }
@@ -269,11 +272,11 @@ function CursoCard({ curso, vistas, portadas, brillo, posiciones, escalas, noBri
 function CtaFormacion({ prog }) {
   const completo = prog.completo;
   const empezado = prog.hechos > 0;
-  const ctaTitulo = completo ? '¡Curso 1 completado!' : empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
+  const ctaTitulo = completo ? 'Curso 1 completado' : empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
   const ctaTexto = completo
     ? 'Has completado el Curso 1. Continúa con el siguiente curso de la formación.'
     : empezado
-      ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. ¡Sigue avanzando!`
+      ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. Sigue avanzando.`
       : 'Descubre tu temperamento, trabaja tus virtudes y construye tu carácter.';
   const ctaBoton = completo ? 'Siguiente curso' : empezado ? 'Continuar' : 'Empezar ahora';
 
@@ -350,25 +353,31 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
   const hechasLecciones = resumenCursos.hechas + m1VideosHechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
 
+  const m1SegundosVistos = m1Videos.filter(p => m1Prog[p.id]).reduce((s, p) => s + (p.duracion || 0), 0);
+  const segundosTotales = resumenCursos.segundosVistos + m1SegundosVistos;
+
   const siguiente = continuar(cursos, progreso.vistas, progreso.ultima);
 
   return (
     <div className="vl-cols vl-cols-3">
       <div className="vl-ancho">
         <div style={eyebrow}>Formación</div>
-        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Virtuous Leadership</h1>
-        <p style={{ ...parrafo, color: MUTED }}>Los cursos de Alexandre Havard, a tu ritmo.</p>
+        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Liderazgo virtuoso</h1>
+        <p style={{ ...parrafo, color: MUTED }}>Conócete, crece y lidera desde tus virtudes.</p>
       </div>
 
-      <section className="vl-ancho" style={{ ...tarjeta, display: 'flex', alignItems: 'center', gap: 18 }} aria-label="Tu progreso">
-        <Anillo valor={porcentaje} />
-        <div>
-          <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
-          <div style={{ ...parrafo, fontSize: 14, marginTop: 4 }}>{formatoDuracion(resumenCursos.segundosVistos)} vistas de {formatoDuracion(resumenCursos.segundosTotal)}</div>
+      <section className="vl-ancho" style={{ ...tarjeta }} aria-label="Tu progreso">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 16 }}>
+          <Anillo valor={porcentaje} />
+          <div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
+            {segundosTotales > 0 && (
+              <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginTop: 4 }}>Tiempo invertido en trabajo personal: {formatoDuracion(segundosTotales)}</div>
+            )}
+          </div>
         </div>
       </section>
 
-      <div className="vl-ancho" style={{ background: '#b8c8d9', padding: '10px 16px', borderRadius: 6, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY }}>Opción B — Cuadros</div>
       <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
         <CtaFormacion prog={m1ProgVid} />
         <Modulo1Card userId={userId} m1Prog={m1Prog} portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
@@ -378,15 +387,6 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
                    portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />
       ))}
 
-      <div className="vl-ancho" style={{ background: '#e8d9b8', padding: '10px 16px', borderRadius: 6, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY }}>Opción A — Esculturas</div>
-      <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        <CtaFormacion prog={m1ProgVid} />
-        <Modulo1Card userId={userId} m1Prog={m1Prog} />
-      </div>
-      {cursos.map((c) => (
-        <CursoCard key={`a-${c.id}`} curso={c} vistas={progreso.vistas}
-                   portadas={PORTADAS_A} />
-      ))}
     </div>
   );
 }

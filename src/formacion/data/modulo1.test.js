@@ -11,14 +11,14 @@ import {
 } from '../flujoModulo.js';
 
 const PASOS = MODULO_1.pasos;
-const TIPOS_VALIDOS = new Set(['video', 'quiz', 'define', 'desliza', 'identifica', 'test_profundo', 'noop', 'cierre']);
+const TIPOS_VALIDOS = new Set(['video', 'quiz', 'define', 'desliza', 'identifica', 'test_profundo', 'test_caracter', 'noop', 'cierre']);
 const TEMPERAMENTOS = ['COL', 'MEL', 'SAN', 'FLE'];
 
 // ── Integridad de datos ──
 
 describe('modulo1 — estructura', () => {
-  test('tiene 27 pasos', () => {
-    assert.equal(PASOS.length, 27);
+  test('tiene 28 pasos', () => {
+    assert.equal(PASOS.length, 28);
   });
 
   test('todos los pasos tienen id y tipo válido', () => {
