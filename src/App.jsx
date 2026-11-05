@@ -100,7 +100,7 @@ export default function App() {
         return (
           <Route key={`portal-${lang}`} path={`/${lang}/${appSlug}`} element={<PortalGuard />}>
             <Route index element={<Hoy />} />
-            <Route path="camino" element={<Camino />} />
+            <Route path="camino" element={<Navigate to=".." replace />} />
             <Route path="formacion" element={<Formacion />} />
             <Route path="formacion/:cursoId" element={<Modulo />} />
             <Route path="perfil" element={<Perfil />} />
