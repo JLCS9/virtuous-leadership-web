@@ -9,6 +9,7 @@ import diagramaCOL from './diagrama-COL.png';
 import diagramaMEL from './diagrama-MEL.png';
 import diagramaSAN from './diagrama-SAN.png';
 import diagramaFLE from './diagrama-FLE.png';
+import diagramaTemperamentosImg from './diagrama-temperamentos.webp';
 import retratoCOL from './assets/retrato-COL.jpg';
 import retratoMEL from './assets/retrato-MEL.jpg';
 import retratoSAN from './assets/retrato-SAN.jpg';
@@ -267,6 +268,11 @@ export function Quiz({ paso, onComplete, modulo }) {
   return (
     <Shell titulo="Cuestionario" actual={idx + 1} total={preguntas.length}>
       <div style={tarjeta}>
+        {paso.diagrama_temperamentos && (
+          <div style={{ marginBottom: 20, textAlign: 'center' }}>
+            <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
+          </div>
+        )}
         <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '0 0 16px', lineHeight: 1.5 }}>
           Responde las siguientes preguntas del cuestionario.
         </p>
@@ -1194,21 +1200,6 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
     return (
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <div style={tarjeta}>
-          <div style={{ textAlign: 'center', marginBottom: 24 }}>
-            {RETRATO_TEMP[p] ? (
-              <img src={RETRATO_TEMP[p]} alt={TEMP_NOMBRE[p]} style={{ width: 130, height: 130, objectFit: 'cover', mixBlendMode: 'multiply', borderRadius: 6 }} />
-            ) : (
-              <span style={{
-                display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: '50%',
-                background: TEMP_COLORS[p] ? `${TEMP_COLORS[p]}22` : BEIGE,
-                border: `2px solid ${TEMP_COLORS[p] ?? GOLD_REF}`,
-                fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: TEMP_COLORS[p] ?? NAVY,
-              }}>
-                {TEMP_NOMBRE[p]?.[0]}
-              </span>
-            )}
-          </div>
-
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 14px', textAlign: 'center' }}>
             Tu virtud-desafío
           </h2>

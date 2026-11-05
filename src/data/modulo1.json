@@ -661,6 +661,7 @@
       "titulo": "Los desafíos de mi temperamento",
       "visible": false,
       "personalizado": true,
+      "diagrama_temperamentos": true,
       "preguntas": [
         {
           "texto": "¿Cuál es la traducción de temperamentum?",
