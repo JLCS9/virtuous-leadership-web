@@ -1,4 +1,4 @@
-// Lógica pura de «Formación» (cursos en vídeo de Alexandre Havard). Sin React ni red.
+// Lógica pura de «Formación» (cursos en vídeo). Sin React ni red.
 //
 // Es la misma regla de la app móvil (apps/mobile/src/features/courses.ts de Virtus):
 //   - una lección cuenta como vista al llegar al 90 % del vídeo (o al pulsar «marcar como vista»);

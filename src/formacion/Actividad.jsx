@@ -66,7 +66,7 @@ function shuffleIndices(n) {
 
 const CARATULA_TEXTOS = {
   quiz: { icono: '?', tipo: 'Cuestionario', desc: 'Responde a unas preguntas para poner a prueba lo que has aprendido en este módulo y afianzar los conceptos clave.' },
-  define: { icono: '✦', tipo: 'Definiciones y conceptos', desc: 'Selecciona todas las palabras que definen cada concepto según Alexandre Havard. Para conseguir la máxima puntuación, debes escoger todas las palabras correctas.' },
+  define: { icono: '✦', tipo: 'Definiciones y conceptos', desc: 'Selecciona todas las palabras que definen cada concepto. Para conseguir la máxima puntuación, debes escoger todas las palabras correctas.' },
   desliza: { icono: '↔', tipo: 'Identifica temperamentos', desc: 'Lee cada escena y asocia el temperamento que mejor encaja.' },
   identifica: { icono: '◉', tipo: 'Diagrama de virtudes', desc: 'Reflexiona sobre las virtudes y cómo se manifiestan en tu vida.' },
   test_profundo: { icono: '◇', tipo: 'Autoexamen profundo', desc: 'Reflexiona con sinceridad sobre estas preguntas. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.' },
@@ -131,14 +131,14 @@ function Conclusion({ titulo, aciertos, total, onReintentar, onContinuar, nota, 
           </span>
         </div>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 8px', textAlign: 'center', lineHeight: 1.3 }}>
-          {perfecto ? '¡Perfecto!' : bueno ? '¡Buen trabajo!' : 'Sigue practicando'}
+          {perfecto ? 'Perfecto' : bueno ? 'Buen trabajo' : 'Sigue practicando'}
         </h2>
         <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.6, textAlign: 'center', margin: '0 auto 6px', maxWidth: 480 }}>
           Has acertado <strong style={{ color: NAVY }}>{aciertos} de {total}</strong> en {titulo}.
         </p>
         {bloqueado && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', textAlign: 'center', margin: '8px 0 0', lineHeight: 1.5 }}>
-            Necesitas al menos un 70% de aciertos para continuar. ¡Inténtalo de nuevo!
+            Necesitas al menos un 70% de aciertos para continuar. Inténtalo de nuevo.
           </p>
         )}
         {!perfecto && !bloqueado && (
@@ -306,13 +306,13 @@ export function Define({ paso, onComplete, modulo }) {
             })}
           </div>
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '18px 0 8px', color: perfecto ? '#065f46' : '#92400e' }}>
-            {perfecto ? '¡Correcto!' : faltantesH.length > 0
+            {perfecto ? 'Correcto.' : faltantesH.length > 0
               ? <>Te ha faltado: <strong>{faltantesH.join(', ')}</strong>.</>
               : 'Has marcado alguna palabra de más.'}
           </p>
           {cpt.definicion && (
             <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6 }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición según Havard</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
               <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.concepto}:</strong> {cpt.definicion}</p>
             </div>
           )}
@@ -423,7 +423,7 @@ export function Define({ paso, onComplete, modulo }) {
         {feedbackActual && (
           <div style={{ margin: '18px 0 8px' }}>
             <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '0 0 6px', color: feedbackActual.perfecto ? '#065f46' : '#92400e' }}>
-              {feedbackActual.perfecto ? '¡Correcto!' : feedbackActual.faltantes.length > 0
+              {feedbackActual.perfecto ? 'Correcto.' : feedbackActual.faltantes.length > 0
                 ? <>Te ha faltado: <strong>{feedbackActual.faltantes.join(', ')}</strong>.</>
                 : null}
             </p>
@@ -999,7 +999,6 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
   const [textoFacilita, setTextoFacilita] = useState('');
   const [textoDificulta, setTextoDificulta] = useState('');
   const [textoDefectos, setTextoDefectos] = useState('');
-  const [respAyuda, setRespAyuda] = useState(null);
   const [lbSrc, setLbSrc] = useState(null);
   const [ejemploAbierto, setEjemploAbierto] = useState({});
 
@@ -1009,7 +1008,7 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
   const virtudDesafio = paso.virtud_desafio_map?.[perfil] ?? paso.virtud_desafio_map?.[p] ?? '—';
   const fd = paso.facilita_dificulta?.[p];
   const compensa = paso.secundario_compensa?.[perfil];
-  const ayudaVirtud = paso.secundario_ayuda_virtud?.[perfil];
+
 
   if (fase === -1) {
     return <Caratula paso={paso} tipo="retos_temperamento" onEmpezar={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
@@ -1253,35 +1252,7 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
           />
         </div>
 
-        <div style={{ borderTop: `1.5px solid ${GOLD_REF}`, paddingTop: 18, marginBottom: 24 }}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: '0 0 14px' }}>
-            Tu temperamento secundario te ayuda a practicar tu virtud-desafío (<strong>{virtudDesafio}</strong>):
-          </p>
-          <div style={{ display: 'flex', gap: 12 }}>
-            {['Sí', 'No'].map((opcion) => (
-              <button key={opcion} type="button" onClick={() => setRespAyuda(opcion)} style={{
-                flex: 1, padding: '14px 20px',
-                fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
-                color: respAyuda === opcion ? '#fff' : NAVY,
-                background: respAyuda === opcion ? GOLD_REF : PAPER,
-                border: `1.5px solid ${respAyuda === opcion ? GOLD_REF : LINE}`,
-                borderRadius: 0, cursor: 'pointer',
-                transition: 'all 150ms ease',
-              }}>
-                {opcion}
-              </button>
-            ))}
-          </div>
-          {ayudaVirtud != null && respAyuda && (
-            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.55, margin: '12px 0 0', fontStyle: 'italic' }}>
-              {ayudaVirtud
-                ? `Efectivamente, tu combinación ${TEMP_NOMBRE[p]}/${TEMP_NOMBRE[s]} te facilita la práctica de la ${virtudDesafio}.`
-                : `Tu combinación ${TEMP_NOMBRE[p]}/${TEMP_NOMBRE[s]} no compensa directamente tu virtud-desafío, pero eso no significa que no puedas trabajarla.`}
-            </p>
-          )}
-        </div>
-
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
           <button type="button" onClick={() => { setLbSrc(null); setFase(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
             fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY,
             background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',

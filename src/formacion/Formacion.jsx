@@ -269,11 +269,11 @@ function CursoCard({ curso, vistas, portadas, brillo, posiciones, escalas, noBri
 function CtaFormacion({ prog }) {
   const completo = prog.completo;
   const empezado = prog.hechos > 0;
-  const ctaTitulo = completo ? '¡Curso 1 completado!' : empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
+  const ctaTitulo = completo ? 'Curso 1 completado' : empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
   const ctaTexto = completo
     ? 'Has completado el Curso 1. Continúa con el siguiente curso de la formación.'
     : empezado
-      ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. ¡Sigue avanzando!`
+      ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. Sigue avanzando.`
       : 'Descubre tu temperamento, trabaja tus virtudes y construye tu carácter.';
   const ctaBoton = completo ? 'Siguiente curso' : empezado ? 'Continuar' : 'Empezar ahora';
 
@@ -356,15 +356,15 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
     <div className="vl-cols vl-cols-3">
       <div className="vl-ancho">
         <div style={eyebrow}>Formación</div>
-        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Virtuous Leadership</h1>
-        <p style={{ ...parrafo, color: MUTED }}>Los cursos de Alexandre Havard, a tu ritmo.</p>
+        <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Liderazgo virtuoso</h1>
+        <p style={{ ...parrafo, color: MUTED }}>Conócete, crece y lidera desde tus virtudes.</p>
       </div>
 
       <section className="vl-ancho" style={{ ...tarjeta, display: 'flex', alignItems: 'center', gap: 18 }} aria-label="Tu progreso">
         <Anillo valor={porcentaje} />
         <div>
           <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
-          <div style={{ ...parrafo, fontSize: 14, marginTop: 4 }}>{formatoDuracion(resumenCursos.segundosVistos)} vistas de {formatoDuracion(resumenCursos.segundosTotal)}</div>
+
         </div>
       </section>
 

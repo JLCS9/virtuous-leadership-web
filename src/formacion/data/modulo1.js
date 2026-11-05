@@ -26,22 +26,22 @@ export const MODULO_1 = {
           distractores: ['Hábito moral', 'Se construye con la práctica', 'Fortaleza espiritual', 'Fruto de la libertad'],
         },
         {
-          nombre: 'Colérico',
+          nombre: 'Temperamento colérico',
           correctas: ['La acción', 'Manager nacido', 'Energía', 'Conseguir metas', 'Confianza en sí mismo'],
           distractores: ['La contemplación', 'Las personas', 'Voluntad oculta', 'Perfeccionista'],
         },
         {
-          nombre: 'Melancólico',
+          nombre: 'Temperamento melancólico',
           correctas: ['Las ideas', 'Contemplación', 'Perfeccionista', 'Independiente', 'Creador'],
           distractores: ['La acción', 'Comunicador nacido', 'La alegría', 'Manager nacido'],
         },
         {
-          nombre: 'Sanguíneo',
+          nombre: 'Temperamento sanguíneo',
           correctas: ['Las personas', 'Comunicador nacido', 'La alegría', 'Sentidos siempre despiertos', 'Le encanta la aventura'],
           distractores: ['La paz', 'Desapasionado', 'Voluntad de hierro', 'Las ideas'],
         },
         {
-          nombre: 'Flemático',
+          nombre: 'Temperamento flemático',
           correctas: ['La paz', 'Desapasionado y científico', 'Voluntad de hierro oculta', 'Constante y perseverante', 'Racional'],
           distractores: ['Emprendedor nato', 'Sentidos siempre despiertos', 'La aventura', 'Creador'],
         },
