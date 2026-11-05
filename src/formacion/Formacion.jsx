@@ -231,7 +231,7 @@ function Portada({ src, alt = '', alto = 260, pos = 'center', brillo = false, es
   );
 }
 
-function CursoCard({ curso, vistas, abrirCurso, portadas, brillo, posiciones, escalas, noBrillo, brilloMap }) {
+function CursoCard({ curso, vistas, portadas, brillo, posiciones, escalas, noBrillo, brilloMap }) {
   const p = progresoCurso(curso, vistas);
   const imgs = portadas || PORTADAS;
   const img = imgs[curso.numero] ?? img01;
@@ -242,7 +242,7 @@ function CursoCard({ curso, vistas, abrirCurso, portadas, brillo, posiciones, es
   const useBrillo = customBrillo ?? (brillo && !noBrillo?.has(curso.numero));
   return (
     <section style={{ ...tarjeta, padding: 0, overflow: 'hidden' }}>
-      <button type="button" onClick={() => abrirCurso(curso.id)} style={{ all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer', display: 'block' }}>
+      <Link to={`/app/formacion/curso-${curso.numero}`} style={{ textDecoration: 'none', display: 'block', cursor: 'pointer' }}>
         <Portada src={img} pos={pos} brillo={useBrillo} escala={esc} />
         <div style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -261,7 +261,7 @@ function CursoCard({ curso, vistas, abrirCurso, portadas, brillo, posiciones, es
           <div style={{ ...barraFondo, marginTop: 14 }} aria-hidden><div style={{ width: `${p.porcentaje}%`, height: '100%', background: GOLD_REF_DK, borderRadius: 0, transition: 'width 500ms ease' }} /></div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 6 }}>{p.hechas} de {p.total} vistas</div>
         </div>
-      </button>
+      </Link>
     </section>
   );
 }
@@ -334,7 +334,7 @@ function Modulo1Card({ userId, m1Prog, portadas, brillo, posiciones, escalas }) 
   );
 }
 
-function Listado({ cursos: todosLosCursos, progreso, abrirCurso, userId }) {
+function Listado({ cursos: todosLosCursos, progreso, userId }) {
   const cursos = todosLosCursos.filter((c) => c.numero !== 1);
   const m1Prog = leerModulo1Progreso(userId);
 
@@ -375,7 +375,7 @@ function Listado({ cursos: todosLosCursos, progreso, abrirCurso, userId }) {
       </div>
       {cursos.map((c) => (
         <CursoCard key={`b-${c.id}`} curso={c} vistas={progreso.vistas}
-                   abrirCurso={abrirCurso} portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />
+                   portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />
       ))}
 
       <div className="vl-ancho" style={{ background: '#e8d9b8', padding: '10px 16px', borderRadius: 6, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY }}>Opción A — Esculturas</div>
@@ -385,7 +385,7 @@ function Listado({ cursos: todosLosCursos, progreso, abrirCurso, userId }) {
       </div>
       {cursos.map((c) => (
         <CursoCard key={`a-${c.id}`} curso={c} vistas={progreso.vistas}
-                   abrirCurso={abrirCurso} portadas={PORTADAS_A} />
+                   portadas={PORTADAS_A} />
       ))}
     </div>
   );
@@ -422,5 +422,5 @@ export default function Formacion() {
     const curso = cat.cursos.find((c) => c.id === idCurso);
     if (curso) return <VistaCurso curso={curso} progreso={progreso} volver={volver} irALeccion={abrirLeccion} />;
   }
-  return <Listado cursos={cat.cursos} progreso={progreso} abrirCurso={abrirCurso} userId={user.id} />;
+  return <Listado cursos={cat.cursos} progreso={progreso} userId={user.id} />;
 }

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useOutletContext, Link } from 'react-router-dom';
-import moduloData from '../data/modulo1.json';
+import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
@@ -12,6 +11,29 @@ import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB
 import { barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoFlecha, IconoPlay, IconoChevron, IconoVideo, IconoEjercicio, IconoCuestionario } from '../app/Iconos';
 import { UMBRAL_VISTA } from './cursos';
+
+import { useCatalogo } from './useFormacion';
+
+const MODULOS = {
+  'curso-1': () => import('../data/modulo1.json'),
+};
+
+function catalogoAModulo(curso) {
+  return {
+    id: `curso${curso.numero}`,
+    titulo: curso.titulo,
+    curso: curso.numero,
+    descripcion: `${curso.lecciones.length} módulos`,
+    pasos: curso.lecciones.map((l, i) => ({
+      id: l.id,
+      num: i + 1,
+      tipo: 'video',
+      titulo: l.titulo,
+      vimeoId: l.vimeoId,
+      visible: true,
+    })),
+  };
+}
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
@@ -28,7 +50,7 @@ function agruparIntro(parrafos) {
   return parrafos.map(p => [p]);
 }
 
-function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, notasProps }) {
+function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
   const completado = Boolean(progreso.completados[paso.id]);
   const lec = moduloDelPaso(pasos, paso.id);
   const paginas = agruparIntro(paso.intro);
@@ -61,7 +83,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, notasPr
     const esUltima = introIdx === paginas.length - 1;
     return (
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <button type="button" onClick={volver} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14 }}>← Curso 1</button>
+        <button type="button" onClick={volver} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14 }}>← Curso {cursoNum}</button>
         <div style={tarjeta}>
           <div style={eyebrow}>{lec ? `Módulo ${lec.numero}` : 'Introducción'}</div>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: NAVY, margin: '8px 0 8px' }}>{paso.titulo}</h2>
@@ -151,7 +173,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, notasPr
   return (
     <div className="vl-leccion" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <style>{`@media (min-width: 1100px) { .vl-leccion { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-leccion > .vl-back { grid-column: 1 / -1; } .vl-leccion > .vl-video-col { position: sticky; top: 20px; } }`}</style>
-      <button type="button" className="vl-back" onClick={volver} style={{ justifySelf: 'start', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: -10 }}>← Curso 1</button>
+      <button type="button" className="vl-back" onClick={volver} style={{ justifySelf: 'start', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: -10 }}>← Curso {cursoNum}</button>
       <div className="vl-video-col">
         <Reproductor leccion={{ id: paso.id, vimeoId: paso.vimeoId, titulo: paso.titulo }} onProgreso={onProgreso} />
       </div>
@@ -332,7 +354,7 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
-function VistaListado({ modulo, pasos, visibles, completados, irA }) {
+function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1 }) {
   const progAll = progresoModulo(pasos, completados);
   const vids = pasos.filter((p) => p.tipo === 'video');
   const vidsHechos = vids.filter((p) => completados[p.id]).length;
@@ -356,7 +378,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA }) {
         <Link to="/app/formacion" style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
           ← Toda la formación
         </Link>
-        <div style={eyebrow}>Curso 1</div>
+        <div style={eyebrow}>Curso {cursoNum}</div>
         <h1 style={{ ...titulo(28), margin: '8px 0 10px' }}>{modulo.titulo}</h1>
         <p style={{ ...parrafo, marginBottom: 24 }}>{modulo.descripcion}</p>
 
@@ -434,6 +456,53 @@ function VistaListado({ modulo, pasos, visibles, completados, irA }) {
 
 export default function Modulo() {
   const { user } = useOutletContext();
+  const { cursoId = 'curso-1' } = useParams();
+  const [moduloData, setModuloData] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const cat = useCatalogo();
+
+  useEffect(() => {
+    const loader = MODULOS[cursoId];
+    if (loader) {
+      setCargando(true);
+      loader().then((m) => { setModuloData(m.default ?? m); setCargando(false); });
+      return;
+    }
+    if (cat.cargando) return;
+    const num = parseInt(cursoId.replace('curso-', ''), 10);
+    const curso = cat.cursos?.find((c) => c.numero === num);
+    if (curso) {
+      setModuloData(catalogoAModulo(curso));
+    } else {
+      setModuloData(null);
+    }
+    setCargando(false);
+  }, [cursoId, cat.cargando, cat.cursos]);
+
+  if (cargando || cat.cargando) {
+    return (
+      <section style={tarjeta}>
+        <div style={eyebrow}>Curso</div>
+        <p style={{ ...parrafo, marginTop: 10 }}>Cargando…</p>
+      </section>
+    );
+  }
+
+  if (!moduloData) {
+    return (
+      <section style={tarjeta}>
+        <div style={eyebrow}>Curso no encontrado</div>
+        <p style={{ ...parrafo, marginTop: 10 }}>Este curso aún no está disponible.</p>
+        <Link to="/app/formacion" style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK, textDecoration: 'none', marginTop: 12, display: 'inline-block' }}>← Toda la formación</Link>
+      </section>
+    );
+  }
+
+  return <ModuloContenido moduloData={moduloData} user={user} cursoId={cursoId} />;
+}
+
+function ModuloContenido({ moduloData, user, cursoId }) {
+  const cursoNum = moduloData.curso != null ? moduloData.curso : (parseInt(cursoId.replace('curso-', ''), 10) || 1);
   const progreso = useModuloProgreso(user.id, moduloData.id);
   const notasHook = useNotas(user.id, moduloData.id);
   const [temp, setTemp] = useState(undefined);
@@ -492,7 +561,7 @@ export default function Modulo() {
   if (temp === undefined) {
     return (
       <section style={tarjeta}>
-        <div style={eyebrow}>Curso 1</div>
+        <div style={eyebrow}>Curso {cursoNum}</div>
         <p style={{ ...parrafo, marginTop: 10 }}>Cargando…</p>
       </section>
     );
@@ -501,7 +570,7 @@ export default function Modulo() {
   if (pasoActual) {
     if (pasoActual.tipo === 'video') {
       const videosPasos = pasos.filter((p) => p.tipo === 'video');
-      return <PasoVideo paso={pasoActual} pasos={pasos} progreso={progreso} avanzar={avanzar} retroceder={pasoAnterior(pasos, pasoActual.id) ? retroceder : null} volver={volver} notasProps={{ videos: videosPasos, completados: progreso.completados, notas: notasHook.notas, onAgregar: notasHook.agregar, onEliminar: notasHook.eliminar }} />;
+      return <PasoVideo paso={pasoActual} pasos={pasos} progreso={progreso} avanzar={avanzar} retroceder={pasoAnterior(pasos, pasoActual.id) ? retroceder : null} volver={volver} cursoNum={cursoNum} notasProps={{ videos: videosPasos, completados: progreso.completados, notas: notasHook.notas, onAgregar: notasHook.agregar, onEliminar: notasHook.eliminar }} />;
     }
     const videoCtx = videoAnterior(pasos, pasoActual.id);
     const videoCtxMod = videoCtx ? moduloDelPaso(pasos, videoCtx.id) : null;
@@ -511,7 +580,7 @@ export default function Modulo() {
           background: 'none', border: 'none', padding: 0, cursor: 'pointer',
           color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14,
         }}>
-          ← {videoCtx ? `Módulo ${videoCtxMod?.numero ?? 0}` : 'Curso 1'}
+          ← {videoCtx ? `Módulo ${videoCtxMod?.numero ?? 0}` : `Curso ${cursoNum}`}
         </button>
         {videoCtx && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 16, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>
@@ -532,6 +601,7 @@ export default function Modulo() {
       visibles={visibles}
       completados={progreso.completados}
       irA={irA}
+      cursoNum={cursoNum}
     />
   );
 }
