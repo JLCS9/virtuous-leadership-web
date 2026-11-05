@@ -268,11 +268,6 @@ export function Quiz({ paso, onComplete, modulo }) {
   return (
     <Shell titulo="Cuestionario" actual={idx + 1} total={preguntas.length}>
       <div style={tarjeta}>
-        {paso.diagrama_temperamentos && (
-          <div style={{ marginBottom: 20, textAlign: 'center' }}>
-            <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
-          </div>
-        )}
         <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '0 0 16px', lineHeight: 1.5 }}>
           Responde las siguientes preguntas del cuestionario.
         </p>
@@ -285,6 +280,11 @@ export function Quiz({ paso, onComplete, modulo }) {
               correcta={origIdx === preg.correcta} revelada={revelada} onClick={() => elegir(origIdx)} />
           ))}
         </div>
+        {paso.diagrama_temperamentos && (
+          <div style={{ marginTop: 20, textAlign: 'center' }}>
+            <img src={diagramaTemperamentosImg} alt="Diagrama de los 4 temperamentos" style={{ width: '100%', maxWidth: 360, height: 'auto' }} />
+          </div>
+        )}
         {revelada && (
           <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             {idx > 0 ? (
