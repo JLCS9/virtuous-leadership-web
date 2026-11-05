@@ -376,23 +376,12 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
             )}
           </div>
         </div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
-          {[{ nombre: 'Curso 1', pct: m1VideosPct }]
-            .concat(cursos.map(c => ({ nombre: `Curso ${c.numero}`, pct: progresoCurso(c, progreso.vistas).porcentaje })))
-            .map((cp, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, minWidth: 56 }}>
-                <Anillo valor={cp.pct} tam={48} />
-                <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textAlign: 'center', lineHeight: 1.25 }}>{cp.nombre}</span>
-              </div>
-            ))}
-        </div>
       </section>
 
       <div className="vl-ancho">
         <CuadernoPersonal userId={userId} pasos={moduloData.pasos} />
       </div>
 
-      <div className="vl-ancho" style={{ background: '#b8c8d9', padding: '10px 16px', borderRadius: 6, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY }}>Opción B — Cuadros</div>
       <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
         <CtaFormacion prog={m1ProgVid} />
         <Modulo1Card userId={userId} m1Prog={m1Prog} portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
@@ -402,15 +391,6 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
                    portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />
       ))}
 
-      <div className="vl-ancho" style={{ background: '#e8d9b8', padding: '10px 16px', borderRadius: 6, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY }}>Opción A — Esculturas</div>
-      <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        <CtaFormacion prog={m1ProgVid} />
-        <Modulo1Card userId={userId} m1Prog={m1Prog} />
-      </div>
-      {cursos.map((c) => (
-        <CursoCard key={`a-${c.id}`} curso={c} vistas={progreso.vistas}
-                   portadas={PORTADAS_A} />
-      ))}
     </div>
   );
 }

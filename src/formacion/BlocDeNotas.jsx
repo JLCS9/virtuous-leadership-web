@@ -135,11 +135,9 @@ export function BlocDeNotas({ videos, completados, pasoActualId, notas, onAgrega
             }}
           >
             {desbloqueadas.map((v, i) => {
-              const numNotas = (notas[v.id] ?? []).length;
-              const etiqueta = numNotas === 0 ? '' : ` · ${numNotas} nota${numNotas === 1 ? '' : 's'}`;
               return (
                 <option key={v.id} value={v.id}>
-                  Módulo {i} — {v.titulo}{etiqueta}
+                  Módulo {i} — {v.titulo}
                 </option>
               );
             })}

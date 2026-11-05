@@ -14,6 +14,12 @@ import retratoMEL from './assets/retrato-MEL.jpg';
 import retratoSAN from './assets/retrato-SAN.jpg';
 import retratoFLE from './assets/retrato-FLE.jpg';
 import retratoTEMP from './assets/retrato-TEMP.jpg';
+import retratoCaracter from './assets/retrato-caracter.jpg';
+import retratoPrudencia from './assets/retrato-prudencia.jpg';
+import retratoFortaleza from './assets/retrato-fortaleza.jpg';
+import retratoDominio from './assets/retrato-dominio.jpg';
+import retratoJusticia from './assets/retrato-justicia.jpg';
+import retratoMagnanimidad from './assets/retrato-magnanimidad.jpg';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
@@ -46,7 +52,7 @@ const IconoLupa = () => (
 );
 const TEMP_SUBTITULO = { COL: 'la acción', MEL: 'las ideas', SAN: 'las personas', FLE: 'la paz' };
 const RETRATO_TEMP = { COL: retratoCOL, MEL: retratoMEL, SAN: retratoSAN, FLE: retratoFLE };
-const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Temperamento colérico': retratoCOL, 'Temperamento melancólico': retratoMEL, 'Temperamento sanguíneo': retratoSAN, 'Temperamento flemático': retratoFLE };
+const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Temperamento colérico': retratoCOL, 'Temperamento melancólico': retratoMEL, 'Temperamento sanguíneo': retratoSAN, 'Temperamento flemático': retratoFLE, 'Carácter': retratoCaracter, 'Prudencia': retratoPrudencia, 'Fortaleza': retratoFortaleza, 'Dominio de sí': retratoDominio, 'Justicia': retratoJusticia, 'Magnanimidad': retratoMagnanimidad };
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
