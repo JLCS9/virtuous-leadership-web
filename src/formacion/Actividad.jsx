@@ -570,7 +570,7 @@ function Lightbox({ src, alt, onClose }) {
 
   return createPortal(
     <div style={{
-      position: 'fixed', inset: 0, zIndex: 100,
+      position: 'fixed', inset: 0, zIndex: 9999,
       display: 'grid', placeItems: 'center',
       background: zoomed ? 'rgba(15,29,56,0.92)' : 'rgba(15,29,56,0.55)',
       transition: 'background 300ms ease',
@@ -583,17 +583,18 @@ function Lightbox({ src, alt, onClose }) {
         transition: 'max-width 300ms ease, max-height 300ms ease',
       }}>
         <button type="button" onClick={onClose} aria-label="Cerrar" style={{
-          position: zoomed ? 'fixed' : 'absolute', top: zoomed ? 12 : -40, right: zoomed ? 16 : 0,
-          background: zoomed ? 'rgba(15,29,56,0.7)' : 'none', border: 'none',
-          fontSize: 32, color: PAPER, cursor: 'pointer', padding: '4px 10px', lineHeight: 1,
-          textShadow: '0 1px 4px rgba(0,0,0,0.5)', borderRadius: 4, zIndex: 101,
-        }}>&times;</button>
+          position: zoomed ? 'fixed' : 'absolute', top: zoomed ? 12 : -44, right: zoomed ? 16 : 0,
+          background: zoomed ? NAVY : 'none', border: 'none', borderRadius: 0,
+          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: PAPER,
+          cursor: 'pointer', padding: '8px 16px', lineHeight: 1, letterSpacing: '0.06em',
+          textTransform: 'uppercase', zIndex: 10000,
+        }}>Cerrar</button>
         <img src={src} alt={alt} onClick={() => setZoomed(!zoomed)} style={{
           width: zoomed ? 'max(1400px, 95vw)' : '100%',
           maxWidth: zoomed ? 'none' : '100%',
           maxHeight: zoomed ? 'none' : '92vh',
           display: 'block', cursor: zoomed ? 'zoom-out' : 'zoom-in',
-          boxShadow: zoomed ? 'none' : '0 8px 32px rgba(15,29,56,0.32)',
+          boxShadow: zoomed ? 'none' : '0 12px 40px rgba(15,29,56,0.30)',
           transition: 'width 300ms ease',
         }} />
       </div>

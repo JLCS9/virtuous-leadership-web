@@ -4,7 +4,7 @@ import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento } from '../lib/virtudes.js';
 import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_LT } from '../theme';
-import { botonPrimario, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
+import { botonPrimario, botonSobreClaro, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha } from './Iconos';
 import { useCamino } from './useCamino';
 import { usePersonas } from './usePersonas';
@@ -24,12 +24,12 @@ function Hero({ children }) {
 
 function PopupFormacion({ onCerrar }) {
   return (
-    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15,29,56,0.45)', backdropFilter: 'blur(4px)' }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ background: PAPER, borderRadius: 12, padding: '32px 28px 28px', maxWidth: 380, width: '90%', textAlign: 'center', boxShadow: '0 16px 48px rgba(15,29,56,0.25)' }}>
-        <div style={{ ...eyebrow, color: MUTED, marginBottom: 10 }}>Próximamente</div>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 12px', lineHeight: 1.3 }}>Solo se han editado temas de la formación</p>
-        <p style={{ ...parrafo, fontSize: 14.5, margin: '0 0 22px', color: MUTED }}>Esta sección se activará próximamente. Por ahora, explora los cursos en Formación.</p>
-        <button type="button" onClick={onCerrar} style={{ ...botonPrimario, width: '100%', justifyContent: 'center' }}>Entendido</button>
+    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15,29,56,0.55)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ ...tarjeta, maxWidth: 400, width: '90%', textAlign: 'center', boxShadow: '0 12px 40px rgba(15,29,56,0.30)' }}>
+        <div style={{ ...eyebrow, marginBottom: 12 }}>Próximamente</div>
+        <h2 style={{ ...titulo(24), margin: '0 0 14px', lineHeight: 1.25 }}>Solo se han editado temas de la formación</h2>
+        <p style={{ ...parrafo, fontSize: 15, margin: '0 0 24px' }}>Esta sección se activará próximamente. Por ahora, explora los cursos en Formación.</p>
+        <button type="button" onClick={onCerrar} style={{ ...botonSobreClaro, width: '100%', justifyContent: 'center' }}>Entendido</button>
       </div>
     </div>
   );
