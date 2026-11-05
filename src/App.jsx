@@ -22,6 +22,7 @@ import PortalGuard from './app/PortalGuard';
 import Hoy from './app/Hoy';
 import Camino from './app/Camino';
 import Formacion from './formacion/Formacion';
+import Modulo from './formacion/Modulo';
 import Perfil from './app/Perfil';
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
@@ -101,6 +102,7 @@ export default function App() {
             <Route index element={<Hoy />} />
             <Route path="camino" element={<Navigate to=".." replace />} />
             <Route path="formacion" element={<Formacion />} />
+            <Route path="formacion/:cursoId" element={<Modulo />} />
             <Route path="perfil" element={<Perfil />} />
           </Route>
         );

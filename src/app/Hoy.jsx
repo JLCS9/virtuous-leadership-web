@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
+import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link, useT } from '../i18n';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento } from '../lib/virtudes.js';
 import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_LT } from '../theme';
-import { botonPrimario, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
+import { botonPrimario, botonSobreClaro, botonContorno, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck, IconoFlecha } from './Iconos';
 import { useCamino } from './useCamino';
 import { usePersonas } from './usePersonas';
@@ -22,10 +24,26 @@ function Hero({ children }) {
   );
 }
 
+function PopupFormacion({ onCerrar }) {
+  return createPortal(
+    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'grid', placeItems: 'center', background: 'rgba(15,29,56,0.22)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ ...tarjeta, maxWidth: 400, width: '90%', textAlign: 'center', boxShadow: '0 8px 32px rgba(15,29,56,0.22)' }}>
+        <div style={{ ...eyebrow, marginBottom: 12 }}>Próximamente</div>
+        <h2 style={{ ...titulo(24), margin: '0 0 14px', lineHeight: 1.25 }}>Solo se han editado temas de la formación</h2>
+        <p style={{ ...parrafo, fontSize: 15, margin: '0 0 24px' }}>Esta sección se activará próximamente. Por ahora, explora los cursos en Formación.</p>
+        <button type="button" onClick={onCerrar} style={{ ...botonSobreClaro, width: '100%', justifyContent: 'center' }}>Entendido</button>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 function RetoDeLaSemana() {
   const camino = useCamino();
   const personas = usePersonas();
+  const [popup, setPopup] = useState(false);
   const etiqueta = { ...eyebrow, color: GOLD_REF_LT, marginTop: 6 };
+  const abrirPopup = (e) => { e.preventDefault(); setPopup(true); };
 
   if (camino.cargando) {
     return <Hero><div style={etiqueta}>Tu reto de la semana</div><p style={{ fontFamily: FONT_SLAB, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu camino…</p></Hero>;
@@ -41,23 +59,33 @@ function RetoDeLaSemana() {
   }
   if (!camino.perfil) {
     return (
-      <Hero>
-        <div style={etiqueta}>Antes de empezar</div>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
-        <Link to="/app/camino?paso=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
-      </Hero>
+      <>
+        {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+        <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+          <Hero>
+            <div style={etiqueta}>Antes de empezar</div>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
+            <span style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></span>
+          </Hero>
+        </div>
+      </>
     );
   }
 
   const { diaHoy } = camino;
   if (diaHoy > TOTAL_DIAS) {
     return (
-      <Hero>
-        <div style={etiqueta}>Tu camino</div>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
-      </Hero>
+      <>
+        {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+        <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+          <Hero>
+            <div style={etiqueta}>Tu camino</div>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
+          </Hero>
+        </div>
+      </>
     );
   }
 
@@ -66,31 +94,34 @@ function RetoDeLaSemana() {
   const paso = siguientePaso(camino);
   const conQuien = empezado ? camino.porDia[diaHoy]?.con_quien : null;
   const sugerencia = empezado && !infoDia(diaHoy)?.cierre ? sugerenciaDelDia(personas.lista, camino.porDia, diaHoy) : null;
-  const destino = !paso || paso.tipo === 'hecho' ? null
-    : paso.tipo === 'examen' ? `/app/camino?examen=${paso.dia}` : `/app/camino?dia=${paso.dia}`;
   return (
-    <Hero>
-      <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
-      <p style={{ fontFamily: FONT_SLAB, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
-      {conQuien ? (
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
-      ) : sugerencia && (
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
-          Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
-        </p>
-      )}
-      {destino ? (
-        <Link to={destino} style={botonPrimario}>
-          {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
-        </Link>
-      ) : empezado && (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: GOLD_REF_LT }}>
-          <IconoCheck width={18} height={18} /> Hoy está hecho
-        </span>
-      )}
-    </Hero>
+    <>
+      {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+      <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+        <Hero>
+          <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
+          <p style={{ fontFamily: FONT_SLAB, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
+          {conQuien ? (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
+          ) : sugerencia && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
+              Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
+            </p>
+          )}
+          {(paso && paso.tipo !== 'hecho') ? (
+            <span style={botonPrimario}>
+              {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
+            </span>
+          ) : empezado && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: GOLD_REF_LT }}>
+              <IconoCheck width={18} height={18} /> Hoy está hecho
+            </span>
+          )}
+        </Hero>
+      </div>
+    </>
   );
 }
 
@@ -159,7 +190,29 @@ function MiResultado() {
   );
 }
 
+function BannerTestOk({ onClose }) {
+  return (
+    <div style={{ ...tarjeta, background: NAVY, color: PAPER, display: 'flex', alignItems: 'center', gap: 14, gridColumn: '1 / -1' }}>
+      <IconoCheck width={20} height={20} />
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 600 }}>Resultado guardado</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 13, opacity: 0.8, marginTop: 4 }}>Tu test de temperamento se ha registrado. Esta es una versión interna del portal.</div>
+      </div>
+      <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', color: PAPER, fontFamily: FONT_BODY, fontSize: 13, cursor: 'pointer', opacity: 0.7, padding: '4px 8px' }}>Cerrar</button>
+    </div>
+  );
+}
+
 export default function Hoy() {
+  const [params, setParams] = useSearchParams();
+  const [showBanner, setShowBanner] = useState(params.get('test') === 'ok');
+
+  function closeBanner() {
+    setShowBanner(false);
+    params.delete('test');
+    setParams(params, { replace: true });
+  }
+
   return (
     <div className="vl-hoy">
       <style>{`
@@ -169,6 +222,7 @@ export default function Hoy() {
           .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
         }
       `}</style>
+      {showBanner && <BannerTestOk onClose={closeBanner} />}
       <div className="vl-hoy-izq">
         <RetoDeLaSemana />
         <MiResultado />

@@ -18,7 +18,11 @@ export async function leerPerfil(userId) {
   };
 }
 
-export async function cambiarPassword(newPassword) {
+export async function cambiarPassword(oldPassword, newPassword) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user?.email) throw new Error('No session');
+  const { error: authErr } = await supabase.auth.signInWithPassword({ email: user.email, password: oldPassword });
+  if (authErr) throw new Error('wrong_password');
   const { error } = await supabase.auth.updateUser({ password: newPassword });
   if (error) throw error;
 }

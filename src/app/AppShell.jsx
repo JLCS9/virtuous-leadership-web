@@ -17,7 +17,7 @@ const PESTANAS = [
 ];
 
 function indicePestana(pathname, lp) {
-  return PESTANAS.findIndex(({ ruta }) => pathname === lp(ruta));
+  return PESTANAS.findIndex(({ ruta, bloqueada }) => !bloqueada && pathname === lp(ruta));
 }
 
 export default function AppShell({ user }) {
@@ -202,9 +202,11 @@ function NavBurbuja({ pathname, lp }) {
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
               padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
+              fontFamily: FONT_BODY, fontSize: 11.5, letterSpacing: '0.02em',
+              position: 'relative', zIndex: 1,
               color: activa ? NAVY : MUTED, background: 'transparent',
-              fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: activa ? 700 : 500, letterSpacing: '0.02em',
-              transition: 'color 200ms ease', position: 'relative', zIndex: 1,
+              fontWeight: activa ? 700 : 500,
+              transition: 'color 200ms ease',
             }}>
               <Icono />
               {etiqueta}

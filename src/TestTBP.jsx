@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT, useLocalPath, ROUTES } from './i18n';
 import { accountsEnabled } from './account/supabase';
+import { useSession } from './account/useSession';
 import { AccountError, createAccountAndSignIn, recordFormConsents, saveTemperamentResult, sendPasswordReset } from './account/account';
 import { CHALLENGE_VIRTUE } from './account/challengeVirtues';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
@@ -1253,6 +1254,7 @@ export default function TestTBP() {
   const [conoceAlex, setConoceAlex] = useState(null);
   const [qualifySource, setQualifySource] = useState('');
   const [guardianPending, setGuardianPending] = useState(false);
+  const session = useSession();
 
   const totalQuestions = useMemo(() => 16 + tieOrder.length + 6 + 1 + 1, [tieOrder]);
 
@@ -1370,7 +1372,72 @@ export default function TestTBP() {
 
   function answerQualify2(value) {
     setQualifySource(value);
-    setPhase(PHASE.GATE);
+    if (session?.user) {
+      autoSubmitLoggedIn(value);
+    } else {
+      setPhase(PHASE.GATE);
+    }
+  }
+
+  async function autoSubmitLoggedIn(qSource) {
+    const user = session.user;
+    const meta = user.user_metadata || {};
+    const profile = t(`result.profiles.${result.key}`);
+    const tempInfo = t(`temperaments.${primario}`);
+    const payload = {
+      contact: {
+        name: meta.first_name || '',
+        email: user.email,
+        birthYear: Number(meta.birth_year) || 0,
+        sex: meta.sex || '',
+        consent: true,
+        consentTimestamp: new Date().toISOString(),
+        language: lang,
+        conoceAlex: conoceAlex === true,
+        qualifySource: qSource || '',
+      },
+      result: {
+        profileKey: result.key,
+        profileName: profile.name,
+        profileLabel: profile.label,
+        primario,
+        primarioName: tempInfo.name,
+        challenge: profile.challenge,
+        isPure: result.isPure,
+        margin: result.margin,
+        scoreS2: result.score_s2,
+        secundario: result.secundario || null,
+      },
+      meta: { version: 'tbp-v1', submittedAt: new Date().toISOString() },
+    };
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'fin_test_temperamento',
+      test_anio: payload.contact.birthYear,
+      test_sexo: payload.contact.sex,
+      test_temperamento: primario,
+    });
+    submitContact(payload).catch(err => console.error('submitContact error:', err));
+    const resultToSave = {
+      profileKey: result.key,
+      primario,
+      secundario: result.secundario || null,
+      isPure: result.isPure,
+      margin: result.margin,
+      scoreS2: result.score_s2,
+      answers: {
+        stage1: s1Order.map((it, i) => [it.id, s1Answers[i]]),
+        tie: tieOrder.map((it, i) => [it.id, tieAnswers[i]]),
+        stage2: s2Order.map((it, i) => [it.id, s2Answers[i]]),
+      },
+      language: lang,
+    };
+    try {
+      await saveTemperamentResult(resultToSave);
+    } catch (err) {
+      console.error('saveTemperamentResult error:', err);
+    }
+    navigate(lp('/app') + '?test=ok');
   }
 
   function onGateOk(opts = {}) {
