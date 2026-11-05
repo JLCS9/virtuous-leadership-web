@@ -1435,13 +1435,13 @@ export function CirculoPersonas({ paso, user, onComplete }) {
           situacion: 'nota_formacion', palabra: null, temperamento: null, linea: notas.trim(),
         });
       }
-      setPersonas(prev => [...prev, { nombre: n, grupo, secundario }]);
+      setPersonas(prev => [...prev, { nombre: n, grupo, primario: temp, secundario }]);
       setNombre('');
       setGrupo(null);
       setRespuestas([]);
       setPreguntaIdx(0);
       setNotas('');
-      setFase('datos');
+      setFase('listado');
     } catch (err) {
       console.error('Error al guardar persona:', err);
     } finally {
@@ -1557,6 +1557,64 @@ export function CirculoPersonas({ paso, user, onComplete }) {
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
             }}>
               {personas.length > 0 ? 'Continuar →' : 'Saltar →'}
+            </button>
+          </div>
+        </>}
+
+        {/* ── FASE LISTADO ── */}
+        {fase === 'listado' && <>
+          <h3 style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 6px', textAlign: 'center' }}>
+            Personas añadidas
+          </h3>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, textAlign: 'center', margin: '0 0 20px' }}>
+            {personas.length === 1 ? '1 persona' : `${personas.length} personas`}
+          </p>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
+            {personas.map((p, i) => {
+              const grupoLabel = GRUPOS_SIMPLE.find(([k]) => k === p.grupo)?.[1] ?? p.grupo;
+              return (
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '14px 18px', background: PAPER,
+                  borderLeft: `4px solid ${TEMP_COLORS[p.primario] ?? GOLD_REF}`,
+                  border: `1px solid ${LINE}`, borderLeftWidth: 4, borderLeftColor: TEMP_COLORS[p.primario] ?? GOLD_REF,
+                }}>
+                  <span style={{
+                    display: 'inline-grid', placeItems: 'center', width: 38, height: 38, borderRadius: '50%',
+                    background: TEMP_COLORS[p.primario] ? `${TEMP_COLORS[p.primario]}22` : BEIGE,
+                    fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: TEMP_COLORS[p.primario] ?? NAVY,
+                    flexShrink: 0,
+                  }}>
+                    {i + 1}
+                  </span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY }}>
+                      {p.nombre}
+                    </div>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>
+                      {grupoLabel} · {TEMP_NOMBRE[p.primario]}{p.secundario ? ` / ${TEMP_NOMBRE[p.secundario]}` : ''}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+            <button type="button" onClick={() => setFase('datos')} style={{
+              fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY,
+              background: PAPER, border: `1.5px solid ${LINE}`, borderRadius: 0,
+              padding: '14px 24px', cursor: 'pointer', flex: 1, minWidth: 160,
+            }}>
+              + Añadir otra persona
+            </button>
+            <button type="button" onClick={() => onComplete({ personas: personas.length })} style={{
+              fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0,
+              padding: '14px 24px', cursor: 'pointer', flex: 1, minWidth: 160,
+            }}>
+              Continuar →
             </button>
           </div>
         </>}
