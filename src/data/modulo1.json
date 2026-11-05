@@ -516,6 +516,26 @@
             "SAN",
             "FLE"
           ]
+        },
+        {
+          "texto": "Organiza una cena improvisada para animar a un amigo que está pasándolo mal. En media hora ha llamado a diez personas y montado el plan.",
+          "respuesta": "SAN",
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
+        },
+        {
+          "texto": "El equipo cambia de estrategia a mitad de proyecto. Mientras otros protestan, acepta el cambio sin alterarse y se adapta al nuevo plan sin perder la calma.",
+          "respuesta": "FLE",
+          "opciones": [
+            "COL",
+            "MEL",
+            "SAN",
+            "FLE"
+          ]
         }
       ]
     },

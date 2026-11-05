@@ -712,6 +712,9 @@ export function Identifica({ paso, onComplete, modulo }) {
     return (
       <Shell titulo={paso.titulo} actual={1} total={total}>
         <div style={tarjeta}>
+          <h3 style={{ fontFamily: FONT_BODY, fontSize: 20, fontWeight: 700, color: NAVY, margin: '0 0 14px', lineHeight: 1.4 }}>
+            Analiza la foto y entiende el diagrama de virtudes
+          </h3>
           <div style={{ marginBottom: 18, cursor: 'zoom-in' }} onClick={() => setLightbox(true)}>
             <img src={diagramaVirtudesImg} alt="Diagrama de las 6 virtudes del líder" style={{ width: '100%', height: 'auto' }} />
           </div>
