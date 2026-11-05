@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { LocalLink as Link, useT } from '../i18n';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
@@ -23,15 +24,16 @@ function Hero({ children }) {
 }
 
 function PopupFormacion({ onCerrar }) {
-  return (
-    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15,29,56,0.55)' }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ ...tarjeta, maxWidth: 400, width: '90%', textAlign: 'center', boxShadow: '0 12px 40px rgba(15,29,56,0.30)' }}>
+  return createPortal(
+    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'grid', placeItems: 'center', background: 'rgba(15,29,56,0.22)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ ...tarjeta, maxWidth: 400, width: '90%', textAlign: 'center', boxShadow: '0 8px 32px rgba(15,29,56,0.22)' }}>
         <div style={{ ...eyebrow, marginBottom: 12 }}>Próximamente</div>
         <h2 style={{ ...titulo(24), margin: '0 0 14px', lineHeight: 1.25 }}>Solo se han editado temas de la formación</h2>
         <p style={{ ...parrafo, fontSize: 15, margin: '0 0 24px' }}>Esta sección se activará próximamente. Por ahora, explora los cursos en Formación.</p>
         <button type="button" onClick={onCerrar} style={{ ...botonSobreClaro, width: '100%', justifyContent: 'center' }}>Entendido</button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
