@@ -22,10 +22,25 @@ function Hero({ children }) {
   );
 }
 
+function PopupFormacion({ onCerrar }) {
+  return (
+    <div onClick={onCerrar} style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(15,29,56,0.45)', backdropFilter: 'blur(4px)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: PAPER, borderRadius: 12, padding: '32px 28px 28px', maxWidth: 380, width: '90%', textAlign: 'center', boxShadow: '0 16px 48px rgba(15,29,56,0.25)' }}>
+        <div style={{ ...eyebrow, color: MUTED, marginBottom: 10 }}>Próximamente</div>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 12px', lineHeight: 1.3 }}>Solo se han editado temas de la formación</p>
+        <p style={{ ...parrafo, fontSize: 14.5, margin: '0 0 22px', color: MUTED }}>Esta sección se activará próximamente. Por ahora, explora los cursos en Formación.</p>
+        <button type="button" onClick={onCerrar} style={{ ...botonPrimario, width: '100%', justifyContent: 'center' }}>Entendido</button>
+      </div>
+    </div>
+  );
+}
+
 function RetoDeLaSemana() {
   const camino = useCamino();
   const personas = usePersonas();
+  const [popup, setPopup] = useState(false);
   const etiqueta = { ...eyebrow, color: GOLD_REF_LT, marginTop: 6 };
+  const abrirPopup = (e) => { e.preventDefault(); setPopup(true); };
 
   if (camino.cargando) {
     return <Hero><div style={etiqueta}>Tu reto de la semana</div><p style={{ fontFamily: FONT_SLAB, fontSize: 24, margin: '14px 0 0', opacity: 0.75 }}>Preparando tu camino…</p></Hero>;
@@ -41,23 +56,33 @@ function RetoDeLaSemana() {
   }
   if (!camino.perfil) {
     return (
-      <Hero>
-        <div style={etiqueta}>Antes de empezar</div>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
-        <Link to="/app/camino?paso=onboarding" style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></Link>
-      </Hero>
+      <>
+        {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+        <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+          <Hero>
+            <div style={etiqueta}>Antes de empezar</div>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Personaliza tu camino.</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: '0 0 20px', opacity: 0.8 }}>Tu temperamento ya lo conocemos. Ahora cuéntanos un poco de tu vida para que el camino sea tuyo. Son dos minutos.</p>
+            <span style={botonPrimario}>Empezar <IconoFlecha width={18} height={18} /></span>
+          </Hero>
+        </div>
+      </>
     );
   }
 
   const { diaHoy } = camino;
   if (diaHoy > TOTAL_DIAS) {
     return (
-      <Hero>
-        <div style={etiqueta}>Tu camino</div>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
-      </Hero>
+      <>
+        {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+        <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+          <Hero>
+            <div style={etiqueta}>Tu camino</div>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
+          </Hero>
+        </div>
+      </>
     );
   }
 
@@ -66,31 +91,34 @@ function RetoDeLaSemana() {
   const paso = siguientePaso(camino);
   const conQuien = empezado ? camino.porDia[diaHoy]?.con_quien : null;
   const sugerencia = empezado && !infoDia(diaHoy)?.cierre ? sugerenciaDelDia(personas.lista, camino.porDia, diaHoy) : null;
-  const destino = !paso || paso.tipo === 'hecho' ? null
-    : paso.tipo === 'examen' ? `/app/camino?examen=${paso.dia}` : `/app/camino?dia=${paso.dia}`;
   return (
-    <Hero>
-      <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
-      <p style={{ fontFamily: FONT_SLAB, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
-      {conQuien ? (
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
-      ) : sugerencia && (
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
-          Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
-        </p>
-      )}
-      {destino ? (
-        <Link to={destino} style={botonPrimario}>
-          {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
-        </Link>
-      ) : empezado && (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: GOLD_REF_LT }}>
-          <IconoCheck width={18} height={18} /> Hoy está hecho
-        </span>
-      )}
-    </Hero>
+    <>
+      {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
+      <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
+        <Hero>
+          <div style={etiqueta}>{empezado ? `Día ${diaHoy} · Tu reto de la semana` : `Empieza el ${fechaCorta(camino.perfil.inicio)}`}</div>
+          <p style={{ fontFamily: FONT_SLAB, fontSize: 29, lineHeight: 1.22, margin: '16px 0 10px', fontWeight: 600 }}>{semana.reto}</p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 8px', opacity: 0.85 }}>{semana.retoTexto}</p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, lineHeight: 1.5, margin: '0 0 22px', opacity: 0.72, fontStyle: 'italic' }}>«{semana.frase}»</p>
+          {conQuien ? (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>Hoy, con: <strong>{idDeClave(conQuien) ? textoConQuien(conQuien, personas.porId) : textoConQuien(conQuien).toLowerCase()}</strong></p>
+          ) : sugerencia && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, margin: '-8px 0 20px', opacity: 0.9 }}>
+              Hoy podrías hacerlo con <strong>{sugerencia.persona.nombre}</strong>{sugerencia.consejo ? `: ${sugerencia.consejo.charAt(0).toLowerCase()}${sugerencia.consejo.slice(1)}.` : '.'}
+            </p>
+          )}
+          {(paso && paso.tipo !== 'hecho') ? (
+            <span style={botonPrimario}>
+              {paso.tipo === 'examen' ? 'Hacer el examen de la noche' : paso.atrasada ? `Hacer el día ${paso.dia}` : 'Tu sesión de hoy'} <IconoFlecha width={18} height={18} />
+            </span>
+          ) : empezado && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: GOLD_REF_LT }}>
+              <IconoCheck width={18} height={18} /> Hoy está hecho
+            </span>
+          )}
+        </Hero>
+      </div>
+    </>
   );
 }
 
