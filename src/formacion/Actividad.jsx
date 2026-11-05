@@ -2,7 +2,7 @@
 // Quiz, Define, Desliza, Identifica — todos comparten el mismo shell (título + barra progreso).
 import { useCallback, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
 import { barraFondo, eyebrow, tarjeta } from '../app/estilos';
 import diagramaVirtudesImg from './diagrama-virtudes.png';
 import diagramaCOL from './diagrama-COL.png';
@@ -293,7 +293,7 @@ export function Define({ paso, onComplete, modulo }) {
             Selecciona todas las palabras que definen el siguiente concepto:
           </p>
           <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '0 0 22px' }}>
-            {cpt.nombre}
+            {cpt.concepto}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             {h.pool.map((p) => {
@@ -319,7 +319,7 @@ export function Define({ paso, onComplete, modulo }) {
           {cpt.definicion && (
             <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6 }}>
               <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
-              <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.nombre}:</strong> {cpt.definicion}</p>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.concepto}:</strong> {cpt.definicion}</p>
             </div>
           )}
           <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -390,16 +390,16 @@ export function Define({ paso, onComplete, modulo }) {
     <Shell titulo="Definiciones y conceptos" actual={idx + 1} total={conceptos.length}>
       <div style={tarjeta}>
         {(() => {
-          const ret = CONCEPTO_A_RETRATO[concepto.nombre];
+          const ret = CONCEPTO_A_RETRATO[concepto.concepto];
           return (
             <div style={{ display: 'flex', gap: 22, alignItems: 'center', marginBottom: 22 }}>
-              {ret && <img src={ret} alt={concepto.nombre} style={{ width: 150, height: 150, objectFit: 'cover', mixBlendMode: 'multiply', flexShrink: 0, borderRadius: 6 }} />}
+              {ret && <img src={ret} alt={concepto.concepto} style={{ width: 150, height: 150, objectFit: 'cover', mixBlendMode: 'multiply', flexShrink: 0, borderRadius: 6 }} />}
               <div style={{ flex: 1 }}>
                 <p style={{ fontFamily: FONT_BODY, fontSize: 18, color: MUTED, margin: '0 0 4px' }}>
                   Selecciona todas las palabras que definen el siguiente concepto:
                 </p>
                 <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: 0 }}>
-                  {concepto.nombre}
+                  {concepto.concepto}
                 </p>
               </div>
             </div>
@@ -438,7 +438,7 @@ export function Define({ paso, onComplete, modulo }) {
                 Te has equivocado en: {feedbackActual.erroneas.map((e, i) => (
                   <span key={e}>{i > 0 && ', '}<strong>{e}</strong></span>
                 ))}
-                {' — '}no {feedbackActual.erroneas.length === 1 ? 'es una definición' : 'son definiciones'} de {concepto.nombre}.
+                {' — '}no {feedbackActual.erroneas.length === 1 ? 'es una definición' : 'son definiciones'} de {concepto.concepto}.
               </p>
             )}
           </div>
@@ -446,7 +446,7 @@ export function Define({ paso, onComplete, modulo }) {
         {revelado && concepto.definicion && (
           <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6, marginTop: 14 }}>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{concepto.nombre}:</strong> {concepto.definicion}</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{concepto.concepto}:</strong> {concepto.definicion}</p>
           </div>
         )}
         <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
@@ -1301,6 +1301,8 @@ const GRUPOS_SIMPLE = [
 
 const MINI_PREGUNTAS_IDX = [0, 1, 2, 3, 5, 7];
 
+const DIAG_IMPOSIBLE = new Set(['COL-FLE', 'FLE-COL', 'MEL-SAN', 'SAN-MEL']);
+
 export function CirculoPersonas({ paso, user, onComplete }) {
   const [fase, setFase] = useState('intro');
   const [nombre, setNombre] = useState('');
@@ -1310,6 +1312,7 @@ export function CirculoPersonas({ paso, user, onComplete }) {
   const [notas, setNotas] = useState('');
   const [guardando, setGuardando] = useState(false);
   const [personas, setPersonas] = useState([]);
+  const [copiado, setCopiado] = useState(false);
   const temp = paso.temperamento_tema;
 
   const [ordenOpciones] = useState(() =>
@@ -1360,10 +1363,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
     const puntos = { COL: 0, MEL: 0, SAN: 0, FLE: 0 };
     for (const r of respuestas) if (puntos[r] !== undefined) puntos[r] += 1;
     const resto = TEMPS.filter(k => k !== temp).sort((a, b) => puntos[b] - puntos[a]);
-    const secundario = puntos[resto[0]] >= 2 ? resto[0] : null;
+    let secundario = puntos[resto[0]] >= 2 ? resto[0] : null;
     const noSe = respuestas.filter(r => r === NO_SE).length;
     const confianza = noSe <= 1 ? 'media' : 'baja';
-    return { puntos, secundario, confianza };
+    const imposible = secundario && DIAG_IMPOSIBLE.has(`${temp}-${secundario}`);
+    if (imposible) secundario = null;
+    return { puntos, secundario, confianza, imposible, indeterminado: !secundario && !imposible };
   }
 
   function responder(tempCode) {
@@ -1499,6 +1504,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
             </div>
           </div>
 
+          {nombre.trim() && grupo && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '0 0 14px', fontStyle: 'italic' }}>
+              A continuación harás un breve test (6 preguntas) para estimar qué temperamento secundario tiene {nombre.trim()}.
+            </p>
+          )}
+
           <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
             <button type="button" onClick={() => { setFase('test'); setPreguntaIdx(0); setRespuestas([]); }} disabled={!nombre.trim() || !grupo} style={{
               fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
@@ -1568,7 +1579,12 @@ export function CirculoPersonas({ paso, user, onComplete }) {
         </>}
 
         {/* ── FASE RESUMEN + NOTAS ── */}
-        {fase === 'resumen' && resultado && <>
+        {fase === 'resumen' && resultado && (() => {
+          const sinResultado = resultado.imposible || !resultado.secundario;
+          const urlTest = 'https://virtuousleadership.com/es/tests/temperamento?utm_source=portal&utm_medium=referral&utm_campaign=conoces_alguien';
+          const textoWa = `Hola, te invito a hacer este test de temperamento para conocerte mejor: ${urlTest}`;
+          const urlWa = `https://wa.me/?text=${encodeURIComponent(textoWa)}`;
+          return <>
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, textAlign: 'center', margin: '0 0 20px', lineHeight: 1.6 }}>
             Resultado estimado para <strong style={{ color: NAVY }}>{nombre.trim()}</strong>
           </p>
@@ -1586,9 +1602,47 @@ export function CirculoPersonas({ paso, user, onComplete }) {
             </div>
           </div>
 
-          <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textAlign: 'center', fontStyle: 'italic', margin: '0 0 20px' }}>
-            Es una estimación tuya — solo {nombre.trim()} puede confirmarlo haciendo el test.
-          </p>
+          {sinResultado ? (
+            <div style={{ textAlign: 'center', padding: '16px 20px', background: '#fef9ee', border: `1px solid ${GOLD_REF_LT}`, marginBottom: 20 }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', lineHeight: 1.6 }}>
+                {resultado.imposible
+                  ? `La combinación ${TEMP_NOMBRE[temp]} con el secundario estimado no es posible según el modelo de temperamentos.`
+                  : 'Las respuestas no son suficientes para determinar un temperamento secundario.'}
+              </p>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: 0, lineHeight: 1.5 }}>
+                Lo mejor es que {nombre.trim()} haga el test de temperamento completo.
+              </p>
+            </div>
+          ) : (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textAlign: 'center', fontStyle: 'italic', margin: '0 0 20px' }}>
+              Es una estimación tuya — solo {nombre.trim()} puede confirmarlo haciendo el test.
+            </p>
+          )}
+
+          {/* ── COMPARTIR TEST ── */}
+          <div style={{ borderTop: `1px solid ${LINE}`, margin: '0 0 20px', paddingTop: 16 }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, margin: '0 0 10px', textAlign: 'center' }}>
+              Invita a {nombre.trim()} a hacer el test completo
+            </p>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button type="button" onClick={() => { navigator.clipboard.writeText(urlTest).then(() => { setCopiado(true); setTimeout(() => setCopiado(false), 2000); }); }} style={{
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, padding: '10px 20px',
+                border: `1.5px solid ${NAVY}`, background: copiado ? NAVY : PAPER,
+                color: copiado ? PAPER : NAVY, borderRadius: 0, cursor: 'pointer',
+                transition: 'all 150ms ease', minWidth: 140,
+              }}>
+                {copiado ? 'Enlace copiado' : 'Copiar enlace'}
+              </button>
+              <a href={urlWa} target="_blank" rel="noopener noreferrer" style={{
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, padding: '10px 20px',
+                border: `1.5px solid #25d366`, background: '#25d366', color: '#fff',
+                borderRadius: 0, textDecoration: 'none', textAlign: 'center', minWidth: 140,
+                display: 'inline-block',
+              }}>
+                Compartir por WhatsApp
+              </a>
+            </div>
+          </div>
 
           <div style={{ marginBottom: 20 }}>
             <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
@@ -1623,7 +1677,8 @@ export function CirculoPersonas({ paso, user, onComplete }) {
               {guardando ? 'Guardando…' : 'Guardar persona'}
             </button>
           </div>
-        </>}
+        </>;
+        })()}
       </div>
     </div>
   );

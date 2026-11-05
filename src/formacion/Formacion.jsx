@@ -352,6 +352,9 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
   const hechasLecciones = resumenCursos.hechas + m1VideosHechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
 
+  const m1SegundosVistos = m1Videos.filter(p => m1Prog[p.id]).reduce((s, p) => s + (p.duracion || 0), 0);
+  const segundosTotales = resumenCursos.segundosVistos + m1SegundosVistos;
+
   const siguiente = continuar(cursos, progreso.vistas, progreso.ultima);
 
   return (
@@ -367,6 +370,9 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
           <Anillo valor={porcentaje} />
           <div>
             <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
+            {segundosTotales > 0 && (
+              <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginTop: 4 }}>Tiempo invertido en trabajo personal: {formatoDuracion(segundosTotales)}</div>
+            )}
           </div>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>

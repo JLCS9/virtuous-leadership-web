@@ -42,7 +42,7 @@
           ]
         },
         {
-          "concepto": "Colérico",
+          "concepto": "Temperamento colérico",
           "definicion": "Temperamento orientado a la acción. Manager nacido, enérgico y decidido, con confianza natural en sí mismo.",
           "correctas": [
             "La acción",
@@ -59,7 +59,7 @@
           ]
         },
         {
-          "concepto": "Melancólico",
+          "concepto": "Temperamento melancólico",
           "definicion": "Temperamento orientado a las ideas. Contemplativo, perfeccionista, independiente y creador por naturaleza.",
           "correctas": [
             "Las ideas",
@@ -76,7 +76,7 @@
           ]
         },
         {
-          "concepto": "Sanguíneo",
+          "concepto": "Temperamento sanguíneo",
           "definicion": "Temperamento orientado a las personas. Comunicador nacido, con los sentidos despiertos y pasión por la aventura.",
           "correctas": [
             "Las personas",
@@ -93,7 +93,7 @@
           ]
         },
         {
-          "concepto": "Flemático",
+          "concepto": "Temperamento flemático",
           "definicion": "Temperamento orientado a la paz. Desapasionado y científico, con una voluntad de hierro oculta bajo su calma exterior.",
           "correctas": [
             "La paz",
