@@ -51,7 +51,7 @@ export const MODULO_1 = {
     // ─── PASO 3: QUIZ 1 ───
     {
       id: 'm1-03', tipo: 'quiz', visible: false,
-      titulo: 'Quiz 1',
+      titulo: 'Cuestionario 1',
       preguntas: [
         {
           texto: '¿Con qué se debe comenzar la educación del carácter?',
@@ -107,7 +107,7 @@ export const MODULO_1 = {
     // ─── PASO 5: QUIZ 2 ───
     {
       id: 'm1-05', tipo: 'quiz', visible: false,
-      titulo: 'Quiz 2',
+      titulo: 'Cuestionario 2',
       preguntas: [
         {
           texto: '¿Cuál de los siguientes factores no influye en el desarrollo del carácter?',
@@ -311,7 +311,7 @@ export const MODULO_1 = {
     // ─── PASO 16: QUIZ Colérico ───
     {
       id: 'm1-16', tipo: 'quiz', visible: false,
-      titulo: 'Quiz — Colérico',
+      titulo: 'Cuestionario — Colérico',
       preguntas: [
         {
           texto: '¿Qué personaje famoso de Shakespeare es colérico?',
@@ -392,7 +392,7 @@ export const MODULO_1 = {
     // ─── PASO 19: QUIZ Melancólico ───
     {
       id: 'm1-19', tipo: 'quiz', visible: false,
-      titulo: 'Quiz — Melancólico',
+      titulo: 'Cuestionario — Melancólico',
       preguntas: [
         {
           texto: '¿Qué personaje famoso de Shakespeare es melancólico?',
@@ -475,7 +475,7 @@ export const MODULO_1 = {
     // ─── PASO 22: QUIZ Sanguíneo ───
     {
       id: 'm1-22', tipo: 'quiz', visible: false,
-      titulo: 'Quiz — Sanguíneo',
+      titulo: 'Cuestionario — Sanguíneo',
       preguntas: [
         {
           texto: '¿Qué cualidad positiva no corresponde al sanguíneo?',
@@ -556,7 +556,7 @@ export const MODULO_1 = {
     // ─── PASO 25: QUIZ Flemático ───
     {
       id: 'm1-25', tipo: 'quiz', visible: false,
-      titulo: 'Quiz — Flemático',
+      titulo: 'Cuestionario — Flemático',
       preguntas: [
         {
           texto: '¿Qué personaje de Guerra y Paz de Tolstói es flemático?',

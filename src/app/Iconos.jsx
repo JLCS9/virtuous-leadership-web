@@ -28,3 +28,12 @@ export const IconoCandado = (p) => (
 export const IconoPerfil = (p) => (
   <svg {...base} {...p}><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 16 0v1" /></svg>
 );
+export const IconoVideo = (p) => (
+  <svg {...base} {...p}><rect x="3" y="6" width="13" height="12" rx="1.5" /><path d="M16 10l5-3v10l-5-3" /></svg>
+);
+export const IconoEjercicio = (p) => (
+  <svg {...base} {...p}><path d="M14 3l4 4-9.5 9.5H5v-3.5L14 3Z" /><path d="M12.5 4.5l4 4" /></svg>
+);
+export const IconoCuestionario = (p) => (
+  <svg {...base} {...p}><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 0 1 4.6 1.3c0 1.7-2.6 2-2.6 3.7" /><circle cx="12" cy="17.5" r=".4" fill="currentColor" stroke="none" /></svg>
+);

@@ -102,7 +102,7 @@ export default function App() {
             <Route index element={<Hoy />} />
             <Route path="camino" element={<Camino />} />
             <Route path="formacion" element={<Formacion />} />
-            <Route path="formacion/modulo1" element={<Modulo />} />
+            <Route path="formacion/curso-1" element={<Modulo />} />
             <Route path="perfil" element={<Perfil />} />
           </Route>
         );

@@ -7,7 +7,7 @@ import { MODULO_1 } from './modulo1.js';
 import {
   pasosDelUsuario, pasosVisibles, indicePaso, siguientePaso,
   pasoAnterior, videoAnterior, progresoModulo, progresoActividad,
-  continuarModulo, leccionDelPaso,
+  continuarModulo, moduloDelPaso,
 } from '../flujoModulo.js';
 
 const PASOS = MODULO_1.pasos;
@@ -290,15 +290,15 @@ describe('flujoModulo — continuarModulo', () => {
   });
 });
 
-describe('flujoModulo — leccionDelPaso', () => {
+describe('flujoModulo — moduloDelPaso', () => {
   const pasos = pasosDelUsuario(MODULO_1, { primary: 'MEL', secondary: 'FLE' });
 
-  test('primer video es lección 1 de 9', () => {
-    const l = leccionDelPaso(pasos, 'm1-01');
-    assert.deepEqual(l, { numero: 1, total: 9 });
+  test('primer video es módulo 0 de 9', () => {
+    const l = moduloDelPaso(pasos, 'm1-01');
+    assert.deepEqual(l, { numero: 0, total: 9 });
   });
 
   test('paso no-video devuelve null', () => {
-    assert.equal(leccionDelPaso(pasos, 'm1-03'), null);
+    assert.equal(moduloDelPaso(pasos, 'm1-03'), null);
   });
 });

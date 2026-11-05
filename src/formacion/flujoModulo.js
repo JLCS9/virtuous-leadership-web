@@ -58,10 +58,10 @@ export function continuarModulo(pasos, completados) {
   return pasos.find((p) => !completados[p.id]) ?? null;
 }
 
-export function leccionDelPaso(pasos, pasoId) {
+export function moduloDelPaso(pasos, pasoId) {
   const p = pasos.find((x) => x.id === pasoId);
   if (!p || p.tipo !== 'video') return null;
   const vids = pasos.filter((x) => x.tipo === 'video');
   const idx = vids.indexOf(p);
-  return { numero: idx + 1, total: vids.length };
+  return { numero: idx, total: vids.length };
 }

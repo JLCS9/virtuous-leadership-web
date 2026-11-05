@@ -21,17 +21,32 @@ export function etapa(porcentaje) {
   return { clave: 'alto', texto: 'Muy presente' };
 }
 
-/** Normaliza el `result` guardado: {valores:{virtud:%}, facetas} o null si no sirve. */
+/** Normaliza el `result` guardado: {valores:{virtud:%}, facetas} o null si no sirve.
+ *  Acepta dos formatos:
+ *  - App móvil: { self: { magnanimidad: 72, ... }, facets: {...} }
+ *  - Web:       { virtues: { prudencia: { global: 0.72, ... }, ... } }  */
 export function resultadoCaracter(result) {
   const self = result?.self;
-  if (!self || typeof self !== 'object') return null;
-  const valores = {};
-  for (const v of VIRTUDES) {
-    const n = Number(self[v.clave]);
-    if (!Number.isFinite(n)) return null;
-    valores[v.clave] = Math.min(100, Math.max(0, n));
+  const virtues = result?.virtues;
+  if (self && typeof self === 'object') {
+    const valores = {};
+    for (const v of VIRTUDES) {
+      const n = Number(self[v.clave]);
+      if (!Number.isFinite(n)) return null;
+      valores[v.clave] = Math.min(100, Math.max(0, n));
+    }
+    return { valores, facetas: result.facets && typeof result.facets === 'object' ? result.facets : null };
   }
-  return { valores, facetas: result.facets && typeof result.facets === 'object' ? result.facets : null };
+  if (virtues && typeof virtues === 'object') {
+    const valores = {};
+    for (const v of VIRTUDES) {
+      const entry = virtues[v.clave];
+      if (!entry || !Number.isFinite(entry.global)) return null;
+      valores[v.clave] = Math.min(100, Math.max(0, Math.round(entry.global * 100)));
+    }
+    return { valores, facetas: null };
+  }
+  return null;
 }
 
 /** La virtud más y menos desarrollada (para el resumen en una frase). */
@@ -63,10 +78,12 @@ export function geometriaRadar(valores, { tamano = 320, margen = 64 } = {}) {
 
 const round = (x) => Math.round(x * 100) / 100;
 
-/** 'COL-SAN' desde un resultado de temperamento de la web ({profileKey}) o de la app ({type}). */
+/** 'COL-SAN' desde un resultado de temperamento (acepta profileKey, type o profile, may/min). */
 export function claveTemperamento(result) {
-  const clave = result?.profileKey ?? result?.type ?? null;
-  return typeof clave === 'string' && /^(COL|MEL|SAN|FLE)(-(COL|MEL|SAN|FLE))?$/.test(clave) ? clave : null;
+  const raw = result?.profileKey ?? result?.type ?? result?.profile ?? null;
+  if (typeof raw !== 'string') return null;
+  const clave = raw.toUpperCase();
+  return /^(COL|MEL|SAN|FLE)(-(COL|MEL|SAN|FLE))?$/.test(clave) ? clave : null;
 }
 
 /** Valores para guardar el resultado del test de carácter de la web con la forma de la app. */

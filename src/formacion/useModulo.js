@@ -7,7 +7,7 @@ function leer(userId, moduloId) {
   try {
     const bruto = JSON.parse(localStorage.getItem(clave(userId, moduloId)));
     return bruto && typeof bruto.completados === 'object'
-      ? { completados: bruto.completados, pasoActual: bruto.pasoActual ?? null }
+      ? { completados: bruto.completados, pasoActual: null }
       : vacio();
   } catch { return vacio(); }
 }

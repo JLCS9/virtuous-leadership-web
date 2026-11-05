@@ -1,11 +1,15 @@
 import { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useOutletContext } from 'react-router-dom';
+import { LocalLink as Link } from '../i18n';
 import { leerPerfil, cambiarPassword, actualizarPerfil, borrarCuenta } from '../account/perfil';
+import { claveTemperamento } from '../lib/virtudes.js';
 import { supabase } from '../account/supabase';
 import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
+import modulo1 from '../data/modulo1.json';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 const SEXO = { hombre: 'Hombre', mujer: 'Mujer' };
@@ -16,6 +20,7 @@ const IDIOMAS = { es: 'Español', en: 'English', fr: 'Français', ru: 'Русс�
 const TABS = [
   { key: 'config', label: 'Configuración' },
   { key: 'datos', label: 'Mis resultados' },
+  { key: 'notas', label: 'Mis notas' },
 ];
 
 /* ─── Primitivas ─── */
@@ -50,10 +55,10 @@ function Lapiz({ onClick }) {
 
 function Seccion({ titulo, children, onEdit }) {
   return (
-    <section style={{ ...tarjeta, position: 'relative' }}>
+    <section style={{ ...tarjeta, position: 'relative', display: 'flex', flexDirection: 'column' }}>
       <div style={eyebrow}>{titulo}</div>
       {onEdit && <Lapiz onClick={onEdit} />}
-      <div style={{ marginTop: 10 }}>{children}</div>
+      <div style={{ marginTop: 10, flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{children}</div>
     </section>
   );
 }
@@ -74,13 +79,39 @@ function Campo({ label, tipo = 'text', value, onChange, opciones, placeholder })
   );
 }
 
+function CampoPwd({ label, value, onChange, visible, onToggle, placeholder }) {
+  const base = { fontFamily: FONT_BODY, fontSize: 14, padding: '10px 40px 10px 12px', border: `1px solid ${LINE}`, borderRadius: 0, outline: 'none', width: '100%', background: '#fff' };
+  return (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, fontWeight: 600 }}>{label}</span>
+      <div style={{ position: 'relative' }}>
+        <input type={visible ? 'text' : 'password'} style={base} value={value ?? ''} onChange={e => onChange(e.target.value)} placeholder={placeholder} />
+        <button type="button" tabIndex={-1} onClick={onToggle} aria-label={visible ? 'Ocultar' : 'Mostrar'}
+          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: MUTED, padding: 4, display: 'flex' }}>
+          {visible ? (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" /><circle cx="12" cy="12" r="3" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+              <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          )}
+        </button>
+      </div>
+    </label>
+  );
+}
+
 /* ─── Modal overlay ─── */
 
 function Modal({ titulo, children, onClose }) {
-  return (
+  return createPortal(
     <div style={{
       position: 'fixed', inset: 0, zIndex: 100, display: 'grid', placeItems: 'center',
-      background: 'rgba(15,29,56,0.55)',
+      background: 'rgba(15,29,56,0.22)',
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
         background: PAPER, borderRadius: 0, borderTop: `2px solid ${GOLD_REF}`,
@@ -93,7 +124,8 @@ function Modal({ titulo, children, onClose }) {
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -115,8 +147,9 @@ function TabConfig({ user, profile, consents, onRefresh }) {
   const [editando, setEditando] = useState(null);
   const [guardando, setGuardando] = useState(false);
   const [draft, setDraft] = useState({});
-  const [pwdState, setPwdState] = useState({ pwd: '', estado: 'idle' });
+  const [pwdState, setPwdState] = useState({ old: '', pwd: '', estado: 'idle', showOld: false, showNew: false });
   const [confirmBorrar, setConfirmBorrar] = useState(false);
+
 
   function abrir(seccion, datos) {
     setDraft(datos);
@@ -134,13 +167,15 @@ function TabConfig({ user, profile, consents, onRefresh }) {
   }
 
   async function guardarPwd() {
-    if (pwdState.pwd.length < 6) return;
+    if (!pwdState.old || pwdState.pwd.length < 6) return;
     setPwdState(s => ({ ...s, estado: 'guardando' }));
     try {
-      await cambiarPassword(pwdState.pwd);
-      setPwdState({ pwd: '', estado: 'ok' });
-      setTimeout(() => { setPwdState({ pwd: '', estado: 'idle' }); setEditando(null); }, 1800);
-    } catch { setPwdState(s => ({ ...s, estado: 'error' })); }
+      await cambiarPassword(pwdState.old, pwdState.pwd);
+      setPwdState({ old: '', pwd: '', estado: 'ok', showOld: false, showNew: false });
+      setTimeout(() => { setPwdState({ old: '', pwd: '', estado: 'idle', showOld: false, showNew: false }); setEditando(null); }, 1800);
+    } catch (err) {
+      setPwdState(s => ({ ...s, estado: err.message === 'wrong_password' ? 'wrong' : 'error' }));
+    }
   }
 
   async function salir() {
@@ -160,19 +195,19 @@ function TabConfig({ user, profile, consents, onRefresh }) {
   return (
     <>
       <div className="vl-cols">
-        {/* General */}
+        {/* Fila 1: las dos grandes — Config general + Datos personales */}
         <Seccion titulo="Configuración general" onEdit={() => abrir('general', { locale: profile.locale })}>
           <Fila label="Email" valor={user.email} />
           <Fila label="Idioma" valor={IDIOMAS[profile.locale]} />
+          <Fila label="Contraseña" valor="••••••••" />
           <div style={{ marginTop: 12 }}>
-            <button type="button" onClick={() => { setPwdState({ pwd: '', estado: 'idle' }); setEditando('password'); }} style={{
+            <button type="button" onClick={() => { setPwdState({ old: '', pwd: '', estado: 'idle', showOld: false, showNew: false }); setEditando('password'); }} style={{
               fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, background: 'none', border: 'none',
               cursor: 'pointer', padding: 0, textDecoration: 'underline',
             }}>Cambiar contraseña</button>
           </div>
         </Seccion>
 
-        {/* Datos personales */}
         <Seccion titulo="Datos personales" onEdit={() => abrir('personal', {
           first_name: profile.first_name ?? '', last_name: profile.last_name ?? '',
           sex: profile.sex ?? '', birth_year: profile.birth_year ?? '', country: profile.country ?? '',
@@ -185,7 +220,7 @@ function TabConfig({ user, profile, consents, onRefresh }) {
           <Fila label="Vida espiritual" valor={profile.spiritual ? 'Sí' : 'No'} />
         </Seccion>
 
-        {/* Consentimientos */}
+        {/* Fila 2: las dos pequeñas — Consentimientos + Caché */}
         <Seccion titulo="Consentimientos">
           {consents.length > 0 ? consents.map((c, i) => (
             <Fila key={i}
@@ -195,7 +230,23 @@ function TabConfig({ user, profile, consents, onRefresh }) {
           )) : <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Sin consentimientos registrados</p>}
         </Seccion>
 
-        {/* Cuenta */}
+        <Seccion titulo="Caché y datos locales">
+          <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 13 }}>
+            Vacía los datos locales del navegador (progreso de módulos, catálogo, preferencias).
+          </p>
+          <button type="button" onClick={() => {
+            try { localStorage.clear(); sessionStorage.clear(); } catch {}
+            olvidarAcceso();
+            olvidarCatalogo();
+            window.location.reload();
+          }} style={{
+            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
+            background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0,
+            padding: '10px 20px', cursor: 'pointer', width: '100%',
+          }}>Vaciar caché y recargar</button>
+        </Seccion>
+
+        {/* Fila 3: ancho completo — Sesión y cuenta */}
         <Seccion titulo="Sesión y cuenta">
           <button type="button" onClick={salir} style={{
             fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
@@ -262,9 +313,13 @@ function TabConfig({ user, profile, consents, onRefresh }) {
       {editando === 'password' && (
         <Modal titulo="Cambiar contraseña" onClose={() => setEditando(null)}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <Campo label="Nueva contraseña" tipo="password" value={pwdState.pwd} onChange={v => setPwdState(s => ({ ...s, pwd: v }))} placeholder="Mínimo 6 caracteres" />
+            <CampoPwd label="Contraseña actual" value={pwdState.old} onChange={v => setPwdState(s => ({ ...s, old: v }))}
+              visible={pwdState.showOld} onToggle={() => setPwdState(s => ({ ...s, showOld: !s.showOld }))} />
+            <CampoPwd label="Nueva contraseña" value={pwdState.pwd} onChange={v => setPwdState(s => ({ ...s, pwd: v }))}
+              visible={pwdState.showNew} onToggle={() => setPwdState(s => ({ ...s, showNew: !s.showNew }))} placeholder="Mínimo 6 caracteres" />
             <BtnGuardar onClick={guardarPwd} guardando={pwdState.estado === 'guardando'} />
             {pwdState.estado === 'ok' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#2e7d32', margin: 0 }}>Contraseña actualizada</p>}
+            {pwdState.estado === 'wrong' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#c62828', margin: 0 }}>La contraseña actual no es correcta</p>}
             {pwdState.estado === 'error' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#c62828', margin: 0 }}>Error al cambiar la contraseña</p>}
           </div>
         </Modal>
@@ -309,7 +364,47 @@ function SelectorHistorico({ items, idx, setIdx }) {
   );
 }
 
-function TabDatos({ tests, personas, camino }) {
+function RetomarLink({ to, children }) {
+  return (
+    <Link to={to} style={{
+      display: 'block', textAlign: 'center', marginTop: 14, fontFamily: FONT_BODY,
+      fontSize: 13, fontWeight: 600, color: GOLD_REF_DK, textDecoration: 'none',
+      padding: '8px 0', border: `1.5px solid ${LINE}`, borderRadius: 0,
+      transition: 'background 150ms ease',
+    }}
+      onMouseEnter={e => { e.currentTarget.style.background = 'rgba(165,139,38,0.06)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
+    >{children}</Link>
+  );
+}
+
+function leerSintesis(userId, moduloId) {
+  try {
+    const bruto = JSON.parse(localStorage.getItem(`vl-modulo:${userId}:${moduloId}`));
+    const cierre = bruto?.completados?.['m1-27'];
+    if (!cierre || !cierre.lo_que_facilita) return null;
+    return cierre;
+  } catch { return null; }
+}
+
+function SeccionFormacion({ userId }) {
+  const sint = leerSintesis(userId, 'modulo1');
+  if (!sint) return null;
+  const fmt = d => new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+  return (
+    <Seccion titulo="Formación · Curso 1">
+      <Fila label="Temperamento primario" valor={TEMP_NOMBRE[sint.temperamento_primario] ?? sint.temperamento_primario} />
+      {sint.temperamento_secundario && <Fila label="Temperamento secundario" valor={TEMP_NOMBRE[sint.temperamento_secundario] ?? sint.temperamento_secundario} />}
+      {sint.virtud_desafio && <Fila label="Virtud-desafío" valor={sint.virtud_desafio} />}
+      <Fila label="Lo que me facilita" valor={sint.lo_que_facilita} />
+      <Fila label="Lo que más me cuesta" valor={sint.lo_que_cuesta} />
+      <Fila label="Mi propósito" valor={sint.proposito} />
+      {sint.fecha && <Fila label="Fecha" valor={fmt(sint.fecha)} />}
+    </Seccion>
+  );
+}
+
+function TabDatos({ tests, personas, camino, user }) {
   const tempTests = tests.filter(t => t.kind === 'temperament');
   const charTests = tests.filter(t => t.kind === 'character');
   const [tempIdx, setTempIdx] = useState(0);
@@ -335,76 +430,177 @@ function TabDatos({ tests, personas, camino }) {
 
   return (
     <div className="vl-cols">
-      {/* Temperamento */}
-      {tempTest && (
-        <Seccion titulo="Tu temperamento">
-          <SelectorHistorico items={tempTests} idx={tempIdx} setIdx={setTempIdx} />
-          <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, margin: '2px 0 10px' }}>
-            {tempPartes.map(t => TEMP_NOMBRE[t.toUpperCase()] ?? t).join(' – ')}
-          </div>
-          {tempTest.result?.scores && (
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 6 }}>
-              {Object.entries(tempTest.result.scores).sort((a, b) => b[1] - a[1]).map(([t, pts]) => (
-                <span key={t} style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>
-                  <strong style={{ color: NAVY }}>{TEMP_NOMBRE[t] ?? t}</strong> {pts}
-                </span>
-              ))}
+      {/* Fila 1: Temperamento + Virtudes */}
+      <Seccion titulo="Tu temperamento">
+        {tempTest ? (
+          <>
+            <SelectorHistorico items={tempTests} idx={tempIdx} setIdx={setTempIdx} />
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, margin: '2px 0 10px' }}>
+              {tempPartes.map(t => TEMP_NOMBRE[t.toUpperCase()] ?? t).join(' – ')}
             </div>
-          )}
-          <Fila label="Fecha" valor={new Date(tempTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
-        </Seccion>
-      )}
+            {tempTest.result?.scores && (() => {
+              const entries = Object.entries(tempTest.result.scores).sort((a, b) => b[1] - a[1]);
+              const total = entries.reduce((s, [, v]) => s + v, 0) || 1;
+              return entries.map(([t, pts]) => (
+                <BarraVirtud key={t} nombre={TEMP_NOMBRE[t] ?? t} pct={Math.round(pts / total * 100)} />
+              ));
+            })()}
+            <Fila label="Fecha" valor={new Date(tempTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
+            <Fila label="Veces realizado" valor={tempTests.length} />
+            {tempTests.length > 1 && (() => {
+              const perfiles = tempTests.map(tt => claveTemperamento(tt.result)).filter(Boolean);
+              const mismo = perfiles.filter(p => p === perfiles[0]).length;
+              return <Fila label="Coincidencia" valor={`${Math.round(mismo / perfiles.length * 100)}%`} />;
+            })()}
+          </>
+        ) : (
+          <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has hecho el test.</p>
+        )}
+        <RetomarLink to="/tests/temperamento">Volver a hacer el test</RetomarLink>
+      </Seccion>
 
-      {/* Virtudes */}
-      {charTest && virtudes && (
-        <Seccion titulo="Tus virtudes">
-          <SelectorHistorico items={charTests} idx={charIdx} setIdx={setCharIdx} />
-          {Object.entries(nombresV).map(([key, nom]) => {
-            const v = virtudes[key];
-            if (!v) return null;
-            return <BarraVirtud key={key} nombre={nom} pct={Math.round((v.global ?? 0) * 100)} />;
-          })}
-          <Fila label="Fecha" valor={new Date(charTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
-        </Seccion>
-      )}
+      <Seccion titulo="Tus virtudes">
+        {charTest && virtudes ? (
+          <>
+            <SelectorHistorico items={charTests} idx={charIdx} setIdx={setCharIdx} />
+            {Object.entries(nombresV).map(([key, nom]) => {
+              const v = virtudes[key];
+              if (!v) return null;
+              return <BarraVirtud key={key} nombre={nom} pct={Math.round((v.global ?? 0) * 100)} />;
+            })}
+            <Fila label="Fecha" valor={new Date(charTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
+            <Fila label="Veces realizado" valor={charTests.length} />
+          </>
+        ) : (
+          <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has hecho el test.</p>
+        )}
+        <RetomarLink to="/tests/caracter">Volver a hacer el test</RetomarLink>
+      </Seccion>
 
-      {/* Personas */}
-      {personas.length > 0 && (
-        <Seccion titulo={`Tus personas (${personas.length})`}>
-          {personas.map((p, i) => (
-            <div key={i} style={{ padding: '9px 0', borderBottom: i < personas.length - 1 ? `1px solid ${LINE}` : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY }}>
-                  {p.nombre} {p.estrella && '★'} {p.me_cuesta && '⚡'}
-                </div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>
-                  {GRUPO[p.grupo]} {p.relacion && `· ${p.relacion}`}
-                </div>
+      {/* Fila 2: Formación */}
+      <SeccionFormacion userId={user?.id} />
+
+      {/* Fila 3: Camino + Personas */}
+      <Seccion titulo="Tu camino">
+        {camino ? (
+          <>
+            <Fila label="Objetivo" valor={camino.objetivo} />
+            <Fila label="Estado de vida" valor={camino.estado_vida} />
+            <Fila label="Vida interior" valor={camino.vida_interior === 'si' ? 'Sí' : camino.vida_interior === 'no' ? 'No' : camino.vida_interior} />
+            <Fila label="Inicio" valor={camino.inicio ? new Date(camino.inicio + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : null} />
+            <Fila label="Hora mañana" valor={camino.hora_manana?.slice(0, 5)} />
+            <Fila label="Hora examen" valor={camino.hora_examen?.slice(0, 5)} />
+          </>
+        ) : (
+          <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has configurado tu camino.</p>
+        )}
+      </Seccion>
+
+      <Seccion titulo={`Tus personas (${personas.length})`}>
+        {personas.length > 0 ? personas.map((p, i) => (
+          <div key={i} style={{ padding: '9px 0', borderBottom: i < personas.length - 1 ? `1px solid ${LINE}` : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY }}>
+                {p.nombre} {p.estrella && '★'} {p.me_cuesta && '⚡'}
               </div>
-              <div style={{ textAlign: 'right' }}>
-                {p.primario && (
-                  <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY }}>
-                    {TEMP_NOMBRE[p.primario]}{p.secundario ? ` – ${TEMP_NOMBRE[p.secundario]}` : ''}
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>
+                {GRUPO[p.grupo]} {p.relacion && `· ${p.relacion}`}
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              {p.primario && (
+                <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY }}>
+                  {TEMP_NOMBRE[p.primario]}{p.secundario ? ` – ${TEMP_NOMBRE[p.secundario]}` : ''}
+                </div>
+              )}
+              <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>{ESTADO_PERSONA[p.estado]}</div>
+            </div>
+          </div>
+        )) : (
+          <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has añadido personas.</p>
+        )}
+      </Seccion>
+
+    </div>
+  );
+}
+
+/* ─── Tab 3: Mis notas ─── */
+
+const MODULOS = [{ id: 'modulo1', titulo: 'Curso 1 — Del temperamento al carácter', data: modulo1 }];
+
+function titulosPasos(data) {
+  const map = {};
+  let idx = 0;
+  for (const p of data.pasos) {
+    if (p.tipo === 'video') {
+      map[p.id] = `Módulo ${idx} · ${p.titulo}`;
+      idx++;
+    }
+  }
+  return map;
+}
+
+function TabNotas({ userId }) {
+  const todas = [];
+  for (const mod of MODULOS) {
+    const key = `vl-notas:${userId}:${mod.id}`;
+    let raw;
+    try { raw = localStorage.getItem(key); } catch { continue; }
+    if (!raw) continue;
+    let parsed;
+    try { parsed = JSON.parse(raw); } catch { continue; }
+    const titulos = titulosPasos(mod.data);
+    const entradas = [];
+    for (const [pasoId, arr] of Object.entries(parsed)) {
+      if (!Array.isArray(arr) || arr.length === 0) continue;
+      entradas.push({ pasoId, titulo: titulos[pasoId] ?? pasoId, notas: arr.slice().reverse() });
+    }
+    if (entradas.length > 0) todas.push({ mod, entradas });
+  }
+
+  if (todas.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', padding: '48px 24px' }}>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>Aún no tienes notas</p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: 0, lineHeight: 1.6 }}>
+          Tus notas de la formación aparecerán aquí, organizadas por curso y módulo.
+        </p>
+      </div>
+    );
+  }
+
+  const totalNotas = todas.reduce((s, g) => s + g.entradas.reduce((s2, e) => s2 + e.notas.length, 0), 0);
+
+  return (
+    <div>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 20px' }}>
+        {totalNotas} nota{totalNotas !== 1 ? 's' : ''} en total
+      </p>
+      {todas.map(({ mod, entradas }) => (
+        <div key={mod.id} style={{ marginBottom: 28 }}>
+          <div style={{ ...eyebrow, marginBottom: 12 }}>{mod.titulo}</div>
+          {entradas.map(({ pasoId, titulo, notas }) => (
+            <div key={pasoId} style={{ ...tarjeta, marginBottom: 12 }}>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginBottom: 10 }}>
+                {titulo}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {notas.map((n) => (
+                  <div key={n.id} style={{ padding: '12px 16px', borderLeft: `3px solid ${GOLD_REF}`, background: 'rgba(165,139,38,0.04)' }}>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
+                      {new Date(n.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    </div>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                      {n.texto}
+                    </p>
                   </div>
-                )}
-                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>{ESTADO_PERSONA[p.estado]}</div>
+                ))}
               </div>
             </div>
           ))}
-        </Seccion>
-      )}
-
-      {/* Camino */}
-      {camino && (
-        <Seccion titulo="Tu camino">
-          <Fila label="Objetivo" valor={camino.objetivo} />
-          <Fila label="Estado de vida" valor={camino.estado_vida} />
-          <Fila label="Vida interior" valor={camino.vida_interior === 'si' ? 'Sí' : camino.vida_interior === 'no' ? 'No' : camino.vida_interior} />
-          <Fila label="Inicio" valor={camino.inicio ? new Date(camino.inicio + 'T00:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' }) : null} />
-          <Fila label="Hora mañana" valor={camino.hora_manana?.slice(0, 5)} />
-          <Fila label="Hora examen" valor={camino.hora_examen?.slice(0, 5)} />
-        </Seccion>
-      )}
+        </div>
+      ))}
     </div>
   );
 }
@@ -452,7 +648,8 @@ export default function Perfil() {
       </div>
 
       {tab === 'config' && <TabConfig user={user} profile={profile} consents={consents} onRefresh={cargar} />}
-      {tab === 'datos' && <TabDatos tests={tests} personas={personas} camino={camino} />}
+      {tab === 'datos' && <TabDatos tests={tests} personas={personas} camino={camino} user={user} />}
+      {tab === 'notas' && <TabNotas userId={user.id} />}
     </div>
   );
 }

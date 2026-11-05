@@ -30,7 +30,18 @@ export default function Login() {
         path="/login"
         noindex={true}
       />
-      <Shell><LoginForm /></Shell>
+      <Shell>
+        <LoginForm />
+        <div style={{ marginTop: 32, textAlign: 'center' }}>
+          <button type="button" onClick={() => {
+            import('../account/supabase').then(({ supabase }) => supabase.auth.signOut());
+            try { localStorage.clear(); sessionStorage.clear(); } catch {}
+            window.location.reload();
+          }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 12, color: MUTED, textDecoration: 'underline' }}>
+            Purgar sesión y recargar
+          </button>
+        </div>
+      </Shell>
     </>
   );
 }
@@ -124,6 +135,7 @@ function LoginForm() {
         <LinkButton onClick={forgot}>{t('panel.forgot')}</LinkButton>
         <Link to="/tests/temperamento" style={{ color: NAVY }}>{t('panel.no_account')}</Link>
       </div>
+
     </Card>
   );
 }
