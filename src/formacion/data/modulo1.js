@@ -623,7 +623,14 @@ export const MODULO_1 = {
       ],
     },
 
-    // ─── PASO 27: CIERRE ───
+    // ─── TEST DE CARÁCTER (E2) ───
+    {
+      id: 'm1-test-caracter', tipo: 'test_caracter', visible: false,
+      titulo: 'Test de carácter',
+      descripcion: 'Evalúa tu nivel actual en las seis virtudes del liderazgo.',
+    },
+
+    // ─── PASO 28: CIERRE ───
     {
       id: 'm1-27', tipo: 'cierre', visible: true,
       titulo: 'Mi Síntesis — Módulo 1',

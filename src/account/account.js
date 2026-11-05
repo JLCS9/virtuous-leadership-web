@@ -153,3 +153,28 @@ export async function saveCharacterResultIfLoggedIn(puntuacion) {
     return false;
   }
 }
+
+export async function saveHeartResultIfLoggedIn(scoreResult) {
+  try {
+    if (!supabase) return false;
+    const { data } = await supabase.auth.getSession();
+    const user = data.session?.user;
+    if (!user || !scoreResult?.disorders) return false;
+    const result = {};
+    for (const [code, d] of Object.entries(scoreResult.disorders)) {
+      result[code] = { score: d.score, pct: d.pct, stage: d.stage };
+    }
+    result.verdict = scoreResult.verdict;
+    const { error } = await supabase.from('test_results').insert({
+      user_id: user.id,
+      test_id: 'vl-corazon',
+      test_version: '1.0.0',
+      kind: 'heart',
+      source: 'self',
+      result,
+    });
+    return !error;
+  } catch {
+    return false;
+  }
+}

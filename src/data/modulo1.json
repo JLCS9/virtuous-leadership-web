@@ -1183,6 +1183,13 @@
       ]
     },
     {
+      "id": "m1-test-caracter",
+      "tipo": "test_caracter",
+      "titulo": "Test de carácter",
+      "visible": false,
+      "descripcion": "Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, fortaleza, dominio de sí, justicia, magnanimidad y humildad. Responde con sinceridad — este test es para ti."
+    },
+    {
       "id": "m1-27",
       "num": 27,
       "tipo": "cierre",

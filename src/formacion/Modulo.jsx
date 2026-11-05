@@ -3,9 +3,10 @@ import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion } from './Actividad';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
+import { CuadernoPersonal } from './CuadernoPersonal';
 import { fetchLatestTemperament } from '../account/account';
 import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE } from '../theme';
 import { barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
@@ -19,19 +20,43 @@ const MODULOS = {
 };
 
 function catalogoAModulo(curso) {
+  const pasos = curso.lecciones.map((l, i) => ({
+    id: l.id,
+    num: i + 1,
+    tipo: 'video',
+    titulo: l.titulo,
+    vimeoId: l.vimeoId,
+    visible: true,
+  }));
+
+  if (curso.numero === 4) {
+    pasos.push({
+      id: 'curso4-test-caracter',
+      num: pasos.length + 1,
+      tipo: 'test_caracter',
+      titulo: 'Test de carácter (comparativa)',
+      descripcion: 'Repite el test de carácter para comparar tu progreso desde el inicio del curso 1.',
+      visible: true,
+    });
+  }
+
+  if (curso.numero === 5) {
+    pasos.push({
+      id: 'curso5-test-corazon',
+      num: pasos.length + 1,
+      tipo: 'test_corazon',
+      titulo: 'Test del corazón',
+      descripcion: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.',
+      visible: true,
+    });
+  }
+
   return {
     id: `curso${curso.numero}`,
     titulo: curso.titulo,
     curso: curso.numero,
-    descripcion: `${curso.lecciones.length} módulos`,
-    pasos: curso.lecciones.map((l, i) => ({
-      id: l.id,
-      num: i + 1,
-      tipo: 'video',
-      titulo: l.titulo,
-      vimeoId: l.vimeoId,
-      visible: true,
-    })),
+    descripcion: `${pasos.length} módulos`,
+    pasos,
   };
 }
 
@@ -221,6 +246,8 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
     case 'conclusion_modulo': return <ConclusionModulo paso={paso} completados={progreso.completados} onContinuar={completar} onVolver={volver} />;
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
+    case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
@@ -233,7 +260,7 @@ function agruparModulos(pasos) {
     if (p.tipo === 'video') {
       actual = { video: p, actividades: [] };
       modulos.push(actual);
-    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada') {
+    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'test_caracter') {
       actual.actividades.push(p);
     }
   }
@@ -356,7 +383,7 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
-function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1 }) {
+function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId }) {
   const progAll = progresoModulo(pasos, completados);
   const vids = pasos.filter((p) => p.tipo === 'video');
   const vidsHechos = vids.filter((p) => completados[p.id]).length;
@@ -399,6 +426,12 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1 
             </div>
           </div>
         </div>
+
+        {cursoNum === 1 && userId && (
+          <div style={{ marginTop: 18 }}>
+            <CuadernoPersonal userId={userId} pasos={modulo.pasos} />
+          </div>
+        )}
       </div>
 
       <div>
@@ -604,6 +637,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
       completados={progreso.completados}
       irA={irA}
       cursoNum={cursoNum}
+      userId={user.id}
     />
   );
 }
