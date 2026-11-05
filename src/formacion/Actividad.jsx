@@ -1307,7 +1307,7 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
           }}>
             ← Atrás
           </button>
-          <button type="button" onClick={() => onComplete({ visto: true })} style={{
+          <button type="button" onClick={() => onComplete({ visto: true, textoFacilita, textoDificulta, textoDefectos })} style={{
             fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
             background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
           }}>

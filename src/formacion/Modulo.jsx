@@ -383,7 +383,7 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
-function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId }) {
+function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
   const progAll = progresoModulo(pasos, completados);
   const vids = pasos.filter((p) => p.tipo === 'video');
   const vidsHechos = vids.filter((p) => completados[p.id]).length;
@@ -429,7 +429,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
         {cursoNum === 1 && userId && (
           <div style={{ marginTop: 18 }}>
-            <CuadernoPersonal userId={userId} pasos={modulo.pasos} />
+            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} />
           </div>
         )}
       </div>
@@ -638,6 +638,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
       irA={irA}
       cursoNum={cursoNum}
       userId={user.id}
+      temperamento={temperamento}
     />
   );
 }
