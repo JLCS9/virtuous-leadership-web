@@ -397,6 +397,59 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
+function ResumenPersonal({ temperamento, pasos, completados }) {
+  if (!temperamento) return null;
+  const p = temperamento.primary;
+  const s = temperamento.secondary;
+  const perfil = s ? `${p}-${s}` : p;
+
+  const retosStep = pasos.find(paso => paso.tipo === 'retos_temperamento');
+  const retosHecho = retosStep && completados[retosStep.id];
+  const fd = retosStep?.facilita_dificulta?.[p];
+  const virtudDesafio = retosStep?.virtud_desafio_map?.[perfil] ?? retosStep?.virtud_desafio_map?.[p];
+
+  return (
+    <div style={{ ...tarjeta, marginTop: 18 }}>
+      <div style={eyebrow}>Mi perfil</div>
+
+      <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+        <div style={{ flex: 1, padding: '10px 12px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[p] ?? LINE}` }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Primario</div>
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginTop: 2 }}>{TEMP_NOMBRE[p]}</div>
+        </div>
+        {s && (
+          <div style={{ flex: 1, padding: '10px 12px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[s] ?? LINE}` }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Secundario</div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginTop: 2 }}>{TEMP_NOMBRE[s]}</div>
+          </div>
+        )}
+      </div>
+
+      {retosHecho && fd && (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginTop: 12 }}>
+            <div style={{ padding: '8px 10px', background: '#ecfdf5', borderLeft: '2px solid #10b981' }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Facilita</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#065f46', lineHeight: 1.4, marginTop: 2 }}>{fd.facilita}</div>
+            </div>
+            <div style={{ padding: '8px 10px', background: '#fef2f2', borderLeft: '2px solid #ef4444' }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Dificulta</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#991b1b', lineHeight: 1.4, marginTop: 2 }}>{fd.dificulta}</div>
+            </div>
+          </div>
+
+          {virtudDesafio && (
+            <div style={{ padding: '10px 12px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginTop: 12 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mi virtud-desafío</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY, marginTop: 2 }}>{virtudDesafio}</div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
   const progAll = progresoModulo(pasos, completados);
   const vids = pasos.filter((p) => p.tipo === 'video');
@@ -440,6 +493,10 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             </div>
           </div>
         </div>
+
+        {cursoNum === 1 && temperamento && (
+          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} />
+        )}
 
         {cursoNum === 1 && userId && (
           <div style={{ marginTop: 18 }}>
