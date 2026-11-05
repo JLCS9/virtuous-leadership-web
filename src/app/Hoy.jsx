@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link, useT } from '../i18n';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
@@ -189,7 +190,29 @@ function MiResultado() {
   );
 }
 
+function BannerTestOk({ onClose }) {
+  return (
+    <div style={{ ...tarjeta, background: NAVY, color: PAPER, display: 'flex', alignItems: 'center', gap: 14, gridColumn: '1 / -1' }}>
+      <IconoCheck width={20} height={20} />
+      <div style={{ flex: 1 }}>
+        <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 600 }}>Resultado guardado</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 13, opacity: 0.8, marginTop: 4 }}>Tu test de temperamento se ha registrado. Esta es una versión interna del portal.</div>
+      </div>
+      <button type="button" onClick={onClose} style={{ background: 'none', border: 'none', color: PAPER, fontFamily: FONT_BODY, fontSize: 13, cursor: 'pointer', opacity: 0.7, padding: '4px 8px' }}>Cerrar</button>
+    </div>
+  );
+}
+
 export default function Hoy() {
+  const [params, setParams] = useSearchParams();
+  const [showBanner, setShowBanner] = useState(params.get('test') === 'ok');
+
+  function closeBanner() {
+    setShowBanner(false);
+    params.delete('test');
+    setParams(params, { replace: true });
+  }
+
   return (
     <div className="vl-hoy">
       <style>{`
@@ -199,6 +222,7 @@ export default function Hoy() {
           .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
         }
       `}</style>
+      {showBanner && <BannerTestOk onClose={closeBanner} />}
       <div className="vl-hoy-izq">
         <RetoDeLaSemana />
         <MiResultado />
