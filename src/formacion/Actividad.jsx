@@ -25,7 +25,7 @@ const IconoLupa = () => (
 );
 const TEMP_SUBTITULO = { COL: 'la acción', MEL: 'las ideas', SAN: 'las personas', FLE: 'la paz' };
 const RETRATO_TEMP = { COL: retratoCOL, MEL: retratoMEL, SAN: retratoSAN, FLE: retratoFLE };
-const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Colérico': retratoCOL, 'Melancólico': retratoMEL, 'Sanguíneo': retratoSAN, 'Flemático': retratoFLE };
+const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Temperamento colérico': retratoCOL, 'Temperamento melancólico': retratoMEL, 'Temperamento sanguíneo': retratoSAN, 'Temperamento flemático': retratoFLE };
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
@@ -293,7 +293,7 @@ export function Define({ paso, onComplete, modulo }) {
             Selecciona todas las palabras que definen el siguiente concepto:
           </p>
           <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '0 0 22px' }}>
-            {cpt.concepto}
+            {cpt.nombre}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
             {h.pool.map((p) => {
@@ -319,7 +319,7 @@ export function Define({ paso, onComplete, modulo }) {
           {cpt.definicion && (
             <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6 }}>
               <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
-              <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.concepto}:</strong> {cpt.definicion}</p>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{cpt.nombre}:</strong> {cpt.definicion}</p>
             </div>
           )}
           <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -390,16 +390,16 @@ export function Define({ paso, onComplete, modulo }) {
     <Shell titulo="Definiciones y conceptos" actual={idx + 1} total={conceptos.length}>
       <div style={tarjeta}>
         {(() => {
-          const ret = CONCEPTO_A_RETRATO[concepto.concepto];
+          const ret = CONCEPTO_A_RETRATO[concepto.nombre];
           return (
             <div style={{ display: 'flex', gap: 22, alignItems: 'center', marginBottom: 22 }}>
-              {ret && <img src={ret} alt={concepto.concepto} style={{ width: 150, height: 150, objectFit: 'cover', mixBlendMode: 'multiply', flexShrink: 0, borderRadius: 6 }} />}
+              {ret && <img src={ret} alt={concepto.nombre} style={{ width: 150, height: 150, objectFit: 'cover', mixBlendMode: 'multiply', flexShrink: 0, borderRadius: 6 }} />}
               <div style={{ flex: 1 }}>
                 <p style={{ fontFamily: FONT_BODY, fontSize: 18, color: MUTED, margin: '0 0 4px' }}>
                   Selecciona todas las palabras que definen el siguiente concepto:
                 </p>
                 <p style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: 0 }}>
-                  {concepto.concepto}
+                  {concepto.nombre}
                 </p>
               </div>
             </div>
@@ -438,7 +438,7 @@ export function Define({ paso, onComplete, modulo }) {
                 Te has equivocado en: {feedbackActual.erroneas.map((e, i) => (
                   <span key={e}>{i > 0 && ', '}<strong>{e}</strong></span>
                 ))}
-                {' — '}no {feedbackActual.erroneas.length === 1 ? 'es una definición' : 'son definiciones'} de {concepto.concepto}.
+                {' — '}no {feedbackActual.erroneas.length === 1 ? 'es una definición' : 'son definiciones'} de {concepto.nombre}.
               </p>
             )}
           </div>
@@ -446,7 +446,7 @@ export function Define({ paso, onComplete, modulo }) {
         {revelado && concepto.definicion && (
           <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, lineHeight: 1.6, marginTop: 14 }}>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Definición</div>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{concepto.concepto}:</strong> {concepto.definicion}</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, margin: 0 }}><strong>{concepto.nombre}:</strong> {concepto.definicion}</p>
           </div>
         )}
         <div style={{ marginTop: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>

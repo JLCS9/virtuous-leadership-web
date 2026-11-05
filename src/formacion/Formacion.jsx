@@ -50,12 +50,14 @@ function leerModulo1Progreso(userId) {
 function Anillo({ valor, tam = 84 }) {
   const r = (tam - 10) / 2;
   const c = 2 * Math.PI * r;
+  const sw = tam < 60 ? 3.5 : 5;
+  const fs = tam < 60 ? 12 : 22;
   return (
     <svg width={tam} height={tam} viewBox={`0 0 ${tam} ${tam}`} role="img" aria-label={`${valor} % completado`}>
-      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke="rgba(27,42,74,0.10)" strokeWidth="5" />
-      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke={GOLD_REF_DK} strokeWidth="5" strokeLinecap="round"
+      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke="rgba(27,42,74,0.10)" strokeWidth={sw} />
+      <circle cx={tam / 2} cy={tam / 2} r={r} fill="none" stroke={GOLD_REF_DK} strokeWidth={sw} strokeLinecap="round"
               strokeDasharray={`${(c * valor) / 100} ${c}`} transform={`rotate(-90 ${tam / 2} ${tam / 2})`} style={{ transition: 'stroke-dasharray 600ms ease' }} />
-      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize="22" fontWeight="700" fill={NAVY}>{valor}%</text>
+      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize={fs} fontWeight="700" fill={NAVY}>{valor}%</text>
     </svg>
   );
 }
@@ -360,11 +362,22 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
         <p style={{ ...parrafo, color: MUTED }}>Conócete, crece y lidera desde tus virtudes.</p>
       </div>
 
-      <section className="vl-ancho" style={{ ...tarjeta, display: 'flex', alignItems: 'center', gap: 18 }} aria-label="Tu progreso">
-        <Anillo valor={porcentaje} />
-        <div>
-          <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
-
+      <section className="vl-ancho" style={{ ...tarjeta }} aria-label="Tu progreso">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 16 }}>
+          <Anillo valor={porcentaje} />
+          <div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, justifyContent: 'center' }}>
+          {[{ nombre: 'Curso 1', pct: m1VideosPct }]
+            .concat(cursos.map(c => ({ nombre: `Curso ${c.numero}`, pct: progresoCurso(c, progreso.vistas).porcentaje })))
+            .map((cp, i) => (
+              <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, minWidth: 56 }}>
+                <Anillo valor={cp.pct} tam={48} />
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textAlign: 'center', lineHeight: 1.25 }}>{cp.nombre}</span>
+              </div>
+            ))}
         </div>
       </section>
 
