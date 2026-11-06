@@ -22,6 +22,8 @@ import retratoDominio from './assets/retrato-dominio.jpg';
 import retratoJusticia from './assets/retrato-justicia.jpg';
 import retratoMagnanimidad from './assets/retrato-magnanimidad.jpg';
 import piramidaImg from '../assets/piramida ES.png';
+import piramideViciosImg from './piramide-virtudes-vicios.png';
+import piramideLVImg from './piramide-liderazgo-virtuoso.png';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
@@ -980,7 +982,7 @@ export function TestProfundo({ paso, onComplete, modulo }) {
 /* ─── REFLEXIÓN PIRÁMIDE (imagen + preguntas abiertas) ─── */
 
 const REFLEXION_IMAGENES = {
-  'piramide-lv': piramidaImg,
+  'piramide-lv': [piramideViciosImg, piramideLVImg],
   'magnanimidad-temperamentos': diagramaTemperamentosImg,
 };
 
@@ -992,7 +994,8 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
   const [respuestas, setRespuestas] = useState(() => Array(preguntas.length).fill(''));
   const [lbSrc, setLbSrc] = useState(null);
 
-  const img = REFLEXION_IMAGENES[paso.imagen] ?? null;
+  const imgEntry = REFLEXION_IMAGENES[paso.imagen] ?? null;
+  const imgs = Array.isArray(imgEntry) ? imgEntry : imgEntry ? [imgEntry] : [];
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="reflexion_piramide" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
@@ -1043,13 +1046,17 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
           <h3 style={{ fontFamily: FONT_BODY, fontSize: 20, fontWeight: 700, color: NAVY, margin: '0 0 14px', lineHeight: 1.4 }}>
             {paso.enunciado}
           </h3>
-          {img && (
+          {imgs.length > 0 && (
             <>
-              <div style={{ marginBottom: 8, cursor: 'zoom-in' }} onClick={() => setLbSrc(img)}>
-                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+              <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
+                {imgs.map((src, i) => (
+                  <div key={i} style={{ flex: 1, cursor: 'zoom-in', minWidth: 0 }} onClick={() => setLbSrc(src)}>
+                    <img src={src} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+                  </div>
+                ))}
               </div>
               <div style={{ marginBottom: 18, textAlign: 'center' }}>
-                <button type="button" onClick={() => setLbSrc(img)} style={{
+                <button type="button" onClick={() => setLbSrc(imgs[0])} style={{
                   background: 'none', border: 'none', padding: 0, cursor: 'pointer',
                   fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
                   display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -1086,6 +1093,9 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
   return (
     <Shell titulo={paso.titulo} actual={slide + 1} total={totalSlides}>
       <div style={tarjeta}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 16px', lineHeight: 1.5 }}>
+          Tómate un momento para reflexionar y responde con tus propias palabras.
+        </p>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
           {preguntas[qIdx]}
         </p>

@@ -401,7 +401,7 @@ function ListaLecciones({ pasos, completados, irA }) {
                 }}>
                   <span style={{ width: 14, display: 'inline-flex' }}>{videoHecho && <IconoCheck width={14} height={14} style={{ color: GOLD_REF }} />}</span>
                   <IconoVideo width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />
-                  <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>Vídeo</span>
+                  <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{mod.video.titulo}</span>
                 </button>
 
                 {mod.actividades.map((act, j) => {
