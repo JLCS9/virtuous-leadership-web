@@ -952,6 +952,9 @@ export function TestProfundo({ paso, onComplete, modulo }) {
   return (
     <Shell titulo={paso.titulo} actual={idx + 1} total={total}>
       <div style={tarjeta}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 12px', lineHeight: 1.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+          Examínate y fija metas para el mes que empieza
+        </p>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
           {preguntas[idx] ?? `Pregunta ${idx + 1}`}
         </p>
