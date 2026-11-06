@@ -505,44 +505,125 @@
     {
       "id": "m2-17",
       "num": 17,
-      "tipo": "reflexion_guiada",
+      "tipo": "plan_crecimiento",
       "titulo": "Mi Plan de Crecimiento en Magnanimidad",
       "visible": false,
-      "parrafos": [
+      "descripcion": "Vamos a desarrollar tu plan de crecimiento en magnanimidad para que puedas ir avanzando sobre él durante este año.",
+      "nota_anual": "Este plan debe realizarse todos los años. Vuelve a inicio y final de año para ver en qué momento estás y el progreso que has conseguido.",
+      "pantallas": [
         {
-          "id": "P1",
-          "tipo": "generico",
-          "texto": "Mi \"Plan de Crecimiento en Magnanimidad\" consiste en las cosas que haré este año, para crecer en Magnanimidad."
+          "id": "explicacion",
+          "tipo": "texto",
+          "titulo": "Mi Plan de Crecimiento en Magnanimidad",
+          "contenido": "Mi plan de crecimiento en magnanimidad consiste en las cosas que haré este año para crecer en magnanimidad.\n\nTeniendo en cuenta lo que me rodea —lo que leo, escucho, veo y las personas con las que me relaciono—, todo influye en mi camino hacia la magnanimidad.\n\nEntender por qué es importante y definir qué quiero hacer para llegar a ese ideal es el primer paso para crecer como líder virtuoso."
         },
         {
-          "id": "P2",
-          "tipo": "reflexion",
-          "texto": "Identifico personas magnánimas para estudiar y tratar de imitar. Puedo inspirarme en los modelos de liderazgo virtuoso presentados en el sitio web alexhavard.com."
-        },
-        {
-          "id": "P3",
-          "tipo": "reflexion",
-          "texto": "Creo un \"entorno magnánimo\" a mi alrededor. Mi entorno son los libros que leo, las películas que veo, la música que escucho. Es internet con toda su grandeza y toda su miseria. Soy selectivo, rechazo lo que es moralmente dudoso y lleno mi corazón y mi mente de cosas bellas y nobles."
-        },
-        {
-          "id": "P4",
-          "tipo": "reflexion",
-          "texto": "Buscaré un asesor cualificado (un Coach de Liderazgo Virtuoso) que pueda ayudarme a establecer y alcanzar objetivos magnánimos."
-        },
-        {
-          "id": "P5",
-          "tipo": "reflexion",
-          "texto": "Cada año vuelvo a hacer el test de magnanimidad (sección 3). Me examino de nuevo. ¿En qué puntos en particular centraré mi atención durante este año?"
-        },
-        {
-          "id": "P6",
-          "tipo": "condicional",
-          "variantes": {
-            "COL": "Identifico las debilidades de mi temperamento que dificultan la magnanimidad: como colérico, tengo tendencia a los gestos vacíos y al activismo ciego. Mi propósito específico para el año próximo:",
-            "MEL": "Identifico las debilidades de mi temperamento que dificultan la magnanimidad: como melancólico, temo la acción y el asumir riesgos. Mi propósito específico para el año próximo:",
-            "SAN": "Identifico las debilidades de mi temperamento que dificultan la magnanimidad: como sanguíneo, empiezo pero nunca termino. Mi propósito específico para el año próximo:",
-            "FLE": "Identifico las debilidades de mi temperamento que dificultan la magnanimidad: como flemático, navego siempre en la dirección de la corriente. Mi propósito específico para el año próximo:"
+          "id": "personas",
+          "tipo": "tabla_dinamica",
+          "titulo": "Personas magnánimas",
+          "explicacion": "Identifica personas magnánimas para estudiar y tratar de imitar. Puedo inspirarme en los modelos de liderazgo virtuoso presentados en el sitio de Alex Havard.",
+          "columnas": [
+            { "key": "nombre", "label": "Modelo virtuoso", "placeholder": "Ej: Martin Luther King" },
+            { "key": "motivo", "label": "¿Por qué? ¿Qué te inspira?", "placeholder": "Ej: Su valentía para defender sus convicciones" }
+          ],
+          "recurso": {
+            "label": "Modelos de Liderazgo Virtuoso",
+            "url": "http://alexhavard.com/es/wp-content/uploads/sites/3/2025/07/Modelos-de-LV.pdf"
           }
+        },
+        {
+          "id": "entorno_intro",
+          "tipo": "texto",
+          "titulo": "Creo un entorno magnánimo a mi alrededor",
+          "contenido": "Mi entorno son los libros que leo, las películas que veo, la música que escucho. Es internet con toda su grandeza y toda su miseria.\n\nSoy selectivo: rechazo lo que es moralmente dudoso y lleno mi corazón y mi mente de cosas bellas y nobles.\n\nA continuación, define los elementos concretos de tu entorno magnánimo."
+        },
+        {
+          "id": "libros",
+          "tipo": "checklist",
+          "titulo": "¿Qué libros te quieres leer?",
+          "explicacion": "Piensa en libros que te inspiren, que te hagan crecer como persona y como líder. Pueden ser biografías, ensayos, novelas que te eleven.",
+          "placeholder": "Ej: Creados para la grandeza — Alexandre Havard",
+          "recurso": {
+            "label": "Libros favoritos de Alex Havard",
+            "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
+          }
+        },
+        {
+          "id": "peliculas",
+          "tipo": "checklist",
+          "titulo": "¿Qué películas quieres ver?",
+          "explicacion": "Películas que muestren personajes magnánimos, historias de superación, de liderazgo auténtico.",
+          "placeholder": "Ej: La lista de Schindler",
+          "recurso": {
+            "label": "Películas favoritas de Alex Havard",
+            "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
+          }
+        },
+        {
+          "id": "arte",
+          "tipo": "checklist",
+          "titulo": "¿Qué obras maestras de arte te gustaría contemplar?",
+          "explicacion": "El arte universal eleva el espíritu. Selecciona obras, artistas o museos que quieras descubrir o revisitar.",
+          "placeholder": "Ej: La Piedad de Miguel Ángel",
+          "recurso": {
+            "label": "Obras de arte favoritas de Alex Havard",
+            "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
+          }
+        },
+        {
+          "id": "musica",
+          "tipo": "checklist",
+          "titulo": "¿Qué piezas musicales quieres escuchar?",
+          "explicacion": "La música noble alimenta el corazón. Piensa en piezas, compositores o géneros que quieras explorar.",
+          "placeholder": "Ej: Sinfonía n.º 9 de Beethoven",
+          "recurso": {
+            "label": "Música favorita de Alex Havard",
+            "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
+          }
+        },
+        {
+          "id": "ambiente",
+          "tipo": "reflexion_doble",
+          "titulo": "Mi ambiente",
+          "explicacion": "Tu ambiente influye profundamente en quién te conviertes. Reflexiona sobre lo que te rodea hoy y lo que necesitas cambiar.",
+          "preguntas": [
+            { "key": "ambiente_actual", "label": "¿Te gusta el ambiente en el que estás? ¿Qué cambiarías?", "placeholder": "Reflexiona sobre tu entorno actual..." },
+            { "key": "alejarme", "label": "¿De qué ambiente o hábitos me prometo alejarme?", "placeholder": "Identifica lo que quieres dejar atrás..." }
+          ]
+        },
+        {
+          "id": "recursos_internet",
+          "tipo": "checklist",
+          "titulo": "¿Qué recursos de internet utilizaré?",
+          "explicacion": "Internet puede ser una herramienta poderosa para el crecimiento si sabes elegir. ¿Qué canales, blogs, podcasts o plataformas te ayudarán?",
+          "placeholder": "Ej: Canal de YouTube de Alex Havard"
+        },
+        {
+          "id": "objetivos",
+          "tipo": "checklist",
+          "titulo": "Mis objetivos para este año",
+          "explicacion": "Define las metas concretas que te propones alcanzar este año en tu camino hacia la magnanimidad.",
+          "placeholder": "Ej: Leer 12 libros de liderazgo"
+        },
+        {
+          "id": "test_debilidades",
+          "tipo": "reflexion_temperamento",
+          "titulo": "Mi temperamento y la magnanimidad",
+          "explicacion": "Conocer las debilidades de tu temperamento te permite trabajar sobre ellas conscientemente. Según lo que has aprendido en el test de magnanimidad y a lo largo de este curso:",
+          "debilidades": {
+            "COL": "Como colérico, tengo tendencia a los gestos vacíos y al activismo ciego.",
+            "MEL": "Como melancólico, temo la acción y el asumir riesgos.",
+            "SAN": "Como sanguíneo, empiezo pero nunca termino.",
+            "FLE": "Como flemático, navego siempre en la dirección de la corriente."
+          },
+          "pregunta_refuerzo": "¿Qué puntos del test de magnanimidad quieres reforzar más este año?"
+        },
+        {
+          "id": "proposito_final",
+          "tipo": "proposito",
+          "titulo": "Mi propósito para el año próximo",
+          "explicacion": "Teniendo en cuenta todo lo que has reflexionado —tus modelos, tu entorno, tus objetivos y las debilidades de tu temperamento—, formula tu propósito concreto para este año.",
+          "placeholder": "Mi propósito específico para el año próximo es..."
         }
       ]
     },

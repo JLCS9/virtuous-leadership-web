@@ -3043,3 +3043,338 @@ export function TestCorazonFormacion({ paso, onComplete }) {
     </>
   );
 }
+
+/* ─── PLAN DE CRECIMIENTO EN MAGNANIMIDAD ─── */
+
+const IconoEnlace = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" />
+  </svg>
+);
+
+const IconoMas = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+    <line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" />
+  </svg>
+);
+
+const IconoBorrar = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+function RecursoLink({ recurso }) {
+  if (!recurso) return null;
+  return (
+    <div style={{ marginTop: 12, textAlign: 'right' }}>
+      <a href={recurso.url} target="_blank" rel="noopener noreferrer" style={{
+        display: 'inline-flex', alignItems: 'center', gap: 5,
+        fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, textDecoration: 'none',
+        opacity: 0.85,
+      }}>
+        <IconoEnlace /> {recurso.label}
+      </a>
+    </div>
+  );
+}
+
+function PantallaTablaDinamica({ pantalla, datos, onChange }) {
+  const filas = datos ?? [];
+  const cols = pantalla.columnas ?? [];
+  function addRow() { onChange([...filas, Object.fromEntries(cols.map(c => [c.key, '']))]); }
+  function updateCell(i, key, val) {
+    const next = filas.map((f, j) => j === i ? { ...f, [key]: val } : f);
+    onChange(next);
+  }
+  function removeRow(i) { onChange(filas.filter((_, j) => j !== i)); }
+
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
+        {pantalla.explicacion}
+      </p>
+      {filas.map((fila, i) => (
+        <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 10, alignItems: 'flex-start' }}>
+          {cols.map(col => (
+            <div key={col.key} style={{ flex: 1, minWidth: 0 }}>
+              {i === 0 && <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{col.label}</div>}
+              <input type="text" value={fila[col.key] ?? ''} onChange={e => updateCell(i, col.key, e.target.value)}
+                placeholder={col.placeholder} style={{
+                  width: '100%', boxSizing: 'border-box', fontFamily: FONT_BODY, fontSize: 14, color: NAVY,
+                  border: `1px solid ${LINE}`, background: '#fff', padding: '10px 12px', borderRadius: 0,
+                }} />
+            </div>
+          ))}
+          <button type="button" onClick={() => removeRow(i)} style={{
+            background: 'none', border: 'none', cursor: 'pointer', color: MUTED, padding: 6, marginTop: i === 0 ? 20 : 0,
+          }} aria-label="Eliminar"><IconoBorrar /></button>
+        </div>
+      ))}
+      <button type="button" onClick={addRow} style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+        background: 'none', border: `1px dashed ${GOLD_REF}`, padding: '10px 18px', cursor: 'pointer', borderRadius: 0,
+      }}>
+        <IconoMas /> Añadir persona
+      </button>
+      <RecursoLink recurso={pantalla.recurso} />
+    </>
+  );
+}
+
+function PantallaChecklist({ pantalla, datos, onChange }) {
+  const items = datos ?? [];
+  function addItem() { onChange([...items, '']); }
+  function updateItem(i, val) { onChange(items.map((it, j) => j === i ? val : it)); }
+  function removeItem(i) { onChange(items.filter((_, j) => j !== i)); }
+
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
+        {pantalla.explicacion}
+      </p>
+      {items.map((item, i) => (
+        <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+          <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, width: 20, textAlign: 'right', flexShrink: 0 }}>{i + 1}.</span>
+          <input type="text" value={item} onChange={e => updateItem(i, e.target.value)}
+            placeholder={pantalla.placeholder} style={{
+              flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY,
+              border: `1px solid ${LINE}`, background: '#fff', padding: '10px 12px', borderRadius: 0,
+            }} />
+          <button type="button" onClick={() => removeItem(i)} style={{
+            background: 'none', border: 'none', cursor: 'pointer', color: MUTED, padding: 6,
+          }} aria-label="Eliminar"><IconoBorrar /></button>
+        </div>
+      ))}
+      <button type="button" onClick={addItem} style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+        background: 'none', border: `1px dashed ${GOLD_REF}`, padding: '10px 18px', cursor: 'pointer', borderRadius: 0,
+      }}>
+        <IconoMas /> Añadir elemento
+      </button>
+      <RecursoLink recurso={pantalla.recurso} />
+    </>
+  );
+}
+
+function PantallaReflexionDoble({ pantalla, datos, onChange }) {
+  const vals = datos ?? {};
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
+        {pantalla.explicacion}
+      </p>
+      {(pantalla.preguntas ?? []).map(preg => (
+        <div key={preg.key} style={{ marginBottom: 18 }}>
+          <label style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+            {preg.label}
+          </label>
+          <textarea value={vals[preg.key] ?? ''} onChange={e => onChange({ ...vals, [preg.key]: e.target.value })}
+            placeholder={preg.placeholder} rows={4} style={{
+              width: '100%', boxSizing: 'border-box', fontFamily: FONT_BODY, fontSize: 14, color: NAVY,
+              border: `1px solid ${LINE}`, background: '#fff', padding: '12px', borderRadius: 0, resize: 'vertical',
+            }} />
+        </div>
+      ))}
+    </>
+  );
+}
+
+function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
+  const vals = datos ?? {};
+  const primary = temperamento?.primary;
+  const debilidad = primary && pantalla.debilidades?.[primary];
+
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 14px' }}>
+        {pantalla.explicacion}
+      </p>
+      {debilidad && (
+        <div style={{
+          background: BEIGE, padding: '14px 18px', marginBottom: 18, borderLeft: `3px solid ${GOLD_REF}`,
+        }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+            {debilidad}
+          </p>
+        </div>
+      )}
+      <label style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+        {pantalla.pregunta_refuerzo}
+      </label>
+      <textarea value={vals.refuerzo ?? ''} onChange={e => onChange({ ...vals, refuerzo: e.target.value })}
+        placeholder="Escribe los puntos que más necesitas trabajar..." rows={4} style={{
+          width: '100%', boxSizing: 'border-box', fontFamily: FONT_BODY, fontSize: 14, color: NAVY,
+          border: `1px solid ${LINE}`, background: '#fff', padding: '12px', borderRadius: 0, resize: 'vertical',
+        }} />
+    </>
+  );
+}
+
+function PantallaProposito({ pantalla, datos, onChange }) {
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
+        {pantalla.explicacion}
+      </p>
+      <textarea value={datos ?? ''} onChange={e => onChange(e.target.value)}
+        placeholder={pantalla.placeholder} rows={6} style={{
+          width: '100%', boxSizing: 'border-box', fontFamily: FONT_BODY, fontSize: 16, color: NAVY,
+          border: `1px solid ${LINE}`, background: '#fff', padding: '16px', borderRadius: 0, resize: 'vertical',
+          lineHeight: 1.7,
+        }} />
+    </>
+  );
+}
+
+const PLAN_STORAGE_KEY = (userId) => `vl-plan:${userId}`;
+
+function leerPlan(userId) {
+  try { return JSON.parse(localStorage.getItem(PLAN_STORAGE_KEY(userId))) ?? {}; } catch { return {}; }
+}
+function guardarPlan(userId, data) {
+  try { localStorage.setItem(PLAN_STORAGE_KEY(userId), JSON.stringify(data)); } catch {}
+}
+
+export function PlanCrecimiento({ paso, temperamento, onComplete }) {
+  const userId = (() => { try { return JSON.parse(localStorage.getItem('sb-session'))?.user?.id ?? 'anon'; } catch { return 'anon'; } })();
+  const pantallas = paso.pantallas ?? [];
+  const [idx, setIdx] = useState(0);
+  const [fase, setFase] = useState('caratula');
+  const [visible, setVisible] = useState(true);
+  const [plan, setPlan] = useState(() => leerPlan(userId));
+
+  function actualizarPantalla(pantallaId, valor) {
+    const next = { ...plan, [pantallaId]: valor };
+    setPlan(next);
+    guardarPlan(userId, next);
+  }
+
+  function siguiente() {
+    setVisible(false);
+    setTimeout(() => {
+      if (idx < pantallas.length - 1) {
+        setIdx(idx + 1);
+        setVisible(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        onComplete({ plan });
+      }
+    }, 300);
+  }
+
+  function anterior() {
+    if (idx > 0) {
+      setVisible(false);
+      setTimeout(() => { setIdx(idx - 1); setVisible(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+    }
+  }
+
+  if (fase === 'caratula') {
+    return (
+      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+            <span style={{
+              display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+              background: BEIGE, border: `2px solid ${GOLD_REF}`,
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: GOLD_REF_DK,
+            }}>✦</span>
+          </div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 14px', textAlign: 'center', lineHeight: 1.3 }}>
+            Desarrollo de mi plan de crecimiento en magnanimidad
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 12px' }}>
+            {paso.descripcion}
+          </p>
+          {paso.nota_anual && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: GOLD_REF_DK, lineHeight: 1.6, textAlign: 'center', maxWidth: 480, margin: '0 auto 8px', fontStyle: 'italic' }}>
+              {paso.nota_anual}
+            </p>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28, marginBottom: 8 }}>
+            <button type="button" onClick={() => setFase('ejercicio')} style={{
+              fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 48px', cursor: 'pointer',
+            }}>
+              Empezar →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const pant = pantallas[idx];
+  if (!pant) { onComplete({ plan }); return null; }
+
+  let contenido = null;
+  if (pant.tipo === 'texto') {
+    contenido = (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        {pant.contenido.split('\n\n').map((parrafo, i) => (
+          <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.7, margin: 0 }}>
+            {parrafo}
+          </p>
+        ))}
+      </div>
+    );
+  } else if (pant.tipo === 'tabla_dinamica') {
+    contenido = <PantallaTablaDinamica pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'checklist') {
+    contenido = <PantallaChecklist pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'reflexion_doble') {
+    contenido = <PantallaReflexionDoble pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'reflexion_temperamento') {
+    contenido = <PantallaReflexionTemperamento pantalla={pant} temperamento={temperamento} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'proposito') {
+    contenido = <PantallaProposito pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  }
+
+  const esUltima = idx === pantallas.length - 1;
+
+  return (
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <div style={eyebrow}>Plan de crecimiento</div>
+      <div style={{ ...tarjeta, marginTop: 12 }}>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+          {pant.titulo}
+        </h2>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginBottom: 20 }}>
+          {idx + 1} de {pantallas.length}
+        </div>
+
+        <div style={{ marginBottom: 10, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+          <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${((idx + 1) / pantallas.length) * 100}%` }} />
+        </div>
+
+        <div style={{
+          opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 300ms ease, transform 300ms ease',
+          padding: '24px 0',
+        }}>
+          {contenido}
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
+          <button type="button" onClick={anterior} disabled={idx === 0} style={{
+            fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: idx === 0 ? `${MUTED}66` : NAVY,
+            background: 'none', border: `1px solid ${idx === 0 ? `${LINE}66` : LINE}`, borderRadius: 0,
+            padding: '12px 28px', cursor: idx === 0 ? 'default' : 'pointer',
+          }}>
+            ← Anterior
+          </button>
+          <button type="button" onClick={siguiente} style={{
+            fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', borderRadius: 0,
+            padding: '14px 36px', cursor: 'pointer',
+          }}>
+            {esUltima ? 'Finalizar plan →' : 'Siguiente →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
