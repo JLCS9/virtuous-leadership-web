@@ -8,6 +8,7 @@ export function pasosDelUsuario(modulo, temperamento) {
     if (p.tipo === 'noop') return false;
     if (p.tipo === 'test_profundo') {
       const t = p.temperamento;
+      if (!t) return true;
       return t === primary || t === secondary;
     }
     return true;
@@ -61,7 +62,18 @@ export function continuarModulo(pasos, completados) {
 export function moduloDelPaso(pasos, pasoId) {
   const p = pasos.find((x) => x.id === pasoId);
   if (!p || p.tipo !== 'video') return null;
-  const vids = pasos.filter((x) => x.tipo === 'video');
-  const idx = vids.indexOf(p);
-  return { numero: idx, total: vids.length };
+  const modHeaders = pasos.filter((x) => x.tipo === 'video' && !x.continua_modulo);
+  if (p.continua_modulo) {
+    const allVids = pasos.filter((x) => x.tipo === 'video');
+    const thisIdx = allVids.indexOf(p);
+    for (let i = thisIdx - 1; i >= 0; i--) {
+      if (!allVids[i].continua_modulo) {
+        const parentIdx = modHeaders.indexOf(allVids[i]);
+        return { numero: parentIdx + 1, total: modHeaders.length };
+      }
+    }
+    return null;
+  }
+  const idx = modHeaders.indexOf(p);
+  return { numero: idx + 1, total: modHeaders.length };
 }

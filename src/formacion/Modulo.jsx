@@ -3,7 +3,7 @@ import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento } from './Actividad';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
@@ -17,6 +17,7 @@ import { useCatalogo } from './useFormacion';
 
 const MODULOS = {
   'curso-1': () => import('../data/modulo1.json'),
+  'curso-2': () => import('../data/modulo2.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -72,7 +73,13 @@ function mapTemp(result) {
 
 function agruparIntro(parrafos) {
   if (!parrafos || !parrafos.length) return [];
-  return parrafos.map(p => [p]);
+  return parrafos.map(p => Array.isArray(p) ? p : [p]);
+}
+
+function renderIntroTexto(text) {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part);
 }
 
 function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
@@ -98,6 +105,15 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
     setVisible(false);
     setTimeout(() => {
       setIntroIdx(i => i + 1);
+      setVisible(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 300);
+  }
+
+  function retrocederIntro() {
+    setVisible(false);
+    setTimeout(() => {
+      setIntroIdx(i => Math.max(0, i - 1));
       setVisible(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 300);
@@ -180,11 +196,19 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
               </>
             ) : (
               pags.map((p, i) => (
-                <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{p}</p>
+                <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{renderIntroTexto(p)}</p>
               ))
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+            {introIdx > 0 ? (
+              <button type="button" onClick={retrocederIntro} style={{
+                fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: NAVY,
+                background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+              }}>
+                ← Anterior
+              </button>
+            ) : <span />}
             <button type="button" onClick={avanzarIntro} style={{
               fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
@@ -228,10 +252,10 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
 function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
-  const moduloNum = _mod?.numero ?? 0;
+  const moduloNum = _mod?.numero ?? 1;
 
   function completar(resultado) {
-    progreso.completar(paso.id, resultado);
+    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: moduloNum });
     avanzar();
   }
 
@@ -241,11 +265,14 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'desliza': return <Desliza paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
     case 'conclusion_modulo': return <ConclusionModulo paso={paso} completados={progreso.completados} onContinuar={completar} onVolver={volver} />;
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} />;
@@ -258,9 +285,13 @@ function agruparModulos(pasos) {
   let actual = null;
   for (const p of pasos) {
     if (p.tipo === 'video') {
-      actual = { video: p, actividades: [] };
-      modulos.push(actual);
-    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'test_caracter') {
+      if (p.continua_modulo && actual) {
+        actual.actividades.push(p);
+      } else {
+        actual = { video: p, actividades: [] };
+        modulos.push(actual);
+      }
+    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter') {
       actual.actividades.push(p);
     }
   }
@@ -285,9 +316,12 @@ function etiquetaPaso(paso) {
   if (paso.tipo === 'quiz') return 'Cuestionario';
   if (paso.tipo === 'define') return 'Definiciones';
   if (paso.tipo === 'test_profundo') return 'Test';
+  if (paso.tipo === 'reflexion_piramide') return 'Reflexión';
+  if (paso.tipo === 'temperamento_magnanimidad') return 'Temperamento';
   if (paso.tipo === 'temperamento_perfil') return 'Tu perfil';
   if (paso.tipo === 'retos_temperamento') return 'Retos';
   if (paso.tipo === 'reflexion_guiada') return 'Reflexión';
+  if (paso.tipo === 'plan_crecimiento') return 'Plan de crecimiento';
   if (paso.tipo === 'cierre') return 'Síntesis';
   if (paso.tipo === 'conclusion_modulo') return 'Resumen';
   if (paso.tipo === 'test_caracter') return 'Test de carácter';
@@ -341,10 +375,10 @@ function ListaLecciones({ pasos, completados, irA }) {
                 background: todoHecho ? GOLD_REF : 'transparent', color: todoHecho ? '#fff' : NAVY,
                 fontFamily: FONT_SLAB, fontSize: 13, fontWeight: 700,
               }}>
-                {todoHecho ? <IconoCheck width={14} height={14} /> : i}
+                {todoHecho ? <IconoCheck width={14} height={14} /> : i + 1}
               </span>
               <span style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500 }}>
-                Módulo {i}: {mod.video.titulo}
+                Módulo {i + 1}: {mod.video.titulo}
               </span>
               <span style={{ display: 'flex', gap: 6, alignItems: 'center', flex: '0 0 auto' }}></span>
               <IconoChevron width={16} height={16} style={{
@@ -369,7 +403,7 @@ function ListaLecciones({ pasos, completados, irA }) {
                 }}>
                   <span style={{ width: 14, display: 'inline-flex' }}>{videoHecho && <IconoCheck width={14} height={14} style={{ color: GOLD_REF }} />}</span>
                   <IconoVideo width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />
-                  <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>Vídeo</span>
+                  <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{mod.video.titulo}</span>
                 </button>
 
                 {mod.actividades.map((act, j) => {
@@ -382,8 +416,8 @@ function ListaLecciones({ pasos, completados, irA }) {
                       borderBottom: j < mod.actividades.length - 1 ? `1px solid ${LINE}` : 'none',
                     }}>
                       <span style={{ width: 14, display: 'inline-flex' }}>{actHecho && <IconoCheck width={14} height={14} style={{ color: GOLD_REF }} />}</span>
-                      {act.tipo === 'quiz' ? <IconoCuestionario width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : <IconoEjercicio width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />}
-                      <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{tituloActividad(act)}</span>
+                      {act.tipo === 'video' ? <IconoVideo width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : act.tipo === 'quiz' ? <IconoCuestionario width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : <IconoEjercicio width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />}
+                      <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{act.tipo === 'video' ? act.titulo : tituloActividad(act)}</span>
                       {score && <span style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK }}>{score}</span>}
                     </button>
                   );
@@ -452,13 +486,21 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
 
 function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
   const progAll = progresoModulo(pasos, completados);
-  const vids = pasos.filter((p) => p.tipo === 'video');
-  const vidsHechos = vids.filter((p) => completados[p.id]).length;
-  const vidsPct = vids.length ? Math.round((vidsHechos / vids.length) * 100) : 0;
+  const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
+  const allVids = pasos.filter((p) => p.tipo === 'video');
+  const vidsHechos = modHeaders.filter((p) => {
+    if (!completados[p.id]) return false;
+    const pIdx = allVids.indexOf(p);
+    for (let j = pIdx + 1; j < allVids.length && allVids[j].continua_modulo; j++) {
+      if (!completados[allVids[j].id]) return false;
+    }
+    return true;
+  }).length;
+  const vidsPct = modHeaders.length ? Math.round((vidsHechos / modHeaders.length) * 100) : 0;
   const cont = continuarModulo(pasos, completados);
 
-  const cierre = visibles.find((p) => p.tipo === 'cierre');
-  const cierreHecho = cierre ? Boolean(completados[cierre.id]) : false;
+  const planStep = pasos.find(p => p.tipo === 'plan_crecimiento');
+  const planHecho = planStep ? Boolean(completados[planStep.id]) : false;
 
   return (
     <div className="vl-listado" style={{ margin: '0 auto' }}>
@@ -487,20 +529,38 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize="18" fontWeight="700" fill={NAVY}>{vidsPct}%</text>
           </svg>
           <div>
-            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {vids.length} módulos</div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {modHeaders.length} módulos</div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>
               {progAll.completo ? 'Curso completado' : 'En progreso'}
             </div>
           </div>
         </div>
 
-        {cursoNum === 1 && temperamento && (
+        {temperamento && (
           <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} />
         )}
 
-        {cursoNum === 1 && userId && (
+        {userId && (
           <div style={{ marginTop: 18 }}>
-            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} />
+            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={modulo.id} />
+            {planStep && (
+              <button type="button" disabled style={{
+                all: 'unset', boxSizing: 'border-box', width: '100%', marginTop: 10,
+                display: 'flex', alignItems: 'center', gap: 10,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: MUTED,
+                background: BEIGE, border: `1px dashed ${LINE}`, padding: '12px 16px',
+                cursor: 'default', opacity: 0.7,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Descargar plan de crecimiento
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, marginLeft: 'auto' }}>Proximamente</span>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -523,7 +583,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
               </span>
               <div style={{ minWidth: 0 }}>
                 <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 600, lineHeight: 1.2 }}>{cont.titulo}</div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, opacity: 0.72, marginTop: 4 }}>{cont.tipo === 'video' ? 'Vídeo' : cont.tipo === 'cierre' ? 'Conclusiones' : cont.tipo === 'conclusion_modulo' ? 'Resumen del módulo' : cont.tipo === 'reflexion_guiada' ? 'Reflexión' : 'Actividad'}</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 12, opacity: 0.72, marginTop: 4 }}>{cont.tipo === 'video' ? 'Vídeo' : cont.tipo === 'cierre' ? 'Conclusiones' : cont.tipo === 'conclusion_modulo' ? 'Resumen del módulo' : cont.tipo === 'reflexion_guiada' ? 'Reflexión' : cont.tipo === 'plan_crecimiento' ? 'Plan de crecimiento' : 'Actividad'}</div>
               </div>
             </button>
           </section>
@@ -531,30 +591,32 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
         <ListaLecciones pasos={pasos} completados={completados} irA={irA} />
 
-        {cierre && (
+        {planStep && (
           <section style={{ marginTop: 18 }}>
-            <button type="button" onClick={() => irA(cierre.id)} style={{
+            <button type="button" onClick={() => irA(planStep.id)} style={{
               all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
               ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
               borderTop: `2px solid ${GOLD_REF}`,
             }}>
               <span style={{
                 flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
-                background: cierreHecho ? GOLD_REF : 'transparent',
-                border: cierreHecho ? 'none' : `1.5px solid ${LINE}`,
-                color: cierreHecho ? '#fff' : NAVY,
+                background: planHecho ? GOLD_REF : 'transparent',
+                border: planHecho ? 'none' : `1.5px solid ${LINE}`,
+                color: planHecho ? '#fff' : NAVY,
+                fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
               }}>
-                {cierreHecho ? <IconoCheck width={16} height={16} /> : <IconoChevron width={14} height={14} />}
+                {planHecho ? <IconoCheck width={16} height={16} /> : '✦'}
               </span>
               <div>
-                <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{cierre.titulo}</div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{planStep.titulo}</div>
                 <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 2 }}>
-                  {cierreHecho ? 'Completado' : 'Síntesis del curso'}
+                  {planHecho ? 'Completado' : 'Plan de crecimiento'}
                 </div>
               </div>
             </button>
           </section>
         )}
+
       </div>
     </div>
   );
@@ -609,7 +671,7 @@ export default function Modulo() {
 
 function ModuloContenido({ moduloData, user, cursoId }) {
   const cursoNum = moduloData.curso != null ? moduloData.curso : (parseInt(cursoId.replace('curso-', ''), 10) || 1);
-  const progreso = useModuloProgreso(user.id, moduloData.id);
+  const progreso = useModuloProgreso(user.id, moduloData.id, cursoNum);
   const notasHook = useNotas(user.id, moduloData.id);
   const [temp, setTemp] = useState(undefined);
 
@@ -628,7 +690,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   const pasoActual = pasoActualId ? pasos.find((p) => p.id === pasoActualId) : null;
 
   function irA(pasoId) {
-    progreso.irA(pasoId);
+    progreso.irA(pasoId, pasos.length);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -638,7 +700,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
     if (sig) {
       irA(sig.id);
     } else {
-      progreso.irA(null);
+      progreso.irA(null, pasos.length);
     }
   }
 
@@ -649,7 +711,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   }
 
   function volver() {
-    progreso.irA(null);
+    progreso.irA(null, pasos.length);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -690,7 +752,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
         </button>
         {videoCtx && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 16, fontFamily: FONT_BODY, fontSize: 14, color: NAVY, flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 600, color: MUTED, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Módulo {videoCtxMod?.numero ?? 0}</span>
+            <span style={{ fontWeight: 600, color: MUTED, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Módulo {videoCtxMod?.numero ?? 1}</span>
             <span style={{ color: LINE }}>|</span>
             <span>{videoCtx.titulo}</span>
             <span style={{ color: MUTED, fontSize: 13 }}>/</span>

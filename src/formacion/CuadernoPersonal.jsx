@@ -23,16 +23,16 @@ const FACILITA_DIFICULTA = {
   FLE: { facilita: 'el dominio propio', dificulta: 'la magnanimidad y la iniciativa' },
 };
 
-function leerProgreso(userId) {
+function leerProgreso(userId, moduloId = 'modulo1') {
   try {
-    const raw = localStorage.getItem(`vl-modulo:${userId}:modulo1`);
+    const raw = localStorage.getItem(`vl-modulo:${userId}:${moduloId}`);
     return raw ? JSON.parse(raw).completados ?? {} : {};
   } catch { return {}; }
 }
 
-function leerNotas(userId) {
+function leerNotas(userId, moduloId = 'modulo1') {
   try {
-    const raw = localStorage.getItem(`vl-notas:${userId}:modulo1`);
+    const raw = localStorage.getItem(`vl-notas:${userId}:${moduloId}`);
     return raw ? JSON.parse(raw) : {};
   } catch { return {}; }
 }
@@ -59,16 +59,19 @@ function formatFecha(iso) {
   return new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-async function generarPDF(userId, pasos, temperamento) {
+const CUADERNO_PDF = { modulo1: '/cuadernos/cuaderno-1.pdf', modulo2: '/cuadernos/cuaderno-2.pdf' };
+
+async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   const { PDFDocument, StandardFonts, rgb, PageSizes } = await import('pdf-lib');
 
-  const comp = leerProgreso(userId);
-  const notas = leerNotas(userId);
+  const comp = leerProgreso(userId, moduloId);
+  const notas = leerNotas(userId, moduloId);
   const p = temperamento?.primary;
   const s = temperamento?.secondary;
   const perfil = s ? `${p}-${s}` : p;
 
-  const pdfBytes = await fetch('/cuadernos/cuaderno-1.pdf').then(r => r.arrayBuffer());
+  const pdfPath = CUADERNO_PDF[moduloId] ?? CUADERNO_PDF.modulo1;
+  const pdfBytes = await fetch(pdfPath).then(r => r.arrayBuffer());
   const doc = await PDFDocument.load(pdfBytes);
 
   const font = await doc.embedFont(StandardFonts.Helvetica);
@@ -107,111 +110,116 @@ async function generarPDF(userId, pasos, temperamento) {
     page.drawText('X', { x: x + 3, y: PH - yTop + 1, size: 11, font: fontBold, color: INK });
   }
 
-  // ━━━ PAGE 4 (index 3): Conceptos básicos ━━━
-  const definePasos = pasos.filter(pp => DEFINE_IDS.includes(pp.id));
-  const allConceptos = definePasos.flatMap(pp => pp.conceptos ?? []);
-  const defineComplete = DEFINE_IDS.some(id => comp[id]);
+  // ━━━ MODULO 1: page-specific fills ━━━
+  if (moduloId === 'modulo1') {
+    // PAGE 4 (index 3): Conceptos básicos
+    const definePasos = pasos.filter(pp => DEFINE_IDS.includes(pp.id));
+    const allConceptos = definePasos.flatMap(pp => pp.conceptos ?? []);
+    const defineComplete = DEFINE_IDS.some(id => comp[id]);
 
-  if (defineComplete && allConceptos.length > 0) {
-    const pg = pages[3];
-    const conceptoPos = {
-      'Temperamento': 200, 'Temperamento colérico': 245, 'Temperamento melancólico': 288,
-      'Temperamento sanguíneo': 332, 'Temperamento flemático': 375,
-      'Carácter': 430, 'Prudencia': 473, 'Fortaleza': 517,
-      'Dominio de sí': 560, 'Justicia': 605, 'Humildad': 647, 'Magnanimidad': 690,
-    };
-    for (const c of allConceptos) {
-      const yTop = conceptoPos[c.concepto];
-      if (!yTop) continue;
-      const txt = (c.correctas ?? []).slice(0, 3).join('  ·  ');
-      if (txt) draw(pg, txt, 200, yTop, { size: 9 });
-    }
-  }
-
-  // ━━━ PAGE 5 (index 4): Mi temperamento ━━━
-  if (p) {
-    const pg = pages[4];
-    const xPos = { COL: 242, MEL: 330, SAN: 414, FLE: 500 };
-    if (xPos[p]) check(pg, xPos[p], 414);
-    if (s && xPos[s]) check(pg, xPos[s], 438);
-  }
-
-  // ━━━ PAGES 7-8 (index 6-7): Mi carácter ━━━
-  const ident = comp[IDENTIFICA_ID];
-  if (ident?.respuestas?.length) {
-    const virtudes = pasos.find(pp => pp.id === IDENTIFICA_ID)?.virtudes ?? [];
-    // Page 7 (index 6): Prudencia, Fortaleza, Dominio de sí
-    // Page 8 (index 7): Justicia, Magnanimidad, Humildad
-    const layout = [
-      { pi: 6, idx: [0, 1, 2], bases: [70, 275, 480] },
-      { pi: 7, idx: [3, 4, 5], bases: [60, 265, 470] },
-    ];
-    for (const l of layout) {
-      const pg = pages[l.pi];
-      for (let vi = 0; vi < l.idx.length; vi++) {
-        const r = ident.respuestas[l.idx[vi]];
-        const v = virtudes[l.idx[vi]];
-        if (!v || !r) continue;
-        const base = l.bases[vi];
-        if (r.facil) draw(pg, r.facil, 170, base + 28, { size: 9 });
-        if (r.ejemploFacil) draw(pg, r.ejemploFacil, 140, base + 48, { size: 9, maxWidth: 370 });
-        if (r.dificil) draw(pg, r.dificil, 145, base + 85, { size: 9 });
-        if (r.ejemploDificil) draw(pg, r.ejemploDificil, 140, base + 105, { size: 9, maxWidth: 370 });
+    if (defineComplete && allConceptos.length > 0) {
+      const pg = pages[3];
+      const conceptoPos = {
+        'Temperamento': 200, 'Temperamento colérico': 245, 'Temperamento melancólico': 288,
+        'Temperamento sanguíneo': 332, 'Temperamento flemático': 375,
+        'Carácter': 430, 'Prudencia': 473, 'Fortaleza': 517,
+        'Dominio de sí': 560, 'Justicia': 605, 'Humildad': 647, 'Magnanimidad': 690,
+      };
+      for (const c of allConceptos) {
+        const yTop = conceptoPos[c.concepto];
+        if (!yTop) continue;
+        const txt = (c.correctas ?? []).slice(0, 3).join('  ·  ');
+        if (txt) draw(pg, txt, 200, yTop, { size: 9 });
       }
     }
-  }
 
-  // ━━━ PAGE 11 (index 10): Los desafíos - Paso 1 ━━━
-  if (p) {
-    const pg = pages[10];
-    const retos = comp[RETOS_ID];
-    const fd = FACILITA_DIFICULTA[p];
-    const facilitaTxt = retos?.textoFacilita ?? fd?.facilita ?? '';
-    if (facilitaTxt) draw(pg, facilitaTxt, ML, 370, { size: 10, maxWidth: TW });
-    const dificultaTxt = retos?.textoDificulta ?? fd?.dificulta ?? '';
-    if (dificultaTxt) draw(pg, dificultaTxt, ML, 460, { size: 10, maxWidth: TW });
+    // PAGE 5 (index 4): Mi temperamento
+    if (p) {
+      const pg = pages[4];
+      const xPos = { COL: 242, MEL: 330, SAN: 414, FLE: 500 };
+      if (xPos[p]) check(pg, xPos[p], 414);
+      if (s && xPos[s]) check(pg, xPos[s], 438);
+    }
 
-    const vd = VIRTUD_DESAFIO_MAP[perfil] ?? VIRTUD_DESAFIO_MAP[p];
-    const vdX = { Humildad: 227, Audacia: 310, Perseverancia: 397, Magnanimidad: 490 };
-    const simple = vd?.includes('Humildad') ? 'Humildad'
-      : vd?.includes('Audacia') ? 'Audacia'
-      : (vd?.includes('esistencia') || vd?.includes('erseverancia')) ? 'Perseverancia'
-      : vd?.includes('Magnanimidad') ? 'Magnanimidad' : null;
-    if (simple && vdX[simple]) check(pg, vdX[simple], 530);
-  }
+    // PAGES 7-8 (index 6-7): Mi carácter
+    const ident = comp[IDENTIFICA_ID];
+    if (ident?.respuestas?.length) {
+      const virtudes = pasos.find(pp => pp.id === IDENTIFICA_ID)?.virtudes ?? [];
+      const layout = [
+        { pi: 6, idx: [0, 1, 2], bases: [70, 275, 480] },
+        { pi: 7, idx: [3, 4, 5], bases: [60, 265, 470] },
+      ];
+      for (const l of layout) {
+        const pg = pages[l.pi];
+        for (let vi = 0; vi < l.idx.length; vi++) {
+          const r = ident.respuestas[l.idx[vi]];
+          const v = virtudes[l.idx[vi]];
+          if (!v || !r) continue;
+          const base = l.bases[vi];
+          if (r.facil) draw(pg, r.facil, 170, base + 28, { size: 9 });
+          if (r.ejemploFacil) draw(pg, r.ejemploFacil, 140, base + 48, { size: 9, maxWidth: 370 });
+          if (r.dificil) draw(pg, r.dificil, 145, base + 85, { size: 9 });
+          if (r.ejemploDificil) draw(pg, r.ejemploDificil, 140, base + 105, { size: 9, maxWidth: 370 });
+        }
+      }
+    }
 
-  // ━━━ PAGE 12 (index 11): Los desafíos - Paso 2 ━━━
-  if (p && s) {
-    const pg = pages[11];
-    const retos = comp[RETOS_ID];
-    if (retos?.textoDefectos) {
-      draw(pg, retos.textoDefectos, ML, 170, { size: 9, maxWidth: TW });
+    // PAGE 11 (index 10): Los desafíos - Paso 1
+    if (p) {
+      const pg = pages[10];
+      const retos = comp[RETOS_ID];
+      const fd = FACILITA_DIFICULTA[p];
+      const facilitaTxt = retos?.textoFacilita ?? fd?.facilita ?? '';
+      if (facilitaTxt) draw(pg, facilitaTxt, ML, 370, { size: 10, maxWidth: TW });
+      const dificultaTxt = retos?.textoDificulta ?? fd?.dificulta ?? '';
+      if (dificultaTxt) draw(pg, dificultaTxt, ML, 460, { size: 10, maxWidth: TW });
+
+      const vd = VIRTUD_DESAFIO_MAP[perfil] ?? VIRTUD_DESAFIO_MAP[p];
+      const vdX = { Humildad: 227, Audacia: 310, Perseverancia: 397, Magnanimidad: 490 };
+      const simple = vd?.includes('Humildad') ? 'Humildad'
+        : vd?.includes('Audacia') ? 'Audacia'
+        : (vd?.includes('esistencia') || vd?.includes('erseverancia')) ? 'Perseverancia'
+        : vd?.includes('Magnanimidad') ? 'Magnanimidad' : null;
+      if (simple && vdX[simple]) check(pg, vdX[simple], 530);
+    }
+
+    // PAGE 12 (index 11): Los desafíos - Paso 2
+    if (p && s) {
+      const pg = pages[11];
+      const retos = comp[RETOS_ID];
+      if (retos?.textoDefectos) {
+        draw(pg, retos.textoDefectos, ML, 170, { size: 9, maxWidth: TW });
+      }
+    }
+
+    // PAGE 24 (index 23): Mi síntesis
+    {
+      const pg = pages[23];
+      const cierre = comp[CIERRE_ID];
+      const tempPrim = TEMP_NOMBRE[cierre?.temperamento_primario ?? p] ?? '';
+      if (tempPrim) draw(pg, tempPrim, 250, 110, { bold: true, size: 10 });
+      const tempSec = TEMP_NOMBRE[cierre?.temperamento_secundario ?? s] ?? '';
+      if (tempSec) draw(pg, tempSec, 440, 110, { bold: true, size: 10 });
+      const vdS = cierre?.virtud_desafio ?? VIRTUD_DESAFIO_MAP[perfil] ?? VIRTUD_DESAFIO_MAP[p] ?? '';
+      if (vdS) draw(pg, vdS, 200, 145, { bold: true, size: 10 });
+      if (cierre?.lo_que_facilita) draw(pg, cierre.lo_que_facilita, 330, 182, { size: 9, maxWidth: 190 });
+      if (cierre?.lo_que_cuesta) draw(pg, cierre.lo_que_cuesta, 260, 222, { size: 9, maxWidth: 260 });
+      if (cierre?.proposito) draw(pg, cierre.proposito, ML, 480, { size: 9, maxWidth: TW });
     }
   }
 
-  // ━━━ PAGE 24 (index 23): Mi síntesis ━━━
-  {
-    const pg = pages[23];
-    const cierre = comp[CIERRE_ID];
-    const tempPrim = TEMP_NOMBRE[cierre?.temperamento_primario ?? p] ?? '';
-    if (tempPrim) draw(pg, tempPrim, 250, 110, { bold: true, size: 10 });
-    const tempSec = TEMP_NOMBRE[cierre?.temperamento_secundario ?? s] ?? '';
-    if (tempSec) draw(pg, tempSec, 440, 110, { bold: true, size: 10 });
-    const vdS = cierre?.virtud_desafio ?? VIRTUD_DESAFIO_MAP[perfil] ?? VIRTUD_DESAFIO_MAP[p] ?? '';
-    if (vdS) draw(pg, vdS, 200, 145, { bold: true, size: 10 });
-    if (cierre?.lo_que_facilita) draw(pg, cierre.lo_que_facilita, 330, 182, { size: 9, maxWidth: 190 });
-    if (cierre?.lo_que_cuesta) draw(pg, cierre.lo_que_cuesta, 260, 222, { size: 9, maxWidth: 260 });
-    if (cierre?.proposito) draw(pg, cierre.proposito, ML, 480, { size: 9, maxWidth: TW });
-  }
+  // ━━━ APPENDIX: Test profundo answers (generic for all courses) ━━━
+  const testProfundoPasos = moduloId === 'modulo1'
+    ? TEST_PROFUNDO_IDS
+    : pasos.filter(pp => pp.tipo === 'test_profundo').map(pp => pp.id);
 
-  // ━━━ APPENDIX: Test profundo answers ━━━
   let hayTest = false;
-  for (const id of TEST_PROFUNDO_IDS) {
+  for (const id of testProfundoPasos) {
     if (comp[id]?.respuestas?.some(r => r)) { hayTest = true; break; }
   }
 
   if (hayTest) {
-    for (const stepId of TEST_PROFUNDO_IDS) {
+    for (const stepId of testProfundoPasos) {
       const resultado = comp[stepId];
       if (!resultado?.respuestas?.some(r => r)) continue;
       const paso = pasos.find(pp => pp.id === stepId);
@@ -220,7 +228,10 @@ async function generarPDF(userId, pasos, temperamento) {
       let curPage = doc.addPage(PageSizes.A4);
       let y = 60;
 
-      curPage.drawText(`Test profundo — ${TEMP_NOMBRE[paso.temperamento] ?? paso.temperamento}`, {
+      const titulo = paso.temperamento
+        ? `Test profundo — ${TEMP_NOMBRE[paso.temperamento] ?? paso.temperamento}`
+        : paso.titulo ?? 'Test profundo';
+      curPage.drawText(titulo, {
         x: ML, y: PH - y, size: 18, font: fontBold, color: INK,
       });
       y += 8;
@@ -231,9 +242,10 @@ async function generarPDF(userId, pasos, temperamento) {
       });
       y += 18;
 
-      for (let i = 0; i < paso.preguntas.length; i++) {
+      const preguntas = paso.preguntas ?? paso.senales ?? [];
+      for (let i = 0; i < preguntas.length; i++) {
         const resp = resultado.respuestas[i];
-        const qLines = splitText(`${i + 1}. ${paso.preguntas[i]}`, fontBold, 10, TW);
+        const qLines = splitText(`${i + 1}. ${preguntas[i]}`, fontBold, 10, TW);
         const aLines = resp ? splitText(resp, font, 9, TW - 10) : [];
         const need = qLines.length * 13 + 3 + Math.max(aLines.length * 12, 16) + 10;
 
@@ -327,18 +339,19 @@ async function generarPDF(userId, pasos, temperamento) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'cuaderno-personal-vl.pdf';
+  const num = moduloId === 'modulo2' ? '2' : '1';
+  a.download = `cuaderno-personal-curso${num}-vl.pdf`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-export function CuadernoPersonal({ userId, pasos, temperamento }) {
+export function CuadernoPersonal({ userId, pasos, temperamento, moduloId = 'modulo1' }) {
   const [generando, setGenerando] = useState(false);
 
   async function descargar() {
     setGenerando(true);
     try {
-      await generarPDF(userId, pasos, temperamento);
+      await generarPDF(userId, pasos, temperamento, moduloId);
     } catch (err) {
       console.error('Error generando cuaderno:', err);
     } finally {
