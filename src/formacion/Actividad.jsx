@@ -9,7 +9,7 @@ import diagramaCOL from './diagrama-COL.png';
 import diagramaMEL from './diagrama-MEL.png';
 import diagramaSAN from './diagrama-SAN.png';
 import diagramaFLE from './diagrama-FLE.png';
-import diagramaTemperamentosImg from './diagrama-temperamentos.webp';
+import diagramaTemperamentosImg from './diagrama-magnanimidad-temperamentos.jpg';
 import retratoCOL from './assets/retrato-COL.jpg';
 import retratoMEL from './assets/retrato-MEL.jpg';
 import retratoSAN from './assets/retrato-SAN.jpg';
