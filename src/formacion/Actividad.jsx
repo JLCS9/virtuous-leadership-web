@@ -21,6 +21,7 @@ import retratoFortaleza from './assets/retrato-fortaleza.jpg';
 import retratoDominio from './assets/retrato-dominio.jpg';
 import retratoJusticia from './assets/retrato-justicia.jpg';
 import retratoMagnanimidad from './assets/retrato-magnanimidad.jpg';
+import piramidaImg from '../assets/piramida ES.png';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
@@ -105,8 +106,10 @@ const CARATULA_TEXTOS = {
   identifica: { icono: '◉', tipo: 'Diagrama de virtudes', desc: 'Reflexiona sobre las virtudes y cómo se manifiestan en tu vida.' },
   test_profundo: { icono: '◇', tipo: 'Autoexamen profundo', desc: 'Reflexiona con sinceridad sobre estas preguntas. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.' },
   retos_temperamento: { icono: '✶', tipo: 'Los retos de mi temperamento', desc: 'Descubre qué aspectos de las virtudes te facilita y te dificulta tu temperamento, y cuál es tu virtud-desafío: la virtud que más necesitas trabajar a lo largo de tu vida.' },
-  test_caracter: { icono: '◈', tipo: 'Test de carácter', desc: 'Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, fortaleza, dominio de sí, justicia, magnanimidad y humildad.' },
+  test_caracter: { icono: '◈', tipo: 'Test de carácter', desc: 'Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, valor, autocontrol, justicia, magnanimidad y humildad.' },
   test_corazon: { icono: '♡', tipo: 'Test del corazón', desc: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.' },
+  reflexion_piramide: { icono: '△', tipo: 'Reflexión', desc: 'Observa el diagrama y reflexiona sobre las relaciones entre las virtudes.' },
+  temperamento_magnanimidad: { icono: '✶', tipo: 'Temperamento y magnanimidad', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar la magnanimidad.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -974,6 +977,331 @@ export function TestProfundo({ paso, onComplete, modulo }) {
   );
 }
 
+/* ─── REFLEXIÓN PIRÁMIDE (imagen + preguntas abiertas) ─── */
+
+const REFLEXION_IMAGENES = {
+  'piramide-lv': piramidaImg,
+  'magnanimidad-temperamentos': diagramaTemperamentosImg,
+};
+
+export function ReflexionPiramide({ paso, onComplete, modulo }) {
+  const preguntas = paso.preguntas ?? [];
+  const total = preguntas.length;
+  const [fase, setFase] = useState('caratula');
+  const [idx, setIdx] = useState(0);
+  const [respuestas, setRespuestas] = useState(() => Array(total).fill(''));
+  const [lbSrc, setLbSrc] = useState(null);
+
+  const img = REFLEXION_IMAGENES[paso.imagen] ?? null;
+
+  if (fase === 'caratula') return <Caratula paso={paso} tipo="reflexion_piramide" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
+
+  function avanzar() {
+    if (idx + 1 < total) {
+      setIdx((i) => i + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setFase('cierre');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  if (fase === 'cierre') {
+    return (
+      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+            <span style={{
+              display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+              background: '#ecfdf5', border: '2px solid #10b981',
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: '#065f46',
+            }}>✓</span>
+          </div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '16px 0 12px', textAlign: 'center' }}>
+            Reflexión completada
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 480, margin: '0 auto 28px' }}>
+            Has completado esta reflexión. Tus respuestas quedan guardadas en tu cuaderno personal.
+          </p>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button type="button" onClick={() => onComplete({ respuestas })} style={{
+              fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 48px', cursor: 'pointer',
+            }}>
+              Continuar →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Shell titulo={paso.titulo} actual={idx + 1} total={total}>
+      {idx === 0 && img && (
+        <div style={{ marginBottom: 24, textAlign: 'center' }}>
+          <button type="button" onClick={() => setLbSrc(img)} style={{
+            background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          }}>
+            <img src={img} alt={paso.enunciado} style={{ maxWidth: '100%', maxHeight: 340, mixBlendMode: 'multiply' }} />
+          </button>
+          <div style={{ marginTop: 8 }}>
+            <button type="button" onClick={() => setLbSrc(img)} style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa />
+              Ampliar diagrama
+            </button>
+          </div>
+        </div>
+      )}
+      {lbSrc && <Lightbox src={lbSrc} alt={paso.enunciado} onClose={() => setLbSrc(null)} />}
+      <div style={tarjeta}>
+        {idx === 0 && paso.descripcion && (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.65, margin: '0 0 20px' }}>
+            {paso.descripcion}
+          </p>
+        )}
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
+          {preguntas[idx]}
+        </p>
+        <textarea
+          value={respuestas[idx]}
+          onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[idx] = e.target.value; return n; })}
+          placeholder="Escribe tu reflexión..."
+          style={{
+            fontFamily: FONT_BODY, fontSize: 18, color: NAVY, background: BEIGE,
+            border: `1px solid ${LINE}`, borderRadius: 0, padding: '16px 18px',
+            width: '100%', boxSizing: 'border-box', minHeight: 140, resize: 'vertical', outline: 'none',
+          }}
+        />
+        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+          <button type="button" onClick={avanzar} disabled={!respuestas[idx]?.trim()} style={{
+            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+            background: respuestas[idx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
+            padding: '18px 40px', cursor: respuestas[idx]?.trim() ? 'pointer' : 'default',
+          }}>
+            {idx + 1 < total ? 'Siguiente' : 'Completar'}
+          </button>
+        </div>
+      </div>
+    </Shell>
+  );
+}
+
+/* ─── TEMPERAMENTO × MAGNANIMIDAD ─── */
+
+export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
+  const [fase, setFase] = useState(-1);
+  const [textoFuerte, setTextoFuerte] = useState('');
+  const [textoDebil, setTextoDebil] = useState('');
+  const [textoFuerteSec, setTextoFuerteSec] = useState('');
+  const [textoDebilSec, setTextoDebilSec] = useState('');
+  const [lbSrc, setLbSrc] = useState(null);
+
+  const p = temperamento?.primary;
+  const s = temperamento?.secondary;
+  const perfil = s ? `${p}-${s}` : p;
+  const img = REFLEXION_IMAGENES[paso.imagen] ?? null;
+  const obstaculo = paso.obstaculos?.[p];
+  const sinergia = paso.sinergias_secundario?.[perfil];
+  const reto = paso.reto_por_temperamento?.[p];
+
+  if (fase === -1) {
+    return <Caratula paso={paso} tipo="temperamento_magnanimidad" onEmpezar={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
+  }
+
+  if (fase === 0) {
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Paso 1 — Tu temperamento dominante</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>
+            {paso.enunciado}
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.65, margin: '0 0 20px' }}>
+            {paso.descripcion}
+          </p>
+
+          {img && (
+            <div style={{ marginBottom: 20, textAlign: 'center' }}>
+              <button type="button" onClick={() => setLbSrc(img)} style={{
+                background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              }}>
+                <img src={img} alt={paso.enunciado} style={{ maxWidth: '100%', maxHeight: 300 }} />
+              </button>
+              <div style={{ marginTop: 8 }}>
+                <button type="button" onClick={() => setLbSrc(img)} style={{
+                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  textDecoration: 'underline', textUnderlineOffset: 3,
+                }}>
+                  <IconoLupa />
+                  Ampliar diagrama
+                </button>
+              </div>
+            </div>
+          )}
+
+          {lbSrc && <Lightbox src={lbSrc} alt={paso.enunciado} onClose={() => setLbSrc(null)} />}
+
+          {p && RETRATO_TEMP[p] && (
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 18, padding: '14px 16px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[p] ?? LINE}` }}>
+              <img src={RETRATO_TEMP[p]} alt={TEMP_NOMBRE[p]} style={{ width: 60, height: 60, objectFit: 'cover', mixBlendMode: 'multiply', borderRadius: 4, flexShrink: 0 }} />
+              <div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Tu temperamento dominante</div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, marginTop: 4 }}>{TEMP_NOMBRE[p]}</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+              {paso.pregunta_fuerte}
+            </label>
+            <textarea
+              value={textoFuerte}
+              onChange={(e) => setTextoFuerte(e.target.value)}
+              placeholder="Escribe los puntos fuertes que identificas…"
+              rows={3}
+              style={{
+                width: '100%', padding: '12px 14px', boxSizing: 'border-box',
+                border: `1px solid ${LINE}`, fontFamily: FONT_BODY, fontSize: 15, color: NAVY,
+                background: '#fff', resize: 'vertical', lineHeight: 1.55,
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+              {paso.pregunta_debil}
+            </label>
+            <textarea
+              value={textoDebil}
+              onChange={(e) => setTextoDebil(e.target.value)}
+              placeholder="Escribe los puntos débiles que identificas…"
+              rows={3}
+              style={{
+                width: '100%', padding: '12px 14px', boxSizing: 'border-box',
+                border: `1px solid ${LINE}`, fontFamily: FONT_BODY, fontSize: 15, color: NAVY,
+                background: '#fff', resize: 'vertical', lineHeight: 1.55,
+              }}
+            />
+          </div>
+
+          {obstaculo && (
+            <div style={{ padding: '16px 18px', background: '#fef2f2', borderLeft: '3px solid #ef4444', marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Obstáculo</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', lineHeight: 1.55 }}>{obstaculo}</div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="button" onClick={() => { setLbSrc(null); setFase(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
+            }}>
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (fase === 1) {
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Paso 2 — Tu temperamento secundario</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>
+            Temperamento secundario y magnanimidad
+          </h2>
+
+          {s && RETRATO_TEMP[s] && (
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 18, padding: '14px 16px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[s] ?? LINE}` }}>
+              <img src={RETRATO_TEMP[s]} alt={TEMP_NOMBRE[s]} style={{ width: 60, height: 60, objectFit: 'cover', mixBlendMode: 'multiply', borderRadius: 4, flexShrink: 0 }} />
+              <div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Tu temperamento secundario</div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, marginTop: 4 }}>{TEMP_NOMBRE[s]}</div>
+              </div>
+            </div>
+          )}
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+              {paso.pregunta_fuerte_sec}
+            </label>
+            <textarea
+              value={textoFuerteSec}
+              onChange={(e) => setTextoFuerteSec(e.target.value)}
+              placeholder="Escribe los puntos fuertes de tu secundario…"
+              rows={3}
+              style={{
+                width: '100%', padding: '12px 14px', boxSizing: 'border-box',
+                border: `1px solid ${LINE}`, fontFamily: FONT_BODY, fontSize: 15, color: NAVY,
+                background: '#fff', resize: 'vertical', lineHeight: 1.55,
+              }}
+            />
+          </div>
+
+          <div style={{ marginBottom: 20 }}>
+            <label style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
+              {paso.pregunta_debil_sec}
+            </label>
+            <textarea
+              value={textoDebilSec}
+              onChange={(e) => setTextoDebilSec(e.target.value)}
+              placeholder="Escribe los puntos débiles de tu secundario…"
+              rows={3}
+              style={{
+                width: '100%', padding: '12px 14px', boxSizing: 'border-box',
+                border: `1px solid ${LINE}`, fontFamily: FONT_BODY, fontSize: 15, color: NAVY,
+                background: '#fff', resize: 'vertical', lineHeight: 1.55,
+              }}
+            />
+          </div>
+
+          {sinergia && (
+            <div style={{ padding: '16px 18px', background: '#ecfdf5', borderLeft: '3px solid #10b981', marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Sinergia</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#065f46', lineHeight: 1.55 }}>{sinergia}</div>
+            </div>
+          )}
+
+          {reto && (
+            <div style={{ padding: '16px 18px', background: BEIGE, borderLeft: `4px solid ${TEMP_COLORS[p] ?? GOLD_REF}`, marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Tu reto personal</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6 }}>{reto}</div>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 24 }}>
+            <button type="button" onClick={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY,
+              background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+            }}>
+              ← Paso 1
+            </button>
+            <button type="button" onClick={() => onComplete({ visto: true, textoFuerte, textoDebil, textoFuerteSec, textoDebilSec })} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 38px', cursor: 'pointer',
+            }}>
+              Siguiente →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 /* ─── CIERRE / SÍNTESIS ─── */
 
 function TempCard({ codigo, tipo, onVerDiagrama }) {
@@ -1473,7 +1801,7 @@ export function CirculoPersonas({ paso, user, onComplete }) {
       setRespuestas([]);
       setPreguntaIdx(0);
       setNotas('');
-      setFase('listado');
+      setFase('datos');
     } catch (err) {
       console.error('Error al guardar persona:', err);
     } finally {

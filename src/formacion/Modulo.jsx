@@ -3,7 +3,7 @@ import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad } from './Actividad';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
@@ -17,6 +17,7 @@ import { useCatalogo } from './useFormacion';
 
 const MODULOS = {
   'curso-1': () => import('../data/modulo1.json'),
+  'curso-2': () => import('../data/modulo2.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -241,6 +242,8 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'desliza': return <Desliza paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
@@ -285,6 +288,8 @@ function etiquetaPaso(paso) {
   if (paso.tipo === 'quiz') return 'Cuestionario';
   if (paso.tipo === 'define') return 'Definiciones';
   if (paso.tipo === 'test_profundo') return 'Test';
+  if (paso.tipo === 'reflexion_piramide') return 'Reflexión';
+  if (paso.tipo === 'temperamento_magnanimidad') return 'Temperamento';
   if (paso.tipo === 'temperamento_perfil') return 'Tu perfil';
   if (paso.tipo === 'retos_temperamento') return 'Retos';
   if (paso.tipo === 'reflexion_guiada') return 'Reflexión';
@@ -494,13 +499,13 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
           </div>
         </div>
 
-        {cursoNum === 1 && temperamento && (
+        {temperamento && (
           <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} />
         )}
 
-        {cursoNum === 1 && userId && (
+        {userId && (
           <div style={{ marginTop: 18 }}>
-            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} />
+            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={moduloData.id} />
           </div>
         )}
       </div>

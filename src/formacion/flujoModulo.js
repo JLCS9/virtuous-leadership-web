@@ -8,6 +8,7 @@ export function pasosDelUsuario(modulo, temperamento) {
     if (p.tipo === 'noop') return false;
     if (p.tipo === 'test_profundo') {
       const t = p.temperamento;
+      if (!t) return true;
       return t === primary || t === secondary;
     }
     return true;
