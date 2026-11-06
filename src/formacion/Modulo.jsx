@@ -255,7 +255,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
   const moduloNum = _mod?.numero ?? 1;
 
   function completar(resultado) {
-    progreso.completar(paso.id, resultado);
+    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: moduloNum });
     avanzar();
   }
 
@@ -499,8 +499,8 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   const vidsPct = modHeaders.length ? Math.round((vidsHechos / modHeaders.length) * 100) : 0;
   const cont = continuarModulo(pasos, completados);
 
-  const cierre = visibles.find((p) => p.tipo === 'cierre');
-  const cierreHecho = cierre ? Boolean(completados[cierre.id]) : false;
+  const planStep = pasos.find(p => p.tipo === 'plan_crecimiento');
+  const planHecho = planStep ? Boolean(completados[planStep.id]) : false;
 
   return (
     <div className="vl-listado" style={{ margin: '0 auto' }}>
@@ -543,6 +543,24 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         {userId && (
           <div style={{ marginTop: 18 }}>
             <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={modulo.id} />
+            {planStep && (
+              <button type="button" disabled style={{
+                all: 'unset', boxSizing: 'border-box', width: '100%', marginTop: 10,
+                display: 'flex', alignItems: 'center', gap: 10,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: MUTED,
+                background: BEIGE, border: `1px dashed ${LINE}`, padding: '12px 16px',
+                cursor: 'default', opacity: 0.7,
+              }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                  <line x1="16" y1="13" x2="8" y2="13" />
+                  <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+                Descargar plan de crecimiento
+                <span style={{ fontFamily: FONT_BODY, fontSize: 11, marginLeft: 'auto' }}>Proximamente</span>
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -573,30 +591,32 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
         <ListaLecciones pasos={pasos} completados={completados} irA={irA} />
 
-        {cierre && (
+        {planStep && (
           <section style={{ marginTop: 18 }}>
-            <button type="button" onClick={() => irA(cierre.id)} style={{
+            <button type="button" onClick={() => irA(planStep.id)} style={{
               all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
               ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
               borderTop: `2px solid ${GOLD_REF}`,
             }}>
               <span style={{
                 flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
-                background: cierreHecho ? GOLD_REF : 'transparent',
-                border: cierreHecho ? 'none' : `1.5px solid ${LINE}`,
-                color: cierreHecho ? '#fff' : NAVY,
+                background: planHecho ? GOLD_REF : 'transparent',
+                border: planHecho ? 'none' : `1.5px solid ${LINE}`,
+                color: planHecho ? '#fff' : NAVY,
+                fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
               }}>
-                {cierreHecho ? <IconoCheck width={16} height={16} /> : <IconoChevron width={14} height={14} />}
+                {planHecho ? <IconoCheck width={16} height={16} /> : '✦'}
               </span>
               <div>
-                <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{cierre.titulo}</div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{planStep.titulo}</div>
                 <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 2 }}>
-                  {cierreHecho ? 'Completado' : 'Síntesis del curso'}
+                  {planHecho ? 'Completado' : 'Plan de crecimiento'}
                 </div>
               </div>
             </button>
           </section>
         )}
+
       </div>
     </div>
   );
@@ -651,7 +671,7 @@ export default function Modulo() {
 
 function ModuloContenido({ moduloData, user, cursoId }) {
   const cursoNum = moduloData.curso != null ? moduloData.curso : (parseInt(cursoId.replace('curso-', ''), 10) || 1);
-  const progreso = useModuloProgreso(user.id, moduloData.id);
+  const progreso = useModuloProgreso(user.id, moduloData.id, cursoNum);
   const notasHook = useNotas(user.id, moduloData.id);
   const [temp, setTemp] = useState(undefined);
 
