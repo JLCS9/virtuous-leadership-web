@@ -73,7 +73,13 @@ function mapTemp(result) {
 
 function agruparIntro(parrafos) {
   if (!parrafos || !parrafos.length) return [];
-  return parrafos.map(p => [p]);
+  return parrafos.map(p => Array.isArray(p) ? p : [p]);
+}
+
+function renderIntroTexto(text) {
+  const parts = text.split(/\*\*(.*?)\*\*/g);
+  if (parts.length === 1) return text;
+  return parts.map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part);
 }
 
 function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
@@ -99,6 +105,15 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
     setVisible(false);
     setTimeout(() => {
       setIntroIdx(i => i + 1);
+      setVisible(true);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 300);
+  }
+
+  function retrocederIntro() {
+    setVisible(false);
+    setTimeout(() => {
+      setIntroIdx(i => Math.max(0, i - 1));
       setVisible(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }, 300);
@@ -181,11 +196,19 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
               </>
             ) : (
               pags.map((p, i) => (
-                <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{p}</p>
+                <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{renderIntroTexto(p)}</p>
               ))
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+            {introIdx > 0 ? (
+              <button type="button" onClick={retrocederIntro} style={{
+                fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: NAVY,
+                background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+              }}>
+                ← Anterior
+              </button>
+            ) : <span />}
             <button type="button" onClick={avanzarIntro} style={{
               fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
@@ -229,7 +252,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
 function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
-  const moduloNum = _mod?.numero ?? 0;
+  const moduloNum = _mod?.numero ?? 1;
 
   function completar(resultado) {
     progreso.completar(paso.id, resultado);
@@ -346,10 +369,10 @@ function ListaLecciones({ pasos, completados, irA }) {
                 background: todoHecho ? GOLD_REF : 'transparent', color: todoHecho ? '#fff' : NAVY,
                 fontFamily: FONT_SLAB, fontSize: 13, fontWeight: 700,
               }}>
-                {todoHecho ? <IconoCheck width={14} height={14} /> : i}
+                {todoHecho ? <IconoCheck width={14} height={14} /> : i + 1}
               </span>
               <span style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500 }}>
-                Módulo {i}: {mod.video.titulo}
+                Módulo {i + 1}: {mod.video.titulo}
               </span>
               <span style={{ display: 'flex', gap: 6, alignItems: 'center', flex: '0 0 auto' }}></span>
               <IconoChevron width={16} height={16} style={{
@@ -505,7 +528,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
         {userId && (
           <div style={{ marginTop: 18 }}>
-            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={moduloData.id} />
+            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={modulo.id} />
           </div>
         )}
       </div>
@@ -695,7 +718,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
         </button>
         {videoCtx && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 16, fontFamily: FONT_BODY, fontSize: 14, color: NAVY, flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 600, color: MUTED, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Módulo {videoCtxMod?.numero ?? 0}</span>
+            <span style={{ fontWeight: 600, color: MUTED, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Módulo {videoCtxMod?.numero ?? 1}</span>
             <span style={{ color: LINE }}>|</span>
             <span>{videoCtx.titulo}</span>
             <span style={{ color: MUTED, fontSize: 13 }}>/</span>

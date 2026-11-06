@@ -13,8 +13,10 @@
       "vimeoId": "924576183",
       "intro": [
         "La magnanimidad es la virtud de las grandes personas.",
-        "La persona magnánima quiere hacer grandes cosas, pero sobre todo quiere ser grande. Tiene confianza en sí mismo, en sus talentos y en sus capacidades. Se siente libre y fuerte llevando su imaginación hasta el final. Está lleno de esperanza humana.",
-        "Sueña y transforma su sueño en misión. Ve en los grandes problemas de la humanidad grandes oportunidades y los obstáculos como cumbres que hay que conquistar. Está convencido de que el mal es el bien que no se hace.",
+        ["La persona magnánima quiere hacer grandes cosas, pero sobre todo quiere ser grande.", "**Tiene confianza en sí mismo, en sus talentos y en sus capacidades.**"],
+        "Se siente libre y fuerte llevando su imaginación hasta el final. Está lleno de esperanza humana.",
+        ["Sueña y transforma su sueño en misión.", "Ve en los grandes problemas de la humanidad grandes oportunidades y los obstáculos como cumbres que hay que conquistar."],
+        "**Está convencido de que el mal es el bien que no se hace.**",
         "La magnanimidad es la primera virtud específica de los líderes."
       ]
     },

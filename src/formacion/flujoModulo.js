@@ -64,5 +64,5 @@ export function moduloDelPaso(pasos, pasoId) {
   if (!p || p.tipo !== 'video') return null;
   const vids = pasos.filter((x) => x.tipo === 'video');
   const idx = vids.indexOf(p);
-  return { numero: idx, total: vids.length };
+  return { numero: idx + 1, total: vids.length };
 }
