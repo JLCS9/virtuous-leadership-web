@@ -249,7 +249,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
   );
 }
 
-function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user }) {
+function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
   const moduloNum = _mod?.numero ?? 1;
@@ -270,7 +270,17 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
-    case 'conclusion_modulo': return <ConclusionModulo paso={paso} completados={progreso.completados} onContinuar={completar} onVolver={volver} />;
+    case 'conclusion_modulo': {
+      const idxConcl = pasos.indexOf(paso);
+      let idxVideo = -1;
+      for (let i = idxConcl - 1; i >= 0; i--) {
+        if (pasos[i].tipo === 'video' && !pasos[i].continua_modulo) { idxVideo = i; break; }
+      }
+      const pendientes = idxVideo >= 0
+        ? pasos.slice(idxVideo, idxConcl).filter(p => p.tipo !== 'noop' && !progreso.completados[p.id])
+        : [];
+      return <ConclusionModulo paso={paso} completados={progreso.completados} pendientes={pendientes} onContinuar={completar} onVolver={volver} irA={irA} />;
+    }
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
@@ -759,7 +769,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
             <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
           </div>
         )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} />
+        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} />
       </div>
     );
   }

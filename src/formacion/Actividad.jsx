@@ -2167,9 +2167,10 @@ export function CirculoPersonas({ paso, user, onComplete }) {
 
 /* ─── CONCLUSIÓN DE MÓDULO ─── */
 
-export function ConclusionModulo({ paso, completados, onContinuar, onVolver }) {
+export function ConclusionModulo({ paso, completados, pendientes = [], onContinuar, onVolver, irA }) {
   const aprendizajes = paso.aprendizajes ?? [];
   const ejercicios = paso.ejercicios_evaluables ?? [];
+  const hayPendientes = pendientes.length > 0;
 
   const scores = ejercicios.map(e => {
     const id = typeof e === 'string' ? e : e.id;
@@ -2181,7 +2182,16 @@ export function ConclusionModulo({ paso, completados, onContinuar, onVolver }) {
 
   const hayEvaluables = scores.length > 0;
   const todosACero = hayEvaluables && scores.every(s => s.aciertos === 0);
-  const bloqueado = todosACero;
+  const bloqueado = todosACero || hayPendientes;
+
+  const ETIQUETAS = {
+    video: 'Vídeo', quiz: 'Cuestionario', define: 'Definiciones', desliza: 'Desliza',
+    identifica: 'Identifica', test_profundo: 'Test', reflexion_piramide: 'Reflexión',
+    temperamento_magnanimidad: 'Temperamento', temperamento_perfil: 'Tu perfil',
+    retos_temperamento: 'Retos', circulo_personas: 'Círculo de personas',
+    reflexion_guiada: 'Reflexión', plan_crecimiento: 'Plan de crecimiento',
+    test_caracter: 'Test de carácter', test_corazon: 'Test del corazón',
+  };
 
   return (
     <div style={{ maxWidth: 860, margin: '0 auto' }}>
@@ -2199,13 +2209,36 @@ export function ConclusionModulo({ paso, completados, onContinuar, onVolver }) {
         </div>
 
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 6px', textAlign: 'center', lineHeight: 1.3 }}>
-          {bloqueado ? 'Módulo no superado' : `Módulo ${paso.modulo_numero} completado`}
+          {hayPendientes
+            ? 'Todavía no has completado todos los pasos'
+            : todosACero ? 'Módulo no superado' : `Módulo ${paso.modulo_numero} completado`}
         </h2>
         <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, textAlign: 'center', margin: '0 0 20px' }}>
           {paso.modulo_titulo}
         </p>
 
-        {hayEvaluables && (
+        {hayPendientes && (
+          <div style={{ padding: '16px 20px', background: '#fef2f2', borderLeft: '3px solid #ef4444', marginBottom: 20, lineHeight: 1.6 }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
+              Debes finalizar los siguientes pasos
+            </div>
+            <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
+              {pendientes.map((p) => (
+                <li key={p.id} style={{ marginBottom: 8 }}>
+                  <button type="button" onClick={() => irA && irA(p.id)} style={{
+                    background: 'none', border: 'none', padding: '6px 0', cursor: 'pointer',
+                    fontFamily: FONT_BODY, fontSize: 15, color: GOLD_REF_DK, fontWeight: 600,
+                    textDecoration: 'underline', textAlign: 'left',
+                  }}>
+                    {ETIQUETAS[p.tipo] ?? p.tipo}: {p.titulo}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {!hayPendientes && hayEvaluables && (
           <div style={{ display: 'grid', gridTemplateColumns: scores.length > 1 ? 'repeat(2, 1fr)' : '1fr', gap: 14, marginBottom: 20 }}>
             {scores.map((s) => {
               const pct = s.total > 0 ? Math.round((s.aciertos / s.total) * 100) : 0;
@@ -2226,7 +2259,7 @@ export function ConclusionModulo({ paso, completados, onContinuar, onVolver }) {
           </div>
         )}
 
-        {!bloqueado && aprendizajes.length > 0 && (
+        {!hayPendientes && !bloqueado && aprendizajes.length > 0 && (
           <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 20, lineHeight: 1.6 }}>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
               En este módulo has aprendido
@@ -2239,7 +2272,7 @@ export function ConclusionModulo({ paso, completados, onContinuar, onVolver }) {
           </div>
         )}
 
-        {bloqueado && (
+        {!hayPendientes && todosACero && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', textAlign: 'center', margin: '0 0 8px', lineHeight: 1.5 }}>
             Necesitas aprobar los cuestionarios para avanzar al siguiente módulo.
           </p>
