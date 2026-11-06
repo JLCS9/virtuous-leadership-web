@@ -3064,16 +3064,24 @@ const IconoBorrar = () => (
   </svg>
 );
 
+function renderTextoFormateado(texto) {
+  return texto.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith('**') && part.endsWith('**')
+      ? <strong key={i}>{part.slice(2, -2)}</strong>
+      : part
+  );
+}
+
 function RecursoLink({ recurso }) {
   if (!recurso) return null;
   return (
-    <div style={{ marginTop: 12, textAlign: 'right' }}>
+    <div style={{ marginTop: 8, marginBottom: 14 }}>
       <a href={recurso.url} target="_blank" rel="noopener noreferrer" style={{
         display: 'inline-flex', alignItems: 'center', gap: 5,
-        fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, textDecoration: 'none',
-        opacity: 0.85,
+        fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+        textDecoration: 'underline', textUnderlineOffset: 3,
       }}>
-        <IconoEnlace /> {recurso.label}
+        <IconoLupa /> {recurso.label}
       </a>
     </div>
   );
@@ -3091,9 +3099,14 @@ function PantallaTablaDinamica({ pantalla, datos, onChange }) {
 
   return (
     <>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
-        {pantalla.explicacion}
-      </p>
+      <div style={{ marginBottom: 18 }}>
+        {pantalla.explicacion.split('\n\n').map((p, i) => (
+          <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: i === 0 ? '0 0 8px' : '8px 0 0' }}>
+            {renderTextoFormateado(p)}
+          </p>
+        ))}
+      </div>
+      <RecursoLink recurso={pantalla.recurso} />
       {filas.map((fila, i) => (
         <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 10, alignItems: 'flex-start' }}>
           {cols.map(col => (
@@ -3118,7 +3131,6 @@ function PantallaTablaDinamica({ pantalla, datos, onChange }) {
       }}>
         <IconoMas /> Añadir persona
       </button>
-      <RecursoLink recurso={pantalla.recurso} />
     </>
   );
 }
@@ -3131,9 +3143,14 @@ function PantallaChecklist({ pantalla, datos, onChange }) {
 
   return (
     <>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
-        {pantalla.explicacion}
-      </p>
+      <div style={{ marginBottom: 18 }}>
+        {pantalla.explicacion.split('\n\n').map((p, i) => (
+          <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: i === 0 ? '0 0 8px' : '8px 0 0' }}>
+            {renderTextoFormateado(p)}
+          </p>
+        ))}
+      </div>
+      <RecursoLink recurso={pantalla.recurso} />
       {items.map((item, i) => (
         <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
           <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, width: 20, textAlign: 'right', flexShrink: 0 }}>{i + 1}.</span>
@@ -3154,7 +3171,52 @@ function PantallaChecklist({ pantalla, datos, onChange }) {
       }}>
         <IconoMas /> Añadir elemento
       </button>
-      <RecursoLink recurso={pantalla.recurso} />
+    </>
+  );
+}
+
+function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
+  const items = datos ?? [];
+  const cats = pantalla.categorias ?? [];
+  function addItem() { onChange([...items, { text: '', categoria: cats[0] || '' }]); }
+  function updateItem(i, field, val) {
+    onChange(items.map((it, j) => j === i ? { ...it, [field]: val } : it));
+  }
+  function removeItem(i) { onChange(items.filter((_, j) => j !== i)); }
+
+  return (
+    <>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
+        {pantalla.explicacion}
+      </p>
+      {items.map((item, i) => (
+        <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+          <select value={item.categoria || cats[0] || ''} onChange={e => updateItem(i, 'categoria', e.target.value)}
+            style={{
+              fontFamily: FONT_BODY, fontSize: 12, color: GOLD_REF_DK, fontWeight: 600,
+              border: `1px solid ${GOLD_REF}`, background: BEIGE, padding: '8px 10px', borderRadius: 0,
+              textTransform: 'uppercase', letterSpacing: '0.04em', cursor: 'pointer',
+              appearance: 'auto',
+            }}>
+            {cats.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <input type="text" value={item.text || ''} onChange={e => updateItem(i, 'text', e.target.value)}
+            placeholder={pantalla.placeholder} style={{
+              flex: 1, minWidth: 150, fontFamily: FONT_BODY, fontSize: 14, color: NAVY,
+              border: `1px solid ${LINE}`, background: '#fff', padding: '10px 12px', borderRadius: 0,
+            }} />
+          <button type="button" onClick={() => removeItem(i)} style={{
+            background: 'none', border: 'none', cursor: 'pointer', color: MUTED, padding: 6,
+          }} aria-label="Eliminar"><IconoBorrar /></button>
+        </div>
+      ))}
+      <button type="button" onClick={addItem} style={{
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+        background: 'none', border: `1px dashed ${GOLD_REF}`, padding: '10px 18px', cursor: 'pointer', borderRadius: 0,
+      }}>
+        <IconoMas /> Añadir objetivo
+      </button>
     </>
   );
 }
@@ -3182,25 +3244,80 @@ function PantallaReflexionDoble({ pantalla, datos, onChange }) {
   );
 }
 
+function EjemploSlider({ slides }) {
+  const [idx, setIdx] = useState(0);
+  if (!slides.length) return null;
+  const cur = slides[idx];
+  return (
+    <div style={{ marginBottom: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {slides.length > 1 && (
+          <button type="button" onClick={() => setIdx(i => (i - 1 + slides.length) % slides.length)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: MUTED, fontSize: 22, lineHeight: 1, flexShrink: 0 }}
+            aria-label="Anterior">{'‹'}</button>
+        )}
+        <div style={{ flex: 1, background: BEIGE, padding: '14px 18px', borderLeft: `3px solid ${cur.border}` }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
+            Ejemplo — {cur.label}
+          </div>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+            {cur.text}
+          </p>
+        </div>
+        {slides.length > 1 && (
+          <button type="button" onClick={() => setIdx(i => (i + 1) % slides.length)}
+            style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4, color: MUTED, fontSize: 22, lineHeight: 1, flexShrink: 0 }}
+            aria-label="Siguiente">{'›'}</button>
+        )}
+      </div>
+      {slides.length > 1 && (
+        <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 8 }}>
+          {slides.map((_, i) => (
+            <button key={i} type="button" onClick={() => setIdx(i)}
+              style={{
+                width: 8, height: 8, borderRadius: '50%', border: 'none', cursor: 'pointer', padding: 0,
+                background: i === idx ? GOLD_REF : LINE,
+              }} aria-label={`Ejemplo ${i + 1}`} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
   const vals = datos ?? {};
   const primary = temperamento?.primary;
-  const debilidad = primary && pantalla.debilidades?.[primary];
+  const secondary = temperamento?.secondary;
+  const TEMP_LABELS = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
+  const debilidadPri = primary && pantalla.debilidades?.[primary];
+  const debilidadSec = secondary && pantalla.debilidades?.[secondary];
 
   return (
     <>
+      {(primary || secondary) && (
+        <div style={{ display: 'flex', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
+          {primary && (
+            <div style={{ padding: '8px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, flex: '1 1 auto', minWidth: 120 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Primario</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginTop: 2 }}>{TEMP_LABELS[primary] || primary}</div>
+            </div>
+          )}
+          {secondary && (
+            <div style={{ padding: '8px 14px', background: BEIGE, borderLeft: `3px solid ${LINE}`, flex: '1 1 auto', minWidth: 120 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Secundario</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginTop: 2 }}>{TEMP_LABELS[secondary] || secondary}</div>
+            </div>
+          )}
+        </div>
+      )}
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 14px' }}>
         {pantalla.explicacion}
       </p>
-      {debilidad && (
-        <div style={{
-          background: BEIGE, padding: '14px 18px', marginBottom: 18, borderLeft: `3px solid ${GOLD_REF}`,
-        }}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
-            {debilidad}
-          </p>
-        </div>
-      )}
+      <EjemploSlider slides={[
+        debilidadPri && { label: TEMP_LABELS[primary] || primary, text: debilidadPri, border: GOLD_REF },
+        debilidadSec && { label: TEMP_LABELS[secondary] || secondary, text: debilidadSec, border: LINE },
+      ].filter(Boolean)} />
       <label style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 6 }}>
         {pantalla.pregunta_refuerzo}
       </label>
@@ -3225,7 +3342,80 @@ function PantallaProposito({ pantalla, datos, onChange }) {
           border: `1px solid ${LINE}`, background: '#fff', padding: '16px', borderRadius: 0, resize: 'vertical',
           lineHeight: 1.7,
         }} />
+      {pantalla.ejemplo && (
+        <div style={{ marginTop: 14, padding: '12px 16px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 4 }}>
+            Ejemplo
+          </div>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+            {pantalla.ejemplo}
+          </p>
+        </div>
+      )}
     </>
+  );
+}
+
+function PantallaResumen({ paso, plan }) {
+  const pantallas = paso.pantallas ?? [];
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: 0 }}>
+        Este es el resumen de tu Plan de Crecimiento en Magnanimidad. Revisa que refleja tus intenciones para este año.
+      </p>
+      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map(pant => {
+        const dato = plan[pant.id];
+        if (!dato || (Array.isArray(dato) && dato.length === 0)) return null;
+        return (
+          <div key={pant.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+            <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+              {pant.titulo}
+            </h3>
+            {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {dato.filter(f => f.nombre).map((f, i) => (
+                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                    <strong>{f.nombre}</strong>{f.motivo ? ` — ${f.motivo}` : ''}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {pant.tipo === 'checklist' && Array.isArray(dato) && (
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {dato.filter(Boolean).map((item, i) => (
+                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {pant.tipo === 'checklist_categorias' && Array.isArray(dato) && (
+              <ul style={{ margin: 0, paddingLeft: 20 }}>
+                {dato.filter(d => d.text).map((item, i) => (
+                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                    <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 6 }}>{item.categoria}</span>
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {pant.tipo === 'reflexion_doble' && typeof dato === 'object' && (
+              <div>
+                {Object.entries(dato).filter(([, v]) => v).map(([k, v]) => (
+                  <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: '0 0 4px' }}>{v}</p>
+                ))}
+              </div>
+            )}
+            {pant.tipo === 'reflexion_temperamento' && typeof dato === 'object' && dato.refuerzo && (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{dato.refuerzo}</p>
+            )}
+            {pant.tipo === 'proposito' && typeof dato === 'string' && (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontWeight: 600 }}>{dato}</p>
+            )}
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
@@ -3284,7 +3474,7 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
             }}>✦</span>
           </div>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 14px', textAlign: 'center', lineHeight: 1.3 }}>
-            Desarrollo de mi plan de crecimiento en magnanimidad
+            Desarrolla tu Plan de Crecimiento en Magnanimidad
           </h2>
           <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 12px' }}>
             {paso.descripcion}
@@ -3316,7 +3506,7 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
         {pant.contenido.split('\n\n').map((parrafo, i) => (
           <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.7, margin: 0 }}>
-            {parrafo}
+            {renderTextoFormateado(parrafo)}
           </p>
         ))}
       </div>
@@ -3331,6 +3521,10 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
     contenido = <PantallaReflexionTemperamento pantalla={pant} temperamento={temperamento} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
   } else if (pant.tipo === 'proposito') {
     contenido = <PantallaProposito pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'checklist_categorias') {
+    contenido = <PantallaChecklistCategorias pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
+  } else if (pant.tipo === 'resumen') {
+    contenido = <PantallaResumen paso={paso} plan={plan} />;
   }
 
   const esUltima = idx === pantallas.length - 1;

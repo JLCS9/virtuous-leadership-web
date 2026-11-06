@@ -507,21 +507,33 @@
       "num": 17,
       "tipo": "plan_crecimiento",
       "titulo": "Mi Plan de Crecimiento en Magnanimidad",
-      "visible": false,
+      "visible": true,
       "descripcion": "Vamos a desarrollar tu plan de crecimiento en magnanimidad para que puedas ir avanzando sobre él durante este año.",
-      "nota_anual": "Este plan debe realizarse todos los años. Vuelve a inicio y final de año para ver en qué momento estás y el progreso que has conseguido.",
+      "nota_anual": "Este plan debe realizarse todos los años. Vuelve al inicio y al final de cada año para ver en qué momento estás y el progreso que has conseguido.",
       "pantallas": [
         {
           "id": "explicacion",
           "tipo": "texto",
           "titulo": "Mi Plan de Crecimiento en Magnanimidad",
-          "contenido": "Mi plan de crecimiento en magnanimidad consiste en las cosas que haré este año para crecer en magnanimidad.\n\nTeniendo en cuenta lo que me rodea —lo que leo, escucho, veo y las personas con las que me relaciono—, todo influye en mi camino hacia la magnanimidad.\n\nEntender por qué es importante y definir qué quiero hacer para llegar a ese ideal es el primer paso para crecer como líder virtuoso."
+          "contenido": "Mi Plan de Crecimiento en Magnanimidad consiste en las cosas que haré este año, para crecer en Magnanimidad.\n\nEste plan te ayudará a concretar acciones específicas para tu desarrollo personal.\n\nEl **beneficio** de hacerlo es tener una hoja de ruta clara que te guíe en tu crecimiento."
+        },
+        {
+          "id": "entorno_intro",
+          "tipo": "texto",
+          "titulo": "¿Tengo un entorno magnánimo a mi alrededor?",
+          "contenido": "Mi entorno son los libros que leo, las películas que veo, la música que escucho. Es internet con toda su grandeza y toda su miseria.\n\nUn entorno magnánimo es aquel que te inspira a ser mejor, que alimenta tu deseo de grandeza y te acerca a modelos de vida noble. Construirlo es una decisión: elegir conscientemente con qué llenar tu mente y tu corazón.\n\nEl **beneficio** de crear ese entorno es que te rodeas de estímulos que refuerzan tu crecimiento, en lugar de frenarlo."
+        },
+        {
+          "id": "entorno_cuestionario",
+          "tipo": "texto",
+          "titulo": "¿Tengo un entorno magnánimo a mi alrededor?",
+          "contenido": "Vamos a trabajar juntos en la construcción de tu entorno magnánimo a través de una serie de cuestiones prácticas.\n\nEn los siguientes pasos reflexionarás sobre las personas que te inspiran, los libros que quieres leer, las películas que deseas ver, el arte y la música que quieres incorporar a tu vida. También revisarás tu ambiente digital y definirás tus objetivos para este año."
         },
         {
           "id": "personas",
           "tipo": "tabla_dinamica",
           "titulo": "Personas magnánimas",
-          "explicacion": "Identifica personas magnánimas para estudiar y tratar de imitar. Puedo inspirarme en los modelos de liderazgo virtuoso presentados en el sitio de Alex Havard.",
+          "explicacion": "Identifica personas magnánimas para estudiar y tratar de imitar. Puedes inspirarte en los modelos de liderazgo virtuoso presentados en la web.\n\nAdemás, te adjuntamos el PDF de los modelos de liderazgo de Alex para que los puedas tener de referencia.",
           "columnas": [
             { "key": "nombre", "label": "Modelo virtuoso", "placeholder": "Ej: Martin Luther King" },
             { "key": "motivo", "label": "¿Por qué? ¿Qué te inspira?", "placeholder": "Ej: Su valentía para defender sus convicciones" }
@@ -532,19 +544,13 @@
           }
         },
         {
-          "id": "entorno_intro",
-          "tipo": "texto",
-          "titulo": "Creo un entorno magnánimo a mi alrededor",
-          "contenido": "Mi entorno son los libros que leo, las películas que veo, la música que escucho. Es internet con toda su grandeza y toda su miseria.\n\nSoy selectivo: rechazo lo que es moralmente dudoso y lleno mi corazón y mi mente de cosas bellas y nobles.\n\nA continuación, define los elementos concretos de tu entorno magnánimo."
-        },
-        {
           "id": "libros",
           "tipo": "checklist",
           "titulo": "¿Qué libros te quieres leer?",
-          "explicacion": "Piensa en libros que te inspiren, que te hagan crecer como persona y como líder. Pueden ser biografías, ensayos, novelas que te eleven.",
+          "explicacion": "¿Qué libros quieres leerte para seguir mejorando ese entorno magnánimo al que estás aspirando?\n\nAdemás, te hemos añadido un PDF con algunas recomendaciones de libros que te pueden ayudar a alcanzar este objetivo.",
           "placeholder": "Ej: Creados para la grandeza — Alexandre Havard",
           "recurso": {
-            "label": "Libros favoritos de Alex Havard",
+            "label": "Libros recomendados (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
           }
         },
@@ -552,10 +558,10 @@
           "id": "peliculas",
           "tipo": "checklist",
           "titulo": "¿Qué películas quieres ver?",
-          "explicacion": "Películas que muestren personajes magnánimos, historias de superación, de liderazgo auténtico.",
+          "explicacion": "¿Qué películas tienes en mente ver para seguir creciendo?\n\nAdemás, te hemos añadido un PDF con una selección de películas que te pueden servir de inspiración.",
           "placeholder": "Ej: La lista de Schindler",
           "recurso": {
-            "label": "Películas favoritas de Alex Havard",
+            "label": "Películas recomendadas (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
           }
         },
@@ -563,10 +569,10 @@
           "id": "arte",
           "tipo": "checklist",
           "titulo": "¿Qué obras maestras de arte te gustaría contemplar?",
-          "explicacion": "El arte universal eleva el espíritu. Selecciona obras, artistas o museos que quieras descubrir o revisitar.",
+          "explicacion": "¿Qué obras de arte te gustaría contemplar este año?\n\nAdemás, te hemos añadido un PDF con una selección de obras de arte que te pueden inspirar.",
           "placeholder": "Ej: La Piedad de Miguel Ángel",
           "recurso": {
-            "label": "Obras de arte favoritas de Alex Havard",
+            "label": "Obras de arte recomendadas (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
           }
         },
@@ -574,10 +580,10 @@
           "id": "musica",
           "tipo": "checklist",
           "titulo": "¿Qué piezas musicales quieres escuchar?",
-          "explicacion": "La música noble alimenta el corazón. Piensa en piezas, compositores o géneros que quieras explorar.",
+          "explicacion": "¿Qué piezas musicales quieres escuchar para enriquecer tu entorno?\n\nAdemás, te hemos añadido un PDF con una selección de piezas musicales que te pueden enriquecer.",
           "placeholder": "Ej: Sinfonía n.º 9 de Beethoven",
           "recurso": {
-            "label": "Música favorita de Alex Havard",
+            "label": "Música recomendada (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
           }
         },
@@ -585,45 +591,51 @@
           "id": "ambiente",
           "tipo": "reflexion_doble",
           "titulo": "Mi ambiente",
-          "explicacion": "Tu ambiente influye profundamente en quién te conviertes. Reflexiona sobre lo que te rodea hoy y lo que necesitas cambiar.",
+          "explicacion": "Es internet con toda su grandeza y toda su miseria. Soy selectivo: rechazo lo que es moralmente dudoso y lleno mi corazón y mi mente de cosas bellas y nobles.",
           "preguntas": [
-            { "key": "ambiente_actual", "label": "¿Te gusta el ambiente en el que estás? ¿Qué cambiarías?", "placeholder": "Reflexiona sobre tu entorno actual..." },
-            { "key": "alejarme", "label": "¿De qué ambiente o hábitos me prometo alejarme?", "placeholder": "Identifica lo que quieres dejar atrás..." }
+            { "key": "alejarme", "label": "El «ambiente» del que me prometo alejarme:", "placeholder": "Describe aquello de lo que quieres alejarte..." }
           ]
         },
         {
           "id": "recursos_internet",
           "tipo": "checklist",
           "titulo": "¿Qué recursos de internet utilizaré?",
-          "explicacion": "Internet puede ser una herramienta poderosa para el crecimiento si sabes elegir. ¿Qué canales, blogs, podcasts o plataformas te ayudarán?",
+          "explicacion": "¿Qué recursos de internet vas a utilizar para seguir creciendo? Piensa en aplicaciones de lectura, canales de YouTube, podcasts, la app de Alex Havard o cualquier otro recurso digital que te ayude en tu camino.",
           "placeholder": "Ej: Canal de YouTube de Alex Havard"
         },
         {
           "id": "objetivos",
-          "tipo": "checklist",
+          "tipo": "checklist_categorias",
           "titulo": "Mis objetivos para este año",
-          "explicacion": "Define las metas concretas que te propones alcanzar este año en tu camino hacia la magnanimidad.",
-          "placeholder": "Ej: Leer 12 libros de liderazgo"
+          "explicacion": "Este año, me lanzaré a los siguientes objetivos:",
+          "placeholder": "Ej: Leer 12 libros de liderazgo",
+          "categorias": ["Lectura", "Viajes", "Acciones", "Películas", "Entorno"]
         },
         {
           "id": "test_debilidades",
           "tipo": "reflexion_temperamento",
           "titulo": "Mi temperamento y la magnanimidad",
-          "explicacion": "Conocer las debilidades de tu temperamento te permite trabajar sobre ellas conscientemente. Según lo que has aprendido en el test de magnanimidad y a lo largo de este curso:",
+          "explicacion": "Identifico las debilidades de mi temperamento que me dificultan la práctica de la magnanimidad, y trato todos los días de superarlas.",
           "debilidades": {
-            "COL": "Como colérico, tengo tendencia a los gestos vacíos y al activismo ciego.",
-            "MEL": "Como melancólico, temo la acción y el asumir riesgos.",
-            "SAN": "Como sanguíneo, empiezo pero nunca termino.",
-            "FLE": "Como flemático, navego siempre en la dirección de la corriente."
+            "COL": "Puedo caer en gestos vacíos y en un activismo sin dirección clara.",
+            "MEL": "Me resulta difícil pasar a la acción y asumir riesgos.",
+            "SAN": "Me cuesta terminar las cosas que empiezo y tiendo a dispersarme.",
+            "FLE": "Tiendo a seguir la corriente sin cuestionar la dirección."
           },
-          "pregunta_refuerzo": "¿Qué puntos del test de magnanimidad quieres reforzar más este año?"
+          "pregunta_refuerzo": "¿En qué puntos en particular centraré mi atención durante este año?"
         },
         {
           "id": "proposito_final",
           "tipo": "proposito",
           "titulo": "Mi propósito para el año próximo",
-          "explicacion": "Teniendo en cuenta todo lo que has reflexionado —tus modelos, tu entorno, tus objetivos y las debilidades de tu temperamento—, formula tu propósito concreto para este año.",
-          "placeholder": "Mi propósito específico para el año próximo es..."
+          "explicacion": "Mi propósito específico para el año próximo:",
+          "placeholder": "Escribe aquí tu propósito...",
+          "ejemplo": "Mi propósito para este año es buscar ayudar a los demás para conseguir que las personas de mi entorno crezcan en virtud junto a mí."
+        },
+        {
+          "id": "resumen",
+          "tipo": "resumen",
+          "titulo": "Tu Plan de Crecimiento"
         }
       ]
     },
