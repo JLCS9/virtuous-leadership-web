@@ -293,9 +293,9 @@ describe('flujoModulo — continuarModulo', () => {
 describe('flujoModulo — moduloDelPaso', () => {
   const pasos = pasosDelUsuario(MODULO_1, { primary: 'MEL', secondary: 'FLE' });
 
-  test('primer video es módulo 0 de 9', () => {
+  test('primer video es módulo 1 de 9', () => {
     const l = moduloDelPaso(pasos, 'm1-01');
-    assert.deepEqual(l, { numero: 0, total: 9 });
+    assert.deepEqual(l, { numero: 1, total: 9 });
   });
 
   test('paso no-video devuelve null', () => {
