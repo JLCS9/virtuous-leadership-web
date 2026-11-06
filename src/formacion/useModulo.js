@@ -118,7 +118,7 @@ function useModuloProgresoBD(userId, cursoNum) {
     });
   }, [userId, cursoNum]);
 
-  const irA = useCallback((pasoId) => {
+  const irA = useCallback((pasoId, totalPasos) => {
     setPasoActual(pasoId);
     const numCompletados = Object.keys(completadosRef.current).length;
 
@@ -127,6 +127,7 @@ function useModuloProgresoBD(userId, cursoNum) {
       curso: cursoNum,
       paso_actual: pasoId,
       completados: numCompletados,
+      total_pasos: totalPasos ?? 0,
       updated_at: new Date().toISOString(),
     }, { onConflict: 'user_id, curso' }).then(({ error }) => {
       if (error) console.warn('[formacion] Error guardando progreso:', error.message);

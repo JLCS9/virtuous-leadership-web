@@ -690,7 +690,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   const pasoActual = pasoActualId ? pasos.find((p) => p.id === pasoActualId) : null;
 
   function irA(pasoId) {
-    progreso.irA(pasoId);
+    progreso.irA(pasoId, pasos.length);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -700,7 +700,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
     if (sig) {
       irA(sig.id);
     } else {
-      progreso.irA(null);
+      progreso.irA(null, pasos.length);
     }
   }
 
@@ -711,7 +711,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   }
 
   function volver() {
-    progreso.irA(null);
+    progreso.irA(null, pasos.length);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
