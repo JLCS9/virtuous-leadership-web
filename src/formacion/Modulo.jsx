@@ -284,8 +284,12 @@ function agruparModulos(pasos) {
   let actual = null;
   for (const p of pasos) {
     if (p.tipo === 'video') {
-      actual = { video: p, actividades: [] };
-      modulos.push(actual);
+      if (p.continua_modulo && actual) {
+        actual.actividades.push(p);
+      } else {
+        actual = { video: p, actividades: [] };
+        modulos.push(actual);
+      }
     } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'test_caracter') {
       actual.actividades.push(p);
     }
@@ -410,8 +414,8 @@ function ListaLecciones({ pasos, completados, irA }) {
                       borderBottom: j < mod.actividades.length - 1 ? `1px solid ${LINE}` : 'none',
                     }}>
                       <span style={{ width: 14, display: 'inline-flex' }}>{actHecho && <IconoCheck width={14} height={14} style={{ color: GOLD_REF }} />}</span>
-                      {act.tipo === 'quiz' ? <IconoCuestionario width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : <IconoEjercicio width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />}
-                      <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{tituloActividad(act)}</span>
+                      {act.tipo === 'video' ? <IconoVideo width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : act.tipo === 'quiz' ? <IconoCuestionario width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} /> : <IconoEjercicio width={15} height={15} style={{ color: MUTED, opacity: 0.5 }} />}
+                      <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>{act.tipo === 'video' ? act.titulo : tituloActividad(act)}</span>
                       {score && <span style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK }}>{score}</span>}
                     </button>
                   );
@@ -480,9 +484,17 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
 
 function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
   const progAll = progresoModulo(pasos, completados);
-  const vids = pasos.filter((p) => p.tipo === 'video');
-  const vidsHechos = vids.filter((p) => completados[p.id]).length;
-  const vidsPct = vids.length ? Math.round((vidsHechos / vids.length) * 100) : 0;
+  const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
+  const allVids = pasos.filter((p) => p.tipo === 'video');
+  const vidsHechos = modHeaders.filter((p) => {
+    if (!completados[p.id]) return false;
+    const pIdx = allVids.indexOf(p);
+    for (let j = pIdx + 1; j < allVids.length && allVids[j].continua_modulo; j++) {
+      if (!completados[allVids[j].id]) return false;
+    }
+    return true;
+  }).length;
+  const vidsPct = modHeaders.length ? Math.round((vidsHechos / modHeaders.length) * 100) : 0;
   const cont = continuarModulo(pasos, completados);
 
   const cierre = visibles.find((p) => p.tipo === 'cierre');
@@ -515,7 +527,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize="18" fontWeight="700" fill={NAVY}>{vidsPct}%</text>
           </svg>
           <div>
-            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {vids.length} módulos</div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {modHeaders.length} módulos</div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>
               {progAll.completo ? 'Curso completado' : 'En progreso'}
             </div>

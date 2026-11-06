@@ -20,19 +20,6 @@
         "La magnanimidad es la primera virtud específica de los líderes."
       ]
     },
-    {
-      "id": "m2-concl-0",
-      "tipo": "conclusion_modulo",
-      "visible": false,
-      "titulo": "Resumen: Introducción",
-      "modulo_numero": 0,
-      "modulo_titulo": "Introducción a la magnanimidad",
-      "aprendizajes": [
-        "Qué es la magnanimidad",
-        "La magnanimidad como primera virtud específica del líder"
-      ],
-      "ejercicios_evaluables": []
-    },
 
     {
       "id": "m2-02",
@@ -41,7 +28,8 @@
       "titulo": "Magnanimidad y Humildad son ideales de vida",
       "visible": true,
       "leccion": 2,
-      "vimeoId": "924576390"
+      "vimeoId": "924576390",
+      "continua_modulo": true
     },
     {
       "id": "m2-03",
@@ -115,10 +103,12 @@
       "id": "m2-concl-1",
       "tipo": "conclusion_modulo",
       "visible": false,
-      "titulo": "Resumen: Magnanimidad y humildad",
-      "modulo_numero": 1,
-      "modulo_titulo": "Magnanimidad y humildad son ideales de vida",
+      "titulo": "Resumen: Practicando la Magnanimidad",
+      "modulo_numero": 0,
+      "modulo_titulo": "Practicando la Magnanimidad",
       "aprendizajes": [
+        "Qué es la magnanimidad",
+        "La magnanimidad como primera virtud específica del líder",
         "El lugar de la magnanimidad en la pirámide de Liderazgo Virtuoso",
         "Relación entre magnanimidad y las demás virtudes"
       ],

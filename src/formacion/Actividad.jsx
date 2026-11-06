@@ -986,10 +986,10 @@ const REFLEXION_IMAGENES = {
 
 export function ReflexionPiramide({ paso, onComplete, modulo }) {
   const preguntas = paso.preguntas ?? [];
-  const total = preguntas.length;
+  const totalSlides = preguntas.length + 1;
   const [fase, setFase] = useState('caratula');
-  const [idx, setIdx] = useState(0);
-  const [respuestas, setRespuestas] = useState(() => Array(total).fill(''));
+  const [slide, setSlide] = useState(0);
+  const [respuestas, setRespuestas] = useState(() => Array(preguntas.length).fill(''));
   const [lbSrc, setLbSrc] = useState(null);
 
   const img = REFLEXION_IMAGENES[paso.imagen] ?? null;
@@ -997,8 +997,8 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
   if (fase === 'caratula') return <Caratula paso={paso} tipo="reflexion_piramide" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
   function avanzar() {
-    if (idx + 1 < total) {
-      setIdx((i) => i + 1);
+    if (slide + 1 < totalSlides) {
+      setSlide((s) => s + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       setFase('cierre');
@@ -1036,41 +1036,62 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
     );
   }
 
-  return (
-    <Shell titulo={paso.titulo} actual={idx + 1} total={total}>
-      {idx === 0 && img && (
-        <div style={{ marginBottom: 24, textAlign: 'center' }}>
-          <button type="button" onClick={() => setLbSrc(img)} style={{
-            background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-          }}>
-            <img src={img} alt={paso.enunciado} style={{ maxWidth: '100%', maxHeight: 340, mixBlendMode: 'multiply' }} />
-          </button>
-          <div style={{ marginTop: 8 }}>
-            <button type="button" onClick={() => setLbSrc(img)} style={{
-              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-              display: 'inline-flex', alignItems: 'center', gap: 5,
-              textDecoration: 'underline', textUnderlineOffset: 3,
+  if (slide === 0) {
+    return (
+      <Shell titulo={paso.titulo} actual={1} total={totalSlides}>
+        <div style={tarjeta}>
+          <h3 style={{ fontFamily: FONT_BODY, fontSize: 20, fontWeight: 700, color: NAVY, margin: '0 0 14px', lineHeight: 1.4 }}>
+            {paso.enunciado}
+          </h3>
+          {img && (
+            <>
+              <div style={{ marginBottom: 8, cursor: 'zoom-in' }} onClick={() => setLbSrc(img)}>
+                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+              </div>
+              <div style={{ marginBottom: 18, textAlign: 'center' }}>
+                <button type="button" onClick={() => setLbSrc(img)} style={{
+                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  textDecoration: 'underline', textUnderlineOffset: 3,
+                }}>
+                  <IconoLupa />
+                  Ampliar diagrama
+                </button>
+              </div>
+            </>
+          )}
+          {lbSrc && <Lightbox src={lbSrc} alt={paso.enunciado} onClose={() => setLbSrc(null)} />}
+          {paso.descripcion && (
+            <div style={{ fontFamily: FONT_BODY, fontSize: 18, color: NAVY, lineHeight: 1.7 }}>
+              {paso.descripcion.split('\n\n').map((p, i) => (
+                <p key={i} style={{ margin: i === 0 ? '0 0 14px' : '14px 0 0' }}>{p}</p>
+              ))}
+            </div>
+          )}
+          <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="button" onClick={avanzar} style={{
+              fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 40px', cursor: 'pointer',
             }}>
-              <IconoLupa />
-              Ampliar diagrama
+              Empezar
             </button>
           </div>
         </div>
-      )}
-      {lbSrc && <Lightbox src={lbSrc} alt={paso.enunciado} onClose={() => setLbSrc(null)} />}
+      </Shell>
+    );
+  }
+
+  const qIdx = slide - 1;
+  return (
+    <Shell titulo={paso.titulo} actual={slide + 1} total={totalSlides}>
       <div style={tarjeta}>
-        {idx === 0 && paso.descripcion && (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.65, margin: '0 0 20px' }}>
-            {paso.descripcion}
-          </p>
-        )}
         <p style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
-          {preguntas[idx]}
+          {preguntas[qIdx]}
         </p>
         <textarea
-          value={respuestas[idx]}
-          onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[idx] = e.target.value; return n; })}
+          value={respuestas[qIdx]}
+          onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[qIdx] = e.target.value; return n; })}
           placeholder="Escribe tu reflexión..."
           style={{
             fontFamily: FONT_BODY, fontSize: 18, color: NAVY, background: BEIGE,
@@ -1079,12 +1100,12 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
           }}
         />
         <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
-          <button type="button" onClick={avanzar} disabled={!respuestas[idx]?.trim()} style={{
+          <button type="button" onClick={avanzar} disabled={!respuestas[qIdx]?.trim()} style={{
             fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
-            background: respuestas[idx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
-            padding: '18px 40px', cursor: respuestas[idx]?.trim() ? 'pointer' : 'default',
+            background: respuestas[qIdx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
+            padding: '18px 40px', cursor: respuestas[qIdx]?.trim() ? 'pointer' : 'default',
           }}>
-            {idx + 1 < total ? 'Siguiente' : 'Completar'}
+            {slide + 1 < totalSlides ? 'Siguiente' : 'Completar'}
           </button>
         </div>
       </div>
