@@ -751,17 +751,6 @@
           "titulo": "Tu Plan de Crecimiento"
         }
       ]
-    },
-    {
-      "id": "m2-19",
-      "num": 19,
-      "tipo": "cierre",
-      "titulo": "Conclusiones Módulo 2",
-      "visible": true,
-      "lectura_recomendada": {
-        "titulo": "Creados para la grandeza",
-        "descripcion": "\"Creados para la grandeza\" explica la virtud de la magnanimidad, una virtud capaz de marcar el tono de toda tu vida, transformarla, darle un nuevo sentido y llevarte al desarrollo de tu personalidad. Junto con la humildad, es una virtud propia de los verdaderos líderes, impulsados por el deseo de alcanzar la grandeza haciendo aflorar la grandeza de los demás."
-      }
     }
   ]
 }

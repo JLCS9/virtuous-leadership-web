@@ -5,7 +5,9 @@ import {
   UMBRAL_VISTA, buscarLeccion, continuar, duracionCurso, formatoDuracion, progresoCurso, resumenGlobal, urlVimeo,
 } from './cursos.js';
 import { pasosDelUsuario } from './flujoModulo';
+import { useModuloProgreso } from './useModulo';
 import moduloData from '../data/modulo1.json';
+import modulo2Data from '../data/modulo2.json';
 import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
@@ -41,11 +43,11 @@ const PORTADA_BRILLO_B = { 4: 1.12, 5: 0.92 };
 const PORTADA_NOBRILLO_B = new Set([6]);
 function portada(numero) { return PORTADAS[numero] ?? img01; }
 
-function leerModulo1Progreso(userId) {
-  try {
-    const bruto = JSON.parse(localStorage.getItem(`vl-modulo:${userId}:modulo1`));
-    return bruto && typeof bruto.completados === 'object' ? bruto.completados : {};
-  } catch { return {}; }
+function progresoModuloCards(pasos, completados) {
+  const videos = pasos.filter((p) => p.tipo === 'video');
+  const hechos = videos.filter((v) => completados[v.id]).length;
+  const total = videos.length;
+  return { hechos, total, porcentaje: total ? Math.round((hechos / total) * 100) : 0, completo: hechos === total };
 }
 
 function Anillo({ valor, tam = 84 }) {
@@ -300,21 +302,18 @@ function CtaFormacion({ prog }) {
   );
 }
 
-function Modulo1Card({ userId, m1Prog, portadas, brillo, posiciones, escalas }) {
-  const pasos = pasosDelUsuario(moduloData, null);
-  const videos = pasos.filter((p) => p.tipo === 'video');
-  const videosHechos = videos.filter((v) => m1Prog[v.id]).length;
-  const videosPct = videos.length ? Math.round((videosHechos / videos.length) * 100) : 0;
-  const prog = { hechos: videosHechos, total: videos.length, porcentaje: videosPct, completo: videosHechos === videos.length };
+function ModuloCursoCard({ cursoNum, titulo, completados, jsonData, portadas, brillo, posiciones, escalas }) {
+  const pasos = pasosDelUsuario(jsonData, null);
+  const prog = progresoModuloCards(pasos, completados);
   const imgs = portadas || PORTADAS;
-  const img = imgs[1] ?? img01;
+  const img = imgs[cursoNum] ?? img01;
   const posMap = posiciones || PORTADA_POS;
-  const pos = posMap[1];
-  const esc = escalas?.[1];
+  const pos = posMap[cursoNum];
+  const esc = escalas?.[cursoNum];
 
   return (
     <section style={{ ...tarjeta, padding: 0, overflow: 'hidden', flex: 1, minWidth: 0 }}>
-      <Link to="/app/formacion/curso-1" style={{ textDecoration: 'none', display: 'block', cursor: 'pointer' }}>
+      <Link to={`/app/formacion/curso-${cursoNum}`} style={{ textDecoration: 'none', display: 'block', cursor: 'pointer' }}>
         <Portada src={img} pos={pos} brillo={brillo} escala={esc} />
         <div style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -322,10 +321,10 @@ function Modulo1Card({ userId, m1Prog, portadas, brillo, posiciones, escalas }) 
               flex: '0 0 36px', height: 36, borderRadius: '50%', display: 'grid', placeItems: 'center',
               background: prog.completo ? GOLD_REF : 'rgba(27,42,74,0.08)', color: NAVY, fontFamily: FONT_SLAB, fontSize: 17, fontWeight: 700,
             }}>
-              {prog.completo ? <IconoCheck width={18} height={18} /> : '1'}
+              {prog.completo ? <IconoCheck width={18} height={18} /> : cursoNum}
             </span>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 700, color: NAVY, lineHeight: 1.2 }}>Del temperamento al carácter</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 700, color: NAVY, lineHeight: 1.2 }}>{titulo}</div>
               <div style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED, marginTop: 3 }}>{prog.hechos} de {prog.total} módulos</div>
             </div>
             <IconoFlecha style={{ color: MUTED, flex: '0 0 24px' }} />
@@ -338,25 +337,20 @@ function Modulo1Card({ userId, m1Prog, portadas, brillo, posiciones, escalas }) 
 }
 
 function Listado({ cursos: todosLosCursos, progreso, userId }) {
-  const cursos = todosLosCursos.filter((c) => c.numero !== 1);
-  const m1Prog = leerModulo1Progreso(userId);
+  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2);
+
+  const m1Hook = useModuloProgreso(userId, 'modulo1', 1);
+  const m2Hook = useModuloProgreso(userId, 'modulo2', 2);
 
   const m1Pasos = pasosDelUsuario(moduloData, null);
-  const m1Videos = m1Pasos.filter((p) => p.tipo === 'video');
-  const m1VideosHechos = m1Videos.filter((p) => m1Prog[p.id]).length;
-
-  const m1VideosPct = m1Videos.length ? Math.round((m1VideosHechos / m1Videos.length) * 100) : 0;
-  const m1ProgVid = { hechos: m1VideosHechos, total: m1Videos.length, porcentaje: m1VideosPct, completo: m1VideosHechos === m1Videos.length };
+  const m2Pasos = pasosDelUsuario(modulo2Data, null);
+  const m1Prog = progresoModuloCards(m1Pasos, m1Hook.completados);
+  const m2Prog = progresoModuloCards(m2Pasos, m2Hook.completados);
 
   const resumenCursos = resumenGlobal(cursos, progreso.vistas);
-  const totalLecciones = resumenCursos.total + m1Videos.length;
-  const hechasLecciones = resumenCursos.hechas + m1VideosHechos;
+  const totalLecciones = resumenCursos.total + m1Prog.total + m2Prog.total;
+  const hechasLecciones = resumenCursos.hechas + m1Prog.hechos + m2Prog.hechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
-
-  const m1SegundosVistos = m1Videos.filter(p => m1Prog[p.id]).reduce((s, p) => s + (p.duracion || 0), 0);
-  const segundosTotales = resumenCursos.segundosVistos + m1SegundosVistos;
-
-  const siguiente = continuar(cursos, progreso.vistas, progreso.ultima);
 
   return (
     <div className="vl-cols vl-cols-3">
@@ -371,17 +365,17 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
           <Anillo valor={porcentaje} />
           <div>
             <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
-            {segundosTotales > 0 && (
-              <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginTop: 4 }}>Tiempo invertido en trabajo personal: {formatoDuracion(segundosTotales)}</div>
-            )}
           </div>
         </div>
       </section>
 
       <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        <CtaFormacion prog={m1ProgVid} />
-        <Modulo1Card userId={userId} m1Prog={m1Prog} portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+        <CtaFormacion prog={m1Prog} />
+        <ModuloCursoCard cursoNum={1} titulo="Del temperamento al carácter" completados={m1Hook.completados} jsonData={moduloData}
+          portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       </div>
+      <ModuloCursoCard cursoNum={2} titulo="Practicando la Magnanimidad" completados={m2Hook.completados} jsonData={modulo2Data}
+        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       {cursos.map((c) => (
         <CursoCard key={`b-${c.id}`} curso={c} vistas={progreso.vistas}
                    portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />
