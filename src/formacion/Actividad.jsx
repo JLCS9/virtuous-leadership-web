@@ -1004,7 +1004,7 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
   return (
     <div style={{ marginBottom: 16 }}>
       <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 10px', lineHeight: 1.5 }}>
-        Selecciona o añade a aquellas personas que admiras de tu entorno o tu círculo
+        Selecciona o añade a aquellas personas que admiras de <strong>tu entorno o tu círculo</strong>
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
         {personas.map(p => {
@@ -1181,7 +1181,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         )}
         {preg.circulo_oro && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', lineHeight: 1.5 }}>
-            Añade a aquellas personas que admiras y no son de tu círculo
+            Añade a aquellas <strong>personas que admiras y no son de tu círculo</strong>
           </p>
         )}
         <textarea
@@ -1189,7 +1189,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
           autoFocus
           value={respuestas[idx]}
           onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[idx] = e.target.value; return n; })}
-          placeholder={preg.placeholder ?? 'Escribe tu reflexión...'}
+          placeholder={preg.placeholder_texto ?? preg.placeholder ?? 'Escribe tu reflexión...'}
           style={{
             fontFamily: FONT_BODY, fontSize: 18, color: NAVY, background: BEIGE,
             border: `1px solid ${LINE}`, borderRadius: 0, padding: '16px 18px',
