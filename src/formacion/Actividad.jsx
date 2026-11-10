@@ -982,10 +982,18 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
     const n = nuevoNombre.trim();
     if (!n) return;
     const tempId = `nuevo_${Date.now()}`;
-    setPersonas(prev => [...prev, { id: tempId, nombre: n, primario: null }]);
+    const nueva = { id: tempId, nombre: n, primario: null, estado: 'pendiente' };
+    setPersonas(prev => [...prev, nueva]);
     onToggle(tempId, n);
     setNuevoNombre('');
     setAnadiendo(false);
+    if (user?.id) {
+      import('../account/personas').then(m =>
+        m.crearPersona(user.id, { nombre: n, grupo: 'pendiente' }, null)
+      ).then(p => {
+        if (p?.id) setPersonas(prev => prev.map(x => x.id === tempId ? { ...x, id: p.id } : x));
+      }).catch(() => {});
+    }
   }
 
   function aceptarRazon(id, valor) {
@@ -995,8 +1003,8 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
 
   return (
     <div style={{ marginBottom: 16 }}>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-        Tu círculo de personas
+      <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 10px', lineHeight: 1.5 }}>
+        Selecciona o añade a aquellas personas que admiras de tu entorno o tu círculo
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
         {personas.map(p => {
@@ -1170,6 +1178,11 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         </p>
         {preg.circulo_oro && user && (
           <SelectorCirculoOro user={user} seleccionados={seleccionadosIdx} onToggle={togglePersona} onExplicar={explicarPersona} />
+        )}
+        {preg.circulo_oro && (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', lineHeight: 1.5 }}>
+            Añade a aquellas personas que admiras y no son de tu círculo
+          </p>
         )}
         <textarea
           key={idx}
@@ -2112,14 +2125,20 @@ export function CirculoPersonas({ paso, user, onComplete }) {
                 Personas añadidas
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {personas.map((p, i) => (
-                  <span key={i} style={{
-                    fontFamily: FONT_BODY, fontSize: 14, padding: '6px 14px',
-                    background: '#ecfdf5', border: '1px solid #10b981', color: '#065f46',
-                  }}>
-                    {p.nombre}{p.secundario ? ` · ${TEMP_NOMBRE[p.secundario]}` : ''}
-                  </span>
-                ))}
+                {personas.map((p, i) => {
+                  const pendiente = p.grupo === 'pendiente';
+                  return (
+                    <span key={i} style={{
+                      fontFamily: FONT_BODY, fontSize: 14, padding: '6px 14px',
+                      background: pendiente ? BEIGE : '#ecfdf5',
+                      border: `1px solid ${pendiente ? GOLD_REF : '#10b981'}`,
+                      color: pendiente ? NAVY : '#065f46',
+                    }}>
+                      {p.nombre}{p.secundario ? ` · ${TEMP_NOMBRE[p.secundario]}` : ''}
+                      {pendiente && <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, marginLeft: 6 }}>· pendiente</span>}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
