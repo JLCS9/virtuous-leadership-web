@@ -871,7 +871,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   }
 
   if (verCuaderno) {
-    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { const vid = videoAnterior(pasos, pasoId); setVerCuaderno(false); irA(vid ? vid.id : pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (
