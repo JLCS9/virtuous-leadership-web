@@ -965,10 +965,12 @@ function leerTestProf(pasoId, total) {
   try { const d = JSON.parse(localStorage.getItem(TEST_PROF_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
 }
 
-function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, onAnadir }) {
+function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
   const [personas, setPersonas] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [anadiendo, setAnadiendo] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState('');
+  const [editando, setEditando] = useState(null);
   useEffect(() => {
     if (!user?.id) { setCargando(false); return; }
     import('../account/personas').then(m => m.listarPersonas()).then(p => setPersonas(p ?? [])).catch(() => {}).finally(() => setCargando(false));
@@ -983,6 +985,12 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, onAnadi
     setPersonas(prev => [...prev, { id: tempId, nombre: n, primario: null }]);
     onToggle(tempId, n);
     setNuevoNombre('');
+    setAnadiendo(false);
+  }
+
+  function aceptarRazon(id, valor) {
+    onExplicar(id, valor);
+    setEditando(null);
   }
 
   return (
@@ -990,63 +998,90 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, onAnadi
       <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
         Tu círculo de personas
       </p>
-      {personas.length > 0 && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 10 }}>
-          {personas.map(p => {
-            const activo = seleccionados[p.id]?.activo;
-            const color = TEMP_COLORS[p.primario] ?? GOLD_REF;
-            return (
-              <button key={p.id} type="button" onClick={() => onToggle(p.id, p.nombre)} style={{
-                fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, textAlign: 'left',
-                color: activo ? '#fff' : NAVY, background: activo ? color : BEIGE,
-                border: `2px solid ${activo ? color : LINE}`, borderRadius: 0,
-                padding: '12px 18px', cursor: 'pointer', transition: 'all 200ms',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              }}>
-                <span>{p.nombre}</span>
-                {activo && <span style={{ fontSize: 18 }}>✓</span>}
-              </button>
-            );
-          })}
-        </div>
-      )}
-      <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-        <input
-          type="text"
-          value={nuevoNombre}
-          onChange={(e) => setNuevoNombre(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') agregarNuevo(); }}
-          placeholder="Añadir persona..."
-          style={{
-            fontFamily: FONT_BODY, fontSize: 15, color: NAVY, background: BEIGE,
-            border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 14px',
-            flex: 1, outline: 'none',
-          }}
-        />
-        <button type="button" onClick={agregarNuevo} disabled={!nuevoNombre.trim()} style={{
-          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
-          color: nuevoNombre.trim() ? '#fff' : MUTED, background: nuevoNombre.trim() ? GOLD_REF : LINE,
-          border: 'none', borderRadius: 0, padding: '10px 18px', cursor: nuevoNombre.trim() ? 'pointer' : 'default',
-        }}>
-          + Añadir
-        </button>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 10 }}>
+        {personas.map(p => {
+          const entry = seleccionados[p.id];
+          const activo = entry?.activo;
+          return (
+            <button key={p.id} type="button" onClick={() => {
+              if (activo && entry?.razon) { setEditando(p.id); return; }
+              onToggle(p.id, p.nombre);
+            }} style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+              color: activo ? PAPER : NAVY, background: activo ? NAVY : BEIGE,
+              border: `1.5px solid ${activo ? NAVY : LINE}`, borderRadius: 0,
+              padding: '9px 16px', cursor: 'pointer', transition: 'all 150ms',
+              display: 'inline-flex', alignItems: 'center', gap: 8,
+            }}>
+              {p.nombre}
+              {activo && entry?.razon && <span style={{ color: PAPER, opacity: 0.7, display: 'inline-flex' }}><IconoLapiz /></span>}
+            </button>
+          );
+        })}
+        {anadiendo ? (
+          <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+            <input
+              autoFocus
+              type="text"
+              value={nuevoNombre}
+              onChange={(e) => setNuevoNombre(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') agregarNuevo(); if (e.key === 'Escape') { setAnadiendo(false); setNuevoNombre(''); } }}
+              placeholder="Nombre..."
+              style={{
+                fontFamily: FONT_BODY, fontSize: 14, color: NAVY, background: PAPER,
+                border: `1.5px solid ${LINE}`, borderRadius: 0, padding: '9px 12px',
+                width: 140, outline: 'none',
+              }}
+            />
+            <button type="button" onClick={agregarNuevo} disabled={!nuevoNombre.trim()} style={{
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600,
+              color: PAPER, background: nuevoNombre.trim() ? GOLD_REF : LINE,
+              border: 'none', borderRadius: 0, padding: '9px 14px', cursor: nuevoNombre.trim() ? 'pointer' : 'default',
+            }}>
+              Añadir
+            </button>
+          </span>
+        ) : (
+          <button type="button" onClick={() => setAnadiendo(true)} style={{
+            fontFamily: FONT_BODY, fontSize: 20, fontWeight: 400,
+            color: MUTED, background: 'transparent',
+            border: `1.5px dashed ${LINE}`, borderRadius: 0,
+            padding: '6px 16px', cursor: 'pointer', lineHeight: 1,
+          }}>
+            +
+          </button>
+        )}
       </div>
-      {Object.entries(seleccionados).filter(([, v]) => v.activo && !v.razon).map(([id, v]) => (
-        <div key={id} style={{ marginTop: 8, padding: '10px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', fontWeight: 600 }}>
+      {Object.entries(seleccionados).filter(([id, v]) => v.activo && (!v.razon || editando === id)).map(([id, v]) => (
+        <div key={id} style={{ marginTop: 8, padding: '12px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', fontWeight: 600 }}>
             ¿Por qué consideras a {v.nombre} magnánimo/a?
           </p>
-          <input
-            type="text"
-            placeholder="Escribe brevemente..."
-            onBlur={(e) => onExplicar(id, e.target.value)}
-            onKeyDown={(e) => { if (e.key === 'Enter') { onExplicar(id, e.target.value); e.target.blur(); } }}
-            style={{
-              fontFamily: FONT_BODY, fontSize: 15, color: NAVY, background: '#fff',
-              border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 14px',
-              width: '100%', outline: 'none',
-            }}
-          />
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input
+              autoFocus
+              type="text"
+              defaultValue={v.razon || ''}
+              placeholder="Escribe brevemente..."
+              onKeyDown={(e) => { if (e.key === 'Enter') aceptarRazon(id, e.target.value); }}
+              ref={el => { if (el) el._ref = id; }}
+              style={{
+                fontFamily: FONT_BODY, fontSize: 15, color: NAVY, background: PAPER,
+                border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 14px',
+                flex: 1, outline: 'none',
+              }}
+            />
+            <button type="button" onClick={(e) => {
+              const input = e.currentTarget.previousElementSibling;
+              aceptarRazon(id, input?.value || '');
+            }} style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+              color: PAPER, background: GOLD_REF, border: 'none', borderRadius: 0,
+              padding: '10px 18px', cursor: 'pointer',
+            }}>
+              Aceptar
+            </button>
+          </div>
         </div>
       ))}
     </div>
