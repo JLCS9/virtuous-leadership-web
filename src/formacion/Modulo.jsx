@@ -585,7 +585,7 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
   );
 }
 
-const TIPOS_EXCLUIR_CUADERNO = new Set(['video', 'quiz', 'conclusion_modulo', 'noop', 'plan_crecimiento', 'test_caracter', 'temperamento_perfil', 'reflexion_guiada']);
+const TIPOS_EXCLUIR_CUADERNO = new Set(['video', 'quiz', 'conclusion_modulo', 'noop', 'plan_crecimiento', 'test_caracter', 'temperamento_perfil', 'reflexion_guiada', 'circulo_personas']);
 
 function tieneDatos(datos) {
   if (!datos) return false;
@@ -594,6 +594,28 @@ function tieneDatos(datos) {
   if (keys.length === 1 && (datos.completado || datos.visto)) return false;
   if (keys.every(k => k === 'visto' || datos[k] === '' || datos[k] === null || datos[k] === undefined)) return false;
   return true;
+}
+
+function resumenEjercicio(paso) {
+  switch (paso.tipo) {
+    case 'define': return 'Asocia cada concepto con su definición correcta.';
+    case 'desliza': return 'Identifica el temperamento que mejor encaja con cada situación.';
+    case 'identifica': return 'Reflexiona sobre qué virtudes te resultan fáciles y cuáles te cuestan.';
+    case 'test_profundo': return 'Responde a las señales concretas de este temperamento en tu vida.';
+    case 'retos_temperamento': return 'Reflexión sobre lo que tu temperamento facilita y dificulta.';
+    case 'temperamento_magnanimidad': return 'Cómo tu temperamento influye en la práctica de la magnanimidad.';
+    case 'cierre': return 'Síntesis del curso: tu virtud desafío y tu propósito.';
+    case 'reflexion_piramide': return 'Reflexión guiada sobre los conceptos del módulo.';
+    default: return 'Ejercicio completado.';
+  }
+}
+
+function resumenCorto(paso, datos) {
+  if (paso.tipo === 'define') return `${datos.aciertos} de ${datos.total} aciertos`;
+  if (paso.tipo === 'desliza') return `${datos.aciertos} de ${datos.total} aciertos`;
+  if (paso.tipo === 'test_profundo') { const r = datos.respuestas ?? []; const n = r.filter(x => x && x.trim()).length; return `${n} respuesta${n !== 1 ? 's' : ''}`; }
+  if (paso.tipo === 'identifica') { const r = datos.respuestas ?? []; const n = r.filter(x => x && (x.facil || x.dificil)).length; return `${n} virtud${n !== 1 ? 'es' : ''} valorada${n !== 1 ? 's' : ''}`; }
+  return null;
 }
 
 function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, temperamento }) {
@@ -617,21 +639,24 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
             Aún no has completado ejercicios con respuestas. Completa los tests y reflexiones del curso.
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {entradas.map(paso => {
               const datos = completados[paso.id];
+              const corto = resumenCorto(paso, datos);
               return (
-                <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
-                  <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 10px' }}>
-                    {paso.titulo || paso.tipo}
-                  </h3>
-                  {paso.enunciado && (
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.5, margin: '0 0 10px', fontStyle: 'italic' }}>
-                      {paso.enunciado}
-                    </p>
-                  )}
-                  <RespuestasCuaderno paso={paso} datos={datos} />
-                </div>
+                <details key={paso.id} style={{ borderTop: `1px solid ${LINE}` }}>
+                  <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                      <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
+                      {corto && <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>· {corto}</span>}
+                      <span style={{ marginLeft: 'auto', fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                    </div>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+                  </summary>
+                  <div style={{ padding: '0 0 16px 0' }}>
+                    <RespuestasCuaderno paso={paso} datos={datos} />
+                  </div>
+                </details>
               );
             })}
           </div>
@@ -756,17 +781,6 @@ function RespuestasCuaderno({ paso, datos }) {
             </p>
           </div>
         ))}
-      </div>
-    );
-  }
-
-  if (paso.tipo === 'circulo_personas') {
-    return (
-      <div>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 4px' }}>{paso.pregunta}</p>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0, paddingLeft: 16 }}>
-          {datos.personas === 1 ? '1 persona identificada' : `${datos.personas} personas identificadas`}
-        </p>
       </div>
     );
   }
