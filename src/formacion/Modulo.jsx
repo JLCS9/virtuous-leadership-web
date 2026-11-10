@@ -618,8 +618,8 @@ function resumenCorto(paso, datos) {
   return null;
 }
 
-function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, temperamento }) {
-  const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo) && completados[p.id] && tieneDatos(completados[p.id]));
+function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, temperamento }) {
+  const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo));
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
@@ -634,14 +634,12 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
           Tu cuaderno personal
         </h2>
-        {entradas.length === 0 ? (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>
-            Aún no has completado ejercicios con respuestas. Completa los tests y reflexiones del curso.
-          </p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {entradas.map(paso => {
-              const datos = completados[paso.id];
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+          {entradas.map(paso => {
+            const datos = completados[paso.id];
+            const hecho = datos && tieneDatos(datos);
+
+            if (hecho) {
               const corto = resumenCorto(paso, datos);
               return (
                 <details key={paso.id} style={{ borderTop: `1px solid ${LINE}` }}>
@@ -658,9 +656,26 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
                   </div>
                 </details>
               );
-            })}
-          </div>
-        )}
+            }
+
+            return (
+              <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 4, opacity: 0.55 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
+                  <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Pendiente</span>
+                    {onIrA && <button type="button" onClick={() => onIrA(paso.id)} style={{
+                      fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
+                      background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
+                      padding: '4px 12px', cursor: 'pointer', opacity: 1,
+                    }}>Ir al ejercicio</button>}
+                  </span>
+                </div>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div style={{ marginTop: 18 }}>
         <CuadernoPersonal userId={userId} pasos={pasos} temperamento={temperamento} moduloId={moduloId} />
@@ -856,7 +871,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   }
 
   if (verCuaderno) {
-    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (
