@@ -3496,7 +3496,7 @@ function PantallaChecklist({ pantalla, datos, onChange }) {
         fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
         background: 'none', border: `1px dashed ${GOLD_REF}`, padding: '10px 18px', cursor: 'pointer', borderRadius: 0,
       }}>
-        <IconoMas /> Añadir elemento
+        <IconoMas /> {pantalla.boton_anadir ?? 'Añadir elemento'}
       </button>
     </>
   );
@@ -3692,6 +3692,14 @@ function IconoLapiz() {
   );
 }
 
+function tieneContenido(dato) {
+  if (!dato) return false;
+  if (Array.isArray(dato)) return dato.some(d => typeof d === 'string' ? d : d?.nombre || d?.text);
+  if (typeof dato === 'object') return Object.values(dato).some(v => v);
+  if (typeof dato === 'string') return dato.trim().length > 0;
+  return false;
+}
+
 export function PantallaResumen({ paso, plan, onEditar }) {
   const pantallas = paso.pantallas ?? [];
   return (
@@ -3699,9 +3707,9 @@ export function PantallaResumen({ paso, plan, onEditar }) {
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: 0 }}>
         Este es el resumen de tu Plan de Crecimiento en Magnanimidad. Revisa que refleja tus intenciones para este año.
       </p>
-      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map((pant, _i, arr) => {
+      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map((pant) => {
         const dato = plan[pant.id];
-        if (!dato || (Array.isArray(dato) && dato.length === 0)) return null;
+        const vacio = !tieneContenido(dato);
         const pantIdx = pantallas.indexOf(pant);
         return (
           <div key={pant.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
@@ -3717,46 +3725,54 @@ export function PantallaResumen({ paso, plan, onEditar }) {
                 </button>
               )}
             </div>
-            {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(f => f.nombre).map((f, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    <strong>{f.nombre}</strong>{f.motivo ? ` — ${f.motivo}` : ''}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'checklist' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(Boolean).map((item, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'checklist_categorias' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(d => d.text).map((item, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 6 }}>{item.categoria}</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'reflexion_doble' && typeof dato === 'object' && (
-              <div>
-                {Object.entries(dato).filter(([, v]) => v).map(([k, v]) => (
-                  <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: '0 0 4px' }}>{v}</p>
-                ))}
-              </div>
-            )}
-            {pant.tipo === 'reflexion_temperamento' && typeof dato === 'object' && dato.refuerzo && (
-              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{dato.refuerzo}</p>
-            )}
-            {pant.tipo === 'proposito' && typeof dato === 'string' && (
-              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontWeight: 600 }}>{dato}</p>
+            {vacio ? (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                Sin completar
+              </p>
+            ) : (
+              <>
+                {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(f => f.nombre).map((f, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        <strong>{f.nombre}</strong>{f.motivo ? ` — ${f.motivo}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'checklist' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(Boolean).map((item, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'checklist_categorias' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(d => d.text).map((item, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 6 }}>{item.categoria}</span>
+                        {item.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'reflexion_doble' && typeof dato === 'object' && (
+                  <div>
+                    {Object.entries(dato).filter(([, v]) => v).map(([k, v]) => (
+                      <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: '0 0 4px' }}>{v}</p>
+                    ))}
+                  </div>
+                )}
+                {pant.tipo === 'reflexion_temperamento' && typeof dato === 'object' && dato.refuerzo && (
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{dato.refuerzo}</p>
+                )}
+                {pant.tipo === 'proposito' && typeof dato === 'string' && (
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontWeight: 600 }}>{dato}</p>
+                )}
+              </>
             )}
           </div>
         );

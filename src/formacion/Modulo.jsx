@@ -537,6 +537,8 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
   const planStep = pasos.find(p => p.tipo === 'plan_crecimiento');
   const planHecho = planStep ? Boolean(completados[planStep.id]) : false;
+  const cierreStep = pasos.find(p => p.tipo === 'cierre' && p.visible !== false);
+  const cierreHecho = cierreStep ? Boolean(completados[cierreStep.id]) : false;
 
   if (verPlan && planStep) {
     return <VistaResumenPlan paso={planStep} userId={userId} onVolver={() => setVerPlan(false)} />;
@@ -652,6 +654,32 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
                 <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{planStep.titulo}</div>
                 <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 2 }}>
                   {planHecho ? 'Completado' : 'Plan de crecimiento'}
+                </div>
+              </div>
+            </button>
+          </section>
+        )}
+
+        {cierreStep && (
+          <section style={{ marginTop: 18 }}>
+            <button type="button" onClick={() => irA(cierreStep.id)} style={{
+              all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
+              ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
+              borderTop: `2px solid ${GOLD_REF}`,
+            }}>
+              <span style={{
+                flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
+                background: cierreHecho ? GOLD_REF : 'transparent',
+                border: cierreHecho ? 'none' : `1.5px solid ${LINE}`,
+                color: cierreHecho ? '#fff' : NAVY,
+                fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
+              }}>
+                {cierreHecho ? <IconoCheck width={16} height={16} /> : '✦'}
+              </span>
+              <div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{cierreStep.titulo}</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 2 }}>
+                  {cierreHecho ? 'Completado' : 'Síntesis del curso'}
                 </div>
               </div>
             </button>
