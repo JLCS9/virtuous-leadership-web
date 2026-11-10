@@ -665,6 +665,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
                       {modNum && corto && <span> · </span>}
                       {corto && <span>{corto}</span>}
                     </p>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
                   </summary>
                   <div style={{ padding: '0 0 16px 0' }}>
                     <RespuestasCuaderno paso={paso} datos={datos} />
@@ -689,6 +690,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
                 <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
                   {modNum && <span>Módulo {modNum}</span>}
                 </p>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
               </div>
             );
           })}
