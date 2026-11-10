@@ -965,7 +965,7 @@ function leerTestProf(pasoId, total) {
   try { const d = JSON.parse(localStorage.getItem(TEST_PROF_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
 }
 
-function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
+function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, preguntaRazon }) {
   const [personas, setPersonas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [anadiendo, setAnadiendo] = useState(false);
@@ -1063,7 +1063,7 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
       {Object.entries(seleccionados).filter(([id, v]) => v.activo && (!v.razon || editando === id)).map(([id, v]) => (
         <div key={id} style={{ marginTop: 8, padding: '12px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', fontWeight: 600 }}>
-            ¿Por qué consideras a {v.nombre} magnánimo/a?
+            {(preguntaRazon ?? '¿Por qué consideras a {nombre} magnánimo/a?').replace('{nombre}', v.nombre)}
           </p>
           <div style={{ display: 'flex', gap: 8 }}>
             <input
@@ -1177,7 +1177,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
           {preg.texto ?? `Pregunta ${idx + 1}`}
         </p>
         {preg.circulo_oro && user && (
-          <SelectorCirculoOro user={user} seleccionados={seleccionadosIdx} onToggle={togglePersona} onExplicar={explicarPersona} />
+          <SelectorCirculoOro user={user} seleccionados={seleccionadosIdx} onToggle={togglePersona} onExplicar={explicarPersona} preguntaRazon={preg.circulo_pregunta} />
         )}
         {preg.circulo_oro && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', lineHeight: 1.5 }}>

@@ -435,7 +435,7 @@
       "preguntas": [
         { "texto": "Soy consciente de mi dignidad como ser humano, y del poder de mi mente, corazón y voluntad. Soy consciente de mi libertad personal.", "placeholder": "¿Eres consciente de tu dignidad? ¿Cómo vives tu libertad personal?" },
         { "texto": "He sido llamado a hacer grandes cosas; por encima de todo, a desarrollar mi personalidad y la de los que encuentro a mi alrededor.", "placeholder": "¿Qué 'grandes cosas' sientes que podrías hacer? ¿A qué sientes que estás llamado?" },
-        { "texto": "Procuro la compañía de personas magnánimas que, a través de sus consejos y su ejemplo, me ayuden a ser magnánimo/a.", "placeholder": "¿Quiénes son esas personas en tu vida? ¿Cómo te influyen?", "placeholder_texto": "Ej: Martin Luther King, porque su valentía y visión me inspiran a pensar en grande...", "circulo_oro": true },
+        { "texto": "Procuro la compañía de personas magnánimas que, a través de sus consejos y su ejemplo, me ayuden a ser magnánimo/a.", "placeholder": "¿Quiénes son esas personas en tu vida? ¿Cómo te influyen?", "placeholder_texto": "Ej: Martin Luther King, porque su valentía y visión me inspiran a pensar en grande...", "circulo_oro": true, "circulo_pregunta": "¿Por qué consideras a {nombre} magnánimo/a?" },
         { "texto": "Establezco propósitos altos para mí mismo y para los demás. Lucho diariamente para mejorar mi carácter y mi comportamiento.", "placeholder": "¿Cuál es tu propósito? ¿Cómo trabajas diariamente sobre tu carácter o tu comportamiento?" },
         { "texto": "Sé en qué soy bueno. Pido a mis compañeros y amigos que me ayuden a descubrir y desarrollar mis talentos.", "placeholder": "¿Cuáles son tus talentos principales? ¿En qué amigos sueles apoyarte para descubrir estos talentos?" },
         { "texto": "Dedico mi energía a multiplicar mis talentos más que a luchar contra mis debilidades.", "placeholder": "¿A qué dedicas más energía: talentos o debilidades? ¿Cómo trabajas tus talentos o debilidades?" },
@@ -448,7 +448,7 @@
         { "texto": "Tomo decisiones audaces. No tengo miedo a asumir riesgos.", "placeholder": "¿Cuál fue la última decisión audaz que tomaste? ¿Cómo te sentiste?" },
         { "texto": "Soy consciente de que el mal no es el mal que hacen los demás, sino el bien que yo no hago.", "placeholder": "¿Qué bien podrías estar haciendo y no haces? ¿Qué te frena?" },
         { "texto": "Veo en los grandes problemas de la humanidad grandes oportunidades.", "placeholder": "¿Qué problema a tu alrededor ves como una oportunidad? ¿Cómo podrías contribuir?" },
-        { "texto": "Escojo colaboradores que puedan retarme.", "placeholder": "¿Quiénes te retan a ser mejor? ¿Buscas activamente ese tipo de personas?", "placeholder_texto": "Ej: Steve Jobs, porque su exigencia y visión retaban a todos a dar lo mejor de sí...", "circulo_oro": true },
+        { "texto": "Escojo colaboradores que puedan retarme.", "placeholder": "¿Quiénes te retan a ser mejor? ¿Buscas activamente ese tipo de personas?", "placeholder_texto": "Ej: Steve Jobs, porque su exigencia y visión retaban a todos a dar lo mejor de sí...", "circulo_oro": true, "circulo_pregunta": "¿Por qué consideras que {nombre} te reta a ser mejor?" },
         { "texto": "No me comparo con nadie.", "placeholder": "¿Tiendes a compararte con otros? ¿Cómo te afecta? ¿Qué haces para evitarlo?" }
       ]
     },
