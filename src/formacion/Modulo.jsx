@@ -264,7 +264,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'define': return <Define paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'desliza': return <Desliza paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} user={user} />;
     case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;

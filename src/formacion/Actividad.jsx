@@ -965,16 +965,75 @@ function leerTestProf(pasoId, total) {
   try { const d = JSON.parse(localStorage.getItem(TEST_PROF_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
 }
 
-export function TestProfundo({ paso, onComplete, modulo }) {
-  const preguntas = paso.preguntas ?? [];
+function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
+  const [personas, setPersonas] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  useEffect(() => {
+    if (!user?.id) { setCargando(false); return; }
+    import('../account/personas').then(m => m.listarPersonas()).then(p => setPersonas(p ?? [])).catch(() => {}).finally(() => setCargando(false));
+  }, [user?.id]);
+
+  if (cargando) return <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>Cargando tu círculo...</p>;
+  if (!personas.length) return null;
+
+  return (
+    <div style={{ marginBottom: 16 }}>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+        Tu círculo de personas
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        {personas.map(p => {
+          const activo = seleccionados[p.id]?.activo;
+          const color = TEMP_COLORS[p.primario] ?? GOLD_REF;
+          return (
+            <button key={p.id} type="button" onClick={() => onToggle(p.id, p.nombre)} style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+              color: activo ? '#fff' : NAVY, background: activo ? color : BEIGE,
+              border: `2px solid ${activo ? color : LINE}`, borderRadius: 24,
+              padding: '8px 18px', cursor: 'pointer', transition: 'all 200ms',
+            }}>
+              {p.nombre}
+              {p.primario && <span style={{ marginLeft: 6, fontSize: 11, opacity: 0.7 }}>{TEMP_NOMBRE[p.primario]?.[0] ?? ''}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {Object.entries(seleccionados).filter(([, v]) => v.activo && !v.razon).map(([id, v]) => (
+        <div key={id} style={{ marginTop: 10, padding: '10px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', fontWeight: 600 }}>
+            ¿Por qué consideras a {v.nombre} magnánimo/a?
+          </p>
+          <input
+            type="text"
+            placeholder="Escribe brevemente..."
+            onBlur={(e) => onExplicar(id, e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { onExplicar(id, e.target.value); e.target.blur(); } }}
+            style={{
+              fontFamily: FONT_BODY, fontSize: 15, color: NAVY, background: '#fff',
+              border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 14px',
+              width: '100%', outline: 'none',
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function TestProfundo({ paso, onComplete, modulo, user }) {
+  const rawPreguntas = paso.preguntas ?? [];
+  const preguntas = rawPreguntas.map(p => typeof p === 'string' ? { texto: p } : p);
   const total = preguntas.length || paso.num_preguntas;
   const [fase, setFase] = useState('caratula');
   const [idx, setIdx] = useState(0);
   const [respuestas, setRespuestas] = useState(() => leerTestProf(paso.id, total));
+  const [circuloData, setCirculoData] = useState({});
   const guardarTestCb = useCallback((d) => { try { localStorage.setItem(TEST_PROF_KEY(paso.id), JSON.stringify(d)); } catch {} }, [paso.id]);
   const guardados = useAutoguardado(guardarTestCb, respuestas);
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="test_profundo" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
+
+  const preg = preguntas[idx];
 
   function avanzar() {
     if (idx + 1 < total) {
@@ -984,6 +1043,22 @@ export function TestProfundo({ paso, onComplete, modulo }) {
       setFase('cierre');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  function togglePersona(id, nombre) {
+    setCirculoData(prev => {
+      const entry = prev[`${idx}:${id}`];
+      return { ...prev, [`${idx}:${id}`]: entry?.activo ? { ...entry, activo: false } : { activo: true, nombre, razon: '' } };
+    });
+  }
+
+  function explicarPersona(id, razon) {
+    setCirculoData(prev => ({ ...prev, [`${idx}:${id}`]: { ...prev[`${idx}:${id}`], razon } }));
+  }
+
+  const seleccionadosIdx = {};
+  for (const [k, v] of Object.entries(circuloData)) {
+    if (k.startsWith(`${idx}:`)) seleccionadosIdx[k.split(':')[1]] = v;
   }
 
   if (fase === 'cierre') {
@@ -1004,7 +1079,7 @@ export function TestProfundo({ paso, onComplete, modulo }) {
             Gracias por tomarte el tiempo de reflexionar con profundidad. Este ejercicio de autoconocimiento es uno de los más valiosos del curso.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <button type="button" onClick={() => onComplete({ respuestas })} style={{
+            <button type="button" onClick={() => onComplete({ respuestas, circulo: circuloData })} style={{
               fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 48px', cursor: 'pointer',
             }}>
@@ -1023,14 +1098,17 @@ export function TestProfundo({ paso, onComplete, modulo }) {
           Examínate y fija metas para el mes que empieza
         </p>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
-          {preguntas[idx] ?? `Pregunta ${idx + 1}`}
+          {preg.texto ?? `Pregunta ${idx + 1}`}
         </p>
+        {preg.circulo_oro && user && (
+          <SelectorCirculoOro user={user} seleccionados={seleccionadosIdx} onToggle={togglePersona} onExplicar={explicarPersona} />
+        )}
         <textarea
           key={idx}
           autoFocus
           value={respuestas[idx]}
           onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[idx] = e.target.value; return n; })}
-          placeholder="Escribe tu reflexión..."
+          placeholder={preg.placeholder ?? 'Escribe tu reflexión...'}
           style={{
             fontFamily: FONT_BODY, fontSize: 18, color: NAVY, background: BEIGE,
             border: `1px solid ${LINE}`, borderRadius: 0, padding: '16px 18px',
