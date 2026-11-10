@@ -562,7 +562,7 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
         background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
         display: 'inline-flex', alignItems: 'center', gap: 6,
       }}>
-        ← Volver al listado
+        ← Volver al curso
       </button>
       <div style={tarjeta}>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
@@ -639,7 +639,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
         background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
         display: 'inline-flex', alignItems: 'center', gap: 6,
       }}>
-        ← Volver
+        ← Volver al curso
       </button>
       <div style={tarjeta}>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
