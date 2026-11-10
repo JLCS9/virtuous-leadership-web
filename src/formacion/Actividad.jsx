@@ -1,6 +1,6 @@
 // Componentes interactivos para las actividades entre vídeos del módulo.
 // Quiz, Define, Desliza, Identifica — todos comparten el mismo shell (título + barra progreso).
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
 import { barraFondo, eyebrow, tarjeta } from '../app/estilos';
@@ -59,6 +59,64 @@ const RETRATO_TEMP = { COL: retratoCOL, MEL: retratoMEL, SAN: retratoSAN, FLE: r
 const CONCEPTO_A_RETRATO = { 'Temperamento': retratoTEMP, 'Temperamento colérico': retratoCOL, 'Temperamento melancólico': retratoMEL, 'Temperamento sanguíneo': retratoSAN, 'Temperamento flemático': retratoFLE, 'Carácter': retratoCaracter, 'Prudencia': retratoPrudencia, 'Fortaleza': retratoFortaleza, 'Dominio de sí': retratoDominio, 'Justicia': retratoJusticia, 'Magnanimidad': retratoMagnanimidad };
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
+
+if (typeof document !== 'undefined' && !document.getElementById('autoguardado-css')) {
+  const s = document.createElement('style');
+  s.id = 'autoguardado-css';
+  s.textContent = '@keyframes fadeInCheck{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}';
+  document.head.appendChild(s);
+}
+
+function useAutoguardado(guardarFn, datos, delay = 5000) {
+  const [guardados, setGuardados] = useState({});
+  const timerRef = useRef(null);
+  const prevRef = useRef(datos);
+
+  useEffect(() => {
+    const prev = prevRef.current;
+    prevRef.current = datos;
+    const cambiados = [];
+    if (typeof datos === 'object' && datos !== null && !Array.isArray(datos)) {
+      for (const k of Object.keys(datos)) {
+        if (JSON.stringify(datos[k]) !== JSON.stringify(prev?.[k])) cambiados.push(k);
+      }
+    } else if (Array.isArray(datos)) {
+      datos.forEach((v, i) => { if (v !== prev?.[i]) cambiados.push(String(i)); });
+    }
+    if (cambiados.length === 0) return;
+    cambiados.forEach(k => setGuardados(g => { const n = { ...g }; delete n[k]; return n; }));
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      guardarFn(datos);
+      cambiados.forEach(k => setGuardados(g => ({ ...g, [k]: Date.now() })));
+    }, delay);
+    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
+  }, [datos, delay, guardarFn]);
+
+  return guardados;
+}
+
+function CheckGuardado({ campo, guardados }) {
+  const ts = guardados[campo];
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (!ts) { setVisible(false); return; }
+    setVisible(true);
+    const t = setTimeout(() => setVisible(false), 3000);
+    return () => clearTimeout(t);
+  }, [ts]);
+  if (!visible) return null;
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      fontFamily: FONT_BODY, fontSize: 12, color: '#10b981', fontWeight: 600,
+      animation: 'fadeInCheck 300ms ease forwards',
+    }}>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      Guardado
+    </span>
+  );
+}
 
 function Shell({ titulo, actual, total, children }) {
   const pct = total > 0 ? Math.round(((actual) / total) * 100) : 0;
@@ -134,9 +192,11 @@ function Caratula({ paso, tipo, onEmpezar, modulo }) {
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 14px', textAlign: 'center', lineHeight: 1.3 }}>
           {txt.tipo}
         </h2>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 8px' }}>
-          {paso.descripcion ?? txt.desc}
-        </p>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 8px' }}>
+          {(paso.descripcion ?? txt.desc).split('\n\n').map((p, i) => (
+            <p key={i} style={{ margin: i === 0 ? 0 : '12px 0 0' }}>{p}</p>
+          ))}
+        </div>
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 28, marginBottom: 8 }}>
           <button type="button" onClick={onEmpezar} style={{
             fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
@@ -900,12 +960,19 @@ export function Identifica({ paso, onComplete, modulo }) {
 
 /* ─── TEST PROFUNDO (preguntas abiertas) ─── */
 
+const TEST_PROF_KEY = (pasoId) => `vl-test-profundo:${pasoId}`;
+function leerTestProf(pasoId, total) {
+  try { const d = JSON.parse(localStorage.getItem(TEST_PROF_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
+}
+
 export function TestProfundo({ paso, onComplete, modulo }) {
   const preguntas = paso.preguntas ?? [];
   const total = preguntas.length || paso.num_preguntas;
   const [fase, setFase] = useState('caratula');
   const [idx, setIdx] = useState(0);
-  const [respuestas, setRespuestas] = useState(() => Array(total).fill(''));
+  const [respuestas, setRespuestas] = useState(() => leerTestProf(paso.id, total));
+  const guardarTestCb = useCallback((d) => { try { localStorage.setItem(TEST_PROF_KEY(paso.id), JSON.stringify(d)); } catch {} }, [paso.id]);
+  const guardados = useAutoguardado(guardarTestCb, respuestas);
 
   if (fase === 'caratula') return <Caratula paso={paso} tipo="test_profundo" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
 
@@ -959,6 +1026,8 @@ export function TestProfundo({ paso, onComplete, modulo }) {
           {preguntas[idx] ?? `Pregunta ${idx + 1}`}
         </p>
         <textarea
+          key={idx}
+          autoFocus
           value={respuestas[idx]}
           onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[idx] = e.target.value; return n; })}
           placeholder="Escribe tu reflexión..."
@@ -968,7 +1037,10 @@ export function TestProfundo({ paso, onComplete, modulo }) {
             width: '100%', minHeight: 160, resize: 'vertical', outline: 'none',
           }}
         />
-        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 6 }}>
+          <CheckGuardado campo={String(idx)} guardados={guardados} />
+        </div>
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
           <button type="button" onClick={avanzar} disabled={!respuestas[idx]?.trim()} style={{
             fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
             background: respuestas[idx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
@@ -989,13 +1061,21 @@ const REFLEXION_IMAGENES = {
   'magnanimidad-temperamentos': diagramaTemperamentosImg,
 };
 
+const REFLEXION_KEY = (pasoId) => `vl-reflexion:${pasoId}`;
+function leerReflexion(pasoId, total) {
+  try { const d = JSON.parse(localStorage.getItem(REFLEXION_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
+}
+
 export function ReflexionPiramide({ paso, onComplete, modulo }) {
   const preguntas = paso.preguntas ?? [];
   const totalSlides = preguntas.length + 1;
   const [fase, setFase] = useState('caratula');
   const [slide, setSlide] = useState(0);
-  const [respuestas, setRespuestas] = useState(() => Array(preguntas.length).fill(''));
+  const [respuestas, setRespuestas] = useState(() => leerReflexion(paso.id, preguntas.length));
+  const guardarReflCb = useCallback((d) => { try { localStorage.setItem(REFLEXION_KEY(paso.id), JSON.stringify(d)); } catch {} }, [paso.id]);
+  const guardados = useAutoguardado(guardarReflCb, respuestas);
   const [lbSrc, setLbSrc] = useState(null);
+  const [ejemploAb, setEjemploAb] = useState({});
 
   const imgEntry = REFLEXION_IMAGENES[paso.imagen] ?? null;
   const imgs = Array.isArray(imgEntry) ? imgEntry : imgEntry ? [imgEntry] : [];
@@ -1103,6 +1183,8 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
           {preguntas[qIdx]}
         </p>
         <textarea
+          key={qIdx}
+          autoFocus
           value={respuestas[qIdx]}
           onChange={(e) => setRespuestas((prev) => { const n = [...prev]; n[qIdx] = e.target.value; return n; })}
           placeholder="Escribe tu reflexión..."
@@ -1112,7 +1194,13 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
             width: '100%', boxSizing: 'border-box', minHeight: 140, resize: 'vertical', outline: 'none',
           }}
         />
-        <div style={{ marginTop: 22, display: 'flex', justifyContent: 'flex-end' }}>
+        {paso.ejemplos?.[qIdx] && (
+          <EjemploColapsable texto={paso.ejemplos[qIdx]} abierto={ejemploAb[qIdx]} onToggle={() => setEjemploAb(prev => ({ ...prev, [qIdx]: !prev[qIdx] }))} />
+        )}
+        <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 6 }}>
+          <CheckGuardado campo={String(qIdx)} guardados={guardados} />
+        </div>
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
           <button type="button" onClick={avanzar} disabled={!respuestas[qIdx]?.trim()} style={{
             fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
             background: respuestas[qIdx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
@@ -3389,21 +3477,40 @@ function PantallaProposito({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaResumen({ paso, plan }) {
+function IconoLapiz() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+      <path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M9.5 3.5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function PantallaResumen({ paso, plan, onEditar }) {
   const pantallas = paso.pantallas ?? [];
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: 0 }}>
         Este es el resumen de tu Plan de Crecimiento en Magnanimidad. Revisa que refleja tus intenciones para este año.
       </p>
-      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map(pant => {
+      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map((pant, _i, arr) => {
         const dato = plan[pant.id];
         if (!dato || (Array.isArray(dato) && dato.length === 0)) return null;
+        const pantIdx = pantallas.indexOf(pant);
         return (
           <div key={pant.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
-            <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
-              {pant.titulo}
-            </h3>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: 0 }}>
+                {pant.titulo}
+              </h3>
+              {onEditar && (
+                <button type="button" onClick={() => onEditar(pantIdx)} title="Editar" style={{
+                  background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
+                }}>
+                  <IconoLapiz />
+                </button>
+              )}
+            </div>
             {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
               <ul style={{ margin: 0, paddingLeft: 20 }}>
                 {dato.filter(f => f.nombre).map((f, i) => (
@@ -3454,7 +3561,7 @@ function PantallaResumen({ paso, plan }) {
 
 const PLAN_STORAGE_KEY = (userId) => `vl-plan:${userId}`;
 
-function leerPlan(userId) {
+export function leerPlan(userId) {
   try { return JSON.parse(localStorage.getItem(PLAN_STORAGE_KEY(userId))) ?? {}; } catch { return {}; }
 }
 function guardarPlan(userId, data) {
@@ -3468,14 +3575,16 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
   const [fase, setFase] = useState('caratula');
   const [visible, setVisible] = useState(true);
   const [plan, setPlan] = useState(() => leerPlan(userId));
+  const guardarCb = useCallback((d) => guardarPlan(userId, d), [userId]);
+  const guardados = useAutoguardado(guardarCb, plan);
 
   function actualizarPantalla(pantallaId, valor) {
     const next = { ...plan, [pantallaId]: valor };
     setPlan(next);
-    guardarPlan(userId, next);
   }
 
   function siguiente() {
+    guardarPlan(userId, plan);
     setVisible(false);
     setTimeout(() => {
       if (idx < pantallas.length - 1) {
@@ -3557,7 +3666,7 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
   } else if (pant.tipo === 'checklist_categorias') {
     contenido = <PantallaChecklistCategorias pantalla={pant} datos={plan[pant.id]} onChange={v => actualizarPantalla(pant.id, v)} />;
   } else if (pant.tipo === 'resumen') {
-    contenido = <PantallaResumen paso={paso} plan={plan} />;
+    contenido = <PantallaResumen paso={paso} plan={plan} onEditar={(pantIdx) => { setIdx(pantIdx); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
   }
 
   const esUltima = idx === pantallas.length - 1;
@@ -3584,6 +3693,12 @@ export function PlanCrecimiento({ paso, temperamento, onComplete }) {
         }}>
           {contenido}
         </div>
+
+        {pant.tipo !== 'texto' && pant.tipo !== 'resumen' && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 4 }}>
+            <CheckGuardado campo={pant.id} guardados={guardados} />
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
           <button type="button" onClick={anterior} disabled={idx === 0} style={{

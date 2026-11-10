@@ -380,7 +380,7 @@ export function CuadernoPersonal({ userId, pasos, temperamento, moduloId = 'modu
         <polyline points="7 10 12 15 17 10" />
         <line x1="12" y1="15" x2="12" y2="3" />
       </svg>
-      {generando ? 'Generando...' : 'Descargar cuaderno personal'}
+      {generando ? 'Generando...' : 'Ver cuaderno personal'}
     </button>
   );
 }

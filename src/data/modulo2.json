@@ -225,6 +225,9 @@
       "descripcion": "Sin la prudencia, la magnanimidad se convierte en soberbia. La soberbia es una falsa magnanimidad: se presenta como magnanimidad, pero no lo es. Solo la humildad metafísica puede evitar que caigamos en la soberbia.",
       "preguntas": [
         "Examina tus intenciones. ¿Buscas de verdad la magnanimidad, o te mueves, en mayor o menor medida, por la vanidad?"
+      ],
+      "ejemplos": [
+        "A veces me doy cuenta de que busco el reconocimiento de los demás más que hacer el bien por sí mismo. Por ejemplo, cuando ayudo a alguien en el trabajo, me descubro esperando que mi jefe se entere. Quiero trabajar en hacer el bien por convicción, no por aplauso."
       ]
     },
     {
@@ -352,7 +355,7 @@
         {
           "texto": "¿Qué puede aprender un colérico de la magnanimidad?",
           "opciones": [
-            "Superar el hábito de la acción ciega (actuar por actuar)",
+            "Superar el hábito del activismo ciego (actuar por actuar)",
             "Convertir su sueño en acción",
             "Vencer la superficialidad, fortalecer la perseverancia y la resistencia",
             "Soñar en grande y actuar más"
@@ -362,7 +365,7 @@
         {
           "texto": "¿Qué puede aprender un melancólico de la magnanimidad?",
           "opciones": [
-            "Superar el hábito de la acción ciega (actuar por actuar)",
+            "Superar el hábito del activismo ciego (actuar por actuar)",
             "Convertir su sueño en acción",
             "Vencer la superficialidad, fortalecer la perseverancia y la resistencia",
             "Soñar en grande y actuar más"
@@ -372,7 +375,7 @@
         {
           "texto": "¿Qué puede aprender un sanguíneo de la magnanimidad?",
           "opciones": [
-            "Superar el hábito de la acción ciega (actuar por actuar)",
+            "Superar el hábito del activismo ciego (actuar por actuar)",
             "Convertir su sueño en acción",
             "Vencer la superficialidad, fortalecer la perseverancia y la resistencia",
             "Soñar en grande y actuar más"
@@ -382,7 +385,7 @@
         {
           "texto": "¿Qué puede aprender un flemático de la magnanimidad?",
           "opciones": [
-            "Superar el hábito de la acción ciega (actuar por actuar)",
+            "Superar el hábito del activismo ciego (actuar por actuar)",
             "Convertir su sueño en acción",
             "Vencer la superficialidad, fortalecer la perseverancia y la resistencia",
             "Soñar en grande y actuar más"
@@ -428,9 +431,9 @@
       "tipo": "test_profundo",
       "titulo": "Test de magnanimidad",
       "visible": false,
-      "descripcion": "Aquí tienes las señales de la magnanimidad. Examínate, y fija metas para el mes que empieza.",
+      "descripcion": "Busca un momento tranquilo para realizar este ejercicio, es un test de 17 preguntas que requiere estar concentrado y evitar posibles distracciones.\n\nReflexiona con sinceridad sobre cada pregunta.\n\nNo hay respuestas correctas ni incorrectas: este autoexamen es una herramienta para tu crecimiento personal.",
       "preguntas": [
-        "Soy consciente de mi dignidad como ser humano, y del poder de mi cabeza, corazón y voluntad. Soy consciente de mi libertad personal.",
+        "Soy consciente de mi dignidad como ser humano, y del poder de mi mente, corazón y voluntad. Soy consciente de mi libertad personal.",
         "He sido llamado a hacer grandes cosas; por encima de todo, a desarrollar mi personalidad y la de los que encuentro a mi alrededor.",
         "Procuro la compañía de personas magnánimas que, a través de sus consejos y su ejemplo, me ayuden a ser magnánimo/a.",
         "Establezco propósitos altos para mí mismo y para los demás. Lucho diariamente para mejorar mi carácter y mi comportamiento.",
