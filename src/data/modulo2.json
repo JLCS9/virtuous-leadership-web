@@ -747,6 +747,7 @@
           "titulo": "¿Qué libros te quieres leer?",
           "explicacion": "¿Qué libros quieres leerte para seguir mejorando ese entorno magnánimo al que estás aspirando?\n\nAdemás, te hemos añadido un PDF con algunas recomendaciones de libros que te pueden ayudar a alcanzar este objetivo.",
           "placeholder": "Ej: Creados para la grandeza — Alexandre Havard",
+          "boton_anadir": "Añadir libro",
           "recurso": {
             "label": "Libros recomendados (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
@@ -758,6 +759,7 @@
           "titulo": "¿Qué películas quieres ver?",
           "explicacion": "¿Qué películas tienes en mente ver para seguir creciendo?\n\nAdemás, te hemos añadido un PDF con una selección de películas que te pueden servir de inspiración.",
           "placeholder": "Ej: La lista de Schindler",
+          "boton_anadir": "Añadir película",
           "recurso": {
             "label": "Películas recomendadas (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
@@ -769,6 +771,7 @@
           "titulo": "¿Qué obras maestras de arte te gustaría contemplar?",
           "explicacion": "¿Qué obras de arte te gustaría contemplar este año?\n\nAdemás, te hemos añadido un PDF con una selección de obras de arte que te pueden inspirar.",
           "placeholder": "Ej: La Piedad de Miguel Ángel",
+          "boton_anadir": "Añadir obra",
           "recurso": {
             "label": "Obras de arte recomendadas (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
@@ -780,6 +783,7 @@
           "titulo": "¿Qué piezas musicales quieres escuchar?",
           "explicacion": "¿Qué piezas musicales quieres escuchar para enriquecer tu entorno?\n\nAdemás, te hemos añadido un PDF con una selección de piezas musicales que te pueden enriquecer.",
           "placeholder": "Ej: Sinfonía n.º 9 de Beethoven",
+          "boton_anadir": "Añadir pieza",
           "recurso": {
             "label": "Música recomendada (PDF)",
             "url": "https://alexhavard.com/es/wp-content/uploads/sites/3/2025/05/Favoritos.pdf"
@@ -803,7 +807,8 @@
           "tipo": "checklist",
           "titulo": "¿Qué recursos de internet utilizaré?",
           "explicacion": "¿Qué recursos de internet vas a utilizar para seguir creciendo? Piensa en aplicaciones de lectura, canales de YouTube, podcasts, la app de Alex Havard o cualquier otro recurso digital que te ayude en tu camino.",
-          "placeholder": "Ej: Canal de YouTube de Alex Havard"
+          "placeholder": "Ej: Canal de YouTube de Alex Havard",
+          "boton_anadir": "Añadir recurso"
         },
         {
           "id": "objetivos",

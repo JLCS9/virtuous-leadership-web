@@ -44,9 +44,22 @@ const PORTADA_NOBRILLO_B = new Set([6]);
 function portada(numero) { return PORTADAS[numero] ?? img01; }
 
 function progresoModuloCards(pasos, completados) {
-  const videos = pasos.filter((p) => p.tipo === 'video');
-  const hechos = videos.filter((v) => completados[v.id]).length;
-  const total = videos.length;
+  const modulos = [];
+  let actual = null;
+  for (const p of pasos) {
+    if (p.tipo === 'video') {
+      if (p.continua_modulo && actual) {
+        actual.push(p);
+      } else {
+        actual = [p];
+        modulos.push(actual);
+      }
+    } else if (actual && p.tipo !== 'noop') {
+      actual.push(p);
+    }
+  }
+  const total = modulos.length;
+  const hechos = modulos.filter(m => m.every(p => completados[p.id])).length;
   return { hechos, total, porcentaje: total ? Math.round((hechos / total) * 100) : 0, completo: hechos === total };
 }
 

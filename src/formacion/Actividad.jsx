@@ -3414,7 +3414,7 @@ function RecursoLink({ recurso }) {
   );
 }
 
-function PantallaTablaDinamica({ pantalla, datos, onChange }) {
+export function PantallaTablaDinamica({ pantalla, datos, onChange }) {
   const filas = datos ?? [];
   const cols = pantalla.columnas ?? [];
   function addRow() { onChange([...filas, Object.fromEntries(cols.map(c => [c.key, '']))]); }
@@ -3462,7 +3462,7 @@ function PantallaTablaDinamica({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaChecklist({ pantalla, datos, onChange }) {
+export function PantallaChecklist({ pantalla, datos, onChange }) {
   const items = datos ?? [];
   function addItem() { onChange([...items, '']); }
   function updateItem(i, val) { onChange(items.map((it, j) => j === i ? val : it)); }
@@ -3496,13 +3496,13 @@ function PantallaChecklist({ pantalla, datos, onChange }) {
         fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
         background: 'none', border: `1px dashed ${GOLD_REF}`, padding: '10px 18px', cursor: 'pointer', borderRadius: 0,
       }}>
-        <IconoMas /> Añadir elemento
+        <IconoMas /> {pantalla.boton_anadir ?? 'Añadir elemento'}
       </button>
     </>
   );
 }
 
-function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
+export function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
   const items = datos ?? [];
   const cats = pantalla.categorias ?? [];
   function addItem() { onChange([...items, { text: '', categoria: cats[0] || '' }]); }
@@ -3548,7 +3548,7 @@ function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaReflexionDoble({ pantalla, datos, onChange }) {
+export function PantallaReflexionDoble({ pantalla, datos, onChange }) {
   const vals = datos ?? {};
   return (
     <>
@@ -3612,7 +3612,7 @@ function EjemploSlider({ slides }) {
   );
 }
 
-function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
+export function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
   const vals = datos ?? {};
   const primary = temperamento?.primary;
   const secondary = temperamento?.secondary;
@@ -3657,7 +3657,7 @@ function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange
   );
 }
 
-function PantallaProposito({ pantalla, datos, onChange }) {
+export function PantallaProposito({ pantalla, datos, onChange }) {
   return (
     <>
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
@@ -3692,6 +3692,14 @@ function IconoLapiz() {
   );
 }
 
+function tieneContenido(dato) {
+  if (!dato) return false;
+  if (Array.isArray(dato)) return dato.some(d => typeof d === 'string' ? d : d?.nombre || d?.text);
+  if (typeof dato === 'object') return Object.values(dato).some(v => v);
+  if (typeof dato === 'string') return dato.trim().length > 0;
+  return false;
+}
+
 export function PantallaResumen({ paso, plan, onEditar }) {
   const pantallas = paso.pantallas ?? [];
   return (
@@ -3699,9 +3707,9 @@ export function PantallaResumen({ paso, plan, onEditar }) {
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: 0 }}>
         Este es el resumen de tu Plan de Crecimiento en Magnanimidad. Revisa que refleja tus intenciones para este año.
       </p>
-      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map((pant, _i, arr) => {
+      {pantallas.filter(p => p.tipo !== 'texto' && p.tipo !== 'resumen').map((pant) => {
         const dato = plan[pant.id];
-        if (!dato || (Array.isArray(dato) && dato.length === 0)) return null;
+        const vacio = !tieneContenido(dato);
         const pantIdx = pantallas.indexOf(pant);
         return (
           <div key={pant.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
@@ -3717,46 +3725,54 @@ export function PantallaResumen({ paso, plan, onEditar }) {
                 </button>
               )}
             </div>
-            {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(f => f.nombre).map((f, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    <strong>{f.nombre}</strong>{f.motivo ? ` — ${f.motivo}` : ''}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'checklist' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(Boolean).map((item, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'checklist_categorias' && Array.isArray(dato) && (
-              <ul style={{ margin: 0, paddingLeft: 20 }}>
-                {dato.filter(d => d.text).map((item, i) => (
-                  <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
-                    <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 6 }}>{item.categoria}</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {pant.tipo === 'reflexion_doble' && typeof dato === 'object' && (
-              <div>
-                {Object.entries(dato).filter(([, v]) => v).map(([k, v]) => (
-                  <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: '0 0 4px' }}>{v}</p>
-                ))}
-              </div>
-            )}
-            {pant.tipo === 'reflexion_temperamento' && typeof dato === 'object' && dato.refuerzo && (
-              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{dato.refuerzo}</p>
-            )}
-            {pant.tipo === 'proposito' && typeof dato === 'string' && (
-              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontWeight: 600 }}>{dato}</p>
+            {vacio ? (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                Sin completar
+              </p>
+            ) : (
+              <>
+                {pant.tipo === 'tabla_dinamica' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(f => f.nombre).map((f, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        <strong>{f.nombre}</strong>{f.motivo ? ` — ${f.motivo}` : ''}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'checklist' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(Boolean).map((item, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'checklist_categorias' && Array.isArray(dato) && (
+                  <ul style={{ margin: 0, paddingLeft: 20 }}>
+                    {dato.filter(d => d.text).map((item, i) => (
+                      <li key={i} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, marginBottom: 4 }}>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', marginRight: 6 }}>{item.categoria}</span>
+                        {item.text}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {pant.tipo === 'reflexion_doble' && typeof dato === 'object' && (
+                  <div>
+                    {Object.entries(dato).filter(([, v]) => v).map(([k, v]) => (
+                      <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: '0 0 4px' }}>{v}</p>
+                    ))}
+                  </div>
+                )}
+                {pant.tipo === 'reflexion_temperamento' && typeof dato === 'object' && dato.refuerzo && (
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{dato.refuerzo}</p>
+                )}
+                {pant.tipo === 'proposito' && typeof dato === 'string' && (
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, fontWeight: 600 }}>{dato}</p>
+                )}
+              </>
             )}
           </div>
         );
@@ -3770,17 +3786,27 @@ const PLAN_STORAGE_KEY = (userId) => `vl-plan:${userId}`;
 export function leerPlan(userId) {
   try { return JSON.parse(localStorage.getItem(PLAN_STORAGE_KEY(userId))) ?? {}; } catch { return {}; }
 }
-function guardarPlan(userId, data) {
+export function guardarPlan(userId, data) {
   try { localStorage.setItem(PLAN_STORAGE_KEY(userId), JSON.stringify(data)); } catch {}
 }
 
-export function PlanCrecimiento({ paso, temperamento, onComplete }) {
-  const userId = (() => { try { return JSON.parse(localStorage.getItem('sb-session'))?.user?.id ?? 'anon'; } catch { return 'anon'; } })();
+export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userIdProp }) {
+  const userId = userIdProp ?? 'anon';
   const pantallas = paso.pantallas ?? [];
   const [idx, setIdx] = useState(0);
   const [fase, setFase] = useState('caratula');
   const [visible, setVisible] = useState(true);
-  const [plan, setPlan] = useState(() => leerPlan(userId));
+  const [plan, setPlan] = useState(() => {
+    let data = leerPlan(userId);
+    if (userId !== 'anon' && (!data || Object.keys(data).length === 0)) {
+      const legacy = leerPlan('anon');
+      if (legacy && Object.keys(legacy).length > 0) {
+        guardarPlan(userId, legacy);
+        data = legacy;
+      }
+    }
+    return data;
+  });
   const guardarCb = useCallback((d) => guardarPlan(userId, d), [userId]);
   const guardados = useAutoguardado(guardarCb, plan);
 
