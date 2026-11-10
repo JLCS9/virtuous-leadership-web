@@ -870,11 +870,18 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   const progAll = progresoModulo(pasos, completados);
   const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
   const allVids = pasos.filter((p) => p.tipo === 'video');
-  const vidsHechos = modHeaders.filter((p) => {
+  const TIPOS_CONTABLES = new Set(['video', 'define', 'desliza', 'identifica', 'test_profundo', 'retos_temperamento', 'temperamento_magnanimidad', 'reflexion_piramide', 'cierre', 'plan_crecimiento']);
+  const vidsHechos = modHeaders.filter((p, mi) => {
     if (!completados[p.id]) return false;
     const pIdx = allVids.indexOf(p);
     for (let j = pIdx + 1; j < allVids.length && allVids[j].continua_modulo; j++) {
       if (!completados[allVids[j].id]) return false;
+    }
+    const startIdx = pasos.indexOf(p);
+    const nextHeader = modHeaders[mi + 1];
+    const endIdx = nextHeader ? pasos.indexOf(nextHeader) : pasos.length;
+    for (let k = startIdx + 1; k < endIdx; k++) {
+      if (TIPOS_CONTABLES.has(pasos[k].tipo) && !completados[pasos[k].id]) return false;
     }
     return true;
   }).length;
