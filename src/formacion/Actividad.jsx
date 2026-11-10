@@ -3414,7 +3414,7 @@ function RecursoLink({ recurso }) {
   );
 }
 
-function PantallaTablaDinamica({ pantalla, datos, onChange }) {
+export function PantallaTablaDinamica({ pantalla, datos, onChange }) {
   const filas = datos ?? [];
   const cols = pantalla.columnas ?? [];
   function addRow() { onChange([...filas, Object.fromEntries(cols.map(c => [c.key, '']))]); }
@@ -3462,7 +3462,7 @@ function PantallaTablaDinamica({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaChecklist({ pantalla, datos, onChange }) {
+export function PantallaChecklist({ pantalla, datos, onChange }) {
   const items = datos ?? [];
   function addItem() { onChange([...items, '']); }
   function updateItem(i, val) { onChange(items.map((it, j) => j === i ? val : it)); }
@@ -3502,7 +3502,7 @@ function PantallaChecklist({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
+export function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
   const items = datos ?? [];
   const cats = pantalla.categorias ?? [];
   function addItem() { onChange([...items, { text: '', categoria: cats[0] || '' }]); }
@@ -3548,7 +3548,7 @@ function PantallaChecklistCategorias({ pantalla, datos, onChange }) {
   );
 }
 
-function PantallaReflexionDoble({ pantalla, datos, onChange }) {
+export function PantallaReflexionDoble({ pantalla, datos, onChange }) {
   const vals = datos ?? {};
   return (
     <>
@@ -3612,7 +3612,7 @@ function EjemploSlider({ slides }) {
   );
 }
 
-function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
+export function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange }) {
   const vals = datos ?? {};
   const primary = temperamento?.primary;
   const secondary = temperamento?.secondary;
@@ -3657,7 +3657,7 @@ function PantallaReflexionTemperamento({ pantalla, temperamento, datos, onChange
   );
 }
 
-function PantallaProposito({ pantalla, datos, onChange }) {
+export function PantallaProposito({ pantalla, datos, onChange }) {
   return (
     <>
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6, margin: '0 0 18px' }}>
@@ -3786,7 +3786,7 @@ const PLAN_STORAGE_KEY = (userId) => `vl-plan:${userId}`;
 export function leerPlan(userId) {
   try { return JSON.parse(localStorage.getItem(PLAN_STORAGE_KEY(userId))) ?? {}; } catch { return {}; }
 }
-function guardarPlan(userId, data) {
+export function guardarPlan(userId, data) {
   try { localStorage.setItem(PLAN_STORAGE_KEY(userId), JSON.stringify(data)); } catch {}
 }
 

@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito } from './Actividad';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
@@ -494,12 +495,66 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
   );
 }
 
+function ModalEditarPlan({ pantalla, datos, onGuardar, onCerrar }) {
+  const [valor, setValor] = useState(datos);
+  let editor = null;
+  if (pantalla.tipo === 'tabla_dinamica') editor = <PantallaTablaDinamica pantalla={pantalla} datos={valor} onChange={setValor} />;
+  else if (pantalla.tipo === 'checklist') editor = <PantallaChecklist pantalla={pantalla} datos={valor} onChange={setValor} />;
+  else if (pantalla.tipo === 'checklist_categorias') editor = <PantallaChecklistCategorias pantalla={pantalla} datos={valor} onChange={setValor} />;
+  else if (pantalla.tipo === 'reflexion_doble') editor = <PantallaReflexionDoble pantalla={pantalla} datos={valor} onChange={setValor} />;
+  else if (pantalla.tipo === 'reflexion_temperamento') editor = <PantallaReflexionTemperamento pantalla={pantalla} datos={valor} onChange={setValor} />;
+  else if (pantalla.tipo === 'proposito') editor = <PantallaProposito pantalla={pantalla} datos={valor} onChange={setValor} />;
+
+  return createPortal(
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 9999, display: 'grid', placeItems: 'center',
+      background: 'rgba(15,29,56,0.55)', backdropFilter: 'blur(4px)',
+    }} onClick={onCerrar}>
+      <div style={{
+        background: PAPER, borderRadius: 0, maxWidth: 600, width: '92vw',
+        maxHeight: '85vh', overflow: 'auto', padding: '28px 24px 20px',
+        boxShadow: '0 12px 48px rgba(15,29,56,0.22)',
+      }} onClick={e => e.stopPropagation()}>
+        <h3 style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
+          {pantalla.titulo}
+        </h3>
+        {editor}
+        <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end', marginTop: 20 }}>
+          <button type="button" onClick={onCerrar} style={{
+            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: MUTED,
+            background: 'none', border: `1px solid ${LINE}`, padding: '10px 20px', cursor: 'pointer',
+          }}>Cancelar</button>
+          <button type="button" onClick={() => onGuardar(valor)} style={{
+            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', padding: '10px 24px', cursor: 'pointer',
+          }}>Guardar</button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 function VistaResumenPlan({ paso, userId, onVolver }) {
-  let plan = leerPlan(userId);
-  if (userId !== 'anon' && (!plan || Object.keys(plan).length === 0)) {
-    plan = leerPlan('anon');
+  const [plan, setPlan] = useState(() => {
+    let data = leerPlan(userId);
+    if (userId !== 'anon' && (!data || Object.keys(data).length === 0)) {
+      data = leerPlan('anon');
+    }
+    return data;
+  });
+  const [editIdx, setEditIdx] = useState(null);
+  const pantallas = paso.pantallas ?? [];
+  const hayDatos = pantallas.some(p => p.tipo !== 'texto' && p.tipo !== 'resumen' && plan[p.id]);
+
+  function handleGuardar(valor) {
+    const pant = pantallas[editIdx];
+    const next = { ...plan, [pant.id]: valor };
+    setPlan(next);
+    guardarPlan(userId, next);
+    setEditIdx(null);
   }
-  const hayDatos = paso.pantallas?.some(p => p.tipo !== 'texto' && p.tipo !== 'resumen' && plan[p.id]);
+
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
       <button type="button" onClick={onVolver} style={{
@@ -514,16 +569,149 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
           Tu Plan de Crecimiento
         </h2>
         {hayDatos
-          ? <PantallaResumen paso={paso} plan={plan} />
+          ? <PantallaResumen paso={paso} plan={plan} onEditar={setEditIdx} />
           : <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>Aún no has completado el plan de crecimiento. Complétalo primero en el curso.</p>
         }
+      </div>
+      {editIdx != null && pantallas[editIdx] && (
+        <ModalEditarPlan
+          pantalla={pantallas[editIdx]}
+          datos={plan[pantallas[editIdx].id]}
+          onGuardar={handleGuardar}
+          onCerrar={() => setEditIdx(null)}
+        />
+      )}
+    </div>
+  );
+}
+
+const TIPOS_CUADERNO = ['test_profundo', 'cierre', 'identifica', 'retos_temperamento', 'temperamento_magnanimidad'];
+
+function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, temperamento }) {
+  const entradas = pasos.filter(p => TIPOS_CUADERNO.includes(p.tipo) && completados[p.id]);
+
+  return (
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <button type="button" onClick={onVolver} style={{
+        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+        background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+      }}>
+        ← Volver al listado
+      </button>
+      <div style={tarjeta}>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
+          Tu cuaderno personal
+        </h2>
+        {entradas.length === 0 ? (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>
+            Aún no has completado ejercicios con respuestas. Completa los tests y reflexiones del curso.
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+            {entradas.map(paso => {
+              const datos = completados[paso.id];
+              return (
+                <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+                  <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 10px' }}>
+                    {paso.titulo}
+                  </h3>
+                  <RespuestasCuaderno paso={paso} datos={datos} />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+      <div style={{ marginTop: 18 }}>
+        <CuadernoPersonal userId={userId} pasos={pasos} temperamento={temperamento} moduloId={moduloId} />
       </div>
     </div>
   );
 }
 
+function RespuestasCuaderno({ paso, datos }) {
+  if (!datos) return null;
+
+  if (paso.tipo === 'test_profundo') {
+    const preguntas = paso.preguntas ?? paso.senales ?? [];
+    const respuestas = datos.respuestas ?? [];
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {preguntas.map((pregunta, i) => (
+          <div key={i}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>
+              {i + 1}. {pregunta}
+            </p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: respuestas[i] ? NAVY : MUTED, lineHeight: 1.6, margin: 0, paddingLeft: 16, fontStyle: respuestas[i] ? 'normal' : 'italic' }}>
+              {respuestas[i] || 'Sin respuesta'}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'identifica') {
+    const virtudes = paso.virtudes ?? [];
+    const respuestas = datos.respuestas ?? [];
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {virtudes.map((v, i) => {
+          const r = respuestas[i];
+          if (!r) return null;
+          return (
+            <div key={i}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 4px' }}>{v.nombre}</p>
+              {r.facil && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: '0 0 2px', paddingLeft: 16 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que me resulta fácil:</span> {r.facil}</p>}
+              {r.ejemploFacil && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: '0 0 2px', paddingLeft: 16 }}><span style={{ color: MUTED, fontSize: 12 }}>Ejemplo:</span> {r.ejemploFacil}</p>}
+              {r.dificil && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: '0 0 2px', paddingLeft: 16 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que me cuesta:</span> {r.dificil}</p>}
+              {r.ejemploDificil && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: '0 0 2px', paddingLeft: 16 }}><span style={{ color: MUTED, fontSize: 12 }}>Ejemplo:</span> {r.ejemploDificil}</p>}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'retos_temperamento') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {datos.textoFacilita && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que mi temperamento facilita:</span> {datos.textoFacilita}</p>}
+        {datos.textoDificulta && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que mi temperamento dificulta:</span> {datos.textoDificulta}</p>}
+        {datos.textoDefectos && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mis defectos dominantes:</span> {datos.textoDefectos}</p>}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'temperamento_magnanimidad') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {datos.textoFuerte && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que mi temperamento facilita:</span> {datos.textoFuerte}</p>}
+        {datos.textoDebil && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que me cuesta más:</span> {datos.textoDebil}</p>}
+        {datos.textoFuerteSec && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi temperamento secundario facilita:</span> {datos.textoFuerteSec}</p>}
+        {datos.textoDebilSec && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi temperamento secundario dificulta:</span> {datos.textoDebilSec}</p>}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'cierre') {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {datos.lo_que_facilita && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que facilita mi temperamento:</span> {datos.lo_que_facilita}</p>}
+        {datos.lo_que_cuesta && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que me cuesta:</span> {datos.lo_que_cuesta}</p>}
+        {datos.virtud_desafio && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi virtud desafío:</span> {datos.virtud_desafio}</p>}
+        {datos.proposito && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi propósito:</span> {datos.proposito}</p>}
+      </div>
+    );
+  }
+
+  return null;
+}
+
 function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
   const [verPlan, setVerPlan] = useState(false);
+  const [verCuaderno, setVerCuaderno] = useState(false);
   const progAll = progresoModulo(pasos, completados);
   const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
   const allVids = pasos.filter((p) => p.tipo === 'video');
@@ -545,6 +733,10 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
   if (verPlan && planStep) {
     return <VistaResumenPlan paso={planStep} userId={userId} onVolver={() => setVerPlan(false)} />;
+  }
+
+  if (verCuaderno) {
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (
@@ -587,7 +779,21 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
         {userId && (
           <div style={{ marginTop: 18 }}>
-            <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={modulo.id} />
+            <button type="button" onClick={() => setVerCuaderno(true)} style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+                color: GOLD_REF_DK, background: 'none',
+                border: `1.5px solid ${GOLD_REF}`, borderRadius: 0,
+                padding: '10px 20px', cursor: 'pointer',
+                transition: 'border-color 200ms ease, color 200ms ease',
+                letterSpacing: '0.02em', width: '100%', justifyContent: 'center',
+              }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              Ver cuaderno personal
+            </button>
             {planStep && (
               <button type="button" onClick={() => setVerPlan(true)} style={{
                 display: 'flex', alignItems: 'center', gap: 8,
