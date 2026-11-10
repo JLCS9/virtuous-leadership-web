@@ -587,8 +587,18 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
 
 const TIPOS_CUADERNO = ['test_profundo', 'cierre', 'identifica', 'retos_temperamento', 'temperamento_magnanimidad'];
 
+function tieneTexto(paso, datos) {
+  if (!datos) return false;
+  if (paso.tipo === 'test_profundo') return (datos.respuestas ?? []).some(r => r && r.trim());
+  if (paso.tipo === 'identifica') return (datos.respuestas ?? []).some(r => r && (r.facil || r.dificil || r.ejemploFacil || r.ejemploDificil));
+  if (paso.tipo === 'retos_temperamento') return !!(datos.textoFacilita || datos.textoDificulta || datos.textoDefectos);
+  if (paso.tipo === 'temperamento_magnanimidad') return !!(datos.textoFuerte || datos.textoDebil || datos.textoFuerteSec || datos.textoDebilSec);
+  if (paso.tipo === 'cierre') return !!(datos.lo_que_facilita || datos.lo_que_cuesta || datos.virtud_desafio || datos.proposito);
+  return false;
+}
+
 function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, temperamento }) {
-  const entradas = pasos.filter(p => TIPOS_CUADERNO.includes(p.tipo) && completados[p.id]);
+  const entradas = pasos.filter(p => TIPOS_CUADERNO.includes(p.tipo) && completados[p.id] && tieneTexto(p, completados[p.id]));
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
