@@ -118,11 +118,13 @@ function AunNo({ camino }) {
   );
 }
 
-function Terminado() {
+function Terminado({ camino }) {
+  const diasHechos = Array.from({ length: TOTAL_DIAS }, (_, i) => i + 1).filter(d => camino.porDia[d]?.sesion_en).length;
+  const todosHechos = diasHechos === TOTAL_DIAS;
   return (
     <section style={tarjeta}>
       <div style={eyebrow}>Tu camino</div>
-      <h2 style={{ ...titulo(28), margin: '10px 0 8px' }}>Has completado tus dos primeras semanas</h2>
+      <h2 style={{ ...titulo(28), margin: '10px 0 8px' }}>{todosHechos ? 'Has completado tus dos primeras semanas' : `Completaste ${diasHechos} de ${TOTAL_DIAS} días`}</h2>
       <p style={parrafo}>Tu próximo vídeo: el carácter se construye sobre la base del temperamento. La semana 2 llega muy pronto.</p>
     </section>
   );
@@ -256,7 +258,7 @@ export default function Camino() {
         <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Tu siguiente paso</h1>
         <p style={{ ...parrafo, color: MUTED }}>Cada semana, un vídeo. Cada día, cinco minutos. Cada noche, un momento para mirar tu día.</p>
       </div>
-      {diaHoy < 1 ? <AunNo camino={camino} /> : diaHoy > TOTAL_DIAS ? <Terminado /> : (
+      {diaHoy < 1 ? <AunNo camino={camino} /> : diaHoy > TOTAL_DIAS ? <Terminado camino={camino} /> : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <SiguientePaso camino={camino} />
           <SiguienteLeccion user={user} />

@@ -73,15 +73,19 @@ function RetoDeLaSemana() {
     );
   }
 
-  const { diaHoy } = camino;
+  const { diaHoy, porDia } = camino;
   if (diaHoy > TOTAL_DIAS) {
+    const diasHechos = Array.from({ length: TOTAL_DIAS }, (_, i) => i + 1).filter(d => porDia[d]?.sesion_en).length;
+    const todosHechos = diasHechos === TOTAL_DIAS;
     return (
       <>
         {popup && <PopupFormacion onCerrar={() => setPopup(false)} />}
         <div onClick={abrirPopup} style={{ cursor: 'pointer' }}>
           <Hero>
             <div style={etiqueta}>Tu camino</div>
-            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>Has completado tus dos primeras semanas.</p>
+            <p style={{ fontFamily: FONT_SLAB, fontSize: 27, lineHeight: 1.25, margin: '14px 0 8px' }}>
+              {todosHechos ? 'Has completado tus dos primeras semanas.' : `Completaste ${diasHechos} de ${TOTAL_DIAS} días.`}
+            </p>
             <p style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.5, margin: 0, opacity: 0.8 }}>La semana 2 llega muy pronto.</p>
           </Hero>
         </div>
