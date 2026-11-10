@@ -585,10 +585,12 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
   );
 }
 
-const TIPOS_CUADERNO = ['test_profundo', 'cierre', 'identifica', 'retos_temperamento', 'temperamento_magnanimidad'];
+const TIPOS_CUADERNO = ['define', 'desliza', 'test_profundo', 'cierre', 'identifica', 'retos_temperamento', 'temperamento_magnanimidad'];
 
 function tieneTexto(paso, datos) {
   if (!datos) return false;
+  if (paso.tipo === 'define') return datos.aciertos != null;
+  if (paso.tipo === 'desliza') return datos.aciertos != null;
   if (paso.tipo === 'test_profundo') return (datos.respuestas ?? []).some(r => r && r.trim());
   if (paso.tipo === 'identifica') return (datos.respuestas ?? []).some(r => r && (r.facil || r.dificil || r.ejemploFacil || r.ejemploDificil));
   if (paso.tipo === 'retos_temperamento') return !!(datos.textoFacilita || datos.textoDificulta || datos.textoDefectos);
@@ -624,7 +626,9 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
               return (
                 <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
                   <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 10px' }}>
-                    {paso.titulo}
+                    {paso.tipo === 'define' && paso.conceptos?.length
+                      ? `Define: ${paso.conceptos.map(c => c.concepto).join(', ')}`
+                      : paso.titulo}
                   </h3>
                   <RespuestasCuaderno paso={paso} datos={datos} />
                 </div>
@@ -642,6 +646,37 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
 
 function RespuestasCuaderno({ paso, datos }) {
   if (!datos) return null;
+
+  if (paso.tipo === 'define') {
+    const conceptos = paso.conceptos ?? [];
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0 }}>
+          Resultado: <strong>{datos.aciertos}</strong> de {datos.total} aciertos
+        </p>
+        {conceptos.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+            {conceptos.map((c, i) => (
+              <div key={i} style={{ paddingLeft: 16 }}>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>{c.concepto}</p>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.5, margin: 0 }}>{c.definicion}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'desliza') {
+    return (
+      <div>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0 }}>
+          Resultado: <strong>{datos.aciertos}</strong> de {datos.total} aciertos
+        </p>
+      </div>
+    );
+  }
 
   if (paso.tipo === 'test_profundo') {
     const preguntas = paso.preguntas ?? paso.senales ?? [];
