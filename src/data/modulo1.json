@@ -15,7 +15,8 @@
         "La personalidad humana se compone de un temperamento y un carácter.",
         "El temperamento es una predisposición natural e innata a reaccionar de una determinada manera. Puede ser colérico, melancólico, sanguíneo o flemático. Nacemos con nuestro temperamento y no podemos cambiarlo: morimos con las cualidades y defectos de nuestro temperamento.",
         "Sobre la base de nuestro temperamento, construimos nuestro carácter. El carácter se compone de virtudes, como la prudencia, el valor, el autocontrol, la justicia, la magnanimidad y la humildad. Las virtudes son hábitos morales, fortalezas espirituales que se adquieren y desarrollan con la práctica. No nacemos con nuestro carácter, lo construimos."
-      ]
+      ],
+      "modulo": 0
     },
     {
       "id": "m1-02",
@@ -109,7 +110,8 @@
             "Creador"
           ]
         }
-      ]
+      ],
+      "modulo": 0
     },
     {
       "id": "m1-03",
@@ -158,7 +160,8 @@
           ],
           "correcta": 2
         }
-      ]
+      ],
+      "modulo": 0
     },
     {
       "id": "m1-concl-0",
@@ -180,7 +183,8 @@
           "id": "m1-03",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 0
     },
     {
       "id": "m1-04",
@@ -189,7 +193,8 @@
       "titulo": "El temperamento es biológico, el carácter espiritual",
       "visible": true,
       "leccion": 2,
-      "vimeoId": "922865851"
+      "vimeoId": "922865851",
+      "modulo": 1
     },
     {
       "id": "m1-06",
@@ -292,7 +297,8 @@
             "Hábito del servicio"
           ]
         }
-      ]
+      ],
+      "modulo": 1
     },
     {
       "id": "m1-05",
@@ -341,7 +347,8 @@
           ],
           "correcta": 3
         }
-      ]
+      ],
+      "modulo": 1
     },
     {
       "id": "m1-concl-1",
@@ -363,7 +370,8 @@
           "id": "m1-05",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 1
     },
     {
       "id": "m1-07",
@@ -372,7 +380,8 @@
       "titulo": "El carácter se construye sobre la base del temperamento",
       "visible": true,
       "leccion": 3,
-      "vimeoId": "922878435"
+      "vimeoId": "922878435",
+      "modulo": 2
     },
     {
       "id": "m1-08",
@@ -426,7 +435,8 @@
           "ejemploActivo": "Poner tus talentos al servicio de los demás sin buscar reconocimiento ni protagonismo."
         }
       ],
-      "diagrama": true
+      "diagrama": true,
+      "modulo": 2
     },
     {
       "id": "m1-09",
@@ -439,7 +449,8 @@
         "Las seis virtudes del líder",
         "Aspecto pasivo y activo de cada virtud"
       ],
-      "ejercicios_evaluables": []
+      "ejercicios_evaluables": [],
+      "modulo": 2
     },
     {
       "id": "m1-10",
@@ -448,7 +459,8 @@
       "titulo": "Cada temperamento posee valores concretos",
       "visible": true,
       "leccion": 4,
-      "vimeoId": "922881313"
+      "vimeoId": "922881313",
+      "modulo": 3
     },
     {
       "id": "m1-11",
@@ -537,7 +549,8 @@
             "FLE"
           ]
         }
-      ]
+      ],
+      "modulo": 3
     },
     {
       "id": "m1-12",
@@ -555,7 +568,8 @@
           "id": "m1-11",
           "label": "Identifica temperamentos"
         }
-      ]
+      ],
+      "modulo": 3
     },
     {
       "id": "m1-13",
@@ -564,14 +578,16 @@
       "titulo": "Temperamento dominante y temperamento secundario",
       "visible": true,
       "leccion": 5,
-      "vimeoId": "924563637"
+      "vimeoId": "924563637",
+      "modulo": 4
     },
     {
       "id": "m1-13b",
       "num": 13.5,
       "tipo": "temperamento_perfil",
       "titulo": "Tu temperamento",
-      "visible": false
+      "visible": false,
+      "modulo": 4
     },
     {
       "id": "m1-13c",
@@ -652,7 +668,8 @@
         "SAN-COL": "Por ejemplo, el colérico aporta la determinación que al sanguíneo le falta: tu lado colérico te ayuda a no abandonar cuando aparecen obstáculos y a insistir hasta terminar.",
         "FLE-SAN": "Por ejemplo, el sanguíneo aporta la iniciativa que al flemático le falta: tu lado sanguíneo te empuja a dar el primer paso, a proponer ideas y a no quedarte esperando a que otro decida.",
         "FLE-MEL": "Por ejemplo, el melancólico aporta la profundidad que al flemático le falta: tu lado melancólico te empuja a preguntarte «¿para qué estoy aquí?» y a buscar un propósito más allá de la comodidad."
-      }
+      },
+      "modulo": 4
     },
     {
       "id": "m1-14",
@@ -703,7 +720,8 @@
           ],
           "correcta": 1
         }
-      ]
+      ],
+      "modulo": 4
     },
     {
       "id": "m1-concl-4",
@@ -721,7 +739,8 @@
           "id": "m1-14",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 4
     },
     {
       "id": "m1-15",
@@ -730,7 +749,8 @@
       "titulo": "El Colérico",
       "visible": true,
       "leccion": 6,
-      "vimeoId": "924566128"
+      "vimeoId": "924566128",
+      "modulo": 5
     },
     {
       "id": "m1-17",
@@ -757,7 +777,8 @@
         "¿Tengo tendencia a querer controlarlo todo?",
         "¿Soy consciente de que mis talentos son dones y no el producto de mi propia actividad?"
       ],
-      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal."
+      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.",
+      "modulo": 5
     },
     {
       "id": "m1-15p",
@@ -766,7 +787,8 @@
       "titulo": "¿Conoces a alguien así?",
       "temperamento_tema": "COL",
       "pregunta": "Después de lo que has aprendido sobre el temperamento Colérico, ¿te recuerda a alguien de tu entorno?",
-      "descripcion_temp": "Orientado a la acción, decidido, emprendedor. Tiende a liderar y busca resultados."
+      "descripcion_temp": "Orientado a la acción, decidido, emprendedor. Tiende a liderar y busca resultados.",
+      "modulo": 5
     },
     {
       "id": "m1-16",
@@ -815,7 +837,8 @@
           ],
           "correcta": 1
         }
-      ]
+      ],
+      "modulo": 5
     },
     {
       "id": "m1-concl-5",
@@ -833,7 +856,8 @@
           "id": "m1-16",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 5
     },
     {
       "id": "m1-18",
@@ -842,7 +866,8 @@
       "titulo": "El Melancólico",
       "visible": true,
       "leccion": 7,
-      "vimeoId": "924571431"
+      "vimeoId": "924571431",
+      "modulo": 6
     },
     {
       "id": "m1-20",
@@ -871,7 +896,8 @@
         "¿Supero la tentación del «perfeccionismo»?",
         "¿Dejo que mis preocupaciones profesionales invadan mi vida familiar?"
       ],
-      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal."
+      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.",
+      "modulo": 6
     },
     {
       "id": "m1-18p",
@@ -880,7 +906,8 @@
       "titulo": "¿Conoces a alguien así?",
       "temperamento_tema": "MEL",
       "pregunta": "Después de lo que has aprendido sobre el temperamento Melancólico, ¿te recuerda a alguien de tu entorno?",
-      "descripcion_temp": "Reflexivo, profundo, idealista. Tiende a pensar mucho antes de actuar y busca la excelencia."
+      "descripcion_temp": "Reflexivo, profundo, idealista. Tiende a pensar mucho antes de actuar y busca la excelencia.",
+      "modulo": 6
     },
     {
       "id": "m1-19",
@@ -929,7 +956,8 @@
           ],
           "correcta": 3
         }
-      ]
+      ],
+      "modulo": 6
     },
     {
       "id": "m1-concl-6",
@@ -947,7 +975,8 @@
           "id": "m1-19",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 6
     },
     {
       "id": "m1-21",
@@ -956,7 +985,8 @@
       "titulo": "El Sanguíneo",
       "visible": true,
       "leccion": 8,
-      "vimeoId": "924568703"
+      "vimeoId": "924568703",
+      "modulo": 7
     },
     {
       "id": "m1-23",
@@ -983,7 +1013,8 @@
         "¿Hago mi trabajo a tiempo o tiendo a dejarlo para más tarde?",
         "¿Persevero en mis planes una vez pasado el entusiasmo inicial?"
       ],
-      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal."
+      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.",
+      "modulo": 7
     },
     {
       "id": "m1-21p",
@@ -992,7 +1023,8 @@
       "titulo": "¿Conoces a alguien así?",
       "temperamento_tema": "SAN",
       "pregunta": "Después de lo que has aprendido sobre el temperamento Sanguíneo, ¿te recuerda a alguien de tu entorno?",
-      "descripcion_temp": "Sociable, entusiasta, optimista. Disfruta de la compañía y conecta fácilmente con los demás."
+      "descripcion_temp": "Sociable, entusiasta, optimista. Disfruta de la compañía y conecta fácilmente con los demás.",
+      "modulo": 7
     },
     {
       "id": "m1-22",
@@ -1041,7 +1073,8 @@
           ],
           "correcta": 1
         }
-      ]
+      ],
+      "modulo": 7
     },
     {
       "id": "m1-concl-7",
@@ -1059,7 +1092,8 @@
           "id": "m1-22",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 7
     },
     {
       "id": "m1-24",
@@ -1068,7 +1102,8 @@
       "titulo": "El Flemático",
       "visible": true,
       "leccion": 9,
-      "vimeoId": "924568973"
+      "vimeoId": "924568973",
+      "modulo": 8
     },
     {
       "id": "m1-26",
@@ -1092,7 +1127,8 @@
         "¿Evito conversaciones incómodas por miedo al conflicto?",
         "¿Intento salir de mi «zona de confort»?"
       ],
-      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal."
+      "descripcion": "Reflexiona con sinceridad sobre cada pregunta. No hay respuestas correctas ni incorrectas: este ejercicio es para tu crecimiento personal.",
+      "modulo": 8
     },
     {
       "id": "m1-24p",
@@ -1101,7 +1137,8 @@
       "titulo": "¿Conoces a alguien así?",
       "temperamento_tema": "FLE",
       "pregunta": "Después de lo que has aprendido sobre el temperamento Flemático, ¿te recuerda a alguien de tu entorno?",
-      "descripcion_temp": "Tranquilo, constante, pacífico. Busca la armonía y mantiene la calma bajo presión."
+      "descripcion_temp": "Tranquilo, constante, pacífico. Busca la armonía y mantiene la calma bajo presión.",
+      "modulo": 8
     },
     {
       "id": "m1-25",
@@ -1150,7 +1187,8 @@
           ],
           "correcta": 3
         }
-      ]
+      ],
+      "modulo": 8
     },
     {
       "id": "m1-concl-8",
@@ -1168,7 +1206,8 @@
           "id": "m1-25",
           "label": "Cuestionario"
         }
-      ]
+      ],
+      "modulo": 8
     },
     {
       "id": "m1-26r",
@@ -1201,14 +1240,16 @@
           "tipo": "generico",
           "texto": "Desarrolla un plan concreto de desarrollo personal basado en estos retos."
         }
-      ]
+      ],
+      "modulo": 9
     },
     {
       "id": "m1-test-caracter",
       "tipo": "test_caracter",
       "titulo": "Test de carácter",
       "visible": false,
-      "descripcion": "Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, valor, autocontrol, justicia, magnanimidad y humildad. Responde con sinceridad — este test es para ti."
+      "descripcion": "Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, valor, autocontrol, justicia, magnanimidad y humildad. Responde con sinceridad — este test es para ti.",
+      "modulo": 9
     },
     {
       "id": "m1-27",
@@ -1239,7 +1280,8 @@
           "FLE-MEL": "Audacia",
           "FLE-SAN": "Magnanimidad"
         }
-      }
+      },
+      "modulo": 9
     }
   ]
 }

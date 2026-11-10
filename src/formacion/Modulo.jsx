@@ -92,12 +92,12 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
 
   function onProgreso(frac) {
     if (frac >= UMBRAL_VISTA && !completado) {
-      progreso.completar(paso.id);
+      progreso.completar(paso.id, undefined, { tipo: 'video', modulo: paso.modulo ?? 0 });
     }
   }
 
   function avanzarYMarcar() {
-    if (!completado) progreso.completar(paso.id);
+    if (!completado) progreso.completar(paso.id, undefined, { tipo: 'video', modulo: paso.modulo ?? 0 });
     avanzar();
   }
 
@@ -255,7 +255,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
   const moduloNum = _mod?.numero ?? 1;
 
   function completar(resultado) {
-    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: moduloNum });
+    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: paso.modulo ?? 0 });
     avanzar();
   }
 

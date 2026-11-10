@@ -67,7 +67,7 @@ if (typeof document !== 'undefined' && !document.getElementById('autoguardado-cs
   document.head.appendChild(s);
 }
 
-function useAutoguardado(guardarFn, datos, delay = 5000) {
+function useAutoguardado(guardarFn, datos, delay = 500) {
   const [guardados, setGuardados] = useState({});
   const timerRef = useRef(null);
   const guardarRef = useRef(guardarFn);
@@ -112,17 +112,17 @@ function CheckGuardado({ campo, guardados }) {
   useEffect(() => {
     if (!ts) { setVisible(false); return; }
     setVisible(true);
-    const t = setTimeout(() => setVisible(false), 3000);
+    const t = setTimeout(() => setVisible(false), 5000);
     return () => clearTimeout(t);
   }, [ts]);
   if (!visible) return null;
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
-      fontFamily: FONT_BODY, fontSize: 12, color: SUCCESS, fontWeight: 600,
+      fontFamily: FONT_BODY, fontSize: 12, color: MUTED, fontWeight: 600,
       animation: 'fadeInCheck 300ms ease forwards',
     }}>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke={SUCCESS} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke={MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
       Guardado
     </span>
   );
@@ -732,8 +732,8 @@ function Lightbox({ src, alt, onClose }) {
     }} onClick={e => { if (e.target === e.currentTarget) { zoomed ? setZoomed(false) : onClose(); } }}>
       <div style={{
         position: 'relative',
-        maxWidth: zoomed ? '98vw' : 'min(1100px, 95vw)',
-        maxHeight: zoomed ? '98vh' : '92vh',
+        maxWidth: zoomed ? '98vw' : 'min(1400px, 95vw)',
+        maxHeight: zoomed ? '98vh' : '95vh',
         overflow: zoomed ? 'auto' : 'visible',
         transition: 'max-width 300ms ease, max-height 300ms ease',
       }}>
@@ -745,12 +745,13 @@ function Lightbox({ src, alt, onClose }) {
           textTransform: 'uppercase', zIndex: 10000,
         }}>Cerrar</button>
         <img src={src} alt={alt} onClick={() => setZoomed(!zoomed)} style={{
-          width: zoomed ? 'max(1400px, 95vw)' : '100%',
+          width: zoomed ? 'max(1600px, 95vw)' : '100%',
           maxWidth: zoomed ? 'none' : '100%',
-          maxHeight: zoomed ? 'none' : '92vh',
+          maxHeight: zoomed ? 'none' : '95vh',
           display: 'block', cursor: zoomed ? 'zoom-out' : 'zoom-in',
           boxShadow: zoomed ? 'none' : '0 12px 40px rgba(15,29,56,0.30)',
           transition: 'width 300ms ease',
+          background: '#fff',
         }} />
       </div>
     </div>,
@@ -1209,7 +1210,16 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 6 }}>
           <CheckGuardado campo={String(idx)} guardados={guardados} />
         </div>
-        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {idx > 0 ? (
+            <button type="button" onClick={() => { setIdx(i => i - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+              background: 'none', border: `1px solid ${LINE}`, borderRadius: 0,
+              padding: '14px 28px', cursor: 'pointer',
+            }}>
+              ← Anterior
+            </button>
+          ) : <span />}
           {(() => {
             const hayTexto = !!respuestas[idx]?.trim();
             const hayCirculo = preg.circulo_oro && Object.values(seleccionadosIdx).some(v => v.activo);
@@ -1307,23 +1317,23 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
           </h3>
           {imgs.length > 0 && (
             <>
-              <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
+              <div style={{ display: 'flex', gap: 10, marginBottom: 18 }}>
                 {imgs.map((src, i) => (
-                  <div key={i} style={{ flex: 1, cursor: 'zoom-in', minWidth: 0 }} onClick={() => setLbSrc(src)}>
-                    <img src={src} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+                  <div key={i} style={{ flex: 1, minWidth: 0, textAlign: 'center' }}>
+                    <div style={{ cursor: 'zoom-in' }} onClick={() => setLbSrc(src)}>
+                      <img src={src} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+                    </div>
+                    <button type="button" onClick={() => setLbSrc(src)} style={{
+                      background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginTop: 8,
+                      fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+                      display: 'inline-flex', alignItems: 'center', gap: 5,
+                      textDecoration: 'underline', textUnderlineOffset: 3,
+                    }}>
+                      <IconoLupa />
+                      Ampliar diagrama
+                    </button>
                   </div>
                 ))}
-              </div>
-              <div style={{ marginBottom: 18, textAlign: 'center' }}>
-                <button type="button" onClick={() => setLbSrc(imgs[0])} style={{
-                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-                  display: 'inline-flex', alignItems: 'center', gap: 5,
-                  textDecoration: 'underline', textUnderlineOffset: 3,
-                }}>
-                  <IconoLupa />
-                  Ampliar diagrama
-                </button>
               </div>
             </>
           )}
@@ -1376,7 +1386,16 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 6 }}>
           <CheckGuardado campo={String(qIdx)} guardados={guardados} />
         </div>
-        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          {slide > 1 ? (
+            <button type="button" onClick={() => { setSlide(s => s - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+              background: 'none', border: `1px solid ${LINE}`, borderRadius: 0,
+              padding: '14px 28px', cursor: 'pointer',
+            }}>
+              ← Anterior
+            </button>
+          ) : <span />}
           <button type="button" onClick={avanzar} disabled={!respuestas[qIdx]?.trim()} style={{
             fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
             background: respuestas[qIdx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
@@ -1399,6 +1418,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
   const [textoFuerteSec, setTextoFuerteSec] = useState('');
   const [textoDebilSec, setTextoDebilSec] = useState('');
   const [lbSrc, setLbSrc] = useState(null);
+  const [ejemploAb, setEjemploAb] = useState({});
 
   const p = temperamento?.primary;
   const s = temperamento?.secondary;
@@ -1429,7 +1449,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
               <button type="button" onClick={() => setLbSrc(img)} style={{
                 background: 'none', border: 'none', padding: 0, cursor: 'pointer',
               }}>
-                <img src={img} alt={paso.enunciado} style={{ maxWidth: '100%', maxHeight: 300 }} />
+                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto' }} />
               </button>
               <div style={{ marginTop: 8 }}>
                 <button type="button" onClick={() => setLbSrc(img)} style={{
@@ -1472,6 +1492,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
                 background: '#fff', resize: 'vertical', lineHeight: 1.55,
               }}
             />
+            <EjemploColapsable texto={paso.ejemplos_fuerte?.[p]} abierto={ejemploAb.fuerte} onToggle={() => setEjemploAb(prev => ({ ...prev, fuerte: !prev.fuerte }))} />
           </div>
 
           <div style={{ marginBottom: 20 }}>
@@ -1489,6 +1510,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
                 background: '#fff', resize: 'vertical', lineHeight: 1.55,
               }}
             />
+            <EjemploColapsable texto={paso.ejemplos_debil?.[p]} abierto={ejemploAb.debil} onToggle={() => setEjemploAb(prev => ({ ...prev, debil: !prev.debil }))} />
           </div>
 
           {obstaculo && (
@@ -1545,6 +1567,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
                 background: '#fff', resize: 'vertical', lineHeight: 1.55,
               }}
             />
+            <EjemploColapsable texto={paso.ejemplos_fuerte?.[s]} abierto={ejemploAb.fuerteSec} onToggle={() => setEjemploAb(prev => ({ ...prev, fuerteSec: !prev.fuerteSec }))} />
           </div>
 
           <div style={{ marginBottom: 20 }}>
@@ -1562,6 +1585,7 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
                 background: '#fff', resize: 'vertical', lineHeight: 1.55,
               }}
             />
+            <EjemploColapsable texto={paso.ejemplos_debil?.[s]} abierto={ejemploAb.debilSec} onToggle={() => setEjemploAb(prev => ({ ...prev, debilSec: !prev.debilSec }))} />
           </div>
 
           {sinergia && (
