@@ -801,6 +801,7 @@ function RespuestasCuaderno({ paso, datos }) {
   }
 
   if (paso.tipo === 'desliza') {
+    const NOMBRE_TEMP = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
     const escenas = paso.escenas ?? [];
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -814,7 +815,7 @@ function RespuestasCuaderno({ paso, datos }) {
                 <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.5, margin: 0 }}>
                   {e.texto?.substring(0, 120)}{e.texto?.length > 120 ? '…' : ''}
                 </p>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, margin: '2px 0 0' }}>Respuesta: {e.respuesta}</p>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, margin: '2px 0 0' }}>Respuesta: {NOMBRE_TEMP[e.respuesta] ?? e.respuesta}</p>
               </div>
             ))}
           </div>
