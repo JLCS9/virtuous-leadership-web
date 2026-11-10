@@ -26,6 +26,17 @@ export const GOLD_REF_LT  = '#c9ab42';
 export const GOLD_REF_DK  = '#786622';
 export const BRUMA         = '#e0e5ee';
 
+// Feedback — colores semánticos para éxito/error/alerta en ejercicios y formularios.
+export const SUCCESS_BG = '#ecfdf5';
+export const SUCCESS    = '#10b981';
+export const SUCCESS_DK = '#065f46';
+export const ERROR_BG   = '#fef2f2';
+export const ERROR      = '#ef4444';
+export const ERROR_DK   = '#991b1b';
+export const WARNING_BG = '#fef7ed';
+export const WARNING    = '#f59e0b';
+export const WARNING_DK = '#92400e';
+
 export const MAX_WIDTH = 1100;
 
 // Etiquetas de los 4 temperamentos (compartidas con el test).

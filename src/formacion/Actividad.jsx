@@ -70,11 +70,18 @@ if (typeof document !== 'undefined' && !document.getElementById('autoguardado-cs
 function useAutoguardado(guardarFn, datos, delay = 5000) {
   const [guardados, setGuardados] = useState({});
   const timerRef = useRef(null);
-  const prevRef = useRef(datos);
+  const guardarRef = useRef(guardarFn);
+  guardarRef.current = guardarFn;
+  const datosRef = useRef(datos);
+  datosRef.current = datos;
+  const savedStrRef = useRef(JSON.stringify(datos));
+
+  const datosStr = useMemo(() => JSON.stringify(datos), [datos]);
 
   useEffect(() => {
-    const prev = prevRef.current;
-    prevRef.current = datos;
+    if (datosStr === savedStrRef.current) return;
+    let prev;
+    try { prev = JSON.parse(savedStrRef.current); } catch { prev = null; }
     const cambiados = [];
     if (typeof datos === 'object' && datos !== null && !Array.isArray(datos)) {
       for (const k of Object.keys(datos)) {
@@ -87,11 +94,14 @@ function useAutoguardado(guardarFn, datos, delay = 5000) {
     cambiados.forEach(k => setGuardados(g => { const n = { ...g }; delete n[k]; return n; }));
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
-      guardarFn(datos);
+      guardarRef.current(datosRef.current);
+      savedStrRef.current = JSON.stringify(datosRef.current);
       cambiados.forEach(k => setGuardados(g => ({ ...g, [k]: Date.now() })));
+      timerRef.current = null;
     }, delay);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, [datos, delay, guardarFn]);
+  }, [datosStr, delay]);
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current); }, []);
 
   return guardados;
 }

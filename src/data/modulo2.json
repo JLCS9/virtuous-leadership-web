@@ -701,7 +701,7 @@
           "preguntas": [
             {
               "key": "alejarme",
-              "label": "El «ambiente» del que me prometo alejarme:",
+              "label": "El ambiente del que me prometo alejarme:",
               "placeholder": "Describe aquello de lo que quieres alejarte..."
             }
           ]
