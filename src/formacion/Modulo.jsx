@@ -629,7 +629,7 @@ function moduloDeEjercicio(pasos, pasoId) {
   return null;
 }
 
-function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, temperamento }) {
+function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, moduloId, temperamento }) {
   const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo));
 
   return (
@@ -669,6 +669,13 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
                   </summary>
                   <div style={{ padding: '0 0 16px 0' }}>
                     <RespuestasCuaderno paso={paso} datos={datos} />
+                    {onEditar && (
+                      <button type="button" onClick={() => onEditar(paso.id)} style={{
+                        fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
+                        background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
+                        padding: '6px 16px', cursor: 'pointer', marginTop: 12,
+                      }}>Editar</button>
+                    )}
                   </div>
                 </details>
               );
@@ -898,7 +905,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   }
 
   if (verCuaderno) {
-    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { const vid = videoAnterior(pasos, pasoId); setVerCuaderno(false); irA(vid ? vid.id : pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { const vid = videoAnterior(pasos, pasoId); setVerCuaderno(false); irA(vid ? vid.id : pasoId); }} onEditar={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (
