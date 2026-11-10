@@ -658,17 +658,19 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
                   <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
-                      {onEditar && (
-                        <button type="button" onClick={(e) => { e.stopPropagation(); onEditar(paso.id); }} title="Editar" style={{
-                          background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
-                        }}>
-                          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }}>
-                            <path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M9.5 3.5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-                          </svg>
-                        </button>
-                      )}
-                      <span style={{ marginLeft: 'auto', fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                      <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                        {onEditar && (
+                          <button type="button" onClick={(e) => { e.stopPropagation(); onEditar(paso.id); }} title="Editar" style={{
+                            background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
+                          }}>
+                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }}>
+                              <path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M9.5 3.5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        )}
+                      </span>
                     </div>
                     <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
                       {modNum && <span>Módulo {modNum}</span>}
