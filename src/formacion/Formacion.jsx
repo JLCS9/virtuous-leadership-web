@@ -8,6 +8,7 @@ import { pasosDelUsuario } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import moduloData from '../data/modulo1.json';
 import modulo2Data from '../data/modulo2.json';
+import modulo3Data from '../data/modulo3.json';
 import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
@@ -350,19 +351,22 @@ function ModuloCursoCard({ cursoNum, titulo, completados, jsonData, portadas, br
 }
 
 function Listado({ cursos: todosLosCursos, progreso, userId }) {
-  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2);
+  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2 && c.numero !== 3);
 
   const m1Hook = useModuloProgreso(userId, 'modulo1', 1);
   const m2Hook = useModuloProgreso(userId, 'modulo2', 2);
+  const m3Hook = useModuloProgreso(userId, 'modulo3', 3);
 
   const m1Pasos = pasosDelUsuario(moduloData, null);
   const m2Pasos = pasosDelUsuario(modulo2Data, null);
+  const m3Pasos = pasosDelUsuario(modulo3Data, null);
   const m1Prog = progresoModuloCards(m1Pasos, m1Hook.completados);
   const m2Prog = progresoModuloCards(m2Pasos, m2Hook.completados);
+  const m3Prog = progresoModuloCards(m3Pasos, m3Hook.completados);
 
   const resumenCursos = resumenGlobal(cursos, progreso.vistas);
-  const totalLecciones = resumenCursos.total + m1Prog.total + m2Prog.total;
-  const hechasLecciones = resumenCursos.hechas + m1Prog.hechos + m2Prog.hechos;
+  const totalLecciones = resumenCursos.total + m1Prog.total + m2Prog.total + m3Prog.total;
+  const hechasLecciones = resumenCursos.hechas + m1Prog.hechos + m2Prog.hechos + m3Prog.hechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
 
   return (
@@ -388,6 +392,8 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
           portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       </div>
       <ModuloCursoCard cursoNum={2} titulo="Practicando la Magnanimidad" completados={m2Hook.completados} jsonData={modulo2Data}
+        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+      <ModuloCursoCard cursoNum={3} titulo="Practicar la humildad" completados={m3Hook.completados} jsonData={modulo3Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       {cursos.map((c) => (
         <CursoCard key={`b-${c.id}`} curso={c} vistas={progreso.vistas}

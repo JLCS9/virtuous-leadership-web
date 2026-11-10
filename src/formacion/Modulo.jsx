@@ -19,6 +19,7 @@ import { useCatalogo } from './useFormacion';
 const MODULOS = {
   'curso-1': () => import('../data/modulo1.json'),
   'curso-2': () => import('../data/modulo2.json'),
+  'curso-3': () => import('../data/modulo3.json'),
 };
 
 function catalogoAModulo(curso) {
