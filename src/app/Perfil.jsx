@@ -7,7 +7,7 @@ import { claveTemperamento } from '../lib/virtudes.js';
 import { supabase } from '../account/supabase';
 import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE } from '../theme';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
 import modulo1 from '../data/modulo1.json';
 
@@ -255,27 +255,27 @@ function TabConfig({ user, profile, consents, onRefresh }) {
           }}>Cerrar sesión</button>
           {!confirmBorrar ? (
             <button type="button" onClick={() => setConfirmBorrar(true)} style={{
-              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: '#dc2626',
-              background: 'none', border: '1.5px solid #fca5a5', borderRadius: 0,
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: ERROR,
+              background: 'none', border: `1.5px solid ${ERROR}`, borderRadius: 0,
               padding: '9px 18px', cursor: 'pointer', width: '100%',
               transition: 'background 150ms ease',
             }}
-              onMouseEnter={e => { e.currentTarget.style.background = '#fef2f2'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = ERROR_BG; }}
               onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
             >Cancelar mi cuenta</button>
           ) : (
-            <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: 0, padding: 16 }}>
-              <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#991b1b', margin: '0 0 12px', lineHeight: 1.5 }}>
+            <div style={{ background: ERROR_BG, border: `1px solid ${ERROR}`, borderRadius: 0, padding: 16 }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, margin: '0 0 12px', lineHeight: 1.5 }}>
                 <strong>¿Estás seguro?</strong> Se borrará tu cuenta y perderás todo tu progreso. Esta acción no se puede deshacer.
               </p>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button type="button" onClick={eliminar} style={{
                   fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: '#fff',
-                  background: '#dc2626', border: 'none', borderRadius: 0, padding: '9px 18px', cursor: 'pointer',
+                  background: ERROR, border: 'none', borderRadius: 0, padding: '9px 18px', cursor: 'pointer',
                 }}>Sí, borrar mi cuenta</button>
                 <button type="button" onClick={() => setConfirmBorrar(false)} style={{
-                  fontFamily: FONT_BODY, fontSize: 13, color: '#991b1b', background: 'none',
-                  border: '1px solid #fca5a5', borderRadius: 0, padding: '9px 14px', cursor: 'pointer',
+                  fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, background: 'none',
+                  border: `1px solid ${ERROR}`, borderRadius: 0, padding: '9px 14px', cursor: 'pointer',
                 }}>Cancelar</button>
               </div>
             </div>
@@ -318,9 +318,9 @@ function TabConfig({ user, profile, consents, onRefresh }) {
             <CampoPwd label="Nueva contraseña" value={pwdState.pwd} onChange={v => setPwdState(s => ({ ...s, pwd: v }))}
               visible={pwdState.showNew} onToggle={() => setPwdState(s => ({ ...s, showNew: !s.showNew }))} placeholder="Mínimo 6 caracteres" />
             <BtnGuardar onClick={guardarPwd} guardando={pwdState.estado === 'guardando'} />
-            {pwdState.estado === 'ok' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#2e7d32', margin: 0 }}>Contraseña actualizada</p>}
-            {pwdState.estado === 'wrong' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#c62828', margin: 0 }}>La contraseña actual no es correcta</p>}
-            {pwdState.estado === 'error' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: '#c62828', margin: 0 }}>Error al cambiar la contraseña</p>}
+            {pwdState.estado === 'ok' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: SUCCESS_DK, margin: 0 }}>Contraseña actualizada</p>}
+            {pwdState.estado === 'wrong' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, margin: 0 }}>La contraseña actual no es correcta</p>}
+            {pwdState.estado === 'error' && <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, margin: 0 }}>Error al cambiar la contraseña</p>}
           </div>
         </Modal>
       )}

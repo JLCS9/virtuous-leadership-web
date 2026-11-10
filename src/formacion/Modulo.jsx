@@ -3,7 +3,7 @@ import { useOutletContext, useParams, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan } from './Actividad';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
@@ -92,12 +92,12 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
 
   function onProgreso(frac) {
     if (frac >= UMBRAL_VISTA && !completado) {
-      progreso.completar(paso.id);
+      progreso.completar(paso.id, undefined, { tipo: 'video', modulo: paso.modulo ?? 0 });
     }
   }
 
   function avanzarYMarcar() {
-    if (!completado) progreso.completar(paso.id);
+    if (!completado) progreso.completar(paso.id, undefined, { tipo: 'video', modulo: paso.modulo ?? 0 });
     avanzar();
   }
 
@@ -249,13 +249,13 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
   );
 }
 
-function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user }) {
+function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
   const moduloNum = _mod?.numero ?? 1;
 
   function completar(resultado) {
-    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: moduloNum });
+    progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: paso.modulo ?? 0 });
     avanzar();
   }
 
@@ -264,13 +264,23 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'define': return <Define paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'desliza': return <Desliza paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} />;
+    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} user={user} />;
     case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
-    case 'conclusion_modulo': return <ConclusionModulo paso={paso} completados={progreso.completados} onContinuar={completar} onVolver={volver} />;
+    case 'conclusion_modulo': {
+      const idxConcl = pasos.indexOf(paso);
+      let idxVideo = -1;
+      for (let i = idxConcl - 1; i >= 0; i--) {
+        if (pasos[i].tipo === 'video' && !pasos[i].continua_modulo) { idxVideo = i; break; }
+      }
+      const pendientes = idxVideo >= 0
+        ? pasos.slice(idxVideo, idxConcl).filter(p => p.tipo !== 'noop' && !progreso.completados[p.id])
+        : [];
+      return <ConclusionModulo paso={paso} completados={progreso.completados} pendientes={pendientes} onContinuar={completar} onVolver={volver} irA={irA} />;
+    }
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
@@ -484,7 +494,33 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
   );
 }
 
+function VistaResumenPlan({ paso, userId, onVolver }) {
+  const plan = leerPlan(userId);
+  const hayDatos = paso.pantallas?.some(p => p.tipo !== 'texto' && p.tipo !== 'resumen' && plan[p.id]);
+  return (
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <button type="button" onClick={onVolver} style={{
+        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+        background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
+        display: 'inline-flex', alignItems: 'center', gap: 6,
+      }}>
+        ← Volver al listado
+      </button>
+      <div style={tarjeta}>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
+          Tu Plan de Crecimiento
+        </h2>
+        {hayDatos
+          ? <PantallaResumen paso={paso} plan={plan} />
+          : <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>Aún no has completado el plan de crecimiento. Complétalo primero en el curso.</p>
+        }
+      </div>
+    </div>
+  );
+}
+
 function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1, userId, temperamento }) {
+  const [verPlan, setVerPlan] = useState(false);
   const progAll = progresoModulo(pasos, completados);
   const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
   const allVids = pasos.filter((p) => p.tipo === 'video');
@@ -501,6 +537,10 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
 
   const planStep = pasos.find(p => p.tipo === 'plan_crecimiento');
   const planHecho = planStep ? Boolean(completados[planStep.id]) : false;
+
+  if (verPlan && planStep) {
+    return <VistaResumenPlan paso={planStep} userId={userId} onVolver={() => setVerPlan(false)} />;
+  }
 
   return (
     <div className="vl-listado" style={{ margin: '0 auto' }}>
@@ -544,12 +584,14 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
           <div style={{ marginTop: 18 }}>
             <CuadernoPersonal userId={userId} pasos={modulo.pasos} temperamento={temperamento} moduloId={modulo.id} />
             {planStep && (
-              <button type="button" disabled style={{
-                all: 'unset', boxSizing: 'border-box', width: '100%', marginTop: 10,
-                display: 'flex', alignItems: 'center', gap: 10,
-                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: MUTED,
-                background: BEIGE, border: `1px dashed ${LINE}`, padding: '12px 16px',
-                cursor: 'default', opacity: 0.7,
+              <button type="button" onClick={() => setVerPlan(true)} style={{
+                display: 'flex', alignItems: 'center', gap: 8,
+                fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+                color: GOLD_REF_DK, background: 'none',
+                border: `1.5px solid ${GOLD_REF}`, borderRadius: 0,
+                padding: '10px 20px', cursor: 'pointer',
+                transition: 'border-color 200ms ease, color 200ms ease',
+                letterSpacing: '0.02em', width: '100%', justifyContent: 'center', marginTop: 10,
               }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ flexShrink: 0 }}>
                   <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -557,8 +599,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
                   <line x1="16" y1="13" x2="8" y2="13" />
                   <line x1="16" y1="17" x2="8" y2="17" />
                 </svg>
-                Descargar plan de crecimiento
-                <span style={{ fontFamily: FONT_BODY, fontSize: 11, marginLeft: 'auto' }}>Proximamente</span>
+                Ver plan de crecimiento
               </button>
             )}
           </div>
@@ -759,7 +800,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
             <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
           </div>
         )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} />
+        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} />
       </div>
     );
   }
