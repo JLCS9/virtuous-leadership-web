@@ -585,22 +585,19 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
   );
 }
 
-const TIPOS_CUADERNO = ['define', 'desliza', 'test_profundo', 'cierre', 'identifica', 'retos_temperamento', 'temperamento_magnanimidad'];
+const TIPOS_EXCLUIR_CUADERNO = new Set(['video', 'quiz', 'conclusion_modulo', 'noop', 'plan_crecimiento', 'test_caracter', 'temperamento_perfil', 'reflexion_guiada']);
 
-function tieneTexto(paso, datos) {
+function tieneDatos(datos) {
   if (!datos) return false;
-  if (paso.tipo === 'define') return datos.aciertos != null;
-  if (paso.tipo === 'desliza') return datos.aciertos != null;
-  if (paso.tipo === 'test_profundo') return (datos.respuestas ?? []).some(r => r && r.trim());
-  if (paso.tipo === 'identifica') return (datos.respuestas ?? []).some(r => r && (r.facil || r.dificil || r.ejemploFacil || r.ejemploDificil));
-  if (paso.tipo === 'retos_temperamento') return !!(datos.textoFacilita || datos.textoDificulta || datos.textoDefectos);
-  if (paso.tipo === 'temperamento_magnanimidad') return !!(datos.textoFuerte || datos.textoDebil || datos.textoFuerteSec || datos.textoDebilSec);
-  if (paso.tipo === 'cierre') return !!(datos.lo_que_facilita || datos.lo_que_cuesta || datos.virtud_desafio || datos.proposito);
-  return false;
+  const keys = Object.keys(datos).filter(k => k !== 'fecha' && k !== 'aprobado');
+  if (keys.length === 0) return false;
+  if (keys.length === 1 && (datos.completado || datos.visto)) return false;
+  if (keys.every(k => k === 'visto' || datos[k] === '' || datos[k] === null || datos[k] === undefined)) return false;
+  return true;
 }
 
 function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, temperamento }) {
-  const entradas = pasos.filter(p => TIPOS_CUADERNO.includes(p.tipo) && completados[p.id] && tieneTexto(p, completados[p.id]));
+  const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo) && completados[p.id] && tieneDatos(completados[p.id]));
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
@@ -626,10 +623,13 @@ function VistaCuaderno({ pasos, completados, onVolver, userId, moduloId, tempera
               return (
                 <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
                   <h3 style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, margin: '0 0 10px' }}>
-                    {paso.tipo === 'define' && paso.conceptos?.length
-                      ? `Define: ${paso.conceptos.map(c => c.concepto).join(', ')}`
-                      : paso.titulo}
+                    {paso.titulo || paso.tipo}
                   </h3>
+                  {paso.enunciado && (
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.5, margin: '0 0 10px', fontStyle: 'italic' }}>
+                      {paso.enunciado}
+                    </p>
+                  )}
                   <RespuestasCuaderno paso={paso} datos={datos} />
                 </div>
               );
@@ -664,16 +664,6 @@ function RespuestasCuaderno({ paso, datos }) {
             ))}
           </div>
         )}
-      </div>
-    );
-  }
-
-  if (paso.tipo === 'desliza') {
-    return (
-      <div>
-        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0 }}>
-          Resultado: <strong>{datos.aciertos}</strong> de {datos.total} aciertos
-        </p>
       </div>
     );
   }
@@ -747,6 +737,77 @@ function RespuestasCuaderno({ paso, datos }) {
         {datos.lo_que_cuesta && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Lo que me cuesta:</span> {datos.lo_que_cuesta}</p>}
         {datos.virtud_desafio && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi virtud desafío:</span> {datos.virtud_desafio}</p>}
         {datos.proposito && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>Mi propósito:</span> {datos.proposito}</p>}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'reflexion_piramide') {
+    const preguntas = paso.preguntas ?? [];
+    const respuestas = datos.respuestas ?? [];
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {preguntas.map((pregunta, i) => (
+          <div key={i}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>
+              {i + 1}. {pregunta}
+            </p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: respuestas[i] ? NAVY : MUTED, lineHeight: 1.6, margin: 0, paddingLeft: 16, fontStyle: respuestas[i] ? 'normal' : 'italic' }}>
+              {respuestas[i] || 'Sin respuesta'}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'circulo_personas') {
+    return (
+      <div>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 4px' }}>{paso.pregunta}</p>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0, paddingLeft: 16 }}>
+          {datos.personas === 1 ? '1 persona identificada' : `${datos.personas} personas identificadas`}
+        </p>
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'desliza') {
+    const escenas = paso.escenas ?? [];
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: 0 }}>
+          Resultado: <strong>{datos.aciertos}</strong> de {datos.total} aciertos
+        </p>
+        {escenas.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {escenas.map((e, i) => (
+              <div key={i} style={{ paddingLeft: 16 }}>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.5, margin: 0 }}>
+                  {e.texto?.substring(0, 120)}{e.texto?.length > 120 ? '…' : ''}
+                </p>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, margin: '2px 0 0' }}>Respuesta: {e.respuesta}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const keys = Object.keys(datos).filter(k => k !== 'fecha' && k !== 'aprobado' && k !== 'completado' && k !== 'visto');
+  if (keys.length > 0) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {keys.map(k => {
+          const v = datos[k];
+          if (v === null || v === undefined || v === '' || v === true || v === false) return null;
+          const label = k.replace(/_/g, ' ').replace(/^./, c => c.toUpperCase());
+          return (
+            <p key={k} style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}>
+              <span style={{ color: MUTED, fontSize: 12 }}>{label}:</span> {typeof v === 'object' ? JSON.stringify(v) : String(v)}
+            </p>
+          );
+        })}
       </div>
     );
   }
