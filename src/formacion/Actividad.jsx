@@ -2,7 +2,7 @@
 // Quiz, Define, Desliza, Identifica — todos comparten el mismo shell (título + barra progreso).
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS } from '../theme';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS, SUCCESS_BG, SUCCESS, SUCCESS_DK, ERROR_BG, ERROR, ERROR_DK, WARNING_BG, WARNING, WARNING_DK } from '../theme';
 import { barraFondo, eyebrow, tarjeta } from '../app/estilos';
 import diagramaVirtudesImg from './diagrama-virtudes.png';
 import diagramaCOL from './diagrama-COL.png';
@@ -109,10 +109,10 @@ function CheckGuardado({ campo, guardados }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 4,
-      fontFamily: FONT_BODY, fontSize: 12, color: '#10b981', fontWeight: 600,
+      fontFamily: FONT_BODY, fontSize: 12, color: SUCCESS, fontWeight: 600,
       animation: 'fadeInCheck 300ms ease forwards',
     }}>
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7l3 3 5-5" stroke={SUCCESS} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
       Guardado
     </span>
   );
@@ -136,8 +136,8 @@ function BotonOpcion({ texto, seleccionada, correcta, revelada, onClick }) {
   let bg = PAPER;
   let border = `1.5px solid ${LINE}`;
   let color = NAVY;
-  if (revelada && correcta) { bg = '#ecfdf5'; border = '1.5px solid #10b981'; color = '#065f46'; }
-  else if (revelada && seleccionada && !correcta) { bg = '#fef2f2'; border = '1.5px solid #ef4444'; color = '#991b1b'; }
+  if (revelada && correcta) { bg = SUCCESS_BG; border = `1.5px solid ${SUCCESS}`; color = SUCCESS_DK; }
+  else if (revelada && seleccionada && !correcta) { bg = ERROR_BG; border = `1.5px solid ${ERROR}`; color = ERROR_DK; }
   else if (seleccionada) { bg = 'rgba(165,139,38,0.10)'; border = `1.5px solid ${GOLD_REF}`; }
 
   return (
@@ -223,10 +223,10 @@ function Conclusion({ titulo, aciertos, total, onReintentar, onContinuar, nota, 
         <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
           <span style={{
             display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: '50%',
-            background: perfecto ? '#ecfdf5' : bueno ? '#fef7ed' : '#fef2f2',
-            border: `2px solid ${perfecto ? '#10b981' : bueno ? '#f59e0b' : '#ef4444'}`,
+            background: perfecto ? SUCCESS_BG : bueno ? WARNING_BG : ERROR_BG,
+            border: `2px solid ${perfecto ? SUCCESS : bueno ? WARNING : ERROR}`,
             fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700,
-            color: perfecto ? '#065f46' : bueno ? '#92400e' : '#991b1b',
+            color: perfecto ? SUCCESS_DK : bueno ? WARNING_DK : ERROR_DK,
           }}>
             {pct}%
           </span>
@@ -238,7 +238,7 @@ function Conclusion({ titulo, aciertos, total, onReintentar, onContinuar, nota, 
           Has acertado <strong style={{ color: NAVY }}>{aciertos} de {total}</strong> en {titulo}.
         </p>
         {bloqueado && (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', textAlign: 'center', margin: '8px 0 0', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: ERROR_DK, textAlign: 'center', margin: '8px 0 0', lineHeight: 1.5 }}>
             Necesitas al menos un 70% de aciertos para continuar. Inténtalo de nuevo.
           </p>
         )}
@@ -438,9 +438,9 @@ export function Define({ paso, onComplete, modulo }) {
               const sel = h.seleccionadas.has(p);
               const esCorrecta = correctasH.has(p);
               let bg = BEIGE; let border = `1.5px solid ${LINE}`; let color = NAVY;
-              if (esCorrecta && sel) { bg = '#ecfdf5'; border = '1.5px solid #10b981'; color = '#065f46'; }
-              else if (esCorrecta && !sel) { bg = '#fef7ed'; border = '1.5px dashed #f59e0b'; color = '#92400e'; }
-              else if (sel && !esCorrecta) { bg = '#fef2f2'; border = '1.5px solid #ef4444'; color = '#991b1b'; }
+              if (esCorrecta && sel) { bg = SUCCESS_BG; border = `1.5px solid ${SUCCESS}`; color = SUCCESS_DK; }
+              else if (esCorrecta && !sel) { bg = WARNING_BG; border = `1.5px dashed ${WARNING}`; color = WARNING_DK; }
+              else if (sel && !esCorrecta) { bg = ERROR_BG; border = `1.5px solid ${ERROR}`; color = ERROR_DK; }
               return (
                 <button key={p} type="button" disabled style={{
                   fontFamily: FONT_BODY, fontSize: 20, fontWeight: 500, color, background: bg,
@@ -449,7 +449,7 @@ export function Define({ paso, onComplete, modulo }) {
               );
             })}
           </div>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '18px 0 8px', color: perfecto ? '#065f46' : '#92400e' }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '18px 0 8px', color: perfecto ? SUCCESS_DK : WARNING_DK }}>
             {perfecto ? 'Correcto.' : faltantesH.length > 0
               ? <>Te ha faltado: <strong>{faltantesH.join(', ')}</strong>.</>
               : 'Has marcado alguna palabra de más.'}
@@ -550,9 +550,9 @@ export function Define({ paso, onComplete, modulo }) {
             let bg = sel ? 'rgba(165,139,38,0.15)' : BEIGE;
             let border = sel ? `1.5px solid ${GOLD_REF}` : `1.5px solid ${LINE}`;
             let color = NAVY;
-            if (revelado && esCorrecta && sel) { bg = '#ecfdf5'; border = '1.5px solid #10b981'; color = '#065f46'; }
-            else if (revelado && esCorrecta && !sel) { bg = '#fef7ed'; border = '1.5px dashed #f59e0b'; color = '#92400e'; }
-            else if (revelado && sel && !esCorrecta) { bg = '#fef2f2'; border = '1.5px solid #ef4444'; color = '#991b1b'; }
+            if (revelado && esCorrecta && sel) { bg = SUCCESS_BG; border = `1.5px solid ${SUCCESS}`; color = SUCCESS_DK; }
+            else if (revelado && esCorrecta && !sel) { bg = WARNING_BG; border = `1.5px dashed ${WARNING}`; color = WARNING_DK; }
+            else if (revelado && sel && !esCorrecta) { bg = ERROR_BG; border = `1.5px solid ${ERROR}`; color = ERROR_DK; }
             return (
               <button key={p} type="button" onClick={() => toggle(p)} disabled={revelado} style={{
                 fontFamily: FONT_BODY, fontSize: 20, fontWeight: 500, color, background: bg,
@@ -566,13 +566,13 @@ export function Define({ paso, onComplete, modulo }) {
         </div>
         {feedbackActual && (
           <div style={{ margin: '18px 0 8px' }}>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '0 0 6px', color: feedbackActual.perfecto ? '#065f46' : '#92400e' }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: '0 0 6px', color: feedbackActual.perfecto ? SUCCESS_DK : WARNING_DK }}>
               {feedbackActual.perfecto ? 'Correcto.' : feedbackActual.faltantes.length > 0
                 ? <>Te ha faltado: <strong>{feedbackActual.faltantes.join(', ')}</strong>.</>
                 : null}
             </p>
             {feedbackActual.erroneas.length > 0 && (
-              <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: 0, color: '#991b1b' }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, margin: 0, color: ERROR_DK }}>
                 Te has equivocado en: {feedbackActual.erroneas.map((e, i) => (
                   <span key={e}>{i > 0 && ', '}<strong>{e}</strong></span>
                 ))}
@@ -677,8 +677,8 @@ export function Desliza({ paso, onComplete, modulo }) {
             let bg = BEIGE;
             let borderColor = LINE;
             let color = NAVY;
-            if (revelada && esCorrecto) { bg = '#ecfdf5'; borderColor = '#10b981'; color = '#065f46'; }
-            else if (revelada && sel && !esCorrecto) { bg = '#fef2f2'; borderColor = '#ef4444'; color = '#991b1b'; }
+            if (revelada && esCorrecto) { bg = SUCCESS_BG; borderColor = SUCCESS; color = SUCCESS_DK; }
+            else if (revelada && sel && !esCorrecto) { bg = ERROR_BG; borderColor = ERROR; color = ERROR_DK; }
             else if (sel) { bg = 'rgba(165,139,38,0.10)'; borderColor = GOLD_REF; }
             return (
               <button key={t} type="button" onClick={() => elegir(t)} disabled={revelada} style={{
@@ -834,8 +834,8 @@ export function Identifica({ paso, onComplete, modulo }) {
     let bg = PAPER;
     let border = `1.5px solid ${LINE}`;
     let badge = null;
-    if (esFacil) { bg = '#ecfdf5'; border = '1.5px solid #10b981'; badge = '+'; }
-    else if (esDificil) { bg = '#fef7ed'; border = '1.5px solid #f59e0b'; badge = '−'; }
+    if (esFacil) { bg = SUCCESS_BG; border = `1.5px solid ${SUCCESS}`; badge = '+'; }
+    else if (esDificil) { bg = WARNING_BG; border = `1.5px solid ${WARNING}`; badge = '−'; }
     return (
       <button type="button" onClick={() => elegirFacil(vIdx, aspecto)} style={{
         fontFamily: FONT_BODY, fontSize: 19, lineHeight: 1.5, color: NAVY, background: bg,
@@ -850,7 +850,7 @@ export function Identifica({ paso, onComplete, modulo }) {
           <span style={{
             position: 'absolute', top: 8, right: 12,
             fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700,
-            color: esFacil ? '#10b981' : '#f59e0b',
+            color: esFacil ? SUCCESS : WARNING,
           }}>{badge}</span>
         )}
       </button>
@@ -921,7 +921,7 @@ export function Identifica({ paso, onComplete, modulo }) {
         {r.facil && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <span style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: '#065f46' }}>
+              <span style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: SUCCESS_DK }}>
                 Me resulta fácil (+): {r.facil === 'pasivo' ? v.pasivo : v.activo}
               </span>
               <textarea value={r.ejemploFacil} onChange={(e) => escribir(vIdx, 'ejemploFacil', e.target.value)}
@@ -932,7 +932,7 @@ export function Identifica({ paso, onComplete, modulo }) {
                 }} />
             </label>
             <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              <span style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: '#92400e' }}>
+              <span style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: WARNING_DK }}>
                 Me resulta difícil (−): {dificil === 'pasivo' ? v.pasivo : v.activo}
               </span>
               <textarea value={r.ejemploDificil} onChange={(e) => escribir(vIdx, 'ejemploDificil', e.target.value)}
@@ -1144,8 +1144,8 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
           <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
             <span style={{
               display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
-              background: '#ecfdf5', border: '2px solid #10b981',
-              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: '#065f46',
+              background: SUCCESS_BG, border: `2px solid ${SUCCESS}`,
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: SUCCESS_DK,
             }}>✓</span>
           </div>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '16px 0 12px', textAlign: 'center' }}>
@@ -1200,13 +1200,20 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
           <CheckGuardado campo={String(idx)} guardados={guardados} />
         </div>
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'flex-end' }}>
-          <button type="button" onClick={avanzar} disabled={!respuestas[idx]?.trim()} style={{
-            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
-            background: respuestas[idx]?.trim() ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
-            padding: '18px 40px', cursor: respuestas[idx]?.trim() ? 'pointer' : 'default',
-          }}>
-            {idx + 1 < total ? 'Siguiente' : 'Completar'}
-          </button>
+          {(() => {
+            const hayTexto = !!respuestas[idx]?.trim();
+            const hayCirculo = preg.circulo_oro && Object.values(seleccionadosIdx).some(v => v.activo);
+            const puede = hayTexto || hayCirculo;
+            return (
+              <button type="button" onClick={avanzar} disabled={!puede} style={{
+                fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+                background: puede ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
+                padding: '18px 40px', cursor: puede ? 'pointer' : 'default',
+              }}>
+                {idx + 1 < total ? 'Siguiente' : 'Completar'}
+              </button>
+            );
+          })()}
         </div>
       </div>
     </Shell>
@@ -1258,8 +1265,8 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
           <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
             <span style={{
               display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
-              background: '#ecfdf5', border: '2px solid #10b981',
-              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: '#065f46',
+              background: SUCCESS_BG, border: `2px solid ${SUCCESS}`,
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: SUCCESS_DK,
             }}>✓</span>
           </div>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '16px 0 12px', textAlign: 'center' }}>
@@ -1475,9 +1482,9 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
           </div>
 
           {obstaculo && (
-            <div style={{ padding: '16px 18px', background: '#fef2f2', borderLeft: '3px solid #ef4444', marginBottom: 20 }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Obstáculo</div>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', lineHeight: 1.55 }}>{obstaculo}</div>
+            <div style={{ padding: '16px 18px', background: ERROR_BG, borderLeft: `3px solid ${ERROR}`, marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: ERROR_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Obstáculo</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: ERROR_DK, lineHeight: 1.55 }}>{obstaculo}</div>
             </div>
           )}
 
@@ -1548,9 +1555,9 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
           </div>
 
           {sinergia && (
-            <div style={{ padding: '16px 18px', background: '#ecfdf5', borderLeft: '3px solid #10b981', marginBottom: 20 }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Sinergia</div>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#065f46', lineHeight: 1.55 }}>{sinergia}</div>
+            <div style={{ padding: '16px 18px', background: SUCCESS_BG, borderLeft: `3px solid ${SUCCESS}`, marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: SUCCESS_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Sinergia</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: SUCCESS_DK, lineHeight: 1.55 }}>{sinergia}</div>
             </div>
           )}
 
@@ -1735,13 +1742,13 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
 
           {fd && (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 20 }}>
-              <div style={{ padding: '16px 18px', background: '#ecfdf5', borderLeft: '3px solid #10b981' }}>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#065f46', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Favorece</div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#065f46', lineHeight: 1.5 }}>{fd.facilita}</div>
+              <div style={{ padding: '16px 18px', background: SUCCESS_BG, borderLeft: `3px solid ${SUCCESS}` }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: SUCCESS_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Favorece</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: SUCCESS_DK, lineHeight: 1.5 }}>{fd.facilita}</div>
               </div>
-              <div style={{ padding: '16px 18px', background: '#fef2f2', borderLeft: '3px solid #ef4444' }}>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Dificulta</div>
-                <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', lineHeight: 1.5 }}>{fd.dificulta}</div>
+              <div style={{ padding: '16px 18px', background: ERROR_BG, borderLeft: `3px solid ${ERROR}` }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: ERROR_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Dificulta</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: ERROR_DK, lineHeight: 1.5 }}>{fd.dificulta}</div>
               </div>
             </div>
           )}
@@ -1896,8 +1903,8 @@ export function RetosTemperamento({ paso, temperamento, onComplete }) {
         )}
 
         {compensa && (
-          <div style={{ padding: '16px 20px', background: '#f0fdf4', borderLeft: '3px solid #10b981', marginBottom: 20 }}>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#065f46', lineHeight: 1.6, margin: 0 }}>
+          <div style={{ padding: '16px 20px', background: SUCCESS_BG, borderLeft: `3px solid ${SUCCESS}`, marginBottom: 20 }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: SUCCESS_DK, lineHeight: 1.6, margin: 0 }}>
               Como {TEMP_NOMBRE[p]}/{TEMP_NOMBRE[s]}, {compensa}.
             </p>
           </div>
@@ -2130,9 +2137,9 @@ export function CirculoPersonas({ paso, user, onComplete }) {
                   return (
                     <span key={i} style={{
                       fontFamily: FONT_BODY, fontSize: 14, padding: '6px 14px',
-                      background: pendiente ? BEIGE : '#ecfdf5',
-                      border: `1px solid ${pendiente ? GOLD_REF : '#10b981'}`,
-                      color: pendiente ? NAVY : '#065f46',
+                      background: pendiente ? BEIGE : SUCCESS_BG,
+                      border: `1px solid ${pendiente ? GOLD_REF : SUCCESS}`,
+                      color: pendiente ? NAVY : SUCCESS_DK,
                     }}>
                       {p.nombre}{p.secundario ? ` · ${TEMP_NOMBRE[p.secundario]}` : ''}
                       {pendiente && <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, marginLeft: 6 }}>· pendiente</span>}
@@ -2337,7 +2344,7 @@ export function CirculoPersonas({ paso, user, onComplete }) {
           </div>
 
           {sinResultado ? (
-            <div style={{ textAlign: 'center', padding: '16px 20px', background: '#fef9ee', border: `1px solid ${GOLD_REF_LT}`, marginBottom: 20 }}>
+            <div style={{ textAlign: 'center', padding: '16px 20px', background: WARNING_BG, border: `1px solid ${GOLD_REF_LT}`, marginBottom: 20 }}>
               <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', lineHeight: 1.6 }}>
                 {resultado.imposible
                   ? `La combinación ${TEMP_NOMBRE[temp]} con el secundario estimado no es posible según el modelo de temperamentos.`
@@ -2452,10 +2459,10 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
         <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
           <span style={{
             display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: '50%',
-            background: bloqueado ? '#fef2f2' : '#ecfdf5',
-            border: `2px solid ${bloqueado ? '#ef4444' : '#10b981'}`,
+            background: bloqueado ? ERROR_BG : SUCCESS_BG,
+            border: `2px solid ${bloqueado ? ERROR : SUCCESS}`,
             fontFamily: FONT_SLAB, fontSize: 32, fontWeight: 700,
-            color: bloqueado ? '#991b1b' : '#065f46',
+            color: bloqueado ? ERROR_DK : SUCCESS_DK,
           }}>
             {bloqueado ? '✗' : '✓'}
           </span>
@@ -2471,8 +2478,8 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
         </p>
 
         {hayPendientes && (
-          <div style={{ padding: '16px 20px', background: '#fef2f2', borderLeft: '3px solid #ef4444', marginBottom: 20, lineHeight: 1.6 }}>
-            <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: '#991b1b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
+          <div style={{ padding: '16px 20px', background: ERROR_BG, borderLeft: `3px solid ${ERROR}`, marginBottom: 20, lineHeight: 1.6 }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: ERROR_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 10 }}>
               Debes finalizar los siguientes pasos
             </div>
             <ul style={{ margin: 0, paddingLeft: 0, listStyle: 'none' }}>
@@ -2498,7 +2505,7 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
               const ok = pct > 0;
               return (
                 <div key={s.id} style={{ padding: '18px 20px', background: PAPER, border: `1px solid ${LINE}`, textAlign: 'center' }}>
-                  <div style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: ok ? (pct >= 70 ? '#065f46' : '#92400e') : '#991b1b' }}>
+                  <div style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: ok ? (pct >= 70 ? SUCCESS_DK : WARNING_DK) : ERROR_DK }}>
                     {s.aciertos} de {s.total}
                   </div>
                   {s.label && (
@@ -2526,7 +2533,7 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
         )}
 
         {!hayPendientes && todosACero && (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: '#991b1b', textAlign: 'center', margin: '0 0 8px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: ERROR_DK, textAlign: 'center', margin: '0 0 8px', lineHeight: 1.5 }}>
             Necesitas aprobar los cuestionarios para avanzar al siguiente módulo.
           </p>
         )}
@@ -3060,7 +3067,7 @@ export function Sintesis({ paso, temperamento, onComplete }) {
 /* ─── TEST DEL CORAZÓN (inline en formación, curso 5) ─── */
 
 const HEART_FACES = { R: heartFaceR, VR: heartFaceVR, VM: heartFaceVM, VI: heartFaceVI, VC: heartFaceVC, SV: heartFaceSV, SI: heartFaceSI, SC: heartFaceSC };
-const HEART_STAGE_COLORS = { none: '#10b981', stage1: '#f59e0b', stage2: '#ef4444' };
+const HEART_STAGE_COLORS = { none: SUCCESS, stage1: WARNING, stage2: ERROR };
 const HEART_STAGE_LABELS = { none: 'Sin inclinación', stage1: 'Cierta inclinación', stage2: 'Fuerte inclinación' };
 
 function resolveHeartLabel(key) {
@@ -3123,8 +3130,8 @@ function HeartResultSummary({ scoreResult, onContinue }) {
         <div style={{ textAlign: 'center', padding: '12px 0 8px' }}>
           <span style={{
             display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
-            background: balanced ? '#ecfdf5' : BEIGE, border: `2px solid ${balanced ? '#10b981' : GOLD_REF}`,
-            fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: balanced ? '#065f46' : GOLD_REF_DK,
+            background: balanced ? SUCCESS_BG : BEIGE, border: `2px solid ${balanced ? SUCCESS : GOLD_REF}`,
+            fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: balanced ? SUCCESS_DK : GOLD_REF_DK,
           }}>♡</span>
         </div>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 8px', textAlign: 'center' }}>
