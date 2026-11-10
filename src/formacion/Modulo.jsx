@@ -618,6 +618,17 @@ function resumenCorto(paso, datos) {
   return null;
 }
 
+function moduloDeEjercicio(pasos, pasoId) {
+  const idx = pasos.findIndex(p => p.id === pasoId);
+  const modHeaders = pasos.filter(p => p.tipo === 'video' && !p.continua_modulo);
+  for (let i = idx - 1; i >= 0; i--) {
+    if (pasos[i].tipo === 'video' && !pasos[i].continua_modulo) {
+      return modHeaders.indexOf(pasos[i]) + 1;
+    }
+  }
+  return null;
+}
+
 function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, temperamento }) {
   const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo));
 
@@ -628,7 +639,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
         background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
         display: 'inline-flex', alignItems: 'center', gap: 6,
       }}>
-        ← Volver al listado
+        ← Volver
       </button>
       <div style={tarjeta}>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
@@ -638,6 +649,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
           {entradas.map(paso => {
             const datos = completados[paso.id];
             const hecho = datos && tieneDatos(datos);
+            const modNum = moduloDeEjercicio(pasos, paso.id);
 
             if (hecho) {
               const corto = resumenCorto(paso, datos);
@@ -646,10 +658,13 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
                   <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
-                      {corto && <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>· {corto}</span>}
                       <span style={{ marginLeft: 'auto', fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
                     </div>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
+                      {modNum && <span>Módulo {modNum}</span>}
+                      {modNum && corto && <span> · </span>}
+                      {corto && <span>{corto}</span>}
+                    </p>
                   </summary>
                   <div style={{ padding: '0 0 16px 0' }}>
                     <RespuestasCuaderno paso={paso} datos={datos} />
@@ -671,7 +686,9 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, userId, moduloId, 
                     }}>Ir al ejercicio</button>}
                   </span>
                 </div>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
+                  {modNum && <span>Módulo {modNum}</span>}
+                </p>
               </div>
             );
           })}
