@@ -282,7 +282,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
       return <ConclusionModulo paso={paso} completados={progreso.completados} pendientes={pendientes} onContinuar={completar} onVolver={volver} irA={irA} />;
     }
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
-    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} />;
@@ -495,7 +495,10 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
 }
 
 function VistaResumenPlan({ paso, userId, onVolver }) {
-  const plan = leerPlan(userId);
+  let plan = leerPlan(userId);
+  if (userId !== 'anon' && (!plan || Object.keys(plan).length === 0)) {
+    plan = leerPlan('anon');
+  }
   const hayDatos = paso.pantallas?.some(p => p.tipo !== 'texto' && p.tipo !== 'resumen' && plan[p.id]);
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>

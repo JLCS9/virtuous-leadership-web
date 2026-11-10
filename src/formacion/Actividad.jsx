@@ -3790,13 +3790,23 @@ function guardarPlan(userId, data) {
   try { localStorage.setItem(PLAN_STORAGE_KEY(userId), JSON.stringify(data)); } catch {}
 }
 
-export function PlanCrecimiento({ paso, temperamento, onComplete }) {
-  const userId = (() => { try { return JSON.parse(localStorage.getItem('sb-session'))?.user?.id ?? 'anon'; } catch { return 'anon'; } })();
+export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userIdProp }) {
+  const userId = userIdProp ?? 'anon';
   const pantallas = paso.pantallas ?? [];
   const [idx, setIdx] = useState(0);
   const [fase, setFase] = useState('caratula');
   const [visible, setVisible] = useState(true);
-  const [plan, setPlan] = useState(() => leerPlan(userId));
+  const [plan, setPlan] = useState(() => {
+    let data = leerPlan(userId);
+    if (userId !== 'anon' && (!data || Object.keys(data).length === 0)) {
+      const legacy = leerPlan('anon');
+      if (legacy && Object.keys(legacy).length > 0) {
+        guardarPlan(userId, legacy);
+        data = legacy;
+      }
+    }
+    return data;
+  });
   const guardarCb = useCallback((d) => guardarPlan(userId, d), [userId]);
   const guardados = useAutoguardado(guardarCb, plan);
 
