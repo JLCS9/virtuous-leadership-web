@@ -965,41 +965,74 @@ function leerTestProf(pasoId, total) {
   try { const d = JSON.parse(localStorage.getItem(TEST_PROF_KEY(pasoId))); return Array.isArray(d) && d.length === total ? d : Array(total).fill(''); } catch { return Array(total).fill(''); }
 }
 
-function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar }) {
+function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, onAnadir }) {
   const [personas, setPersonas] = useState([]);
   const [cargando, setCargando] = useState(true);
+  const [nuevoNombre, setNuevoNombre] = useState('');
   useEffect(() => {
     if (!user?.id) { setCargando(false); return; }
     import('../account/personas').then(m => m.listarPersonas()).then(p => setPersonas(p ?? [])).catch(() => {}).finally(() => setCargando(false));
   }, [user?.id]);
 
   if (cargando) return <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>Cargando tu círculo...</p>;
-  if (!personas.length) return null;
+
+  function agregarNuevo() {
+    const n = nuevoNombre.trim();
+    if (!n) return;
+    const tempId = `nuevo_${Date.now()}`;
+    setPersonas(prev => [...prev, { id: tempId, nombre: n, primario: null }]);
+    onToggle(tempId, n);
+    setNuevoNombre('');
+  }
 
   return (
     <div style={{ marginBottom: 16 }}>
       <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
         Tu círculo de personas
       </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-        {personas.map(p => {
-          const activo = seleccionados[p.id]?.activo;
-          const color = TEMP_COLORS[p.primario] ?? GOLD_REF;
-          return (
-            <button key={p.id} type="button" onClick={() => onToggle(p.id, p.nombre)} style={{
-              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
-              color: activo ? '#fff' : NAVY, background: activo ? color : BEIGE,
-              border: `2px solid ${activo ? color : LINE}`, borderRadius: 24,
-              padding: '8px 18px', cursor: 'pointer', transition: 'all 200ms',
-            }}>
-              {p.nombre}
-              {p.primario && <span style={{ marginLeft: 6, fontSize: 11, opacity: 0.7 }}>{TEMP_NOMBRE[p.primario]?.[0] ?? ''}</span>}
-            </button>
-          );
-        })}
+      {personas.length > 0 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginBottom: 10 }}>
+          {personas.map(p => {
+            const activo = seleccionados[p.id]?.activo;
+            const color = TEMP_COLORS[p.primario] ?? GOLD_REF;
+            return (
+              <button key={p.id} type="button" onClick={() => onToggle(p.id, p.nombre)} style={{
+                fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, textAlign: 'left',
+                color: activo ? '#fff' : NAVY, background: activo ? color : BEIGE,
+                border: `2px solid ${activo ? color : LINE}`, borderRadius: 0,
+                padding: '12px 18px', cursor: 'pointer', transition: 'all 200ms',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              }}>
+                <span>{p.nombre}</span>
+                {activo && <span style={{ fontSize: 18 }}>✓</span>}
+              </button>
+            );
+          })}
+        </div>
+      )}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
+        <input
+          type="text"
+          value={nuevoNombre}
+          onChange={(e) => setNuevoNombre(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') agregarNuevo(); }}
+          placeholder="Añadir persona..."
+          style={{
+            fontFamily: FONT_BODY, fontSize: 15, color: NAVY, background: BEIGE,
+            border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 14px',
+            flex: 1, outline: 'none',
+          }}
+        />
+        <button type="button" onClick={agregarNuevo} disabled={!nuevoNombre.trim()} style={{
+          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+          color: nuevoNombre.trim() ? '#fff' : MUTED, background: nuevoNombre.trim() ? GOLD_REF : LINE,
+          border: 'none', borderRadius: 0, padding: '10px 18px', cursor: nuevoNombre.trim() ? 'pointer' : 'default',
+        }}>
+          + Añadir
+        </button>
       </div>
       {Object.entries(seleccionados).filter(([, v]) => v.activo && !v.razon).map(([id, v]) => (
-        <div key={id} style={{ marginTop: 10, padding: '10px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
+        <div key={id} style={{ marginTop: 8, padding: '10px 14px', background: BEIGE, border: `1px solid ${LINE}`, borderRadius: 0 }}>
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 6px', fontWeight: 600 }}>
             ¿Por qué consideras a {v.nombre} magnánimo/a?
           </p>
