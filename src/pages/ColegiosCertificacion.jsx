@@ -281,8 +281,6 @@ function ColegiosCertificacion() {
   const wide = w >= 1000;
 
   const handleViabilidad = (e) => { e.preventDefault(); navigate(`/${lang}/colegios/gracias/conversacion`); };
-  const handleConversation = (e) => { e.preventDefault(); closeModal(); navigate(`/${lang}/colegios/gracias/conversacion`); };
-  const handleDetails = (e) => { e.preventDefault(); closeModal(); navigate(`/${lang}/colegios/gracias/detalles`); };
 
   return (
     <div ref={rootRef} className="vlc">
@@ -343,11 +341,12 @@ function ColegiosCertificacion() {
                 margin: 0, fontSize: 'clamp(16px,1.3vw,18px)', lineHeight: 1.7, color: C.cream, maxWidth: '62ch',
               }}>{k('hero_text')}</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                <button type="button" className="vlc-cta" onClick={() => openModal('dossier')} data-gtm="details-open">
-                  {k('cta_presentation')}
-                </button>
-                <button type="button" className="vlc-ghost" onClick={() => openModal('conversation')} data-gtm="conversation-open">
-                  {k('cta_conversation')}
+                <a href="#solicitud" className="vlc-cta" data-gtm="viabilidad-scroll">
+                  {k('cta_viabilidad')}
+                </a>
+                <button type="button" className="vlc-ghost" onClick={() => openModal('dossier')} data-gtm="dossier-open">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 20h16" /></svg>
+                  {k('cta_dossier')}
                 </button>
               </div>
               <ul style={{
@@ -738,15 +737,11 @@ function ColegiosCertificacion() {
         <div style={{
           position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 55,
           background: 'rgba(15,30,51,.96)', borderTop: '1px solid rgba(201,171,66,.4)',
-          padding: '10px 16px calc(10px + env(safe-area-inset-bottom))',
-          display: 'flex', gap: 8,
+          padding: '12px 16px calc(12px + env(safe-area-inset-bottom))',
         }}>
-          <button type="button" className="vlc-cta" onClick={() => openModal('dossier')} style={{ flex: 1, minHeight: 46, padding: '0 12px', fontSize: 14 }}>
-            {k('cta_presentation')}
-          </button>
-          <button type="button" className="vlc-ghost" onClick={() => openModal('conversation')} style={{ flex: 1, minHeight: 46, padding: '0 12px', fontSize: 14 }}>
-            {k('cta_conversation')}
-          </button>
+          <a href="#solicitud" className="vlc-cta" style={{ display: 'flex', minHeight: 48, padding: '0 16px' }}>
+            Solicitar Informe de Viabilidad
+          </a>
         </div>
       )}
 
@@ -758,55 +753,15 @@ function ColegiosCertificacion() {
               fontSize: 'clamp(24px,3vw,30px)', lineHeight: 1.15, color: C.blueDeep,
             }}>{k('modal_title')}</h2>
             <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{k('modal_text')}</p>
-            <form onSubmit={handleDetails} style={{ marginTop: 12 }}>
-              <FormField label={k('det_nombre')} id="det-nombre" autoComplete="name" />
-              <FormField label={k('det_email')} id="det-email" type="email" autoComplete="email" />
-              <FormField label={k('det_centro')} id="det-centro" />
-              <FormField label={k('det_pais')} id="det-pais" />
-              <SelectField label={k('det_cargo')} id="det-cargo" options={k('det_cargo_opts')} />
-              <FormField label={k('det_num')} id="det-num" type="number" />
-              <label className="vlc-check" style={{ margin: '16px 0 24px' }}>
-                <input type="checkbox" required />
-                <span style={{ fontSize: 13, lineHeight: 1.5, color: C.plomo }}>{k('det_rgpd')}</span>
-              </label>
-              <button type="submit" className="vlc-cta" style={{ width: '100%' }}>{k('det_submit')}</button>
-            </form>
+            <div id="brevo-form" style={{
+              marginTop: 12, minHeight: 220, border: `1px dashed ${C.piedra}`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 12, letterSpacing: '0.16em', color: C.plomo,
+            }}>BREVO FORM</div>
           </Stack>
         </ModalShell>
       )}
 
-      {modal === 'conversation' && (
-        <ModalShell onClose={closeModal} closeRef={closeRef}>
-          <Stack gap={16} reveal={false}>
-            <h2 style={{
-              margin: 0, paddingRight: 36, fontFamily: SLAB, fontWeight: 700,
-              fontSize: 'clamp(24px,3vw,30px)', lineHeight: 1.15, color: C.blueDeep,
-            }}>{k('conv_title')}</h2>
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{k('conv_text')}</p>
-            <form onSubmit={handleConversation} style={{ marginTop: 12 }}>
-              <FormField label={k('conv_nombre')} id="conv-nombre" autoComplete="name" />
-              <FormField label={k('conv_email')} id="conv-email" type="email" autoComplete="email" />
-              <FormField label={k('conv_tel')} id="conv-tel" type="tel" autoComplete="tel" required={false} />
-              <FormField label={k('conv_centro')} id="conv-centro" />
-              <FormField label={k('conv_pais')} id="conv-pais" />
-              <SelectField label={k('conv_cargo')} id="conv-cargo" options={k('conv_cargo_opts')} />
-              <FormField label={k('conv_num')} id="conv-num" type="number" />
-              <div className="vlc-field">
-                <label htmlFor="conv-interes">{k('conv_interes')}</label>
-                <select id="conv-interes" name="conv-interes" defaultValue="">
-                  <option value="" disabled hidden></option>
-                  {k('conv_interes_opts').map((o) => <option key={o}>{o}</option>)}
-                </select>
-              </div>
-              <label className="vlc-check" style={{ margin: '16px 0 24px' }}>
-                <input type="checkbox" required />
-                <span style={{ fontSize: 13, lineHeight: 1.5, color: C.plomo }}>{k('conv_rgpd')}</span>
-              </label>
-              <button type="submit" className="vlc-cta" style={{ width: '100%' }}>{k('conv_submit')}</button>
-            </form>
-          </Stack>
-        </ModalShell>
-      )}
 
     </div>
   );
