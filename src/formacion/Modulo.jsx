@@ -443,7 +443,25 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
-function ResumenPersonal({ temperamento, pasos, completados }) {
+function extraerReflexiones(pasos, completados) {
+  const items = [];
+  for (const paso of pasos) {
+    const datos = completados[paso.id];
+    if (!datos) continue;
+    if (paso.tipo === 'test_profundo' || paso.tipo === 'reflexion_piramide') {
+      const textos = (datos.respuestas ?? []).filter(t => typeof t === 'string' && t.trim());
+      if (textos.length > 0) items.push({ id: paso.id, titulo: paso.titulo, texto: textos[0] });
+    } else if (paso.tipo === 'temperamento_magnanimidad') {
+      const t = datos.textoFuerte || datos.textoDebil;
+      if (t) items.push({ id: paso.id, titulo: paso.titulo, texto: datos.textoFuerte ? `Puntos fuertes: ${datos.textoFuerte}` : `Puntos débiles: ${datos.textoDebil}` });
+    } else if (paso.tipo === 'cierre' && datos.lo_que_facilita) {
+      items.push({ id: paso.id, titulo: 'Mi síntesis', texto: datos.proposito || datos.lo_que_facilita });
+    }
+  }
+  return items;
+}
+
+function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
   if (!temperamento) return null;
   const p = temperamento.primary;
   const s = temperamento.secondary;
@@ -453,6 +471,8 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
   const retosHecho = retosStep && completados[retosStep.id];
   const fd = retosStep?.facilita_dificulta?.[p];
   const virtudDesafio = retosStep?.virtud_desafio_map?.[perfil] ?? retosStep?.virtud_desafio_map?.[p];
+
+  const reflexiones = extraerReflexiones(pasos, completados);
 
   return (
     <div style={{ ...tarjeta, marginTop: 18 }}>
@@ -491,6 +511,27 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
             </div>
           )}
         </>
+      )}
+
+      {reflexiones.length > 0 && (
+        <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Mis reflexiones</div>
+          {reflexiones.map((r) => (
+            <div key={r.id} style={{ marginBottom: 10, padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${LINE}` }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>{r.titulo}</div>
+              <div style={{
+                fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45,
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+              }}>{r.texto}</div>
+            </div>
+          ))}
+          {onVerCuaderno && (
+            <button type="button" onClick={onVerCuaderno} style={{
+              fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
+              background: 'none', border: 'none', padding: '4px 0 0', cursor: 'pointer',
+            }}>Ver todas en el cuaderno →</button>
+          )}
+        </div>
       )}
     </div>
   );
@@ -949,7 +990,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         </div>
 
         {temperamento && (
-          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} />
+          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} onVerCuaderno={() => setVerCuaderno(true)} />
         )}
 
         {userId && (
