@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useT } from '../i18n';
 import SEO from '../components/SEO';
 import ColegiosPrograma from './ColegiosPrograma';
@@ -233,6 +233,7 @@ export default function ColegiosPage() {
 function ColegiosCertificacion() {
   const { t, lang } = useT();
   const navigate = useNavigate();
+  const location = useLocation();
   const k = (key) => t(`colegios_cert.${key}`);
   const rootRef = useRef(null);
   const closeRef = useRef(null);
@@ -244,6 +245,14 @@ function ColegiosCertificacion() {
   useEffect(() => {
     try { if (localStorage.getItem('vl-ce-topbar-closed') === '1') setBarOpen(false); } catch (e) {}
   }, []);
+
+  useEffect(() => {
+    const which = location.state?.openModal;
+    if (which === 'conversation' || which === 'details') {
+      setModal(which === 'details' ? 'dossier' : which);
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state]);
 
   const closeBar = () => {
     setBarOpen(false);
@@ -334,10 +343,11 @@ function ColegiosCertificacion() {
                 margin: 0, fontSize: 'clamp(16px,1.3vw,18px)', lineHeight: 1.7, color: C.cream, maxWidth: '62ch',
               }}>{k('hero_text')}</p>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
-                <a href="#solicitud" className="vlc-cta" data-gtm="contact-lead">{k('cta_viabilidad')}</a>
-                <button type="button" className="vlc-ghost" onClick={() => openModal('dossier')} data-gtm="dossier-open">
-                  <Icon name="download" size={18} color="currentColor" />
-                  {k('cta_dossier')}
+                <button type="button" className="vlc-cta" onClick={() => openModal('dossier')} data-gtm="details-open">
+                  {k('cta_presentation')}
+                </button>
+                <button type="button" className="vlc-ghost" onClick={() => openModal('conversation')} data-gtm="conversation-open">
+                  {k('cta_conversation')}
                 </button>
               </div>
               <ul style={{
@@ -728,11 +738,15 @@ function ColegiosCertificacion() {
         <div style={{
           position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 55,
           background: 'rgba(15,30,51,.96)', borderTop: '1px solid rgba(201,171,66,.4)',
-          padding: '12px 16px calc(12px + env(safe-area-inset-bottom))',
+          padding: '10px 16px calc(10px + env(safe-area-inset-bottom))',
+          display: 'flex', gap: 8,
         }}>
-          <a href="#solicitud" className="vlc-cta" style={{ display: 'flex', minHeight: 48, padding: '0 16px' }}>
-            {k('cta_viabilidad')}
-          </a>
+          <button type="button" className="vlc-cta" onClick={() => openModal('dossier')} style={{ flex: 1, minHeight: 46, padding: '0 12px', fontSize: 14 }}>
+            {k('cta_presentation')}
+          </button>
+          <button type="button" className="vlc-ghost" onClick={() => openModal('conversation')} style={{ flex: 1, minHeight: 46, padding: '0 12px', fontSize: 14 }}>
+            {k('cta_conversation')}
+          </button>
         </div>
       )}
 
@@ -794,30 +808,6 @@ function ColegiosCertificacion() {
         </ModalShell>
       )}
 
-      {modal === 'details' && (
-        <ModalShell onClose={closeModal} closeRef={closeRef}>
-          <Stack gap={16} reveal={false}>
-            <h2 style={{
-              margin: 0, paddingRight: 36, fontFamily: SLAB, fontWeight: 700,
-              fontSize: 'clamp(24px,3vw,30px)', lineHeight: 1.15, color: C.blueDeep,
-            }}>{k('det_title')}</h2>
-            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.6 }}>{k('det_text')}</p>
-            <form onSubmit={handleDetails} style={{ marginTop: 12 }}>
-              <FormField label={k('det_nombre')} id="det2-nombre" autoComplete="name" />
-              <FormField label={k('det_email')} id="det2-email" type="email" autoComplete="email" />
-              <FormField label={k('det_centro')} id="det2-centro" />
-              <FormField label={k('det_pais')} id="det2-pais" />
-              <SelectField label={k('det_cargo')} id="det2-cargo" options={k('det_cargo_opts')} />
-              <FormField label={k('det_num')} id="det2-num" type="number" />
-              <label className="vlc-check" style={{ margin: '16px 0 24px' }}>
-                <input type="checkbox" required />
-                <span style={{ fontSize: 13, lineHeight: 1.5, color: C.plomo }}>{k('det_rgpd')}</span>
-              </label>
-              <button type="submit" className="vlc-cta" style={{ width: '100%' }}>{k('det_submit')}</button>
-            </form>
-          </Stack>
-        </ModalShell>
-      )}
     </div>
   );
 }
