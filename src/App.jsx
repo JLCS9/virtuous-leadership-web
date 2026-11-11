@@ -5,6 +5,7 @@ import Acreditacion from './pages/Acreditacion';
 import AcreditacionColegios from './pages/AcreditacionColegios';
 import ColegiosPrograma from './pages/ColegiosPrograma';
 import ColegiosPage from './pages/ColegiosCertificacion';
+import ColegiosGracias from './pages/ColegiosGracias';
 import EmpresasPage from './pages/EmpresasCertificacion';
 import AcreditacionUniversidades from './pages/AcreditacionUniversidades';
 import AcreditacionEducacionSuperior from './pages/AcreditacionEducacionSuperior';
@@ -36,6 +37,7 @@ const PAGE_ELEMENTS = {
   acreditacion_landing:  <Acreditacion />,
   acreditacion_colegios: <AcreditacionColegios />,
   programa_colegios:     <ColegiosPage />,
+  colegios_gracias:      <ColegiosGracias />,
   programa_empresas:     <EmpresasPage />,
   universidades:         <AcreditacionUniversidades />,
   edsup:                 <AcreditacionEducacionSuperior />,
