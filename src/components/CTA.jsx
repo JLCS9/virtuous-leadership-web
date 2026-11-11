@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NAVY, NAVY_SOFT, PAPER, GOLD, GOLD_SOFT } from '../theme';
+import { NAVY, PAPER, GOLD, GOLD_SOFT } from '../theme';
 import { styles } from '../theme';
 import { LocalLink } from '../i18n';
 
@@ -24,9 +24,7 @@ export default function CTA({ to, href, variant = 'primary', children, style, ho
   // Hover por defecto: depende de la variante y del background actual.
   let defaultHover;
   if (variant === 'primary') {
-    defaultHover = merged.background === GOLD
-      ? { background: GOLD_SOFT }
-      : { background: NAVY_SOFT };
+    defaultHover = { background: GOLD_SOFT };
   } else {
     defaultHover = { background: NAVY, color: PAPER };
   }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { BEIGE, INK, FONT_SANS } from '../theme';
+import { BEIGE, INK, FONT_BODY, GOLD_REF } from '../theme';
 import Header from './Header';
 import Footer from './Footer';
 
@@ -25,15 +25,15 @@ export default function Layout({ children }) {
 
   return (
     <div style={{
-      minHeight: '100vh', background: BEIGE, color: INK, fontFamily: FONT_SANS,
+      minHeight: '100vh', background: BEIGE, color: INK, fontFamily: FONT_BODY,
       display: 'flex', flexDirection: 'column',
     }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:ital,wght@0,400;0,600;1,400&display=swap');
         html, body, #root { margin: 0; padding: 0; }
         * { box-sizing: border-box; }
         a { color: inherit; }
-        button:focus-visible, a:focus-visible { outline: 2px solid #C5A55A; outline-offset: 2px; }
+        button:focus-visible, a:focus-visible { outline: 2px solid ${GOLD_REF}; outline-offset: 2px; }
       `}</style>
       <Header />
       <main style={{ flex: 1 }}>
