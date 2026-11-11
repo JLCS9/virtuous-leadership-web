@@ -10,6 +10,8 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
 import modulo1 from '../data/modulo1.json';
+import modulo2 from '../data/modulo2.json';
+import modulo3 from '../data/modulo3.json';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 const SEXO = { hombre: 'Hombre', mujer: 'Mujer' };
@@ -527,36 +529,108 @@ function TabDatos({ tests, personas, camino, user }) {
 
 /* ─── Tab 3: Mis notas ─── */
 
-const MODULOS = [{ id: 'modulo1', titulo: 'Curso 1 — Del temperamento al carácter', data: modulo1 }];
+const MODULOS = [
+  { id: 'modulo1', titulo: 'Curso 1 — Del temperamento al carácter', data: modulo1 },
+  { id: 'modulo2', titulo: 'Curso 2 — Practicando la magnanimidad', data: modulo2 },
+  { id: 'modulo3', titulo: 'Curso 3 — Practicar la humildad', data: modulo3 },
+];
+
+const TIPO_LABEL = {
+  test_profundo: 'Autoexamen',
+  reflexion_piramide: 'Reflexión',
+  identifica: 'Diagrama',
+  define: 'Define',
+  desliza: 'Desliza',
+  retos_temperamento: 'Reto',
+  cuestionario: 'Cuestionario',
+  reflexion_guiada: 'Reflexión guiada',
+};
 
 function titulosPasos(data) {
   const map = {};
-  let idx = 0;
+  let modIdx = 0;
+  let currentMod = '';
   for (const p of data.pasos) {
-    if (p.tipo === 'video') {
-      map[p.id] = `Módulo ${idx} · ${p.titulo}`;
-      idx++;
+    if (p.tipo === 'video' && p.visible !== false) {
+      currentMod = `Mód. ${modIdx} · ${p.titulo}`;
+      map[p.id] = currentMod;
+      modIdx++;
+    } else if (p.tipo !== 'video' && currentMod) {
+      const label = TIPO_LABEL[p.tipo] ?? p.tipo;
+      map[p.id] = `${currentMod} › ${label}`;
     }
   }
   return map;
 }
 
-function TabNotas({ userId }) {
-  const todas = [];
+function buildTitulosGlobal() {
+  const global = {};
   for (const mod of MODULOS) {
-    const key = `vl-notas:${userId}:${mod.id}`;
-    let raw;
-    try { raw = localStorage.getItem(key); } catch { continue; }
-    if (!raw) continue;
-    let parsed;
-    try { parsed = JSON.parse(raw); } catch { continue; }
     const titulos = titulosPasos(mod.data);
-    const entradas = [];
-    for (const [pasoId, arr] of Object.entries(parsed)) {
-      if (!Array.isArray(arr) || arr.length === 0) continue;
-      entradas.push({ pasoId, titulo: titulos[pasoId] ?? pasoId, notas: arr.slice().reverse() });
+    for (const [pasoId, titulo] of Object.entries(titulos)) {
+      global[pasoId] = { titulo, modId: mod.id, modTitulo: mod.titulo };
     }
-    if (entradas.length > 0) todas.push({ mod, entradas });
+  }
+  return global;
+}
+
+function TabNotas({ userId }) {
+  const [notasBD, setNotasBD] = useState(null);
+  const [cargando, setCargando] = useState(Boolean(supabase));
+
+  useEffect(() => {
+    if (!supabase) return;
+    supabase.from('notas_formacion')
+      .select('id, contenido_id, texto, created_at')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: true })
+      .then(({ data, error }) => {
+        if (error) { console.warn('[notas] Error:', error.message); setCargando(false); return; }
+        const mapa = {};
+        for (const r of data ?? []) {
+          if (!mapa[r.contenido_id]) mapa[r.contenido_id] = [];
+          mapa[r.contenido_id].push({ id: r.id, texto: r.texto, fecha: r.created_at });
+        }
+        setNotasBD(mapa);
+        setCargando(false);
+      });
+  }, [userId]);
+
+  const titulosGlobal = buildTitulosGlobal();
+  const todas = [];
+
+  if (supabase && notasBD) {
+    const porCurso = {};
+    for (const [pasoId, arr] of Object.entries(notasBD)) {
+      if (!Array.isArray(arr) || arr.length === 0) continue;
+      const info = titulosGlobal[pasoId];
+      const modId = info?.modId ?? 'desconocido';
+      if (!porCurso[modId]) porCurso[modId] = [];
+      porCurso[modId].push({ pasoId, titulo: info?.titulo ?? pasoId, notas: arr.slice().reverse() });
+    }
+    for (const mod of MODULOS) {
+      if (porCurso[mod.id]?.length > 0) todas.push({ mod, entradas: porCurso[mod.id] });
+    }
+  } else if (!supabase) {
+    for (const mod of MODULOS) {
+      const key = `vl-notas:${userId}:${mod.id}`;
+      let raw;
+      try { raw = localStorage.getItem(key); } catch { continue; }
+      if (!raw) continue;
+      let parsed;
+      try { parsed = JSON.parse(raw); } catch { continue; }
+      const entradas = [];
+      for (const [pasoId, arr] of Object.entries(parsed)) {
+        if (!Array.isArray(arr) || arr.length === 0) continue;
+        const info = titulosGlobal[pasoId];
+        entradas.push({ pasoId, titulo: info?.titulo ?? pasoId, notas: arr.slice().reverse() });
+      }
+      if (entradas.length > 0) todas.push({ mod, entradas });
+    }
+  }
+
+  if (cargando) {
+    return <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, textAlign: 'center', padding: '48px 24px' }}>Cargando notas…</p>;
   }
 
   if (todas.length === 0) {
