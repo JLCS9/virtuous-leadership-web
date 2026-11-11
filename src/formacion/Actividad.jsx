@@ -10,6 +10,8 @@ import diagramaMEL from './diagrama-MEL.png';
 import diagramaSAN from './diagrama-SAN.png';
 import diagramaFLE from './diagrama-FLE.png';
 import diagramaTemperamentosImg from './diagrama-magnanimidad-temperamentos.jpg';
+import piramideHumildadImg from './piramide-humildad.png';
+import piramideLVCompletaImg from './piramide-lv-completa.png';
 import retratoCOL from './assets/retrato-COL.jpg';
 import retratoMEL from './assets/retrato-MEL.jpg';
 import retratoSAN from './assets/retrato-SAN.jpg';
@@ -179,7 +181,7 @@ const CARATULA_TEXTOS = {
   test_caracter: { icono: '◈', tipo: 'Test de carácter', desc: 'Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, valor, autocontrol, justicia, magnanimidad y humildad.' },
   test_corazon: { icono: '♡', tipo: 'Test del corazón', desc: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.' },
   reflexion_piramide: { icono: '△', tipo: 'Reflexión', desc: 'Observa el diagrama y reflexiona sobre las relaciones entre las virtudes.' },
-  temperamento_magnanimidad: { icono: '✶', tipo: 'Tu temperamento y la virtud', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar esta virtud.' },
+  temperamento_magnanimidad: { icono: '✶', tipo: 'Tu temperamento', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar esta virtud.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -1244,7 +1246,9 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
 
 const REFLEXION_IMAGENES = {
   'piramide-lv': [piramideViciosImg, piramideLVImg],
+  'piramide-humildad': [piramideHumildadImg, piramideLVCompletaImg],
   'magnanimidad-temperamentos': diagramaTemperamentosImg,
+  'humildad-temperamentos': piramideHumildadImg,
 };
 
 const REFLEXION_KEY = (pasoId) => `vl-reflexion:${pasoId}`;
