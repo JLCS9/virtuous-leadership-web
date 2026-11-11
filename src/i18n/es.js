@@ -240,50 +240,57 @@ export default {
   // activarla en otro idioma, copiar esta rama a ese dict y añadir el idioma a
   // CERT_LANGS en ColegiosCertificacion.jsx.
   colegios_cert: {
-    seo_title: 'Certificación en Liderazgo Virtuoso® para colegios',
-    seo_description: 'Un proceso acompañado para que toda su comunidad educativa crezca en carácter a través de las virtudes humanas. Su colegio, Institución Certificada.',
+    seo_title: 'Certificación Institucional en Liderazgo Virtuoso® para colegios | Virtuous Leadership Institute',
+    seo_description: 'Un proceso formativo y de acompañamiento directivo creado por Alexandre Havard para que su claustro comparta un mismo lenguaje sobre el carácter y su colegio obtenga el sello de Institución Certificada.',
     contact_email: 'certification@virtuousleadership.com',
-    mail_subject_conversation: 'Conversación inicial — Certificación para colegios',
-    mail_subject_presentation: 'Solicitud de la presentación — Certificación para colegios',
+
+    // CTAs principales
+    cta_viabilidad: 'Solicitar Informe de Viabilidad Institucional',
+    cta_dossier: 'Descargar Dossier Ejecutivo (PDF)',
     cta_conversation: 'Solicite una conversación inicial',
-    cta_presentation: 'Reciba la presentación completa',
+    cta_presentation: 'Reciba todos los detalles',
 
-    hero_eyebrow: 'Para instituciones educativas',
-    hero_title: 'Certificación en Liderazgo Virtuoso®',
-    hero_text: 'Un proceso acompañado, con una formación estructurada en torno al carácter, las virtudes y la misión personal, en un único itinerario progresivo de menos de 12 meses. Su colegio puede convertirse en Institución Certificada.',
-    hero_img_alt: 'Perfil del David de Miguel Ángel en penumbra',
+    // Barra superior
+    bar_text: 'Próxima Convocatoria Institucional: Febrero. Centros limitados por convocatoria para garantizar el acompañamiento del Instituto a cada centro.',
+    bar_link: 'Consultar calendario institucional →',
+    bar_close: 'Cerrar aviso',
 
-    trust: ['29 países', '+100.000 personas formadas', '95% lo recomienda'],
-
-    // 02 — El porqué
-    why_title: 'Cada persona educa con lo que es, no solo con lo que enseña.',
-    why_text: 'Un colegio transmite conocimientos, pero lo que marca a un alumno es el carácter de quienes lo educan: lo que ve en ellos cada día. Nadie transmite un carácter que no tiene. Por eso quien crece en carácter hace crecer a los demás, y esa formación llega hasta el aula y las familias.',
-
-    // 03 — Institución Certificada
-    cert_title: 'Conviértase en Institución Certificada.',
-    cert_subtitle: 'Convertirse en Institución Certificada es un proceso que transforma la cultura del colegio, hace crecer a los educadores e inspira a los alumnos a la grandeza.',
-    cert_text_1: 'Hay colegios que enseñan valores. Y hay colegios que forman el carácter. La Certificación reconoce a los que han asumido ese compromiso con toda su comunidad educativa y lo han llevado a sus aulas y a sus familias.',
-    cert_text_2: 'Colegios de Europa y América ya forman parte de este camino. La aspiración es una comunidad internacional de instituciones educativas convencidas de que la grandeza y el servicio se educan, y empiezan en quien educa.',
-    cert_col_cap: 'Capacitación',
-    cert_col_cert: 'Certificación',
-    cert_rows: [
-      { t: 'Acceso al itinerario de formación completa', cap: true },
-      { t: 'Certificado Oficial para cada participante', cap: true },
-      { t: 'Responsable del Instituto, panel de avance e informe de temperamentos', cap: false },
-      { t: 'Medición del impacto en tres niveles', cap: false },
-      { t: 'Guías pedagógicas y test de temperamento para alumnos e hijos', cap: false },
-      { t: 'Implantación con rúbrica, feedback y validación del Instituto', cap: false },
-      { t: 'Sello de Institución Certificada, renovable cada año', cap: false },
+    // Hero
+    hero_badge: 'Programa Oficial de Formación del Carácter',
+    hero_title: 'Certificación Institucional en Liderazgo Virtuoso®',
+    hero_subtitle: 'Transforme la cultura de su centro desde el carácter de quienes educan.',
+    hero_text: 'Un proceso formativo y de acompañamiento directivo creado por Alexandre Havard para que el equipo directivo y el claustro docente compartan un mismo lenguaje sobre el carácter, conozcan su temperamento y consoliden un proyecto educativo con sello oficial.',
+    hero_img_alt: 'Equipo directivo y docentes reunidos en torno a una mesa',
+    hero_sello_title: 'Sello Oficial de Institución Certificada',
+    hero_sello_text: 'De dentro hacia fuera: primero los educadores, luego las aulas.',
+    trust: [
+      { n: 100000, prefix: '+', text: 'personas formadas en 29 países' },
+      { n: 30, prefix: '+', text: 'centros educativos formados' },
+      { n: 35, text: 'horas de formación en vídeo' },
+      { text: 'FUNDAE', sub: 'Bonificable a través de FUNDAE (España)' },
     ],
     cert_cta: 'Reciba todos los detalles',
 
-    // 04 — Fundamentos
-    fund_eyebrow: 'Fundamentos de la metodología',
-    fund_title: 'Liderar es educar. Educar es formar el carácter.',
-    fund_pillars: [
-      { title: 'La ciencia del liderazgo.', text: 'Liderar es educar, del latín edūcere, sacar fuera lo que ya está en la persona. Por eso el liderazgo es un llamado universal, no el privilegio de un cargo o de un temperamento.' },
-      { title: 'La antropología.', text: 'El temperamento es innato y no se cambia; el carácter se adquiere con la práctica de las virtudes. Conocer el propio temperamento sirve para entenderse, comunicar con los demás y para identificar la virtud-desafío, el camino más corto hacia la excelencia.' },
-      { title: 'La ética de las virtudes.', text: 'Las cuatro cardinales (prudencia, fortaleza, dominio de sí y justicia) aseguran la integridad. La magnanimidad y la humildad son la esencia del liderazgo.' },
+    // Prueba social
+    proof_eyebrow: 'Aval institucional contrastado',
+    proof_title: 'Una metodología adoptada por redes formativas y centros de referencia',
+    proof_band: 'Despliegue activo en redes de educación técnica y secundaria con más de 25 centros en España, junto a centros privados e internacionales en Europa y América Latina.',
+    proof_cases: [
+      {
+        tag: 'Primera Institución Certificada',
+        name: 'Colegio Americano de Bogotá',
+        sub: 'Centro K-12 · Bogotá, Colombia',
+        text: 'Institución pionera a nivel internacional en integrar la metodología de Liderazgo Virtuoso de Alexandre Havard en su claustro docente y comunidad educativa, y primera en completar el proceso de Certificación.',
+        foot: 'Placa oficial de Institución Certificada.',
+      },
+      {
+        tag: 'Proceso Activo de Certificación',
+        name: 'Delmar International School',
+        sub: 'Colegio Privado Internacional · México',
+        quote: 'Buscábamos un curso profundo y a la vez práctico, que nos ayudara a crecer como personas para ayudar a crecer a nuestros alumnos y familias. La satisfacción por lo logrado como Colegio es total.',
+        quote_author: 'Rodrigo Minakata · Subdirector General',
+        caps: ['104 profesionales docentes en formación', '20 directivos coordinando', 'Informe de temperamentos y medición del impacto en curso'],
+      },
     ],
     fund_temp_label: 'Temperamento',
     fund_temps: ['Colérico', 'Sanguíneo', 'Melancólico', 'Flemático'],
@@ -292,95 +299,91 @@ export default {
     fund_academic_link: 'Lea la contribución científica completa →',
     fund_img_alt: 'Rueda de los cuatro temperamentos: colérico, sanguíneo, melancólico y flemático',
 
-    // 05 — Cómo funciona
-    how_eyebrow: 'Cómo funciona la Certificación',
-    how_title: 'La comunidad educativa, organizada para crecer junta.',
-    how_roles: ['Dirección', 'Docentes', 'Tutores', 'Orientación', 'Administración', 'Servicios'],
-    how_cascade: 'En cascada',
-    how_levels: [
-      { title: 'Coordinador del programa.', text: 'Un miembro del equipo directivo.' },
-      { title: 'Equipo coordinador.', text: 'Un responsable por cada grupo de 5 a 10 personas.' },
-      { title: 'Profesores y personal.', text: 'Lo llevan al aula y a las familias.' },
+    // Fundamento pedagógico
+    fund_quote: '«Cada persona educa con lo que es, no solo con lo que enseña.»',
+    fund_lead: 'Los colegios destacan en la instrucción académica, pero la huella perdurable en los alumnos depende del carácter de sus educadores. El liderazgo no es un cargo: es crecer haciendo crecer a los demás.',
+    fund_img_alt: 'Rueda de los cuatro temperamentos: colérico, sanguíneo, melancólico y flemático',
+    fund_col1_title: 'El temperamento es biológico',
+    fund_col1_text: 'Nacemos con una predisposición innata que condiciona nuestras respuestas espontáneas.',
+    fund_col2_title: 'El carácter es espiritual',
+    fund_col2_text: 'Se construye libremente mediante la práctica de las virtudes. Sin carácter, el temperamento domina a la persona. Con carácter, la persona gobierna su vida y cumple su misión.',
+    temperaments: [
+      { name: 'Colérico', text: 'Tendencia natural a la acción y al mando.', virtue: 'HUMILDAD', color: '#a72334' },
+      { name: 'Sanguíneo', text: 'Tendencia natural a las personas, la sociabilidad y el entusiasmo.', virtue: 'PERSEVERANCIA', color: '#c8852a' },
+      { name: 'Melancólico', text: 'Tendencia natural a las ideas, la reflexión y la profundidad.', virtue: 'AUDACIA', color: '#4e4075' },
+      { name: 'Flemático', text: 'Tendencia natural a la paz, la serenidad y la estabilidad.', virtue: 'MAGNANIMIDAD', color: '#437f3f' },
     ],
-    how_facts: [
-      { icon: 'clock', n: 35, text: 'horas de formación' },
-      { icon: 'calendar', n: 6, text: 'meses recomendados, flexible de 2 a 12' },
-      { icon: 'calendarCheck', text: 'Calendario adaptado a su centro' },
+    fund_virtue_label: 'Virtud-desafío',
+
+    // Itinerario formativo
+    path_title: 'Un proceso riguroso y acompañado para los educadores del centro',
+    path_pills: [
+      { label: 'Carga lectiva', text: '35 horas de formación en vídeo impartidas directamente por Alexandre Havard.' },
+      { label: 'Duración', text: '6 meses de trabajo continuo y asimilación gradual (un módulo cada 2–3 semanas).' },
+      { label: 'Destinatarios', text: 'Obligatorio para el 100% del Equipo Directivo y el Claustro Docente. Personal de administración y servicios: participación opcional.' },
     ],
-    how_fundae: 'Formación bonificable a través de FUNDAE (solo en España).',
-    how_steps_title: 'Cómo se pone en marcha',
-    how_steps: [
-      { title: 'Conversación inicial.', text: 'Conocemos su centro y preparamos una propuesta a medida.' },
-      { title: 'Organización.', text: 'Se definen el coordinador del programa, el equipo coordinador, los grupos y el calendario.' },
-      { title: 'Accesos.', text: 'Cada participante recibe su acceso y sus instrucciones.' },
-      { title: 'El recorrido.', text: 'Capacitación, implantación y Certificación, con seguimiento por parte del Instituto.' },
+    courses: [
+      'Del Temperamento al Carácter',
+      'Practicar la Magnanimidad',
+      'Practicar la Humildad',
+      'Las 4 Virtudes Fundamentales (prudencia, fortaleza, dominio de sí y justicia)',
+      'Corazón, Intelecto y Voluntad',
+      'Descubre tu Misión',
+      'La Educación del Corazón',
     ],
 
-    // 06 — La experiencia
-    exp_quote: '«Buscábamos un curso profundo y a la vez práctico, que nos ayudara a crecer como personas para ayudar a crecer a nuestros alumnos y familias. La satisfacción por lo logrado como Colegio es total.»',
-    exp_quote_author: 'Rodrigo Minakata, Subdirector General · Delmar International School',
-    exp_nums: [
-      { n: 105, text: 'profesionales formados' },
-      { n: 20, text: 'responsables' },
+    // Entregables
+    del_title: 'Qué recibe la Dirección de la Institución',
+    deliverables: [
+      { title: 'Informe de temperamentos', text: 'El mapa de los temperamentos de la comunidad educativa, procesado a partir de los tests individuales. Una herramienta para entender cómo decide y se relaciona el equipo, y en qué virtudes-desafío concentrar el crecimiento.', span: 4 },
+      { title: 'Medición del impacto (inicio y cierre)', text: 'Test de carácter al inicio y al cierre del itinerario para medir con datos empíricos la evolución del equipo y del lenguaje común sobre el carácter.', span: 2 },
+      { title: 'Transferencia a Familias («Train the Trainers»)', text: 'Al finalizar el semestre, el responsable del Instituto forma al comité interno del colegio (orientadores y tutores) y les entrega el material de presentación y guiones para que el propio centro lidere las escuelas de padres en el siguiente curso.', span: 2 },
+      { title: 'Sello Oficial y Placa Conmemorativa', text: 'Distintivo físico grabado para el acceso al edificio y sellos digitales vectorizados para folletos de admisiones y web corporativa.', span: 4 },
     ],
-    exp_stats: [
-      { n: 93, suffix: '%', text: 'lo valora como Excelente o Muy bueno' },
-      { n: 95, suffix: '%', text: 'lo recomienda' },
-      { title: '«Del Temperamento al Carácter» y «Descubre tu Misión»', text: 'los módulos más valorados' },
-    ],
-    exp_cards: [
-      { quote: '«Me ha ayudado a entender mejor a los que son diferentes a mí, en especial a los coléricos, y también a los sanguíneos. A no avergonzarme cuando ensalzan mis talentos, algo que me violentaba mucho, y a ser un poco más audaz, aunque me sigue costando, cuando tengo que decidir y actuar, sobre todo en lo relacionado con la gestión de personas.»', author: 'Mª Dolores' },
-      { quote: '«La claridad de la exposición y lo bien enraizada que está. Muchos cursos sobre «tipos de persona» son pura palabrería; esta formación se apoya en la antropología y enseña de verdad a crecer como persona.»', author: 'David B.' },
-      { quote: '«Me ha sorprendido el enfoque, la profundidad y la espiritualidad del programa. Va más allá de lo teórico: toca el corazón y el alma, algo muy diferente a lo que suelen ofrecer.»', author: 'Isabel G.' },
-      { quote: '«He tomado mayor conciencia de que el liderazgo consiste, ante todo, en crecer haciendo crecer a los demás.»', author: 'Luis E.' },
-    ],
-    exp_author_name: 'Alexandre Havard',
-    exp_author_role: 'Fundador del Sistema de Liderazgo Virtuoso',
-    exp_author_bio: 'Forma a altos directivos en los 7 continentes y enseña en el MIT-Skoltech de Moscú; su obra está traducida a más de veinte lenguas.',
-    exp_author_link: 'Conozca a Alexandre Havard en alexhavard.com →',
-    exp_author_nums: [
-      { n: 100000, prefix: '+', text: 'personas formadas' },
-      { n: 29, text: 'países' },
+    del_modes: [
+      { title: 'Modalidad Presencial', text: 'Jornadas del responsable del Instituto en el propio centro educativo (inmersión directiva inicial, sesión plenaria de apertura y auditoría final con entrega de placa y formación de formadores). Seguimiento continuo en plataforma.' },
+      { title: 'Modalidad 100% Online (Global)', text: '3 sesiones ejecutivas estratégicas por videoconferencia directa con el Equipo Directivo (Apertura, Entrega del Informe de Temperamentos y Cierre de curso). Tutoría continua en campus virtual y envío internacional de la placa conmemorativa.' },
     ],
 
-    // 07 — Cierre: FAQ
-    faq_title: 'Preguntas frecuentes',
-    faqs: [
-      ['¿Cuánto tiempo exige?', '35 horas de formación en unos 6 meses, flexible de 2 a 12 según el colegio. El calendario se adapta al centro.'],
-      ['¿Quién puede participar?', 'Toda la comunidad educativa: dirección, docentes, tutores, orientación, administración y servicios.'],
-      ['¿Puedo contratar solo la Capacitación?', 'Sí. Y la Certificación puede añadirse mientras el claustro está en formación. Si el recorrido ya ha terminado, la Certificación se hace con una nueva promoción.'],
-      ['¿Qué es la rúbrica de implantación?', 'La guía con la que el colegio define cómo lleva el carácter a sus aulas, y con la que el Instituto valida el proyecto antes de otorgar el sello.'],
-      ['¿Cuánto dura el acceso a la formación?', 'Un año desde el alta de cada participante. Con la Certificación, la renovación anual incluye la renovación de los accesos.'],
-      ['¿Qué pasa con las nuevas incorporaciones?', 'Se incorporan con nuevos accesos, en cualquier momento del curso.'],
-      ['¿Son confidenciales los resultados de los tests?', 'El informe de temperamentos se presenta siempre con datos agregados, sin nombres.'],
-      ['¿Se adapta a centros o redes grandes?', 'Sí. El programa se amplía a medida según el número de participantes.'],
+    // Ruta plurianual
+    road_title: 'Un compromiso de formación institucional en 3 etapas',
+    road_phases: [
+      { year: 'Año 1', title: 'Institución Certificada (Cultura y Fundación)', text: 'Capacitación de 35 horas del claustro, tests de carácter de inicio y cierre, informe de temperamentos, rúbrica de implantación y concesión de la placa oficial.' },
+      { year: 'Año 2', title: 'Transferencia Pedagógica (Aulas y Familias)', text: 'Despliegue del Plan de Acción Tutorial (PAT) con las guías pedagógicas para el profesor, celebración de las escuelas de padres lideradas por el centro e integración con la app Virtus (práctica diaria de las virtudes).' },
+      { year: 'Año 3', title: 'Institución Acreditada (Consolidación y Red)', text: 'Evaluación externa bajo la Rúbrica de Excelencia. Los centros que consolidan el sistema en su día a día acceden al distintivo superior de Institución Acreditada, actuando como centros mentores internacionales.' },
     ],
 
-    // 07b — ¿Y si empieza por usted?
-    self_eyebrow: '¿Y si empieza por usted?',
-    self_title: 'El carácter se forma de uno en uno.',
-    self_text: 'Si quiere recorrer el camino por su cuenta, antes o al margen de su colegio, puede hacerlo hoy mismo.',
-    self_cta: 'Haga el test de temperamento gratuito',
-    self_link: 'Vea la formación individual →',
+    // Formulario inline
+    form_title: 'Inicie el proceso de certificación para la convocatoria de Febrero',
+    form_lead: 'Centros limitados por convocatoria para asegurar la dedicación del responsable del Instituto asignado a cada institución.',
+    form_checks: [
+      'Hoja de ruta calendarizada a medida del centro',
+      'España: capacitación bonificable a través de FUNDAE, con cargo al crédito de formación del colegio',
+      'Resto de mercados: tramos de licencias por volumen y acompañamiento del Instituto',
+    ],
+    form_nombre: 'Nombre y Apellidos',
+    form_cargo: 'Cargo Directivo',
+    form_cargo_opts: ['Director General', 'Titular', 'Jefe de Estudios', 'Director Pedagógico', 'Responsable de Red'],
+    form_inst: 'Nombre de la Institución Educativa',
+    form_loc: 'Localidad y País',
+    form_email: 'Correo Electrónico Institucional',
+    form_tel: 'Teléfono de Contacto',
+    form_claustro: 'Tamaño aproximado del claustro',
+    form_claustro_opts: ['Hasta 20 docentes', '21 a 50 docentes', '51 a 100 docentes', 'Más de 100'],
+    form_submit: 'Solicitar Informe de Viabilidad Institucional',
 
-    // 07c — CTA final
-    final_title: '¿Llevamos el Liderazgo Virtuoso® a su colegio?',
-    final_text: 'Empezamos con una conversación para conocer su centro y construir un plan a medida.',
-    final_presentation: 'Reciba la presentación completa',
-    final_tagline: 'Igniting Hearts for Greatness',
-
-    // Modal Presentación
-    modal_title: 'Reciba la presentación de la Certificación',
-    modal_text: 'Se la enviamos por email en unos minutos.',
+    // Modal Dossier
+    modal_title: 'Reciba el Dossier Ejecutivo',
+    modal_text: 'Se lo enviamos por email en unos minutos.',
+    modal_close: 'Cerrar',
 
     // Modal Conversación
     conv_title: 'Solicite una conversación inicial',
     conv_text: 'Cuéntenos lo esencial de su centro y le proponemos fecha en menos de 48 horas.',
-    conv_nombre: 'Nombre',
-    conv_apellidos: 'Apellidos',
+    conv_nombre: 'Nombre y apellidos',
     conv_email: 'Email',
     conv_tel: 'Teléfono',
-    conv_colegio: 'Colegio',
+    conv_centro: 'Colegio y ciudad',
     conv_pais: 'País',
     conv_cargo: 'Cargo',
     conv_cargo_opts: ['Dirección', 'Equipo directivo', 'Orientación', 'Docente', 'Otro'],
@@ -388,13 +391,36 @@ export default {
     conv_interes: '¿Qué le interesa?',
     conv_interes_opts: ['Capacitación', 'Certificación', 'Aún no lo sé'],
     conv_rgpd: 'Acepto recibir información sobre la Certificación y comunicaciones de Liderazgo Virtuoso®.',
-    conv_rgpd_privacy: 'Acepto la política de privacidad y protección de datos.',
     conv_submit: 'Solicitar la conversación',
 
+    // Modal Detalles
+    det_title: 'Reciba todos los detalles de la Certificación',
+    det_text: 'Se la enviamos por email en unos minutos.',
+    det_nombre: 'Nombre y apellidos',
+    det_email: 'Email',
+    det_centro: 'Colegio',
+    det_pais: 'País',
+    det_cargo: 'Cargo',
+    det_cargo_opts: ['Dirección', 'Equipo directivo', 'Orientación', 'Docente', 'Otro'],
+    det_num: 'Nº aproximado de profesionales',
+    det_rgpd: 'Acepto recibir la presentación y comunicaciones de Liderazgo Virtuoso®.',
+    det_submit: 'Recibir la presentación',
+
     // Gracias
-    thanks_title: 'Hemos recibido su solicitud.',
-    thanks_text: 'Un responsable del Instituto se pondrá en contacto con usted en breve. Si no recibe noticias en unos días, revise la carpeta de spam o escríbanos a certification@virtuousleadership.com.',
-    thanks_back: 'Volver a la página de la Certificación',
+    thanks_det_title: 'Su presentación está en camino.',
+    thanks_det_text: 'Le acabamos de enviar un email con toda la información de la Certificación Institucional. Si no lo encuentra en unos minutos, revise la carpeta de spam o correo no deseado.',
+    thanks_det_cta_eyebrow: '¿Prefiere verla con nosotros?',
+    thanks_det_cta_text: 'Si desea que un responsable del Instituto le presente la Certificación en una breve videoconferencia, solicite una conversación inicial.',
+    thanks_conv_title: 'Hemos recibido su solicitud.',
+    thanks_conv_text: 'Un responsable del Instituto le escribirá en menos de 48 horas para proponerle una fecha.',
+    thanks_conv_cta_eyebrow: 'Mientras tanto, la presentación completa:',
+    thanks_conv_cta_text: 'Si desea adelantar y recibir toda la información por email antes de la conversación, solicítela aquí.',
+
+    // Footer propio de esta landing (no se usa — el footer viene del Layout)
+    footer_desc: 'Instituto certificador en la metodología de Liderazgo Virtuoso® de Alexandre Havard. Centros certificados y en proceso en América Latina y Europa. Disponible en español, inglés y francés.',
+    footer_inst: 'Institucional',
+    footer_contact: 'Contacto Directivo',
+    footer_contact_text: 'Atención prioritaria a Direcciones Generales, Titularidades y Redes Educativas:',
   },
 
   // Pagina /empresas — version "Certificacion" (oct 2026). Mismo sistema visual
