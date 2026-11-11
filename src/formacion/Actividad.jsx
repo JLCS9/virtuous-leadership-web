@@ -1109,18 +1109,99 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, pregunt
   );
 }
 
+function RenderTextoRico(texto) {
+  const partes = texto.split(/(\*\*[^*]+\*\*|__[^_]+__)/g);
+  return partes.map((parte, i) => {
+    if (parte.startsWith('**') && parte.endsWith('**')) return <strong key={i} style={{ fontWeight: 700 }}>{parte.slice(2, -2)}</strong>;
+    if (parte.startsWith('__') && parte.endsWith('__')) return <span key={i} style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>{parte.slice(2, -2)}</span>;
+    return parte;
+  });
+}
+
+function SlideLectura({ slide, actual, total, onSiguiente, onAnterior }) {
+  const items = Array.isArray(slide) ? slide : [slide];
+  return (
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <div style={tarjeta}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={eyebrow}>Lectura</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>{actual} / {total}</div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          {items.map((item, i) => {
+            if (typeof item === 'string') {
+              return <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.75, margin: 0 }}>{RenderTextoRico(item)}</p>;
+            }
+            if (item.cita) {
+              return (
+                <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
+                  <span style={{ fontFamily: 'Georgia, serif', fontSize: 40, lineHeight: 1, color: GOLD_REF, flexShrink: 0, marginTop: -4 }}>"</span>
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 19, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>{RenderTextoRico(item.cita)}</p>
+                </div>
+              );
+            }
+            if (item.enfasis) {
+              return <p key={i} style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.6, margin: 0 }}>{RenderTextoRico(item.enfasis)}</p>;
+            }
+            return null;
+          })}
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
+          {actual > 1 ? (
+            <button type="button" onClick={onAnterior} style={{
+              fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+              background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+            }}>← Anterior</button>
+          ) : <span />}
+          <button type="button" onClick={onSiguiente} style={{
+            fontFamily: FONT_BODY, fontSize: 17, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+          }}>Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function TestProfundo({ paso, onComplete, modulo, user }) {
   const rawPreguntas = paso.preguntas ?? [];
   const preguntas = rawPreguntas.map(p => typeof p === 'string' ? { texto: p } : p);
   const total = preguntas.length || paso.num_preguntas;
+  const lecturas = paso.lecturas ?? [];
   const [fase, setFase] = useState('caratula');
+  const [lecturaIdx, setLecturaIdx] = useState(0);
   const [idx, setIdx] = useState(0);
   const [respuestas, setRespuestas] = useState(() => leerTestProf(paso.id, total));
   const [circuloData, setCirculoData] = useState({});
   const guardarTestCb = useCallback((d) => { try { localStorage.setItem(TEST_PROF_KEY(paso.id), JSON.stringify(d)); } catch {} }, [paso.id]);
   const guardados = useAutoguardado(guardarTestCb, respuestas);
 
-  if (fase === 'caratula') return <Caratula paso={paso} tipo="test_profundo" modulo={modulo} onEmpezar={() => setFase('ejercicio')} />;
+  if (fase === 'caratula') return <Caratula paso={paso} tipo="test_profundo" modulo={modulo} onEmpezar={() => setFase(lecturas.length > 0 ? 'lectura' : 'ejercicio')} />;
+
+  if (fase === 'lectura') {
+    return (
+      <SlideLectura
+        slide={lecturas[lecturaIdx]}
+        actual={lecturaIdx + 1}
+        total={lecturas.length}
+        onSiguiente={() => {
+          if (lecturaIdx + 1 < lecturas.length) {
+            setLecturaIdx(i => i + 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            setFase('ejercicio');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+        onAnterior={() => {
+          if (lecturaIdx > 0) {
+            setLecturaIdx(i => i - 1);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }}
+      />
+    );
+  }
 
   const preg = preguntas[idx];
 

@@ -208,6 +208,36 @@
       "titulo": "Humildad fundamental y pusilanimidad",
       "visible": false,
       "descripcion": "Reflexiona sobre tu proceso de crecimiento en la humildad. La pusilanimidad no es una virtud: es confundir la humildad con la falsa modestia o la pasividad.",
+      "lecturas": [
+        [
+          "La humildad fundamental no es pusilanimidad.",
+          "Si durante el proceso de crecimiento en humildad fallas en practicar la virtud de la prudencia, es probable que en lugar de volverte humilde caigas en la trampa de la pusilanimidad."
+        ],
+        [
+          "Desde el punto de vista de la magnanimidad, la pusilanimidad es falta de virtud, una falta de magnanimidad. En este caso, la pusilanimidad es el resultado de una falta de voluntad.",
+          { "cita": "Soy pusilánime porque no tengo la suficiente fuerza de voluntad para ser magnánimo." }
+        ],
+        [
+          "Desde el punto de vista de la humildad, la pusilanimidad es una falsa virtud, una falsa humildad, porque parece humildad. En este caso, la pusilanimidad es el resultado de una falta de sabiduría.",
+          { "cita": "Soy pusilánime porque no tengo la suficiente sabiduría para conocerme a mí mismo." }
+        ],
+        [
+          "Puedes luchar por la humildad y al mismo tiempo fallar por ser imprudente. Y en ese caso habrás logrado no tanto humildad, sino pusilanimidad."
+        ],
+        [
+          "La prudencia nos enseña que la humildad no es pusilanimidad, ni falta de noble ambición. La humildad es el hábito de vivir en la verdad sobre uno mismo. Y la verdad sobre uno mismo es que, además de limitaciones, tenemos talentos que hay que utilizar y desarrollar."
+        ],
+        [
+          { "enfasis": "Si nos olvidamos de esta verdad básica, nos ponemos en riesgo de convertirnos no en humildes, **sino en __pusilánimes__**." }
+        ],
+        [
+          "Una manifestación muy típica de pusilanimidad es la pasividad.",
+          { "cita": "¿Quién soy yo para emprender una aventura tan audaz?" },
+          "Y la falsa modestia.",
+          { "cita": "Es mejor permanecer con un perfil bajo que llamar la atención y correr el riesgo de ser y parecer orgulloso." },
+          "La pasividad y la falsa modestia provienen de la falta de prudencia, la falta de sabiduría y verdad."
+        ]
+      ],
       "preguntas": [
         {
           "texto": "En el proceso de crecimiento de la humildad, ¿caes a veces en la trampa de la pasividad o de la falsa modestia?",
