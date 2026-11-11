@@ -1,11 +1,21 @@
 import { useState, useEffect } from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { NAVY, NAVY_SOFT, NAVY_DEEP, GOLD, GOLD_SOFT, GOLD_DEEP, PAPER, BEIGE, LINE, MUTED, FONT_SERIF, FONT_SANS, MAX_WIDTH } from '../theme';
+import { NAVY, NAVY_DEEP, PAPER, FONT_BODY, GOLD_REF, GOLD_REF_LT, MAX_WIDTH } from '../theme';
 import { useT, useLocalPath } from '../i18n';
 import LangSwitcher from './LangSwitcher';
 import { accountsEnabled } from '../account/supabase';
 import { useSession } from '../account/useSession';
 import logoUrl from '../assets/logo-1.png';
+
+const C = {
+  blueDeep: NAVY,
+  blueNight: NAVY_DEEP,
+  gold: GOLD_REF,
+  goldLight: GOLD_REF_LT,
+  cream: PAPER,
+  white: '#ffffff',
+};
+const SANS = FONT_BODY;
 
 function Brand() {
   const lp = useLocalPath();
@@ -27,21 +37,7 @@ export default function Header() {
 
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
-  // Dos verticales: "Centros educativos" (pestaña que lleva a la home, donde
-  // estan las 3 tarjetas, y despliega los 3 programas educativos) y
-  // "Empresas" (enlace directo al programa para empresas).
   const NAV = [
-    {
-      to: '/',
-      label: t('nav.education_centers'),
-      children: [
-        { to: '/colegios',           label: t('nav.schools') },
-        { to: '/universidades',      label: t('nav.universities') },
-        { to: '/educacion-superior', label: t('nav.higher_ed') },
-      ],
-    },
-    { to: '/empresas',              label: t('nav.businesses') },
-    { to: '/acreditacion/colegios', label: t('nav.accreditation') },
     { to: '/tests',                  label: t('nav.tests') },
     ...(accountsEnabled ? [{ to: session ? '/app' : '/login', label: session ? t('nav.my_panel') : t('nav.login') }] : []),
   ];
@@ -49,9 +45,9 @@ export default function Header() {
   return (
     <header style={{
       position: 'sticky', top: 0, zIndex: 50,
-      background: NAVY,
-      borderBottom: `1px solid ${NAVY_SOFT}`,
-      boxShadow: '0 1px 0 rgba(197,165,90,0.18)',
+      background: C.blueNight,
+      borderBottom: `1px solid rgba(255,255,255,0.08)`,
+      boxShadow: '0 1px 0 rgba(165,139,38,0.18)',
     }}>
       <div className="header-inner" style={{
         maxWidth: MAX_WIDTH, margin: '0 auto',
@@ -62,46 +58,45 @@ export default function Header() {
 
         <nav style={{ marginLeft: 'auto', display: 'none', alignItems: 'center', gap: 4 }}
              className="nav-desktop">
-          {NAV.map((item, i) => item.children ? (
-            <Submenu key={i} item={item} />
-          ) : (
+          {NAV.map((item, i) => (
             <NavLink
               key={i}
               to={lp(item.to)}
               end={item.exact}
               style={({ isActive }) => ({
-                fontFamily: FONT_SANS, fontSize: 14,
-                color: isActive ? GOLD : PAPER,
+                fontFamily: SANS, fontSize: 14,
+                color: isActive ? C.gold : PAPER,
                 fontWeight: isActive ? 600 : 500,
                 padding: '10px 14px', textDecoration: 'none',
-                borderBottom: `2px solid ${isActive ? GOLD : 'transparent'}`,
+                borderBottom: `2px solid ${isActive ? C.gold : 'transparent'}`,
                 transition: 'all 160ms ease',
               })}
-              onMouseOver={e => { e.currentTarget.style.color = GOLD; }}
+              onMouseOver={e => { e.currentTarget.style.color = C.gold; }}
               onMouseOut={e => {
                 const isActive = e.currentTarget.getAttribute('aria-current') === 'page';
-                e.currentTarget.style.color = isActive ? GOLD : PAPER;
+                e.currentTarget.style.color = isActive ? C.gold : PAPER;
               }}
             >
               {item.label}
             </NavLink>
           ))}
 
-          <Link
-            to={lp('/contacto')}
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event('open-contact-modal'))}
             style={{
-              marginLeft: 12, fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600,
+              marginLeft: 12, fontFamily: SANS, fontSize: 13, fontWeight: 600,
               letterSpacing: '0.06em', textTransform: 'uppercase',
-              color: NAVY, background: GOLD, padding: '10px 18px',
-              border: `1px solid ${GOLD}`, borderRadius: 2,
-              textDecoration: 'none',
+              color: C.white, background: C.gold, padding: '10px 18px',
+              border: `1px solid ${C.gold}`, borderRadius: 2,
+              cursor: 'pointer',
               transition: 'all 160ms ease',
             }}
-            onMouseOver={e => { e.currentTarget.style.background = GOLD_SOFT; e.currentTarget.style.borderColor = GOLD_SOFT; }}
-            onMouseOut={e => { e.currentTarget.style.background = GOLD; e.currentTarget.style.borderColor = GOLD; }}
+            onMouseOver={e => { e.currentTarget.style.background = C.goldLight; e.currentTarget.style.borderColor = C.goldLight; }}
+            onMouseOut={e => { e.currentTarget.style.background = C.gold; e.currentTarget.style.borderColor = C.gold; }}
           >
             {t('nav.contact')}
-          </Link>
+          </button>
 
           <div style={{ marginLeft: 10 }}>
             <LangSwitcher inverted />
@@ -128,65 +123,35 @@ export default function Header() {
       </div>
 
       {open && (
-        <div style={{ background: NAVY_DEEP, borderTop: `1px solid ${NAVY_SOFT}` }} className="nav-mobile-panel">
-          {NAV.map((item, i) => item.children ? (
-            <div key={i}>
-              {/* El padre navega (home); los hijos van siempre visibles debajo. */}
-              <NavLink
-                to={lp(item.to)}
-                end
-                style={({ isActive }) => ({
-                  display: 'block',
-                  padding: '14px 24px',
-                  fontFamily: FONT_SANS, fontSize: 16, color: isActive ? GOLD : PAPER, fontWeight: 600,
-                  textDecoration: 'none', borderBottom: `1px solid ${NAVY_SOFT}`,
-                  background: isActive ? NAVY : 'transparent',
-                })}
-              >
-                {item.label}
-              </NavLink>
-              {item.children.map((c, j) => (
-                <NavLink
-                  key={j}
-                  to={lp(c.to)}
-                  style={({ isActive }) => ({
-                    display: 'block', padding: '12px 36px',
-                    fontFamily: FONT_SANS, fontSize: 14,
-                    color: isActive ? GOLD : '#D9DEE8', fontWeight: isActive ? 600 : 500,
-                    textDecoration: 'none', borderBottom: `1px solid ${NAVY_SOFT}`,
-                    background: isActive ? NAVY : 'transparent',
-                  })}
-                >
-                  {c.label}
-                </NavLink>
-              ))}
-            </div>
-          ) : (
+        <div style={{ background: C.blueDeep, borderTop: `1px solid rgba(255,255,255,0.08)` }} className="nav-mobile-panel">
+          {NAV.map((item, i) => (
             <NavLink
               key={i}
               to={lp(item.to)}
               end={item.exact}
               style={({ isActive }) => ({
                 display: 'block', padding: '14px 24px',
-                fontFamily: FONT_SANS, fontSize: 16,
-                color: isActive ? GOLD : PAPER, fontWeight: isActive ? 600 : 500,
-                textDecoration: 'none', borderBottom: `1px solid ${NAVY_SOFT}`,
-                background: isActive ? NAVY : 'transparent',
+                fontFamily: SANS, fontSize: 16,
+                color: isActive ? C.gold : PAPER, fontWeight: isActive ? 600 : 500,
+                textDecoration: 'none', borderBottom: `1px solid rgba(255,255,255,0.06)`,
+                background: isActive ? C.blueNight : 'transparent',
               })}
             >
               {item.label}
             </NavLink>
           ))}
-          <Link
-            to={lp('/contacto')}
+          <button
+            type="button"
+            onClick={() => { setOpen(false); window.dispatchEvent(new Event('open-contact-modal')); }}
             style={{
-              display: 'block', padding: '16px 24px', fontFamily: FONT_SANS, fontSize: 16,
-              color: NAVY, background: GOLD, textDecoration: 'none', textAlign: 'center',
+              display: 'block', width: '100%', padding: '16px 24px', fontFamily: SANS, fontSize: 16,
+              color: C.white, background: C.gold, border: 'none', textAlign: 'center',
               fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+              cursor: 'pointer',
             }}
           >
             {t('nav.contact')}
-          </Link>
+          </button>
         </div>
       )}
 
@@ -199,70 +164,5 @@ export default function Header() {
         }
       `}</style>
     </header>
-  );
-}
-
-function Submenu({ item }) {
-  const [open, setOpen] = useState(false);
-  const location = useLocation();
-  const lp = useLocalPath();
-  const someActive = item.children.some(c => {
-    const full = lp(c.to);
-    return location.pathname.startsWith(full) && c.to !== '/';
-  });
-
-  return (
-    <div
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      style={{ position: 'relative' }}
-    >
-      {/* La pestaña es un enlace (navega a item.to); el desplegable se abre
-          por hover sobre el contenedor. */}
-      <Link
-        to={lp(item.to)}
-        style={{
-          fontFamily: FONT_SANS, fontSize: 14,
-          color: someActive ? GOLD : PAPER,
-          fontWeight: someActive ? 600 : 500,
-          padding: '10px 14px', background: 'transparent', border: 'none',
-          borderBottom: `2px solid ${someActive ? GOLD : 'transparent'}`,
-          cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 4,
-          textDecoration: 'none',
-          transition: 'color 160ms ease',
-        }}
-        onMouseOver={e => { e.currentTarget.style.color = GOLD; }}
-        onMouseOut={e => { e.currentTarget.style.color = someActive ? GOLD : PAPER; }}
-      >
-        {item.label}
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><path d="M2 3 L5 7 L8 3 Z"/></svg>
-      </Link>
-      {open && (
-        <div style={{
-          position: 'absolute', top: '100%', left: 0,
-          background: PAPER, border: `1px solid ${LINE}`,
-          minWidth: 260, padding: 6, marginTop: 0,
-          boxShadow: '0 12px 28px rgba(0,0,0,0.18)',
-          borderRadius: 2,
-        }}>
-          {item.children.map((c, j) => (
-            <NavLink
-              key={j}
-              to={lp(c.to)}
-              style={({ isActive }) => ({
-                display: 'block', padding: '10px 14px',
-                fontFamily: FONT_SANS, fontSize: 14,
-                color: isActive ? NAVY : MUTED, fontWeight: isActive ? 600 : 500,
-                textDecoration: 'none', borderRadius: 2,
-                background: isActive ? BEIGE : 'transparent',
-                borderLeft: `2px solid ${isActive ? GOLD : 'transparent'}`,
-              })}
-            >
-              {c.label}
-            </NavLink>
-          ))}
-        </div>
-      )}
-    </div>
   );
 }

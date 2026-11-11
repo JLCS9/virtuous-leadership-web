@@ -19,6 +19,8 @@ import { useCatalogo } from './useFormacion';
 const MODULOS = {
   'curso-1': () => import('../data/modulo1.json'),
   'curso-2': () => import('../data/modulo2.json'),
+  'curso-3': () => import('../data/modulo3.json'),
+  'curso-4': () => import('../data/modulo4.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -78,9 +80,13 @@ function agruparIntro(parrafos) {
 }
 
 function renderIntroTexto(text) {
-  const parts = text.split(/\*\*(.*?)\*\*/g);
+  const parts = text.split(/(\*\*.*?\*\*|__.*?__)/g);
   if (parts.length === 1) return text;
-  return parts.map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith('__') && part.endsWith('__')) return <u key={i}>{part.slice(2, -2)}</u>;
+    return part;
+  });
 }
 
 function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
@@ -250,7 +256,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
   );
 }
 
-function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA }) {
+function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA, cursoNum = 1 }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
   const moduloNum = _mod?.numero ?? 1;
@@ -286,7 +292,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
-    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
 }
@@ -442,7 +448,33 @@ function ListaLecciones({ pasos, completados, irA }) {
   );
 }
 
-function ResumenPersonal({ temperamento, pasos, completados }) {
+function extraerReflexiones(pasos, completados) {
+  const items = [];
+  for (const paso of pasos) {
+    const datos = completados[paso.id];
+    if (!datos) continue;
+    const titulo = paso.resumen_ficha || paso.titulo;
+    const prio = paso.prioridad_ficha ?? 5;
+    if (paso.tipo === 'test_profundo' || paso.tipo === 'reflexion_piramide') {
+      const textos = (datos.respuestas ?? []).filter(t => typeof t === 'string' && t.trim());
+      if (textos.length > 0) items.push({ id: paso.id, titulo, texto: textos[0], prio });
+    } else if (paso.tipo === 'temperamento_magnanimidad') {
+      const t = datos.textoFuerte || datos.textoDebil;
+      if (t) items.push({ id: paso.id, titulo, texto: datos.textoFuerte ? `Puntos fuertes: ${datos.textoFuerte}` : `Puntos débiles: ${datos.textoDebil}`, prio });
+    } else if (paso.tipo === 'cierre' && (datos.lo_que_facilita || datos.compromiso)) {
+      const texto = datos.proposito || datos.lo_que_facilita || datos.compromiso || '';
+      items.push({ id: paso.id, titulo, texto, prio });
+    } else if (paso.tipo === 'plan_crecimiento' && datos.plan) {
+      const planData = datos.plan;
+      const texto = planData.proposito_final || planData.ambiente || '';
+      if (texto) items.push({ id: paso.id, titulo, texto: typeof texto === 'string' ? texto : JSON.stringify(texto), prio });
+    }
+  }
+  items.sort((a, b) => a.prio - b.prio);
+  return items.slice(0, 3);
+}
+
+function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
   if (!temperamento) return null;
   const p = temperamento.primary;
   const s = temperamento.secondary;
@@ -452,6 +484,8 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
   const retosHecho = retosStep && completados[retosStep.id];
   const fd = retosStep?.facilita_dificulta?.[p];
   const virtudDesafio = retosStep?.virtud_desafio_map?.[perfil] ?? retosStep?.virtud_desafio_map?.[p];
+
+  const reflexiones = extraerReflexiones(pasos, completados);
 
   return (
     <div style={{ ...tarjeta, marginTop: 18 }}>
@@ -490,6 +524,27 @@ function ResumenPersonal({ temperamento, pasos, completados }) {
             </div>
           )}
         </>
+      )}
+
+      {reflexiones.length > 0 && (
+        <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Mis reflexiones</div>
+          {reflexiones.map((r) => (
+            <div key={r.id} style={{ marginBottom: 10, padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${LINE}` }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>{r.titulo}</div>
+              <div style={{
+                fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45,
+                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+              }}>{r.texto}</div>
+            </div>
+          ))}
+          {onVerCuaderno && (
+            <button type="button" onClick={onVerCuaderno} style={{
+              fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
+              background: 'none', border: 'none', padding: '4px 0 0', cursor: 'pointer',
+            }}>Ver todas en el cuaderno →</button>
+          )}
+        </div>
       )}
     </div>
   );
@@ -910,7 +965,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   }
 
   if (verCuaderno) {
-    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { const vid = videoAnterior(pasos, pasoId); setVerCuaderno(false); irA(vid ? vid.id : pasoId); }} onEditar={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} onEditar={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (
@@ -948,7 +1003,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         </div>
 
         {temperamento && (
-          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} />
+          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} onVerCuaderno={() => setVerCuaderno(true)} />
         )}
 
         {userId && (
@@ -1211,7 +1266,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
             <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
           </div>
         )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} />
+        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} cursoNum={cursoNum} />
       </div>
     );
   }

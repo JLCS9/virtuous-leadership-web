@@ -759,6 +759,8 @@
       "titulo": "Test profundo — Colérico",
       "visible": false,
       "temperamento": "COL",
+      "resumen_ficha": "¿Pido opinión o me aferro a mis ideas?",
+      "prioridad_ficha": 3,
       "num_preguntas": 14,
       "foco": "Humildad, servicio, orgullo, escuchar, pedir perdón",
       "preguntas": [
@@ -876,6 +878,8 @@
       "titulo": "Test profundo — Melancólico",
       "visible": false,
       "temperamento": "MEL",
+      "resumen_ficha": "¿Convierto mis sueños en acciones concretas?",
+      "prioridad_ficha": 3,
       "num_preguntas": 16,
       "foco": "Audacia, acción, perdón, positividad, perfeccionismo",
       "preguntas": [
@@ -995,6 +999,8 @@
       "titulo": "Test profundo — Sanguíneo",
       "visible": false,
       "temperamento": "SAN",
+      "resumen_ficha": "¿Realizo todas las tareas al detalle?",
+      "prioridad_ficha": 3,
       "num_preguntas": 14,
       "foco": "Perseverancia, profundidad, constancia, sinceridad",
       "preguntas": [
@@ -1112,6 +1118,8 @@
       "titulo": "Test profundo — Flemático",
       "visible": false,
       "temperamento": "FLE",
+      "resumen_ficha": "¿Busco la compañía de personas magnánimas?",
+      "prioridad_ficha": 3,
       "num_preguntas": 11,
       "foco": "Magnanimidad, iniciativa, misión, salir de la zona de confort",
       "preguntas": [
@@ -1257,6 +1265,8 @@
       "tipo": "cierre",
       "titulo": "Conclusiones Módulo 1",
       "visible": true,
+      "resumen_ficha": "Mi propósito del curso",
+      "prioridad_ficha": 1,
       "sintesis": {
         "campos": [
           "temperamento_primario",

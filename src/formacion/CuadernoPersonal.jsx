@@ -59,7 +59,7 @@ function formatFecha(iso) {
   return new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-const CUADERNO_PDF = { modulo1: '/cuadernos/cuaderno-1.pdf', modulo2: '/cuadernos/cuaderno-2.pdf' };
+const CUADERNO_PDF = { modulo1: '/cuadernos/cuaderno-1.pdf', modulo2: '/cuadernos/cuaderno-2.pdf', modulo3: '/cuadernos/cuaderno-3.pdf', modulo4: '/cuadernos/cuaderno-4.pdf' };
 
 async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   const { PDFDocument, StandardFonts, rgb, PageSizes } = await import('pdf-lib');
@@ -339,7 +339,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const num = moduloId === 'modulo2' ? '2' : '1';
+  const num = moduloId === 'modulo4' ? '4' : moduloId === 'modulo3' ? '3' : moduloId === 'modulo2' ? '2' : '1';
   a.download = `cuaderno-personal-curso${num}-vl.pdf`;
   a.click();
   URL.revokeObjectURL(url);

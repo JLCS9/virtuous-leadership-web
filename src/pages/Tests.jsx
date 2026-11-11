@@ -58,16 +58,19 @@ export default function Tests() {
   return (
     <>
       <SEO title={seo.title} description={seo.description} path="/tests" />
-      <section style={{ background: BEIGE, borderBottom: `1px solid ${LINE}` }}>
-        <div style={{ maxWidth: 980, margin: '0 auto', padding: '64px 24px', textAlign: 'center' }}>
+      <section style={{ background: '#fff' }}>
+        <div style={{ maxWidth: 980, margin: '0 auto', padding: 'clamp(48px,8vw,80px) 24px clamp(24px,4vw,48px)', textAlign: 'center' }}>
           <div style={styles.eyebrow}>{t('tests.eyebrow')}</div>
           <h1 style={styles.h1}>{t('tests.hero_title')}</h1>
-          <p style={{ ...styles.paraLarge, maxWidth: 720, margin: '24px auto 0' }}>{t('tests.hero_subtitle')}</p>
+          <p style={{
+            fontFamily: FONT_SANS, fontSize: 'clamp(16px, 1.8vw, 18px)', lineHeight: 1.65,
+            color: MUTED, maxWidth: 720, margin: '20px auto 0',
+          }}>{t('tests.hero_subtitle')}</p>
         </div>
       </section>
 
-      <Section background={PAPER} paddingY={88}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
+      <Section background="#fff" paddingY={48}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: 28 }}>
           {cards.map((c, i) => (
             <TestCard
               key={i}
@@ -76,6 +79,8 @@ export default function Tests() {
               label={c.label}
               title={c.title}
               text={c.text}
+              tags_label={c.tags_label}
+              tags={c.tags}
               cta={c.cta}
               comingSoon={t('common.coming_soon')}
               image={imageForCard(c, lang)}
@@ -90,19 +95,19 @@ export default function Tests() {
 // Miniatura CIRCULAR pequeña centrada arriba de la card. La imagen se ve
 // entera (object-fit: contain sobre fondo BEIGE dentro del círculo). Mismo
 // tratamiento para los 3 tests → coherencia visual en /tests.
-function TestCard({ available, to, label, title, text, cta, image, comingSoon }) {
-  const THUMB_SIZE = 128; // px, diámetro del círculo
+function TestCard({ available, to, label, title, text, tags_label, tags, cta, image, comingSoon }) {
+  const THUMB_SIZE = 108;
   const card = (
     <div style={{
       height: '100%',
-      background: available ? PAPER : '#F8F5ED',
+      background: PAPER,
       border: `1px solid ${LINE}`,
       borderTop: `3px solid ${available ? GOLD : LINE}`,
       borderRadius: 2,
       transition: 'all 200ms ease',
       cursor: available ? 'pointer' : 'default',
       display: 'flex', flexDirection: 'column',
-      opacity: available ? 1 : 0.7,
+      opacity: available ? 1 : 0.6,
       overflow: 'hidden',
     }}>
       {image && (
@@ -119,13 +124,6 @@ function TestCard({ available, to, label, title, text, cta, image, comingSoon })
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            {/* object-fit: contain para que la figura completa se vea
-                dentro del círculo, sin recorte. Padding interno para que
-                no toque el borde.
-                mixBlendMode: 'multiply' hace que los píxeles blancos del
-                PNG se transparenten sobre el fondo BEIGE (blanco × BEIGE
-                = BEIGE), preservando los detalles oscuros. Truco visual
-                para PNGs con fondo blanco intrínseco sin editar el asset. */}
             <img src={image} alt=""
                  style={{
                    width: '86%', height: '86%',
@@ -136,19 +134,33 @@ function TestCard({ available, to, label, title, text, cta, image, comingSoon })
           </div>
         </div>
       )}
-      <div style={{ padding: '20px 28px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <div style={{ padding: '16px 24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600, textAlign: 'center' }}>
           {label}
           {!available && <span style={{ marginLeft: 8, color: MUTED }}>· {comingSoon}</span>}
         </div>
         <h3 style={{ ...styles.h3, fontSize: 22, marginTop: 10, marginBottom: 12, textAlign: 'center' }}>{title}</h3>
-        {/* whiteSpace: pre-line para que los \n del i18n se rendericen como
-            saltos visibles dentro de la tarjeta (las descripciones tienen
-            una primera linea de definicion y una segunda con la enumeracion
-            de items). */}
-        <p style={{ ...styles.para, margin: 0, fontSize: 15, flex: 1, whiteSpace: 'pre-line' }}>{text}</p>
+        <p style={{ ...styles.para, margin: '0 0 16px', fontSize: 15 }}>{text}</p>
+        {tags_label && tags && (
+          <div style={{ marginBottom: 4 }}>
+            <div style={{ fontFamily: FONT_SANS, fontSize: 12, fontWeight: 600, color: NAVY, letterSpacing: '0.04em', marginBottom: 8 }}>
+              {tags_label}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+              {tags.map((tag, i) => (
+                <span key={i} style={{
+                  fontFamily: FONT_SANS, fontSize: 12, lineHeight: 1,
+                  color: GOLD_DEEP, background: BEIGE,
+                  padding: '5px 10px', borderRadius: 3,
+                  border: `1px solid ${LINE}`,
+                }}>{tag}</span>
+              ))}
+            </div>
+          </div>
+        )}
+        <div style={{ flex: 1 }} />
         {available && cta && (
-          <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 13, color: NAVY, fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase', textAlign: 'center' }}>
+          <div style={{ marginTop: 20, fontFamily: FONT_SANS, fontSize: 14, color: GOLD, fontWeight: 600, textAlign: 'center' }}>
             {cta} →
           </div>
         )}

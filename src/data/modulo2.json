@@ -1,13 +1,13 @@
 {
   "id": "modulo2",
-  "titulo": "Practicando la Magnanimidad",
+  "titulo": "Practicando la magnanimidad",
   "curso": 2,
   "pasos": [
     {
       "id": "m2-01",
       "num": 1,
       "tipo": "video",
-      "titulo": "Practicando la Magnanimidad",
+      "titulo": "Practicando la magnanimidad",
       "visible": true,
       "leccion": 1,
       "vimeoId": "924576183",
@@ -44,6 +44,8 @@
       "tipo": "reflexion_piramide",
       "titulo": "La magnanimidad en el sistema de Liderazgo Virtuoso",
       "visible": false,
+      "resumen_ficha": "¿Cómo ayuda la humildad a la magnanimidad?",
+      "prioridad_ficha": 4,
       "imagen": "piramide-lv",
       "enunciado": "Observa la Pirámide de Liderazgo Virtuoso",
       "descripcion": "Contempla el diagrama y reflexiona sobre el lugar que ocupa la magnanimidad en el sistema de virtudes. Después responde a las preguntas.",
@@ -112,9 +114,9 @@
       "id": "m2-concl-1",
       "tipo": "conclusion_modulo",
       "visible": false,
-      "titulo": "Resumen: Practicando la Magnanimidad",
+      "titulo": "Resumen: Practicando la magnanimidad",
       "modulo_numero": 0,
-      "modulo_titulo": "Practicando la Magnanimidad",
+      "modulo_titulo": "Practicando la magnanimidad",
       "aprendizajes": [
         "Qué es la magnanimidad",
         "La magnanimidad como primera virtud específica del líder",
@@ -229,6 +231,8 @@
       "tipo": "reflexion_piramide",
       "titulo": "No confundo la magnanimidad con la soberbia",
       "visible": false,
+      "resumen_ficha": "¿Busco magnanimidad o me muevo por vanidad?",
+      "prioridad_ficha": 3,
       "imagen": "soberbia-magnanimidad",
       "enunciado": "No confundo la magnanimidad con la soberbia",
       "descripcion": "Sin la prudencia, la magnanimidad se convierte en soberbia. La soberbia es una falsa magnanimidad: se presenta como magnanimidad, pero no lo es. Solo la humildad metafísica puede evitar que caigamos en la soberbia.",
@@ -330,6 +334,8 @@
       "tipo": "temperamento_magnanimidad",
       "titulo": "¿Cómo puede mi temperamento ayudarme a practicar la magnanimidad?",
       "visible": false,
+      "resumen_ficha": "Mis puntos fuertes y débiles en magnanimidad",
+      "prioridad_ficha": 2,
       "imagen": "magnanimidad-temperamentos",
       "enunciado": "¿Cómo puede mi temperamento ayudarme a practicar la magnanimidad?",
       "descripcion": "Estudia el diagrama de la Magnanimidad. Observa las fortalezas y debilidades de cada temperamento en relación con la magnanimidad, tanto en la contemplación como en la acción.",
@@ -460,6 +466,8 @@
       "tipo": "test_profundo",
       "titulo": "Test de magnanimidad",
       "visible": false,
+      "resumen_ficha": "¿Soy consciente de mi dignidad y libertad?",
+      "prioridad_ficha": 2,
       "descripcion": "Busca un momento tranquilo para realizar este ejercicio, es un test de 17 preguntas que requiere estar concentrado y evitar posibles distracciones.\n\nReflexiona con sinceridad sobre cada pregunta.\n\nNo hay respuestas correctas ni incorrectas: este autoexamen es una herramienta para tu crecimiento personal.",
       "preguntas": [
         {
@@ -698,6 +706,8 @@
       "tipo": "plan_crecimiento",
       "titulo": "Mi Plan de Crecimiento en Magnanimidad",
       "visible": true,
+      "resumen_ficha": "Mi plan de crecimiento en magnanimidad",
+      "prioridad_ficha": 1,
       "descripcion": "Vamos a desarrollar tu plan de crecimiento en magnanimidad para que puedas ir avanzando sobre él durante este año.",
       "nota_anual": "Este plan debe realizarse todos los años. Vuelve al inicio y al final de cada año para ver en qué momento estás y el progreso que has conseguido.",
       "pantallas": [
