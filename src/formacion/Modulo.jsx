@@ -251,7 +251,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
   );
 }
 
-function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA }) {
+function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, user, irA, cursoNum = 1 }) {
   const _vidCtx = videoAnterior(pasos, paso.id);
   const _mod = _vidCtx ? moduloDelPaso(pasos, _vidCtx.id) : null;
   const moduloNum = _mod?.numero ?? 1;
@@ -287,7 +287,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
-    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
 }
@@ -1253,7 +1253,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
             <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
           </div>
         )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} />
+        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} cursoNum={cursoNum} />
       </div>
     );
   }

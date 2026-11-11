@@ -1,13 +1,13 @@
 {
   "id": "modulo2",
-  "titulo": "Practicando la Magnanimidad",
+  "titulo": "Introducción: Practicando la magnanimidad",
   "curso": 2,
   "pasos": [
     {
       "id": "m2-01",
       "num": 1,
       "tipo": "video",
-      "titulo": "Practicando la Magnanimidad",
+      "titulo": "Introducción: Practicando la magnanimidad",
       "visible": true,
       "leccion": 1,
       "vimeoId": "924576183",
@@ -112,9 +112,9 @@
       "id": "m2-concl-1",
       "tipo": "conclusion_modulo",
       "visible": false,
-      "titulo": "Resumen: Practicando la Magnanimidad",
+      "titulo": "Resumen: Introducción",
       "modulo_numero": 0,
-      "modulo_titulo": "Practicando la Magnanimidad",
+      "modulo_titulo": "Introducción: Practicando la magnanimidad",
       "aprendizajes": [
         "Qué es la magnanimidad",
         "La magnanimidad como primera virtud específica del líder",

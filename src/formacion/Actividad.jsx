@@ -3001,7 +3001,7 @@ export function TestCaracterFormacion({ paso, onComplete }) {
   );
 }
 
-export function Sintesis({ paso, temperamento, onComplete }) {
+export function Sintesis({ paso, temperamento, onComplete, cursoNum = 1 }) {
   const map = paso.sintesis?.virtud_desafio_map ?? {};
   const p = temperamento?.primary;
   const s = temperamento?.secondary;
@@ -3029,7 +3029,7 @@ export function Sintesis({ paso, temperamento, onComplete }) {
       <div style={eyebrow}>Mi Síntesis</div>
       <div style={{ ...tarjeta, marginTop: 12 }}>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 20px' }}>
-          Conclusiones del Curso 1
+          Conclusiones del Curso {cursoNum}
         </h2>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, marginBottom: 20 }}>
