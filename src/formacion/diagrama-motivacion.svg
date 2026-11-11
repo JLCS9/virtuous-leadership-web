@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 480" width="520" height="480">
+  <defs>
+    <linearGradient id="blueTop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a2e4a"/>
+      <stop offset="100%" stop-color="#1b3a5c"/>
+    </linearGradient>
+    <linearGradient id="blueMid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a4d6e"/>
+      <stop offset="100%" stop-color="#3a6080"/>
+    </linearGradient>
+    <linearGradient id="greenDk" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2d6e3f"/>
+      <stop offset="100%" stop-color="#347a47"/>
+    </linearGradient>
+    <linearGradient id="greenLt" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a8c4e"/>
+      <stop offset="100%" stop-color="#44a058"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Trascendental section -->
+  <polygon points="130,10 390,10 430,80 100,80" fill="url(#blueTop)" rx="4"/>
+  <text x="260" y="38" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="14" font-weight="700" letter-spacing="1.5">RELIGIÓN</text>
+  <text x="260" y="58" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="11">Servir a Dios</text>
+
+  <polygon points="90,88 430,88 460,170 60,170" fill="url(#blueMid)"/>
+  <text x="260" y="120" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="14" font-weight="700" letter-spacing="1.5">ALTRUISMO</text>
+  <text x="260" y="144" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="11">Servir a los seres humanos</text>
+
+  <text x="260" y="200" text-anchor="middle" fill="#1b3a5c" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="2">MOTIVACIÓN TRASCENDENTAL</text>
+
+  <!-- Inmanente section -->
+  <rect x="40" y="230" width="212" height="80" rx="3" fill="url(#greenDk)"/>
+  <text x="146" y="260" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="1">PSICOLÓGICA</text>
+  <text x="146" y="280" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="10.5">Estar en paz con mi consciencia</text>
+
+  <rect x="268" y="230" width="212" height="80" rx="3" fill="url(#greenLt)"/>
+  <text x="374" y="260" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="1">ESPIRITUAL</text>
+  <text x="374" y="280" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="10.5">Mejorar mi carácter</text>
+
+  <rect x="40" y="322" width="212" height="80" rx="3" fill="url(#greenLt)"/>
+  <text x="146" y="352" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="1">MATERIAL</text>
+  <text x="146" y="372" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="10.5">Ganar dinero</text>
+
+  <rect x="268" y="322" width="212" height="80" rx="3" fill="url(#greenDk)"/>
+  <text x="374" y="352" text-anchor="middle" fill="#fff" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="1">PROFESIONAL</text>
+  <text x="374" y="372" text-anchor="middle" fill="rgba(255,255,255,0.8)" font-family="'Inter',sans-serif" font-size="10.5">Aprender cosas nuevas</text>
+
+  <text x="260" y="436" text-anchor="middle" fill="#2d6e3f" font-family="'Inter',sans-serif" font-size="13" font-weight="700" letter-spacing="2">MOTIVACIÓN INMANENTE</text>
+</svg>

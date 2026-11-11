@@ -20,6 +20,7 @@ const MODULOS = {
   'curso-1': () => import('../data/modulo1.json'),
   'curso-2': () => import('../data/modulo2.json'),
   'curso-3': () => import('../data/modulo3.json'),
+  'curso-4': () => import('../data/modulo4.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -79,9 +80,13 @@ function agruparIntro(parrafos) {
 }
 
 function renderIntroTexto(text) {
-  const parts = text.split(/\*\*(.*?)\*\*/g);
+  const parts = text.split(/(\*\*.*?\*\*|__.*?__)/g);
   if (parts.length === 1) return text;
-  return parts.map((part, i) => i % 2 === 1 ? <strong key={i}>{part}</strong> : part);
+  return parts.map((part, i) => {
+    if (part.startsWith('**') && part.endsWith('**')) return <strong key={i}>{part.slice(2, -2)}</strong>;
+    if (part.startsWith('__') && part.endsWith('__')) return <u key={i}>{part.slice(2, -2)}</u>;
+    return part;
+  });
 }
 
 function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
@@ -287,7 +292,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
-    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} />;
+    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
 }
@@ -448,17 +453,25 @@ function extraerReflexiones(pasos, completados) {
   for (const paso of pasos) {
     const datos = completados[paso.id];
     if (!datos) continue;
+    const titulo = paso.resumen_ficha || paso.titulo;
+    const prio = paso.prioridad_ficha ?? 5;
     if (paso.tipo === 'test_profundo' || paso.tipo === 'reflexion_piramide') {
       const textos = (datos.respuestas ?? []).filter(t => typeof t === 'string' && t.trim());
-      if (textos.length > 0) items.push({ id: paso.id, titulo: paso.titulo, texto: textos[0] });
+      if (textos.length > 0) items.push({ id: paso.id, titulo, texto: textos[0], prio });
     } else if (paso.tipo === 'temperamento_magnanimidad') {
       const t = datos.textoFuerte || datos.textoDebil;
-      if (t) items.push({ id: paso.id, titulo: paso.titulo, texto: datos.textoFuerte ? `Puntos fuertes: ${datos.textoFuerte}` : `Puntos débiles: ${datos.textoDebil}` });
-    } else if (paso.tipo === 'cierre' && datos.lo_que_facilita) {
-      items.push({ id: paso.id, titulo: 'Mi síntesis', texto: datos.proposito || datos.lo_que_facilita });
+      if (t) items.push({ id: paso.id, titulo, texto: datos.textoFuerte ? `Puntos fuertes: ${datos.textoFuerte}` : `Puntos débiles: ${datos.textoDebil}`, prio });
+    } else if (paso.tipo === 'cierre' && (datos.lo_que_facilita || datos.compromiso)) {
+      const texto = datos.proposito || datos.lo_que_facilita || datos.compromiso || '';
+      items.push({ id: paso.id, titulo, texto, prio });
+    } else if (paso.tipo === 'plan_crecimiento' && datos.plan) {
+      const planData = datos.plan;
+      const texto = planData.proposito_final || planData.ambiente || '';
+      if (texto) items.push({ id: paso.id, titulo, texto: typeof texto === 'string' ? texto : JSON.stringify(texto), prio });
     }
   }
-  return items;
+  items.sort((a, b) => a.prio - b.prio);
+  return items.slice(0, 3);
 }
 
 function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
@@ -952,7 +965,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   }
 
   if (verCuaderno) {
-    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { const vid = videoAnterior(pasos, pasoId); setVerCuaderno(false); irA(vid ? vid.id : pasoId); }} onEditar={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
+    return <VistaCuaderno pasos={pasos} completados={completados} onVolver={() => setVerCuaderno(false)} onIrA={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} onEditar={(pasoId) => { setVerCuaderno(false); irA(pasoId); }} userId={userId} moduloId={modulo.id} temperamento={temperamento} />;
   }
 
   return (

@@ -26,6 +26,8 @@ import retratoMagnanimidad from './assets/retrato-magnanimidad.jpg';
 import piramidaImg from '../assets/piramida ES.png';
 import piramideViciosImg from './piramide-virtudes-vicios.png';
 import piramideLVImg from './piramide-liderazgo-virtuoso.png';
+import diagramaMotivacionImg from './diagrama-motivacion.svg';
+import diagramaHumildadTempImg from './diagrama-humildad-temperamentos.webp';
 import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
@@ -202,7 +204,7 @@ function Caratula({ paso, tipo, onEmpezar, modulo }) {
           </div>
         )}
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '12px 0 14px', textAlign: 'center', lineHeight: 1.3 }}>
-          {txt.tipo}
+          {paso.caratula_titulo || txt.tipo}
         </h2>
         <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 8px' }}>
           {txt.desc.split('\n\n').map((p, i) => (
@@ -1118,15 +1120,57 @@ function RenderTextoRico(texto) {
   });
 }
 
-function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible = true }) {
+function CarruselCitas({ items }) {
+  const [idx, setIdx] = useState(0);
+  const item = items[idx];
+  return (
+    <div>
+      <div style={{
+        display: 'flex', gap: 14, padding: '16px 20px', background: BEIGE,
+        borderLeft: `3px solid ${GOLD_REF}`,
+      }}>
+        <span style={{ fontFamily: 'Georgia, serif', fontSize: 40, lineHeight: 1, color: GOLD_REF, flexShrink: 0, marginTop: -4 }}>"</span>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 20, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>
+          {RenderTextoRico(item.cita)}
+        </p>
+      </div>
+      {item.etiqueta && (
+        <div style={{ textAlign: 'center', marginTop: 10, fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+          {item.etiqueta}
+        </div>
+      )}
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 14 }}>
+        <button type="button" onClick={() => setIdx(i => Math.max(0, i - 1))} disabled={idx === 0} style={{
+          background: 'none', border: 'none', padding: '4px 8px', cursor: idx === 0 ? 'default' : 'pointer',
+          fontFamily: FONT_BODY, fontSize: 18, fontWeight: 700, color: idx === 0 ? LINE : GOLD_REF_DK,
+        }}>‹</button>
+        {items.map((_, i) => (
+          <button key={i} type="button" onClick={() => setIdx(i)} style={{
+            width: i === idx ? 24 : 8, height: 8, borderRadius: 4,
+            background: i === idx ? GOLD_REF : LINE,
+            border: 'none', padding: 0, cursor: 'pointer',
+            transition: 'all 300ms ease',
+          }} />
+        ))}
+        <button type="button" onClick={() => setIdx(i => Math.min(items.length - 1, i + 1))} disabled={idx === items.length - 1} style={{
+          background: 'none', border: 'none', padding: '4px 8px', cursor: idx === items.length - 1 ? 'default' : 'pointer',
+          fontFamily: FONT_BODY, fontSize: 18, fontWeight: 700, color: idx === items.length - 1 ? LINE : GOLD_REF_DK,
+        }}>›</button>
+      </div>
+    </div>
+  );
+}
+
+function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible = true, titulo }) {
   const items = Array.isArray(slide) ? slide : [slide];
   const esUltima = actual === total;
+  const [lightboxSrc, setLightboxSrc] = useState(null);
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
       <div style={eyebrow}>Lectura</div>
       <div style={{ ...tarjeta, marginTop: 12 }}>
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
-          Lectura del cuaderno
+          {titulo || 'Lectura del cuaderno'}
         </h2>
         <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginBottom: 20 }}>
           {actual} de {total}
@@ -1156,9 +1200,32 @@ function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible =
             if (item.enfasis) {
               return <p key={i} style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.6, margin: 0 }}>{RenderTextoRico(item.enfasis)}</p>;
             }
+            if (item.carrusel) {
+              return <CarruselCitas key={i} items={item.carrusel} />;
+            }
+            if (item.imagen) {
+              const src = REFLEXION_IMAGENES[item.imagen];
+              const imgSrc = Array.isArray(src) ? src[0] : src;
+              if (!imgSrc) return null;
+              return (
+                <div key={i} style={{ textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
+                  <img src={imgSrc} alt={item.imagen} style={{ maxWidth: '100%', maxHeight: 420, display: 'block', margin: '0 auto', mixBlendMode: 'multiply' }} />
+                  <button type="button" onClick={() => setLightboxSrc(imgSrc)} style={{
+                    background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                    fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+                    display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8,
+                    textDecoration: 'underline', textUnderlineOffset: 3,
+                  }}>
+                    <IconoLupa /> Ver diagrama
+                  </button>
+                </div>
+              );
+            }
             return null;
           })}
         </div>
+
+        {lightboxSrc && <Lightbox src={lightboxSrc} alt="Diagrama" onClose={() => setLightboxSrc(null)} />}
 
         <div style={{ display: 'flex', justifyContent: actual > 1 ? 'space-between' : 'flex-end', marginTop: 12 }}>
           {actual > 1 && (
@@ -1188,6 +1255,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
   const [idx, setIdx] = useState(0);
   const [respuestas, setRespuestas] = useState(() => leerTestProf(paso.id, total));
   const [circuloData, setCirculoData] = useState({});
+  const [ejemploAbierto, setEjemploAbierto] = useState({});
   const guardarTestCb = useCallback((d) => { try { localStorage.setItem(TEST_PROF_KEY(paso.id), JSON.stringify(d)); } catch {} }, [paso.id]);
   const guardados = useAutoguardado(guardarTestCb, respuestas);
 
@@ -1200,6 +1268,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         actual={lecturaIdx + 1}
         total={lecturas.length}
         visible={lecturaVisible}
+        titulo={paso.titulo_lectura || paso.titulo}
         onSiguiente={() => {
           setLecturaVisible(false);
           setTimeout(() => {
@@ -1288,7 +1357,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
     <Shell titulo={paso.titulo} actual={idx + 1} total={total}>
       <div style={tarjeta}>
         <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 12px', lineHeight: 1.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
-          Examínate y fija metas para el mes que empieza
+          {paso.titulo_lectura || paso.titulo}
         </p>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
           {preg.texto ?? `Pregunta ${idx + 1}`}
@@ -1299,6 +1368,11 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         {preg.circulo_oro && (
           <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, margin: '0 0 8px', lineHeight: 1.5 }}>
             Añade a aquellas <strong>personas que admiras y no son de tu círculo</strong>
+          </p>
+        )}
+        {paso.sub_enunciado && (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.6, margin: '-8px 0 16px' }}>
+            {paso.sub_enunciado}
           </p>
         )}
         <textarea
@@ -1316,6 +1390,24 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         <div style={{ display: 'flex', justifyContent: 'flex-end', minHeight: 20, marginTop: 6 }}>
           <CheckGuardado campo={String(idx)} guardados={guardados} />
         </div>
+        {preg.ejemplo && (
+          <>
+            <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, [idx]: !prev[idx] }))} style={{
+              background: 'none', border: 'none', padding: '0 0 8px', cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa />
+              Ver ejemplo
+            </button>
+            {ejemploAbierto[idx] && (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '0 0 12px', padding: '10px 14px', background: BEIGE, borderLeft: `2px solid ${GOLD_REF}` }}>
+                {preg.ejemplo}
+              </p>
+            )}
+          </>
+        )}
         <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           {idx > 0 ? (
             <button type="button" onClick={() => { setIdx(i => i - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
@@ -1352,7 +1444,8 @@ const REFLEXION_IMAGENES = {
   'piramide-lv': [piramideViciosImg, piramideLVImg],
   'piramide-humildad': [piramideHumildadImg, piramideLVCompletaImg],
   'magnanimidad-temperamentos': diagramaTemperamentosImg,
-  'humildad-temperamentos': piramideHumildadImg,
+  'humildad-temperamentos': diagramaHumildadTempImg,
+  'diagrama-motivacion': diagramaMotivacionImg,
 };
 
 const REFLEXION_KEY = (pasoId) => `vl-reflexion:${pasoId}`;
@@ -1553,11 +1646,11 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
           </p>
 
           {img && (
-            <div style={{ marginBottom: 20, textAlign: 'center' }}>
+            <div style={{ marginBottom: 20, textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
               <button type="button" onClick={() => setLbSrc(img)} style={{
                 background: 'none', border: 'none', padding: 0, cursor: 'pointer',
               }}>
-                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto' }} />
+                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
               </button>
               <div style={{ marginTop: 8 }}>
                 <button type="button" onClick={() => setLbSrc(img)} style={{
@@ -1647,8 +1740,32 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
         <div style={tarjeta}>
           <div style={eyebrow}>Paso 2 — Tu temperamento secundario</div>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>
-            Temperamento secundario y magnanimidad
+            Temperamento secundario y {paso.titulo?.toLowerCase().includes('humildad') ? 'humildad' : 'magnanimidad'}
           </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.65, margin: '0 0 20px' }}>
+            {paso.descripcion}
+          </p>
+
+          {img && (
+            <div style={{ marginBottom: 20, textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
+              <button type="button" onClick={() => setLbSrc(img)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+                <img src={img} alt={paso.enunciado} style={{ width: '100%', height: 'auto', mixBlendMode: 'multiply' }} />
+              </button>
+              <div style={{ marginTop: 8 }}>
+                <button type="button" onClick={() => setLbSrc(img)} style={{
+                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                  textDecoration: 'underline', textUnderlineOffset: 3,
+                }}>
+                  <IconoLupa />
+                  Ampliar diagrama
+                </button>
+              </div>
+            </div>
+          )}
+
+          {lbSrc && <Lightbox src={lbSrc} alt={paso.enunciado} onClose={() => setLbSrc(null)} />}
 
           {s && RETRATO_TEMP[s] && (
             <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginBottom: 18, padding: '14px 16px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[s] ?? LINE}` }}>
@@ -1695,6 +1812,13 @@ export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
             />
             <EjemploColapsable texto={paso.ejemplos_debil?.[s]} abierto={ejemploAb.debilSec} onToggle={() => setEjemploAb(prev => ({ ...prev, debilSec: !prev.debilSec }))} />
           </div>
+
+          {paso.obstaculos?.[s] && (
+            <div style={{ padding: '16px 18px', background: ERROR_BG, borderLeft: `3px solid ${ERROR}`, marginBottom: 20 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: ERROR_DK, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: 6 }}>Obstáculo</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: ERROR_DK, lineHeight: 1.55 }}>{paso.obstaculos[s]}</div>
+            </div>
+          )}
 
           {sinergia && (
             <div style={{ padding: '16px 18px', background: SUCCESS_BG, borderLeft: `3px solid ${SUCCESS}`, marginBottom: 20 }}>
@@ -2613,7 +2737,7 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
         <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '14px 0 6px', textAlign: 'center', lineHeight: 1.3 }}>
           {hayPendientes
             ? 'Todavía no has completado todos los pasos'
-            : todosACero ? 'Módulo no superado' : `Módulo ${paso.modulo_numero} completado`}
+            : todosACero ? 'Módulo no superado' : `Módulo ${paso.modulo_numero + 1} completado`}
         </h2>
         <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, textAlign: 'center', margin: '0 0 20px' }}>
           {paso.modulo_titulo}
@@ -2641,7 +2765,7 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
         )}
 
         {!hayPendientes && hayEvaluables && (
-          <div style={{ display: 'grid', gridTemplateColumns: scores.length > 1 ? 'repeat(2, 1fr)' : '1fr', gap: 14, marginBottom: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 14, marginBottom: 20 }}>
             {scores.map((s) => {
               const pct = s.total > 0 ? Math.round((s.aciertos / s.total) * 100) : 0;
               const ok = pct > 0;
@@ -2660,6 +2784,29 @@ export function ConclusionModulo({ paso, completados, pendientes = [], onContinu
             })}
           </div>
         )}
+
+        {!hayPendientes && (() => {
+          const noEvaluados = ejercicios.map(e => {
+            const id = typeof e === 'string' ? e : e.id;
+            const label = typeof e === 'string' ? '' : (e.label ?? '');
+            const c = completados[id];
+            if (!c || typeof c.aciertos === 'number') return null;
+            return { id, label };
+          }).filter(Boolean);
+          if (noEvaluados.length === 0) return null;
+          return (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 14, marginBottom: 20 }}>
+              {noEvaluados.map(s => (
+                <div key={s.id} style={{ padding: '18px 20px', background: PAPER, border: `1px solid ${LINE}`, textAlign: 'center' }}>
+                  <span style={{ display: 'inline-grid', placeItems: 'center', width: 36, height: 36, borderRadius: '50%', background: SUCCESS_BG, border: `2px solid ${SUCCESS}`, fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: SUCCESS_DK }}>✓</span>
+                  {s.label && (
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginTop: 8 }}>{s.label}</div>
+                  )}
+                </div>
+              ))}
+            </div>
+          );
+        })()}
 
         {!hayPendientes && !bloqueado && aprendizajes.length > 0 && (
           <div style={{ padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 20, lineHeight: 1.6 }}>
@@ -3109,7 +3256,7 @@ export function TestCaracterFormacion({ paso, onComplete }) {
   );
 }
 
-export function Sintesis({ paso, temperamento, onComplete, cursoNum = 1 }) {
+export function Sintesis({ paso, temperamento, onComplete, cursoNum = 1, user }) {
   const map = paso.sintesis?.virtud_desafio_map ?? {};
   const p = temperamento?.primary;
   const s = temperamento?.secondary;
@@ -3121,6 +3268,11 @@ export function Sintesis({ paso, temperamento, onComplete, cursoNum = 1 }) {
     proposito: '',
   });
 
+  const [faseC3, setFaseC3] = useState('reflexion');
+  const [pagRefl, setPagRefl] = useState(0);
+  const [areaCrecimiento, setAreaCrecimiento] = useState(null);
+  const [compromisoTexto, setCompromisoTexto] = useState('');
+
   function guardar() {
     onComplete({
       temperamento_primario: temperamento?.primary,
@@ -3131,6 +3283,197 @@ export function Sintesis({ paso, temperamento, onComplete, cursoNum = 1 }) {
   }
 
   const TEMP_NOMBRE_LOCAL = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
+
+  const [verEjemploC, setVerEjemploC] = useState(false);
+
+  /* ─── Curso 3: cierre con reflexión guiada ─── */
+  if (paso.reflexion_cierre) {
+    const rc = paso.reflexion_cierre;
+    const nombre = user?.user_metadata?.first_name || '';
+    const paginas = rc.paginas;
+    const totalPags = paginas.length;
+
+    const reemplazaNombre = (txt) => txt.replace(/\{nombre\}/g, nombre);
+
+    const renderElemento = (elem, i) => {
+      if (typeof elem === 'string') {
+        const txt = reemplazaNombre(elem);
+        return (
+          <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '0 0 12px' }}>
+            {RenderTextoRico(txt)}
+          </p>
+        );
+      }
+      if (elem.lista) {
+        return (
+          <ul key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '4px 0 12px', paddingLeft: 28 }}>
+            {elem.lista.map((li, j) => <li key={j} style={{ marginBottom: 6 }}>{RenderTextoRico(reemplazaNombre(li))}</li>)}
+          </ul>
+        );
+      }
+      if (elem.por_temperamento) {
+        const raw = elem.por_temperamento[temperamento?.primary] ?? '';
+        const txt = reemplazaNombre(raw);
+        const lineas = txt.split('\n').filter(Boolean);
+        return (
+          <div key={i}>
+            {lineas.map((linea, j) => (
+              <p key={j} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '0 0 14px' }}>
+                {RenderTextoRico(linea)}
+              </p>
+            ))}
+          </div>
+        );
+      }
+      return null;
+    };
+
+    const btnAtras = (onClick) => (
+      <button type="button" onClick={onClick} style={{
+        fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
+        background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+      }}>
+        ← Anterior
+      </button>
+    );
+
+    const btnSiguiente = (onClick, disabled) => (
+      <button type="button" disabled={disabled} onClick={onClick} style={{
+        fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+        background: disabled ? LINE : GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px',
+        cursor: disabled ? 'default' : 'pointer',
+      }}>
+        Siguiente →
+      </button>
+    );
+
+    if (faseC3 === 'reflexion') {
+      return (
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div style={eyebrow}>Reflexión final</div>
+          <div style={{ ...tarjeta, marginTop: 12 }}>
+            <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 24px' }}>
+              Conclusiones del Curso {cursoNum}
+            </h2>
+            {paginas[pagRefl].map((elem, i) => renderElemento(elem, i))}
+            <div style={{ marginTop: 28, display: 'flex', justifyContent: pagRefl > 0 ? 'space-between' : 'flex-end', alignItems: 'center' }}>
+              {pagRefl > 0 && btnAtras(() => setPagRefl(pagRefl - 1))}
+              {btnSiguiente(() => {
+                if (pagRefl < totalPags - 1) setPagRefl(pagRefl + 1);
+                else setFaseC3('choice');
+              })}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (faseC3 === 'choice') {
+      return (
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div style={eyebrow}>Tu compromiso</div>
+          <div style={{ ...tarjeta, marginTop: 12 }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.65, margin: '0 0 24px' }}>
+              {rc.pregunta_choice.enunciado}
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {rc.pregunta_choice.opciones.map((op) => (
+                <button key={op.key} type="button"
+                  onClick={() => setAreaCrecimiento(op.key)}
+                  style={{
+                    fontFamily: FONT_BODY, fontSize: 18, color: areaCrecimiento === op.key ? '#fff' : NAVY,
+                    background: areaCrecimiento === op.key ? NAVY : PAPER,
+                    border: `1px solid ${areaCrecimiento === op.key ? NAVY : LINE}`,
+                    borderRadius: 0, padding: '18px 20px', cursor: 'pointer',
+                    textAlign: 'left', transition: 'all 200ms ease',
+                  }}>
+                  {op.texto}
+                </button>
+              ))}
+            </div>
+            <div style={{ marginTop: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {btnAtras(() => { setFaseC3('reflexion'); setPagRefl(totalPags - 1); })}
+              {btnSiguiente(() => setFaseC3('compromiso'), !areaCrecimiento)}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    if (faseC3 === 'compromiso') {
+      const promptTexto = rc.pregunta_compromiso[areaCrecimiento] ?? '';
+      const ejemploTexto = rc.ejemplo_compromiso?.[areaCrecimiento] ?? '';
+      return (
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <div style={eyebrow}>Tu compromiso</div>
+          <div style={{ ...tarjeta, marginTop: 12 }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.65, margin: '0 0 24px' }}>
+              {promptTexto}
+            </p>
+            <textarea value={compromisoTexto} onChange={(e) => setCompromisoTexto(e.target.value)}
+              placeholder="Escribe tu compromiso…"
+              style={{
+                fontFamily: FONT_BODY, fontSize: 18, padding: '16px 18px', border: `1px solid ${LINE}`,
+                borderRadius: 0, outline: 'none', width: '100%', minHeight: 120, resize: 'vertical', background: '#fff',
+              }} />
+            {ejemploTexto && (
+              <div style={{ marginTop: 16 }}>
+                <button type="button" onClick={() => setVerEjemploC(!verEjemploC)} style={{
+                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+                  background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', gap: 6,
+                }}>
+                  <IconoLupa />
+                  {verEjemploC ? 'Ocultar ejemplo' : 'Ver ejemplo'}
+                </button>
+                {verEjemploC && (
+                  <div style={{
+                    marginTop: 10, padding: '14px 18px', background: BEIGE,
+                    borderLeft: `3px solid ${GOLD_REF}`, fontSize: 14, fontFamily: FONT_BODY,
+                    color: MUTED, lineHeight: 1.6, fontStyle: 'italic',
+                  }}>
+                    {reemplazaNombre(ejemploTexto)}
+                  </div>
+                )}
+              </div>
+            )}
+            <div style={{ marginTop: 28, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {btnAtras(() => setFaseC3('choice'))}
+              {btnSiguiente(() => setFaseC3('felicitacion'), !compromisoTexto.trim())}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={{ ...tarjeta, textAlign: 'center', padding: '48px 32px' }}>
+          <div style={{
+            display: 'inline-grid', placeItems: 'center', width: 72, height: 72, borderRadius: '50%',
+            background: BEIGE, border: `2px solid ${GOLD_REF}`, marginBottom: 20,
+          }}>
+            <span style={{ fontFamily: FONT_SLAB, fontSize: 32, fontWeight: 700, color: GOLD_REF_DK, lineHeight: 1 }}>&#10003;</span>
+          </div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '0 0 12px' }}>
+            {reemplazaNombre(rc.felicitacion)}
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6, margin: '0 0 32px' }}>
+            Tu reflexión y compromiso han quedado guardados.
+          </p>
+          <button type="button" onClick={() => onComplete({
+            area_crecimiento_humildad: areaCrecimiento,
+            compromiso: compromisoTexto,
+          })} style={{
+            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+            background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 40px', cursor: 'pointer',
+          }}>
+            Marcar como completado
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
