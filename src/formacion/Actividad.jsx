@@ -1118,25 +1118,38 @@ function RenderTextoRico(texto) {
   });
 }
 
-function SlideLectura({ slide, actual, total, onSiguiente, onAnterior }) {
+function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible = true }) {
   const items = Array.isArray(slide) ? slide : [slide];
+  const esUltima = actual === total;
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
-      <div style={tarjeta}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <div style={eyebrow}>Lectura</div>
-          <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>{actual} / {total}</div>
+      <div style={eyebrow}>Lectura</div>
+      <div style={{ ...tarjeta, marginTop: 12 }}>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+          Lectura del cuaderno
+        </h2>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginBottom: 20 }}>
+          {actual} de {total}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+        <div style={{ marginBottom: 10, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+          <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(actual / total) * 100}%` }} />
+        </div>
+
+        <div style={{
+          opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 300ms ease, transform 300ms ease',
+          padding: '24px 0', display: 'flex', flexDirection: 'column', gap: 14,
+        }}>
           {items.map((item, i) => {
             if (typeof item === 'string') {
-              return <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.75, margin: 0 }}>{RenderTextoRico(item)}</p>;
+              return <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{RenderTextoRico(item)}</p>;
             }
             if (item.cita) {
               return (
                 <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
                   <span style={{ fontFamily: 'Georgia, serif', fontSize: 40, lineHeight: 1, color: GOLD_REF, flexShrink: 0, marginTop: -4 }}>"</span>
-                  <p style={{ fontFamily: FONT_BODY, fontSize: 19, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>{RenderTextoRico(item.cita)}</p>
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 20, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>{RenderTextoRico(item.cita)}</p>
                 </div>
               );
             }
@@ -1146,17 +1159,18 @@ function SlideLectura({ slide, actual, total, onSiguiente, onAnterior }) {
             return null;
           })}
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 28 }}>
-          {actual > 1 ? (
+
+        <div style={{ display: 'flex', justifyContent: actual > 1 ? 'space-between' : 'flex-end', marginTop: 12 }}>
+          {actual > 1 && (
             <button type="button" onClick={onAnterior} style={{
-              fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
               background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
             }}>← Anterior</button>
-          ) : <span />}
+          )}
           <button type="button" onClick={onSiguiente} style={{
-            fontFamily: FONT_BODY, fontSize: 17, fontWeight: 600, color: '#fff',
+            fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
             background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
-          }}>Siguiente →</button>
+          }}>{esUltima ? 'Continuar →' : 'Siguiente →'}</button>
         </div>
       </div>
     </div>
@@ -1170,6 +1184,7 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
   const lecturas = paso.lecturas ?? [];
   const [fase, setFase] = useState('caratula');
   const [lecturaIdx, setLecturaIdx] = useState(0);
+  const [lecturaVisible, setLecturaVisible] = useState(true);
   const [idx, setIdx] = useState(0);
   const [respuestas, setRespuestas] = useState(() => leerTestProf(paso.id, total));
   const [circuloData, setCirculoData] = useState({});
@@ -1184,19 +1199,27 @@ export function TestProfundo({ paso, onComplete, modulo, user }) {
         slide={lecturas[lecturaIdx]}
         actual={lecturaIdx + 1}
         total={lecturas.length}
+        visible={lecturaVisible}
         onSiguiente={() => {
-          if (lecturaIdx + 1 < lecturas.length) {
-            setLecturaIdx(i => i + 1);
+          setLecturaVisible(false);
+          setTimeout(() => {
+            if (lecturaIdx + 1 < lecturas.length) {
+              setLecturaIdx(i => i + 1);
+            } else {
+              setFase('ejercicio');
+            }
+            setLecturaVisible(true);
             window.scrollTo({ top: 0, behavior: 'smooth' });
-          } else {
-            setFase('ejercicio');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
+          }, 300);
         }}
         onAnterior={() => {
           if (lecturaIdx > 0) {
-            setLecturaIdx(i => i - 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setLecturaVisible(false);
+            setTimeout(() => {
+              setLecturaIdx(i => i - 1);
+              setLecturaVisible(true);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
           }
         }}
       />
