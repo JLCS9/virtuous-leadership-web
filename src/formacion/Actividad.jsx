@@ -179,7 +179,7 @@ const CARATULA_TEXTOS = {
   test_caracter: { icono: '◈', tipo: 'Test de carácter', desc: 'Evalúa tu nivel actual en las seis virtudes del liderazgo: prudencia, valor, autocontrol, justicia, magnanimidad y humildad.' },
   test_corazon: { icono: '♡', tipo: 'Test del corazón', desc: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.' },
   reflexion_piramide: { icono: '△', tipo: 'Reflexión', desc: 'Observa el diagrama y reflexiona sobre las relaciones entre las virtudes.' },
-  temperamento_magnanimidad: { icono: '✶', tipo: 'Temperamento y magnanimidad', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar la magnanimidad.' },
+  temperamento_magnanimidad: { icono: '✶', tipo: 'Tu temperamento y la virtud', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar esta virtud.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -203,7 +203,7 @@ function Caratula({ paso, tipo, onEmpezar, modulo }) {
           {txt.tipo}
         </h2>
         <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 520, margin: '0 auto 8px' }}>
-          {(paso.descripcion ?? txt.desc).split('\n\n').map((p, i) => (
+          {txt.desc.split('\n\n').map((p, i) => (
             <p key={i} style={{ margin: i === 0 ? 0 : '12px 0 0' }}>{p}</p>
           ))}
         </div>
