@@ -21,6 +21,7 @@ function ContactModal({ open, onClose }) {
   const w = useWidth();
   const tablet = w >= 760;
   const [form, setForm] = useState({});
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -41,8 +42,6 @@ function ContactModal({ open, onClose }) {
   const upd = (field) => (e) => setForm((prev) => ({
     ...prev, [field]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
   }));
-
-  const [sending, setSending] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     const url = import.meta.env.VITE_SUBMIT_CONTACT_URL;
