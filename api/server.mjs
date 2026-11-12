@@ -74,6 +74,9 @@ const CONVERFLOW_TT_LISTS = {
   fr: process.env.CONVERFLOW_TT_LIST_FR || 'TT-FR',
   ru: process.env.CONVERFLOW_TT_LIST_RU || 'TT-RU',
 };
+const COLEGIOS_NOTIFY_EMAILS = (process.env.COLEGIOS_NOTIFY_EMAIL || 'marketing@csodigital.tech,luis@csodigital.tech').split(',').map(e => e.trim()).filter(Boolean);
+const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || '';
+const BREVO_SENDER_NAME  = process.env.BREVO_SENDER_NAME || 'Virtuous Leadership';
 const PORT          = parseInt(process.env.PORT || '3001', 10);
 
 if (!BREVO_API_KEY) { console.error('[fatal] BREVO_API_KEY env var missing'); process.exit(1); }
@@ -1098,6 +1101,132 @@ async function handleSubmitHeart(req, res) {
   }
 }
 
+// ────────────── Colegios: notificación a Luis ──────────────
+
+async function handleSubmitColegios(req, res) {
+  let body;
+  try { body = JSON.parse(await readBody(req)); } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+
+  const { nombre, cargo, institucion, localidad, email, telefono, claustro } = body;
+  if (!nombre || !institucion || !email) {
+    return sendJson(res, 400, { error: 'nombre, institucion and email are required' });
+  }
+
+  if (!BREVO_SENDER_EMAIL) {
+    console.error('[colegios] BREVO_SENDER_EMAIL not set — cannot send notification');
+    return sendJson(res, 503, { error: 'Email service not configured' });
+  }
+
+  const escHtml = v => String(v || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+  const htmlContent = `
+<h2>Nueva solicitud de Informe de Viabilidad</h2>
+<table style="border-collapse:collapse;font-family:sans-serif;font-size:15px">
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Nombre</td><td style="padding:8px 0">${escHtml(nombre)}</td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Cargo</td><td style="padding:8px 0">${escHtml(cargo)}</td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Institución</td><td style="padding:8px 0">${escHtml(institucion)}</td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Localidad</td><td style="padding:8px 0">${escHtml(localidad)}</td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Email</td><td style="padding:8px 0"><a href="mailto:${escHtml(email)}">${escHtml(email)}</a></td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Teléfono</td><td style="padding:8px 0">${escHtml(telefono)}</td></tr>
+  <tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">Tamaño claustro</td><td style="padding:8px 0">${escHtml(claustro)}</td></tr>
+</table>
+<p style="margin-top:24px;font-size:13px;color:#888">Enviado desde el formulario de virtuousleadership.com/colegios</p>`;
+
+  try {
+    const brevoRes = await fetchWithTimeout('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': BREVO_API_KEY, 'Content-Type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({
+        sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
+        to: COLEGIOS_NOTIFY_EMAILS.map(e => ({ email: e })),
+        replyTo: { email, name: nombre },
+        subject: `Solicitud de Viabilidad — ${institucion}`,
+        htmlContent,
+      }),
+    }, 8000);
+
+    if (!brevoRes.ok) {
+      const text = await brevoRes.text().catch(() => '');
+      console.error(`[colegios] brevo smtp → HTTP ${brevoRes.status} ${text.slice(0, 200)}`);
+      return sendJson(res, 502, { error: 'Failed to send notification' });
+    }
+
+    console.log(`[colegios] notification sent → ${COLEGIOS_NOTIFY_EMAILS.join(',')} inst=${institucion} email=${email}`);
+    return sendJson(res, 200, { ok: true });
+  } catch (e) {
+    console.error('[colegios] fetch error:', e);
+    return sendJson(res, 500, { error: 'Internal error' });
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// HANDLER — Formulario de contacto general (modal en todas las páginas).
+// Envía un email transaccional a COLEGIOS_NOTIFY_EMAIL (misma bandeja que
+// colegios; Luis gestiona ambos) con los datos del formulario.
+// ════════════════════════════════════════════════════════════════════════════
+const CONTACT_NOTIFY_EMAILS = (process.env.CONTACT_NOTIFY_EMAIL || 'marketing@csodigital.tech,luis@csodigital.tech').split(',').map(e => e.trim()).filter(Boolean);
+
+async function handleSubmitContact(req, res) {
+  let body;
+  try { body = JSON.parse(await readBody(req)); } catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+
+  const { nombre, apellidos, email, tel, pais, centro, cargo, mensaje } = body;
+  if (!nombre || !email) {
+    return sendJson(res, 400, { error: 'nombre and email are required' });
+  }
+
+  if (!BREVO_SENDER_EMAIL) {
+    console.error('[contacto] BREVO_SENDER_EMAIL not set — cannot send notification');
+    return sendJson(res, 503, { error: 'Email service not configured' });
+  }
+
+  const escHtml = v => String(v || '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+  const rows = [
+    ['Nombre', nombre],
+    ['Apellidos', apellidos],
+    ['Email', email],
+    ['Teléfono', tel],
+    ['País', pais],
+    ['Centro / Institución', centro],
+    ['Cargo', cargo],
+    ['Mensaje', mensaje],
+  ].filter(([, v]) => v);
+
+  const htmlContent = `
+<h2>Nuevo mensaje de contacto</h2>
+<table style="border-collapse:collapse;font-family:sans-serif;font-size:15px">
+  ${rows.map(([label, val]) => `<tr><td style="padding:8px 16px 8px 0;font-weight:600;vertical-align:top">${escHtml(label)}</td><td style="padding:8px 0">${escHtml(val)}</td></tr>`).join('\n  ')}
+</table>
+<p style="margin-top:24px;font-size:13px;color:#888">Enviado desde el formulario de contacto de virtuousleadership.com</p>`;
+
+  try {
+    const brevoRes = await fetchWithTimeout('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': BREVO_API_KEY, 'Content-Type': 'application/json', accept: 'application/json' },
+      body: JSON.stringify({
+        sender: { email: BREVO_SENDER_EMAIL, name: BREVO_SENDER_NAME },
+        to: CONTACT_NOTIFY_EMAILS.map(e => ({ email: e })),
+        replyTo: { email, name: [nombre, apellidos].filter(Boolean).join(' ') },
+        subject: `Contacto web — ${[nombre, apellidos].filter(Boolean).join(' ')}`,
+        htmlContent,
+      }),
+    }, 8000);
+
+    if (!brevoRes.ok) {
+      const text = await brevoRes.text().catch(() => '');
+      console.error(`[contacto] brevo smtp → HTTP ${brevoRes.status} ${text.slice(0, 200)}`);
+      return sendJson(res, 502, { error: 'Failed to send notification' });
+    }
+
+    console.log(`[contacto] notification sent → ${CONTACT_NOTIFY_EMAILS.join(',')} name=${nombre} email=${email}`);
+    return sendJson(res, 200, { ok: true });
+  } catch (e) {
+    console.error('[contacto] fetch error:', e);
+    return sendJson(res, 500, { error: 'Internal error' });
+  }
+}
+
 // ════════════════════════════════════════════════════════════════════════════
 // HTTP server — routing
 // ════════════════════════════════════════════════════════════════════════════
@@ -1139,6 +1268,14 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/submit-heart') {
     return handleSubmitHeart(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/submit-colegios') {
+    return handleSubmitColegios(req, res);
+  }
+
+  if (req.method === 'POST' && req.url === '/api/submit-contact') {
+    return handleSubmitContact(req, res);
   }
 
   return sendJson(res, 404, { error: 'Not found' });

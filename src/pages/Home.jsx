@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { LocalLink as Link } from '../i18n';
 import {
   NAVY, NAVY_DEEP, PAPER, INK, MUTED, BRUMA,
@@ -75,60 +75,9 @@ export default function Home() {
   const wide = w >= 1000;
   const seo = HOME_SEO[lang] || HOME_SEO.es;
 
-  const [modal, setModal] = useState(false);
-  const [form, setForm] = useState({});
   const [cardIdx, setCardIdx] = useState(0);
-  const closeRef = useRef(null);
 
-  const openModal = () => setModal(true);
-  const closeModal = () => { setModal(false); setForm({}); };
-
-  useEffect(() => {
-    const onOpen = () => setModal(true);
-    window.addEventListener('open-contact-modal', onOpen);
-    return () => window.removeEventListener('open-contact-modal', onOpen);
-  }, []);
-
-  useEffect(() => {
-    if (!modal) return undefined;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const id = setTimeout(() => closeRef.current && closeRef.current.focus(), 30);
-    const onKey = (e) => { if (e.key === 'Escape') closeModal(); };
-    window.addEventListener('keydown', onKey);
-    return () => {
-      document.body.style.overflow = prev;
-      clearTimeout(id);
-      window.removeEventListener('keydown', onKey);
-    };
-  }, [modal]);
-
-  const upd = (field) => (e) => setForm((prev) => ({
-    ...prev, [field]: e.target.type === 'checkbox' ? e.target.checked : e.target.value,
-  }));
-
-  const contactEmail = t('home.contact_email');
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const lines = [
-      form.nombre && `${t('home.form_nombre')}: ${form.nombre}`,
-      form.apellidos && `${t('home.form_apellidos')}: ${form.apellidos}`,
-      form.email && `Email: ${form.email}`,
-      form.tel && `${t('home.form_tel')}: ${form.tel}`,
-      form.pais && `${t('home.form_pais')}: ${form.pais}`,
-      form.centro && `${t('home.form_centro')}: ${form.centro}`,
-      form.cargo && `${t('home.form_cargo')}: ${form.cargo}`,
-      form.mensaje && `${t('home.form_mensaje')}: ${form.mensaje}`,
-    ].filter(Boolean).join('\n');
-    window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(t('home.contact_subject'))}&body=${encodeURIComponent(lines)}`;
-    closeModal();
-  };
-
-  const fld = {
-    display: 'block', width: '100%', boxSizing: 'border-box', padding: '12px 14px',
-    border: `1px solid ${C.bruma}`, fontFamily: SANS, fontSize: 16, color: C.blueDeep,
-    background: '#fff', outline: 'none', borderRadius: 0,
-  };
+  const openModal = () => window.dispatchEvent(new Event('open-contact-modal'));
 
   const heroStats = t('home.hero_stats');
 
@@ -508,105 +457,6 @@ export default function Home() {
       </section>
 
       {/* Modal de contacto */}
-      {modal && (
-        <div role="dialog" aria-modal="true" aria-labelledby="home-contact-title"
-             onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
-             style={{
-               position: 'fixed', inset: 0, zIndex: 100,
-               background: 'rgba(15,30,51,.78)',
-               display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
-             }}>
-          <div style={{
-            position: 'relative', background: C.white, width: '100%', maxWidth: 580,
-            maxHeight: 'calc(100svh - 40px)', overflow: 'auto',
-            padding: 'clamp(28px,5vw,48px)', boxSizing: 'border-box',
-            boxShadow: '0 18px 50px rgba(15,30,51,0.20)',
-            borderTop: `2px solid ${C.gold}`,
-          }}>
-            <button type="button" ref={closeRef} aria-label="Cerrar" onClick={closeModal} style={{
-              all: 'unset', position: 'absolute', top: 12, right: 12,
-              width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer', color: C.plomo,
-            }}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" aria-hidden="true">
-                <path d="M5 5l14 14M19 5L5 19" />
-              </svg>
-            </button>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-              <h2 id="home-contact-title" style={{
-                margin: '0 0 8px', paddingRight: 36, fontFamily: SLAB, fontWeight: 700,
-                fontSize: 'clamp(24px,3vw,30px)', lineHeight: 1.15, color: C.blueDeep,
-              }}>{t('home.form_title')}</h2>
-              <p style={{ margin: '0 0 24px', fontSize: 16, lineHeight: 1.6, color: C.plomo }}>
-                {t('home.form_subtitle')}
-              </p>
-
-              <div style={{ display: 'grid', gridTemplateColumns: tablet ? '1fr 1fr' : '1fr', gap: 16, marginBottom: 16 }}>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_nombre')}</span>
-                  <input type="text" required value={form.nombre || ''} onChange={upd('nombre')} style={fld} />
-                </label>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_apellidos')}</span>
-                  <input type="text" required value={form.apellidos || ''} onChange={upd('apellidos')} style={fld} />
-                </label>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: tablet ? '1fr 1fr' : '1fr', gap: 16, marginBottom: 16 }}>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>Email</span>
-                  <input type="email" required value={form.email || ''} onChange={upd('email')} style={fld} />
-                </label>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_tel')}</span>
-                  <input type="tel" value={form.tel || ''} onChange={upd('tel')} style={fld} />
-                </label>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: tablet ? '1fr 1fr' : '1fr', gap: 16, marginBottom: 16 }}>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_pais')}</span>
-                  <input type="text" value={form.pais || ''} onChange={upd('pais')} style={fld} />
-                </label>
-                <label style={{ display: 'block' }}>
-                  <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_centro')}</span>
-                  <input type="text" value={form.centro || ''} onChange={upd('centro')} style={fld} />
-                </label>
-              </div>
-
-              <label style={{ display: 'block', marginBottom: 16 }}>
-                <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_cargo')}</span>
-                <input type="text" value={form.cargo || ''} onChange={upd('cargo')} style={fld} />
-              </label>
-
-              <label style={{ display: 'block', marginBottom: 16 }}>
-                <span style={{ display: 'block', marginBottom: 6, fontSize: 14, fontWeight: 600, color: C.blueDeep }}>{t('home.form_mensaje')}</span>
-                <textarea rows={3} value={form.mensaje || ''} onChange={upd('mensaje')} style={{ ...fld, resize: 'vertical' }} />
-              </label>
-
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, lineHeight: 1.5, cursor: 'pointer', marginBottom: 12 }}>
-                <input type="checkbox" checked={form.newsletter || false} onChange={upd('newsletter')} style={{ marginTop: 3, flexShrink: 0 }} />
-                <span>{t('home.form_newsletter')}</span>
-              </label>
-
-              <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 14, lineHeight: 1.5, cursor: 'pointer', marginBottom: 12 }}>
-                <input type="checkbox" required checked={form.rgpd || false} onChange={upd('rgpd')} style={{ marginTop: 3, flexShrink: 0 }} />
-                <span>{t('home.form_rgpd')}</span>
-              </label>
-
-              <button type="submit" style={{
-                display: 'flex', width: '100%', justifyContent: 'center', alignItems: 'center',
-                background: C.gold, color: '#fff', fontFamily: SANS, fontWeight: 600,
-                fontSize: 16, padding: '16px 28px', border: 'none', cursor: 'pointer',
-                transition: 'background 200ms ease', marginTop: 8,
-              }}
-                onMouseOver={e => { e.currentTarget.style.background = C.goldLight; }}
-                onMouseOut={e => { e.currentTarget.style.background = C.gold; }}
-              >{t('home.form_submit')}</button>
-            </form>
-          </div>
-        </div>
-      )}
     </>
   );
 }

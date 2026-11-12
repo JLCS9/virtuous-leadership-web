@@ -280,7 +280,32 @@ function ColegiosCertificacion() {
   const tablet = w >= 760;
   const wide = w >= 1000;
 
-  const handleViabilidad = (e) => { e.preventDefault(); navigate(`/${lang}/colegios/gracias/conversacion`); };
+  const handleViabilidad = async (e) => {
+    e.preventDefault();
+    const f = e.target;
+    const data = {
+      nombre: f.querySelector('#ce-nombre')?.value || '',
+      cargo: f.querySelector('#ce-cargo')?.value || '',
+      institucion: f.querySelector('#ce-inst')?.value || '',
+      localidad: f.querySelector('#ce-loc')?.value || '',
+      email: f.querySelector('#ce-email')?.value || '',
+      telefono: f.querySelector('#ce-tel')?.value || '',
+      claustro: f.querySelector('#ce-claustro')?.value || '',
+    };
+    const url = import.meta.env.VITE_SUBMIT_COLEGIOS_URL;
+    if (url) {
+      try {
+        await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+      } catch (err) {
+        console.error('[colegios] submit error:', err);
+      }
+    }
+    navigate(`/${lang}/colegios/gracias/conversacion`);
+  };
 
   return (
     <div ref={rootRef} className="vlc">
