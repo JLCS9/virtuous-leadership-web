@@ -118,6 +118,9 @@ export default {
     form_newsletter: 'I agree to receive information and communications about Virtuous Leadership programmes.',
     form_rgpd: 'I accept the privacy policy and the processing of my personal data.',
     form_submit: 'Request conversation',
+    form_sent_title: 'Message sent',
+    form_sent_text: 'Thank you for contacting us. We will get back to you as soon as possible.',
+    form_sent_close: 'Close',
     alex_cta: 'See the training',
 
     alex_eyebrow: 'Founder',
