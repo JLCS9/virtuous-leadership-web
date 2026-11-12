@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { BEIGE, INK, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, MUTED } from '../theme';
+import { BEIGE, INK, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_LT, LINE, MUTED } from '../theme';
 import { useT } from '../i18n';
 import Header from './Header';
 import Footer from './Footer';

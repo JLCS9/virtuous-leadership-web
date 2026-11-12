@@ -1,30 +1,29 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import Home from './pages/Home';
 import Acreditacion from './pages/Acreditacion';
-import AcreditacionColegios from './pages/AcreditacionColegios';
-import ColegiosPrograma from './pages/ColegiosPrograma';
-import ColegiosPage from './pages/ColegiosCertificacion';
+const AcreditacionColegios = lazy(() => import('./pages/AcreditacionColegios'));
+const ColegiosPage = lazy(() => import('./pages/ColegiosCertificacion'));
 import ColegiosGracias from './pages/ColegiosGracias';
-import EmpresasPage from './pages/EmpresasCertificacion';
+const EmpresasPage = lazy(() => import('./pages/EmpresasCertificacion'));
 import AcreditacionUniversidades from './pages/AcreditacionUniversidades';
 import AcreditacionEducacionSuperior from './pages/AcreditacionEducacionSuperior';
 import Tests from './pages/Tests';
-import TestTemperamento from './pages/TestTemperamento';
-import TestTemperamentoNinos from './pages/TestTemperamentoNinos';
-import TestTemperamentoGracias from './pages/TestTemperamentoGracias';
-import TestCaracter from './pages/TestCaracter';
-import TestCorazon from './pages/TestCorazon';
+const TestTemperamento = lazy(() => import('./pages/TestTemperamento'));
+const TestTemperamentoNinos = lazy(() => import('./pages/TestTemperamentoNinos'));
+const TestTemperamentoGracias = lazy(() => import('./pages/TestTemperamentoGracias'));
+const TestCaracter = lazy(() => import('./pages/TestCaracter'));
+const TestCorazon = lazy(() => import('./pages/TestCorazon'));
 import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
 import Cookies from './pages/Cookies';
 import Contacto from './pages/Contacto';
 import Login from './pages/Login';
-import PortalGuard from './app/PortalGuard';
-import Hoy from './app/Hoy';
-import Camino from './app/Camino';
-import Formacion from './formacion/Formacion';
-import Modulo from './formacion/Modulo';
-import Perfil from './app/Perfil';
+const PortalGuard = lazy(() => import('./app/PortalGuard'));
+const Hoy = lazy(() => import('./app/Hoy'));
+const Formacion = lazy(() => import('./formacion/Formacion'));
+const Modulo = lazy(() => import('./formacion/Modulo'));
+const Perfil = lazy(() => import('./app/Perfil'));
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
@@ -78,6 +77,7 @@ export default function App() {
     <>
       <PageTracker />
       <CookieConsent />
+      <Suspense fallback={null}>
       <Routes>
       {/* Páginas sin Layout (tests, legales, login, etc.) */}
       {SUPPORTED_LANGS.flatMap(lang =>
@@ -140,6 +140,7 @@ export default function App() {
 
       <Route path="*" element={<LegacyRedirect />} />
     </Routes>
+    </Suspense>
     </>
   );
 }

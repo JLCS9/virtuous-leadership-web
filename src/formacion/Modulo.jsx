@@ -66,6 +66,20 @@ function catalogoAModulo(curso) {
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
+const VIRTUDES_CARDS = [
+  { nombre: 'Prudencia', def: 'Tomar decisiones buenas', a1: 'Deliberación', a1d: 'Mira la realidad cara a cara · Pide consejo', a2: 'Decisión', a2d: 'Supera el miedo a equivocarte · Actúa sin demora' },
+  { nombre: 'Fortaleza', def: 'Asumir riesgos y mantener el rumbo', a1: 'Resistencia', a1d: 'Persevera con fundamento, no por obstinación', a2: 'Audacia', a2d: 'Asume riesgos con medios y objetivos morales' },
+  { nombre: 'Dominio de sí', def: 'Gestionar nuestras emociones', a1: 'Someter las malas emociones', a1d: 'Las que empujan a obrar mal', a2: 'Estimular las buenas', a2d: 'Las que empujan a hacer el bien' },
+  { nombre: 'Justicia', def: 'Dar a cada uno lo que le corresponde', a1: 'Comunión', a1d: 'Verdad, empatía, amistad, misericordia', a2: 'Bien común', a2d: 'Laboriosidad, vida del hogar, ciudadanía' },
+];
+
+const INTEGRA_CARDS = [
+  { virtud: 'Prudencia', accion: 'Respeta la realidad objetiva y toma decisiones de acuerdo con esa realidad.' },
+  { virtud: 'Fortaleza', accion: 'Asume riesgos cuando es necesario y mantiene el rumbo.', nota: 'Audacia y resistencia' },
+  { virtud: 'Dominio de sí', accion: 'Dice «sí» a lo que la ennoblece y «no» a lo que le envilece.' },
+  { virtud: 'Justicia', accion: 'Da a cada persona lo suyo, cumpliendo fielmente sus obligaciones profesionales, sociales y familiares.' },
+];
+
 function mapTemp(result) {
   if (!result) return null;
   const p = result.primario ?? result.primary;
@@ -200,6 +214,42 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
                 <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '14px 0 0' }}>
                   <strong>No nacemos con nuestro carácter, lo construimos.</strong>
                 </p>
+              </>
+            ) : (paso.id === 'm4-01' || paso.id === 'm4-02') && introIdx === 1 ? (
+              <>
+                <style>{`
+                  .vl-vc { background: rgba(165,139,38,0.06); border: 1.5px solid rgba(165,139,38,0.12); border-radius: 12px; padding: 20px 22px; cursor: default; transition: all 350ms cubic-bezier(.4,0,.2,1); animation: vlChipIn 450ms ease both; }
+                  .vl-vc:hover { background: rgba(165,139,38,0.13); border-color: ${GOLD_REF}88; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); }
+                  .vl-vc-det { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 400ms cubic-bezier(.4,0,.2,1), opacity 300ms ease, margin 300ms ease; margin-top: 0; }
+                  .vl-vc:hover .vl-vc-det { max-height: 120px; opacity: 1; margin-top: 14px; }
+                  .vl-vc-pill { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; background: ${GOLD_REF}18; color: ${GOLD_REF_DK}; }
+                `}</style>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
+                  {VIRTUDES_CARDS.map((v, i) => {
+                    const ic = paso.id === 'm4-02' ? INTEGRA_CARDS[i] : null;
+                    return (
+                      <div key={v.nombre} className="vl-vc" style={{ animationDelay: `${i * 120}ms` }}>
+                        <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY }}>{v.nombre}</div>
+                        <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, marginTop: 6, lineHeight: 1.5 }}>
+                          {ic ? ic.accion : v.def}
+                        </div>
+                        {ic && ic.nota && <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, fontWeight: 600, marginTop: 4 }}>{ic.nota}</div>}
+                        <div className="vl-vc-det">
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                            <div>
+                              <span className="vl-vc-pill" style={{ fontFamily: FONT_BODY }}>{v.a1}</span>
+                              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 4, lineHeight: 1.4 }}>{v.a1d}</div>
+                            </div>
+                            <div>
+                              <span className="vl-vc-pill" style={{ fontFamily: FONT_BODY }}>{v.a2}</span>
+                              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 4, lineHeight: 1.4 }}>{v.a2d}</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </>
             ) : (
               pags.map((p, i) => (

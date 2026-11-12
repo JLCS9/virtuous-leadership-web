@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useT } from '../i18n';
 import SEO from '../components/SEO';
-import selloImg from '../assets/colegios/sello-institucion-certificada.png';
+import selloImg from '../assets/colegios/sello-institucion-certificada.webp';
 
 const C = {
   blueDeep: '#1a304f',

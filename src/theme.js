@@ -15,10 +15,7 @@ export const LINE      = '#D8D2C2';
 
 export const FONT_SLAB = "'Roboto Slab', Georgia, serif";
 export const FONT_BODY = "'Roboto', system-ui, sans-serif";
-export const FONT_MONO = "ui-monospace, SFMono-Regular, Menlo, monospace";
 
-export const FONT_SERIF = FONT_SLAB;
-export const FONT_SANS  = FONT_BODY;
 export const GOLD_REF     = GOLD;
 export const GOLD_REF_LT  = GOLD_SOFT;
 export const GOLD_REF_DK  = GOLD_DEEP;

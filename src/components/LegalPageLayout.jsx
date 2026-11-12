@@ -4,14 +4,14 @@
 
 import { useLocalPath } from '../i18n';
 import LangSwitcher from './LangSwitcher';
-import { PAPER, BEIGE, NAVY, NAVY_SOFT, GOLD, LINE, MUTED, INK, FONT_SERIF, FONT_SANS } from '../theme';
+import { PAPER, BEIGE, NAVY, NAVY_SOFT, GOLD, LINE, MUTED, INK, FONT_SLAB, FONT_BODY } from '../theme';
 
 const READ_MAX_WIDTH = 780; // ancho cómodo para texto largo
 
 export default function LegalPageLayout({ eyebrow, title, lastUpdated, lastUpdatedLabel = 'Última actualización', children }) {
   const lp = useLocalPath();
   return (
-    <div style={{ minHeight: '100vh', background: PAPER, color: INK, fontFamily: FONT_SANS }}>
+    <div style={{ minHeight: '100vh', background: PAPER, color: INK, fontFamily: FONT_BODY }}>
       {/* Barra superior: home link a la izquierda (discreto) + bandera a la derecha */}
       <header style={{
         position: 'sticky', top: 0, zIndex: 10,
@@ -21,7 +21,7 @@ export default function LegalPageLayout({ eyebrow, title, lastUpdated, lastUpdat
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <a href={lp('/')} style={{
-          fontFamily: FONT_SERIF, fontSize: 18, fontWeight: 600,
+          fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 600,
           color: NAVY, textDecoration: 'none', letterSpacing: '-0.01em',
         }}>Virtuous Leadership</a>
         <LangSwitcher inverted={false} />
@@ -36,7 +36,7 @@ export default function LegalPageLayout({ eyebrow, title, lastUpdated, lastUpdat
         )}
         {title && (
           <h1 style={{
-            fontFamily: FONT_SERIF, fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 600,
+            fontFamily: FONT_SLAB, fontSize: 'clamp(30px, 4vw, 44px)', fontWeight: 600,
             color: NAVY, letterSpacing: '-0.01em', lineHeight: 1.15, margin: 0,
           }}>{title}</h1>
         )}
@@ -57,7 +57,7 @@ export default function LegalPageLayout({ eyebrow, title, lastUpdated, lastUpdat
 export function H2({ children }) {
   return (
     <h2 style={{
-      fontFamily: FONT_SERIF, fontSize: 'clamp(22px, 2.6vw, 28px)', fontWeight: 600,
+      fontFamily: FONT_SLAB, fontSize: 'clamp(22px, 2.6vw, 28px)', fontWeight: 600,
       color: NAVY, letterSpacing: '-0.005em', margin: '40px 0 12px 0',
     }}>{children}</h2>
   );
@@ -66,7 +66,7 @@ export function H2({ children }) {
 export function H3({ children }) {
   return (
     <h3 style={{
-      fontFamily: FONT_SERIF, fontSize: 20, fontWeight: 600, color: NAVY_SOFT,
+      fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 600, color: NAVY_SOFT,
       margin: '28px 0 10px 0',
     }}>{children}</h3>
   );
@@ -74,7 +74,7 @@ export function H3({ children }) {
 
 export function P({ children, html }) {
   const style = {
-    fontFamily: FONT_SANS, fontSize: 16, lineHeight: 1.7, color: INK,
+    fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.7, color: INK,
     margin: '12px 0',
   };
   return html
@@ -85,7 +85,7 @@ export function P({ children, html }) {
 export function UL({ children }) {
   return (
     <ul style={{
-      fontFamily: FONT_SANS, fontSize: 16, lineHeight: 1.7, color: INK,
+      fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.7, color: INK,
       margin: '12px 0 12px 24px', padding: 0,
     }}>{children}</ul>
   );
@@ -113,7 +113,7 @@ export function Table({ headers, rows }) {
   return (
     <div style={{ overflowX: 'auto', margin: '16px 0' }}>
       <table style={{
-        width: '100%', borderCollapse: 'collapse', fontFamily: FONT_SANS, fontSize: 14,
+        width: '100%', borderCollapse: 'collapse', fontFamily: FONT_BODY, fontSize: 14,
       }}>
         <thead>
           <tr>

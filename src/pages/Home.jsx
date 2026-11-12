@@ -6,21 +6,21 @@ import {
 } from '../theme';
 import { useT } from '../i18n';
 import SEO from '../components/SEO';
-import alexImg from '../assets/alex-perfil.jpeg';
+import alexImg from '../assets/alex-perfil.webp';
 import heroImg from '../assets/empresas/hero-rome.webp';
 
-import ttEs from '../assets/tt.png';
+import ttEs from '../assets/tt.webp';
 import ttEn from '../assets/tt-en.png';
 import ttFr from '../assets/tt-fr.png';
-import ttRu from '../assets/tt-ru.png';
-import pyramidEs from '../assets/piramida ES.png';
-import pyramidEn from '../assets/Pyramid Eng.png';
-import pyramidFr from '../assets/Pyramide FR.png';
-import pyramidRu from '../assets/Pyramid Ruso.png';
-import heartEs from '../assets/HRW-es.png';
-import heartEn from '../assets/HRW-en.png';
-import heartFr from '../assets/HRW-fr.png';
-import heartRu from '../assets/HRW-ru.png';
+import ttRu from '../assets/tt-ru.webp';
+import pyramidEs from '../assets/piramida ES.webp';
+import pyramidEn from '../assets/Pyramid Eng.webp';
+import pyramidFr from '../assets/Pyramide FR.webp';
+import pyramidRu from '../assets/Pyramid Ruso.webp';
+import heartEs from '../assets/HRW-es.webp';
+import heartEn from '../assets/HRW-en.webp';
+import heartFr from '../assets/HRW-fr.webp';
+import heartRu from '../assets/HRW-ru.webp';
 
 const TT_IMGS = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 const PYRAMID_IMGS = { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu };
@@ -199,7 +199,7 @@ export default function Home() {
                   background: C.page, flexShrink: 0, marginBottom: 20,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}>
-                  <img src={test.img} alt="" style={{
+                  <img src={test.img} alt="" loading="lazy" style={{
                     width: '86%', height: '86%', objectFit: 'contain',
                     ...(test.blend ? { mixBlendMode: 'multiply' } : {}),
                   }} />
@@ -413,7 +413,7 @@ export default function Home() {
               boxShadow: '0 16px 40px rgba(26,48,79,0.10)',
               background: C.bruma,
             }}>
-              <img src={alexImg} alt="Alexandre Havard"
+              <img src={alexImg} alt="Alexandre Havard" loading="lazy"
                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             </div>
           </div>

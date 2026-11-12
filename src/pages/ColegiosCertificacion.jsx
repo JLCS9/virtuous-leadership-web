@@ -7,7 +7,7 @@ import ColegiosPrograma from './ColegiosPrograma';
 import heroImg from '../assets/colegios/escultura-hero.jpg';
 import ctaImg from '../assets/colegios/escultura-cta.jpg';
 import comunidadImg from '../assets/colegios/comunidad-educativa.jpg';
-import selloImg from '../assets/colegios/sello-institucion-certificada.png';
+import selloImg from '../assets/colegios/sello-institucion-certificada.webp';
 import ruedaImg from '../assets/colegios/rueda-temperamentos.webp';
 
 const CERT_LANGS = new Set(['es']);
@@ -511,7 +511,7 @@ function ColegiosCertificacion() {
                 borderLeft: `1px solid ${C.gold}`, paddingLeft: 'clamp(18px,2.4vw,28px)', maxWidth: '60ch',
               }}>{k('fund_lead')}</p>
             </div>
-            <img src={ruedaImg} alt={k('fund_img_alt')} style={{
+            <img src={ruedaImg} alt={k('fund_img_alt')} loading="lazy" style={{
               display: 'block', width: 'min(100%,240px)', height: 'auto', aspectRatio: '1/1',
               objectFit: 'contain', justifySelf: 'center',
               filter: 'drop-shadow(0 12px 28px rgba(15,30,51,.16))',
@@ -708,7 +708,7 @@ function ColegiosCertificacion() {
 
       <section id="solicitud" style={{ position: 'relative', background: C.blueNight, color: '#fff', overflow: 'hidden', padding: `${SECTION_Y} 0` }}>
         <div aria-hidden="true" style={{ position: 'absolute', inset: 0 }}>
-          <img src={ctaImg} alt="" style={{
+          <img src={ctaImg} alt="" loading="lazy" style={{
             display: 'block', width: '100%', height: '100%', objectFit: 'cover',
             objectPosition: '50% 25%', filter: 'grayscale(1) contrast(1.05)',
           }} />

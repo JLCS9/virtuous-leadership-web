@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useT } from './i18n';
+import { NAVY, NAVY_SOFT, BEIGE, PAPER, INK, MUTED, LINE } from './theme';
 import QUESTIONS_ES from './data/questions-children.es.json';
 import QUESTIONS_EN from './data/questions-children.en.json';
 import QUESTIONS_FR from './data/questions-children.fr.json';
 import QUESTIONS_RU from './data/questions-children.ru.json';
 import { applyGender, renderItem } from './lib/childPersonalize';
-import ttImg from './assets/tt.png';
+import ttImg from './assets/tt.webp';
 // Imágenes del CTA final por idioma — los archivos tienen leyenda y
 // portada localizadas (no son los mismos files con texto en inglés).
 import crecerEs from './assets/crecer-es.jpg';
@@ -30,18 +31,9 @@ const BUDLE_BY_LANG     = { es: budleEs,  en: budleEn,  fr: budleFr,  ru: budleR
 // el JSON del idioma activo desde useMemo dentro del componente.
 const QUESTIONS_BASE = QUESTIONS_ES;
 
-// ───────────────────── paleta y tipografías ─────────────────────
-// Mismo lenguaje visual que el test adulto. Mantenemos copias locales en lugar
-// de importarlas para que ambos componentes evolucionen independientes.
-const NAVY = '#1B2A4A';
-const NAVY_SOFT = '#2A3B5F';
+// ───────────────────── paleta local (solo valores que difieren del theme) ─────────────────────
 const GOLD = '#C5A55A';
 const GOLD_SOFT = '#E0C98A';
-const BEIGE = '#F4F1EA';
-const PAPER = '#FBF8F1';
-const INK = '#22262E';
-const MUTED = '#6B6B6B';
-const LINE = '#D8D2C2';
 
 const TEMP_COLORS = {
   COL: { color: '#9C3A3A', soft: '#E9CFCF', letter: 'C' },

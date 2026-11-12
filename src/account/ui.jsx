@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocalPath } from '../i18n';
-import { NAVY, NAVY_SOFT, GOLD, GOLD_SOFT, PAPER, INK, MUTED, LINE, FONT_SERIF, FONT_SANS } from '../theme';
+import { NAVY, NAVY_SOFT, GOLD, GOLD_SOFT, PAPER, INK, MUTED, LINE, FONT_SLAB, FONT_BODY } from '../theme';
 import logoUrl from '../assets/logo-1.png';
 
 export const ERR_RED = '#A03434';
@@ -26,11 +26,11 @@ export function Title({ eyebrow, children }) {
   return (
     <>
       {eyebrow && (
-        <div style={{ fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9D8240', fontWeight: 600, marginBottom: 10 }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.18em', textTransform: 'uppercase', color: '#9D8240', fontWeight: 600, marginBottom: 10 }}>
           {eyebrow}
         </div>
       )}
-      <h1 style={{ fontFamily: FONT_SERIF, fontSize: 30, fontWeight: 600, color: NAVY, margin: 0, lineHeight: 1.15 }}>
+      <h1 style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 600, color: NAVY, margin: 0, lineHeight: 1.15 }}>
         {children}
       </h1>
     </>
@@ -65,7 +65,7 @@ export function Field({ id, label, error, hint, ...inputProps }) {
       <div style={{ position: 'relative' }}>
         <input id={id} {...inputProps} type={finalType}
                style={{
-                 width: '100%', fontFamily: FONT_SANS, fontSize: 15, padding: `12px ${isPassword ? '44px' : '14px'} 12px 14px`,
+                 width: '100%', fontFamily: FONT_BODY, fontSize: 15, padding: `12px ${isPassword ? '44px' : '14px'} 12px 14px`,
                  background: PAPER, color: INK, border: `1px solid ${error ? ERR_RED : LINE}`,
                  borderRadius: 2, outline: 'none', boxSizing: 'border-box',
                }}
@@ -86,9 +86,9 @@ export function Field({ id, label, error, hint, ...inputProps }) {
 
 export function PrimaryButton({ busy, children, ...props }) {
   return (
-    <button {...props} disabled={busy || props.disabled}
+    <button type="button" {...props} disabled={busy || props.disabled}
             style={{
-              fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600, letterSpacing: '0.04em',
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.04em',
               color: PAPER, background: busy ? NAVY_SOFT : NAVY, border: 'none',
               padding: '14px 28px', borderRadius: 2, cursor: busy ? 'wait' : 'pointer',
               width: '100%',
@@ -101,7 +101,7 @@ export function PrimaryButton({ busy, children, ...props }) {
 export function LinkButton({ children, ...props }) {
   return (
     <button type="button" {...props}
-            style={{ background: 'none', border: 'none', padding: 0, color: NAVY, textDecoration: 'underline', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 14 }}>
+            style={{ background: 'none', border: 'none', padding: 0, color: NAVY, textDecoration: 'underline', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14 }}>
       {children}
     </button>
   );
@@ -127,7 +127,7 @@ export function TopBar({ children }) {
       <Link to={lp('/')} aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
         <img src={logoUrl} alt="Virtuous Leadership" width="44" height="44" style={{ display: 'block', borderRadius: '50%' }} />
       </Link>
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14, fontFamily: FONT_SANS, fontSize: 14, color: NAVY }}>
+      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 14, fontFamily: FONT_BODY, fontSize: 14, color: NAVY }}>
         {children}
       </div>
     </div>

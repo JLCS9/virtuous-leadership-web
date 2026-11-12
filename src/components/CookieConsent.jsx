@@ -20,7 +20,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useT, LocalLink } from '../i18n';
 import {
-  NAVY, GOLD, GOLD_DEEP, PAPER, INK, MUTED, LINE, FONT_SERIF, FONT_SANS,
+  NAVY, GOLD, GOLD_DEEP, PAPER, INK, MUTED, LINE, FONT_SLAB, FONT_BODY,
 } from '../theme';
 
 const COOKIE_NAME = 'vl_consent';
@@ -96,11 +96,11 @@ function CategoryRow({ title, desc, on, disabled, alwaysLabel, onChange }) {
   return (
     <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '10px 0', borderBottom: `1px solid ${LINE}` }}>
       <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600, color: NAVY }}>{title}</div>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 11.5, lineHeight: 1.45, color: MUTED, marginTop: 2 }}>{desc}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY }}>{title}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, lineHeight: 1.45, color: MUTED, marginTop: 2 }}>{desc}</div>
       </div>
       {disabled
-        ? <span style={{ fontFamily: FONT_SANS, fontSize: 11, color: GOLD_DEEP, fontWeight: 600, whiteSpace: 'nowrap', marginTop: 2 }}>{alwaysLabel}</span>
+        ? <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_DEEP, fontWeight: 600, whiteSpace: 'nowrap', marginTop: 2 }}>{alwaysLabel}</span>
         : <Toggle on={on} onChange={onChange} />}
     </div>
   );
@@ -176,7 +176,7 @@ export default function CookieConsent() {
         position: 'fixed', zIndex: 2147483000,
         background: PAPER, border: `1px solid ${LINE}`, borderTop: `3px solid ${GOLD}`,
         boxShadow: '0 10px 34px rgba(15,29,56,0.22)',
-        fontFamily: FONT_SANS, padding: 18,
+        fontFamily: FONT_BODY, padding: 18,
         borderRadius: isMobile ? '8px 8px 0 0' : 4,
         ...(isMobile
           ? { left: 0, right: 0, bottom: 0, width: 'auto',
@@ -184,10 +184,10 @@ export default function CookieConsent() {
           : { left: 16, bottom: 16, width: 'min(380px, calc(100% - 32px))' }),
       }}
     >
-      <div style={{ fontFamily: FONT_SERIF, fontSize: 17, fontWeight: 600, color: NAVY, marginBottom: 6 }}>
+      <div style={{ fontFamily: FONT_SLAB, fontSize: 17, fontWeight: 600, color: NAVY, marginBottom: 6 }}>
         {t('cookies_banner.title')}
       </div>
-      <p style={{ fontFamily: FONT_SANS, fontSize: 12.5, lineHeight: 1.55, color: INK, margin: 0 }}>
+      <p style={{ fontFamily: FONT_BODY, fontSize: 12.5, lineHeight: 1.55, color: INK, margin: 0 }}>
         {t('cookies_banner.body')}{' '}
         <LocalLink to="/cookies" style={{ color: GOLD_DEEP, textDecoration: 'underline', whiteSpace: 'nowrap' }}>
           {t('cookies_banner.privacy_link')}
@@ -243,7 +243,7 @@ export default function CookieConsent() {
 // ─────────────────────────── estilos de botón (locales) ───────────────────────────
 
 const btnBase = {
-  fontFamily: FONT_SANS, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
+  fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.05em', textTransform: 'uppercase',
   fontWeight: 600, padding: '10px 14px', borderRadius: 2, cursor: 'pointer',
   transition: 'all 160ms ease',
 };
@@ -251,6 +251,6 @@ const btnPrimary   = { ...btnBase, color: PAPER, background: NAVY, border: `1px 
 const btnSecondary = { ...btnBase, color: NAVY, background: 'transparent', border: `1px solid ${NAVY}` };
 const btnLink = {
   display: 'block', width: '100%', marginTop: 10, padding: 4,
-  fontFamily: FONT_SANS, fontSize: 12, color: MUTED, background: 'transparent',
+  fontFamily: FONT_BODY, fontSize: 12, color: MUTED, background: 'transparent',
   border: 'none', cursor: 'pointer', textDecoration: 'underline', textAlign: 'center',
 };

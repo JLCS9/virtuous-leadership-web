@@ -2,13 +2,13 @@ import { LocalLink as Link } from '../i18n';
 import {
   NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
-  FONT_SERIF, FONT_SANS, styles,
+  FONT_SLAB, FONT_BODY, styles,
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { FactRow } from './AcreditacionColegios';
-import classImg from '../assets/class.jpeg';
+import classImg from '../assets/class.webp';
 
 export default function AcreditacionUniversidades() {
   const { t } = useT();

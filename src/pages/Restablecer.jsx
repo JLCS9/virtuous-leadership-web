@@ -12,7 +12,7 @@ import { TestShell } from '../TestTBP';
 import { supabase } from '../account/supabase';
 import { useSession } from '../account/useSession';
 import { Card, Title, Field, PrimaryButton, Notice } from '../account/ui';
-import { NAVY, MUTED, FONT_SANS, styles } from '../theme';
+import { NAVY, MUTED, FONT_BODY, styles } from '../theme';
 
 export default function Restablecer() {
   const { t } = useT();
@@ -45,7 +45,7 @@ export default function Restablecer() {
           ) : !session ? (
             <>
               <p style={{ ...styles.para, marginTop: 12 }}>{t('reset.invalid_link')}</p>
-              <Link to="/login" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('reset.back')} →</Link>
+              <Link to="/login" style={{ fontFamily: FONT_BODY, color: NAVY }}>{t('reset.back')} →</Link>
             </>
           ) : (
             <>
