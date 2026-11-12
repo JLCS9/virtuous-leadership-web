@@ -12,16 +12,17 @@
 
 import React, { useState, useMemo } from 'react';
 import { useT } from './i18n';
+import { NAVY, NAVY_SOFT, BEIGE, PAPER, INK, MUTED, LINE } from './theme';
 import { scoreCharacter, toBrevoAttributes } from './lib/characterScoring.js';
 import { saveCharacterResultIfLoggedIn } from './account/account';
 import CHARACTER_TEST from './data/character-test.json';
 import CHARACTER_SUPPORT from './data/character-support-text.json';
 
 // Pirámide de las 6 virtudes (asset por idioma — el texto va embebido).
-import pyramidEs from './assets/piramida ES.png';
-import pyramidEn from './assets/Pyramid Eng.png';
-import pyramidFr from './assets/Pyramide FR.png';
-import pyramidRu from './assets/Pyramid Ruso.png';
+import pyramidEs from './assets/piramida ES.webp';
+import pyramidEn from './assets/Pyramid Eng.webp';
+import pyramidFr from './assets/Pyramide FR.webp';
+import pyramidRu from './assets/Pyramid Ruso.webp';
 const PYRAMID = { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu };
 
 // Caritas / retratos por virtud (mismo asset para los 4 idiomas — no
@@ -33,24 +34,17 @@ const PYRAMID = { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu };
 //   Justice → Judith, Magnanimity → Paul, Humility → Jean.
 // (Judith aparece 2× a propósito — figura común a autodominio y justicia
 // por su discernimiento y su acción para el bien del pueblo.)
-import faceP from './assets/Pastorelle.jpg.jpeg'; // Prudencia
-import faceC from './assets/Courage.jpg.jpeg';   // Fortaleza
-import faceS from './assets/Judith.jpg.jpeg';    // Dominio de sí
-import faceJ from './assets/Judith.jpg.jpeg';    // Justicia (mismo Judith)
-import faceM from './assets/Paul.jpg.jpeg';      // Magnanimidad
-import faceH from './assets/Jean.jpg.jpeg';      // Humildad
+import faceP from './assets/Pastorelle.webp'; // Prudencia
+import faceC from './assets/Courage.webp';   // Fortaleza
+import faceS from './assets/Judith.webp';    // Dominio de sí
+import faceJ from './assets/Judith.webp';    // Justicia (mismo Judith)
+import faceM from './assets/Paul.webp';      // Magnanimidad
+import faceH from './assets/Jean.webp';      // Humildad
 const VIRTUE_FACES = { P: faceP, C: faceC, S: faceS, J: faceJ, M: faceM, H: faceH };
 
-// ────────────────── paleta y tipografías (sync con TestTBP) ──────────────────
-const NAVY = '#1B2A4A';
-const NAVY_SOFT = '#2A3B5F';
+// ────────────────── paleta local (solo valores que difieren del theme) ──────────────────
 const GOLD = '#C5A55A';
 const GOLD_SOFT = '#E0C98A';
-const BEIGE = '#F4F1EA';
-const PAPER = '#FBF8F1';
-const INK = '#22262E';
-const MUTED = '#6B6B6B';
-const LINE = '#D8D2C2';
 
 // Color por virtud — paleta consistente con el branding del temperamento.
 const VIRTUE_COLORS = {

@@ -14,7 +14,7 @@ import cuadernosImg from '../assets/empresas/mockup-cuadernos.webp';
 import havardImg from '../assets/colegios/alexandre-havard.jpg';
 import isotipoWhite from '../assets/colegios/logo-isotipo-white.png';
 import logoFullWhite from '../assets/colegios/logo-full-white.png';
-import selloImg from '../assets/colegios/sello-institucion-certificada.png';
+import selloImg from '../assets/colegios/sello-institucion-certificada.webp';
 import ruedaImg from '../assets/colegios/rueda-temperamentos.webp';
 
 const CERT_LANGS = new Set(['es']);

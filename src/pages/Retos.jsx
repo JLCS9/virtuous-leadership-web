@@ -12,7 +12,7 @@ import { TestShell } from '../TestTBP';
 import { useSession } from '../account/useSession';
 import { RetosError, retoDeHoy, tieneAccesoRetos, turnoNoche, turnoOnboarding } from '../account/retos';
 import { Card, Title, PrimaryButton, Notice, TopBar } from '../account/ui';
-import { NAVY, GOLD_DEEP, MUTED, INK, LINE, PAPER, BEIGE, FONT_SERIF, FONT_SANS, styles } from '../theme';
+import { NAVY, GOLD_DEEP, MUTED, INK, LINE, PAPER, BEIGE, FONT_SLAB, FONT_BODY, styles } from '../theme';
 
 const VIRTUD = {
   prudencia: 'Prudencia',
@@ -78,7 +78,7 @@ function RetosDelDia() {
   return (
     <Card>
       <Title eyebrow={t('retos.today_eyebrow')}>{VIRTUD[r.virtud] ?? r.virtud}</Title>
-      <p style={{ fontFamily: FONT_SERIF, fontSize: 26, lineHeight: 1.3, color: INK, margin: '22px 0 12px' }}>{r.reto}</p>
+      <p style={{ fontFamily: FONT_SLAB, fontSize: 26, lineHeight: 1.3, color: INK, margin: '22px 0 12px' }}>{r.reto}</p>
       <p style={{ ...styles.para, color: MUTED, fontStyle: 'italic', margin: 0 }}>{r.porque}</p>
       {r.respaldo && <p style={{ fontSize: 13, color: MUTED, marginTop: 14 }}>{t('retos.fallback_note')}</p>}
       <div style={{ marginTop: 28 }}>
@@ -110,7 +110,7 @@ function Chat({ mensajes, botones = [], onEnviar, onBoton, ocupado, cerrado, chi
             alignSelf: m.rol === 'coach' ? 'flex-start' : 'flex-end', maxWidth: '85%',
             background: m.rol === 'coach' ? BEIGE : NAVY, color: m.rol === 'coach' ? INK : PAPER,
             border: m.rol === 'coach' ? `1px solid ${LINE}` : 'none',
-            padding: '10px 14px', borderRadius: 4, fontFamily: m.rol === 'coach' ? FONT_SERIF : FONT_SANS,
+            padding: '10px 14px', borderRadius: 4, fontFamily: m.rol === 'coach' ? FONT_SLAB : FONT_BODY,
             fontSize: m.rol === 'coach' ? 19 : 15, lineHeight: 1.4, whiteSpace: 'pre-wrap',
           }}>{m.texto}</div>
         ))}
@@ -124,7 +124,7 @@ function Chat({ mensajes, botones = [], onEnviar, onBoton, ocupado, cerrado, chi
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 12 }}>
               {botones.map((b) => (
                 <button key={b} type="button" disabled={ocupado} onClick={() => onBoton(b)} style={{
-                  fontFamily: FONT_SANS, fontSize: 14, padding: '9px 14px', borderRadius: 2, cursor: 'pointer',
+                  fontFamily: FONT_BODY, fontSize: 14, padding: '9px 14px', borderRadius: 2, cursor: 'pointer',
                   background: PAPER, color: NAVY, border: `1px solid ${b === 'prisa' ? LINE : NAVY}`,
                 }}>{t(`retos.buttons.${b}`)}</button>
               ))}
@@ -134,7 +134,7 @@ function Chat({ mensajes, botones = [], onEnviar, onBoton, ocupado, cerrado, chi
             <textarea value={texto} onChange={(e) => setTexto(e.target.value)} rows={2} maxLength={2000}
                       placeholder={t('retos.placeholder')} aria-label={t('retos.placeholder')}
                       onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) enviar(e); }}
-                      style={{ flex: 1, fontFamily: FONT_SANS, fontSize: 15, padding: '10px 12px', border: `1px solid ${LINE}`, borderRadius: 2, resize: 'vertical', background: PAPER, color: INK }} />
+                      style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 15, padding: '10px 12px', border: `1px solid ${LINE}`, borderRadius: 2, resize: 'vertical', background: PAPER, color: INK }} />
             <div style={{ width: 110 }}><PrimaryButton type="submit" busy={ocupado}>{t('retos.send')}</PrimaryButton></div>
           </form>
           <p style={{ fontSize: 12, color: MUTED, marginTop: 10 }}>{t('retos.privacy')}</p>
@@ -205,7 +205,7 @@ function Noche({ onSalir }) {
             onBoton={(b) => paso({ tipo: 'boton', valor: b }, t(`retos.buttons.${b}`))}>
         {s.cerrado && (
           <div style={{ marginTop: 8 }}>
-            {!s.crisis && <p style={{ fontFamily: FONT_SERIF, fontSize: 20, color: GOLD_DEEP }}>{t('retos.night_done')}</p>}
+            {!s.crisis && <p style={{ fontFamily: FONT_SLAB, fontSize: 20, color: GOLD_DEEP }}>{t('retos.night_done')}</p>}
             <PrimaryButton onClick={onSalir}>{t('retos.back_today')}</PrimaryButton>
           </div>
         )}

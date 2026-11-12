@@ -1,16 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useT, useLocalPath, ROUTES } from './i18n';
+import { NAVY, NAVY_SOFT, BEIGE, PAPER, INK, MUTED, LINE } from './theme';
 import { accountsEnabled } from './account/supabase';
 import { useSession } from './account/useSession';
 import { AccountError, createAccountAndSignIn, recordFormConsents, saveTemperamentResult, sendPasswordReset } from './account/account';
 import { CHALLENGE_VIRTUE } from './account/challengeVirtues';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
 // el texto traducido en la propia imagen.
-import ttEs from './assets/tt.png';
+import ttEs from './assets/tt.webp';
 import ttEn from './assets/tt-en.png';
 import ttFr from './assets/tt-fr.png';
-import ttRu from './assets/tt-ru.png';
+import ttRu from './assets/tt-ru.webp';
 const TT = { es: ttEs, en: ttEn, fr: ttFr, ru: ttRu };
 // Imagenes por idioma para los CTAs del final del test:
 import crecerEs  from './assets/crecer-es.jpg';
@@ -24,15 +25,8 @@ import budleRu   from './assets/budle-rus.png';
 const CRECER = { es: crecerEs, en: crecerEn, fr: crecerFr, ru: crecerRu };
 const BUDLE  = { es: budleEs,  en: budleEn,  fr: budleFr,  ru: budleRu };
 
-const NAVY = '#1B2A4A';
-const NAVY_SOFT = '#2A3B5F';
 const GOLD = '#C5A55A';
 const GOLD_SOFT = '#E0C98A';
-const BEIGE = '#F4F1EA';
-const PAPER = '#FBF8F1';
-const INK = '#22262E';
-const MUTED = '#6B6B6B';
-const LINE = '#D8D2C2';
 
 const TEMP_COLORS = {
   COL: { color: '#9C3A3A', soft: '#E9CFCF', letter: 'C' },
@@ -1127,7 +1121,7 @@ function QualifySource({ conoceAlex, progress, total, onSubmit, onBack }) {
     <div style={styles.card} className="vl-test-card">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
         <span style={styles.progress}>{t('test.question.progress', { n: progress, total })}</span>
-        <button style={{ ...styles.buttonGhost, cursor: 'pointer' }} onClick={onBack}>
+        <button type="button" style={{ ...styles.buttonGhost, cursor: 'pointer' }} onClick={onBack}>
           {t('test.question.back')}
         </button>
       </div>

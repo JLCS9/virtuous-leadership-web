@@ -9,7 +9,7 @@ import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import {
   NAVY, NAVY_SOFT, GOLD, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
-  FONT_SERIF, FONT_SANS, TEMP_COLORS,
+  FONT_SLAB, FONT_BODY, TEMP_COLORS,
   styles,
 } from '../theme';
 import { Card, Title, PrimaryButton } from '../account/ui';
@@ -61,7 +61,7 @@ function Shell({ children }) {
     <div style={{
       minHeight: '100vh',
       background: BEIGE,
-      fontFamily: FONT_SANS,
+      fontFamily: FONT_BODY,
       WebkitFontSmoothing: 'antialiased',
     }}>
       <style>{`
@@ -134,7 +134,7 @@ function ResultsLanding({ user }) {
     <div style={{
       minHeight: '100vh',
       background: BEIGE,
-      fontFamily: FONT_SANS,
+      fontFamily: FONT_BODY,
       WebkitFontSmoothing: 'antialiased',
     }}>
       <style>{`
@@ -156,7 +156,7 @@ function ResultsLanding({ user }) {
           </div>
 
           <h1 style={{
-            fontFamily: FONT_SERIF,
+            fontFamily: FONT_SLAB,
             fontSize: 'clamp(22px, 4vw, 26px)',
             fontWeight: 700,
             lineHeight: 1.3,
@@ -167,7 +167,7 @@ function ResultsLanding({ user }) {
           </h1>
 
           <div style={{
-            fontFamily: FONT_SERIF,
+            fontFamily: FONT_SLAB,
             fontSize: 'clamp(32px, 7vw, 44px)',
             fontWeight: 700,
             lineHeight: 1.1,
@@ -185,7 +185,7 @@ function ResultsLanding({ user }) {
             </div>
             <div style={{
               display: 'flex', gap: 10, alignItems: 'center',
-              fontFamily: FONT_SANS, fontSize: 15, fontWeight: 500, lineHeight: 1,
+              fontFamily: FONT_BODY, fontSize: 15, fontWeight: 500, lineHeight: 1,
               color: INK,
             }}>
               <span>{tempPrimario.name}</span>
@@ -216,7 +216,7 @@ function ResultsLanding({ user }) {
         }}>
           <div style={{ maxWidth: 712, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 22 }}>
             <div style={{
-              fontFamily: FONT_SANS, fontSize: 12, fontWeight: 600,
+              fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600,
               letterSpacing: '0.18em', textTransform: 'uppercase',
               color: GOLD,
             }}>
@@ -224,7 +224,7 @@ function ResultsLanding({ user }) {
             </div>
 
             <div style={{
-              fontFamily: FONT_SERIF, fontSize: 'clamp(40px, 9vw, 60px)',
+              fontFamily: FONT_SLAB, fontSize: 'clamp(40px, 9vw, 60px)',
               fontWeight: 700, lineHeight: 1, color: PAPER, letterSpacing: '-0.01em',
             }}>
               {virtue.name}
@@ -233,7 +233,7 @@ function ResultsLanding({ user }) {
             <div style={{ width: 80, height: 2, background: GOLD }} />
 
             <p style={{
-              fontFamily: FONT_SANS, fontSize: 'clamp(16px, 2.5vw, 18px)',
+              fontFamily: FONT_BODY, fontSize: 'clamp(16px, 2.5vw, 18px)',
               lineHeight: 1.6, color: PAPER, margin: 0,
             }}>
               {virtue.def}
@@ -241,7 +241,7 @@ function ResultsLanding({ user }) {
 
             {profile.reto && (
               <p style={{
-                fontFamily: FONT_SERIF, fontStyle: 'italic',
+                fontFamily: FONT_SLAB, fontStyle: 'italic',
                 fontSize: 'clamp(17px, 2.8vw, 20px)', lineHeight: 1.55,
                 color: PAPER, margin: 0, paddingTop: 8,
               }}>
@@ -263,11 +263,11 @@ function ResultsLanding({ user }) {
             display: 'flex', flexDirection: 'column', gap: 18,
           }}>
             <div style={{
-              fontFamily: FONT_SERIF, fontSize: 72, lineHeight: 0.6,
+              fontFamily: FONT_SLAB, fontSize: 72, lineHeight: 0.6,
               color: GOLD_DEEP, height: 32,
             }}>"</div>
             <blockquote style={{
-              fontFamily: FONT_SERIF,
+              fontFamily: FONT_SLAB,
               fontSize: 'clamp(26px, 5.5vw, 36px)',
               lineHeight: 1.4,
               color: NAVY,
@@ -278,14 +278,14 @@ function ResultsLanding({ user }) {
           </div>
 
           <div style={{
-            fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600,
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600,
             letterSpacing: '0.16em', textTransform: 'uppercase',
             color: GOLD_DEEP, paddingTop: 16,
           }}>
             {t('landing.video_eyebrow')}
           </div>
           <h2 style={{
-            fontFamily: FONT_SERIF,
+            fontFamily: FONT_SLAB,
             fontSize: 'clamp(24px, 4.5vw, 32px)',
             fontWeight: 700,
             lineHeight: 1.25,
@@ -295,7 +295,7 @@ function ResultsLanding({ user }) {
             {t('landing.video_title')}
           </h2>
           <p style={{
-            fontFamily: FONT_SANS,
+            fontFamily: FONT_BODY,
             fontSize: 'clamp(15px, 2.3vw, 17px)',
             lineHeight: 1.6,
             color: INK,
@@ -312,7 +312,7 @@ function ResultsLanding({ user }) {
             />
           </div>
           <div style={{
-            fontFamily: FONT_SANS, fontSize: 14, lineHeight: 1.5, color: MUTED,
+            fontFamily: FONT_BODY, fontSize: 14, lineHeight: 1.5, color: MUTED,
           }}>
             <span style={{ color: NAVY, fontWeight: 500 }}>Alexandre Havard</span>
             {' · '}
@@ -331,14 +331,14 @@ function ResultsLanding({ user }) {
           display: 'flex', flexDirection: 'column', gap: 22,
         }}>
           <div style={{
-            fontFamily: FONT_SANS, fontSize: 13, fontWeight: 600,
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600,
             letterSpacing: '0.16em', textTransform: 'uppercase',
             color: GOLD,
           }}>
             {t('landing.next_step_title')}
           </div>
           <h2 style={{
-            fontFamily: FONT_SERIF,
+            fontFamily: FONT_SLAB,
             fontSize: 'clamp(24px, 5vw, 30px)',
             fontWeight: 700,
             lineHeight: 1.25,
@@ -350,7 +350,7 @@ function ResultsLanding({ user }) {
             )}
           </h2>
           <p style={{
-            fontFamily: FONT_SANS,
+            fontFamily: FONT_BODY,
             fontSize: 'clamp(15px, 2.3vw, 17px)',
             lineHeight: 1.6,
             color: PAPER,
@@ -365,7 +365,7 @@ function ResultsLanding({ user }) {
               rel="noopener noreferrer"
               style={{
                 display: 'inline-block',
-                fontFamily: FONT_SANS,
+                fontFamily: FONT_BODY,
                 fontSize: 14,
                 fontWeight: 600,
                 letterSpacing: '0.12em',
@@ -397,13 +397,13 @@ function StrengthCard({ title, text }) {
     }}>
       <div style={{ width: 24, height: 2, background: GOLD_DEEP }} />
       <h2 style={{
-        fontFamily: FONT_SERIF, fontSize: 20, fontWeight: 700,
+        fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700,
         lineHeight: 1.3, color: NAVY, margin: 0,
       }}>
         {title}
       </h2>
       <p style={{
-        fontFamily: FONT_SANS, fontSize: 'clamp(15px, 2.2vw, 17px)',
+        fontFamily: FONT_BODY, fontSize: 'clamp(15px, 2.2vw, 17px)',
         lineHeight: 1.6, color: INK, margin: 0,
       }}>
         {text}

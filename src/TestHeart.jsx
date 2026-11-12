@@ -23,42 +23,36 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { useT } from './i18n';
+import { NAVY, NAVY_SOFT, BEIGE, PAPER, INK, MUTED, LINE } from './theme';
 import { scoreHeart, toBrevoAttributes, HEART_DISORDER_CODES } from './lib/heartScoring.js';
 import HEART_TEST from './data/heart-test.json';
 import HEART_SUPPORT from './data/heart-support-text.json';
 
 // Imagen destacada del test — por idioma (texto embebido).
-import hrwEs from './assets/HRW-es.png';
-import hrwEn from './assets/HRW-en.png';
-import hrwFr from './assets/HRW-fr.png';
-import hrwRu from './assets/HRW-ru.png';
+import hrwEs from './assets/HRW-es.webp';
+import hrwEn from './assets/HRW-en.webp';
+import hrwFr from './assets/HRW-fr.webp';
+import hrwRu from './assets/HRW-ru.webp';
 const HRW_BY_LANG = { es: hrwEs, en: hrwEn, fr: hrwFr, ru: hrwRu };
 
 // Caritas / retratos por trastorno (mismo asset para los 4 idiomas — no
 // llevan texto embebido). Uno por cada uno de los 8 trastornos.
-import faceR   from './assets/heart-disorder-R.jpeg';   // Kant
-import faceVR  from './assets/heart-disorder-VR.jpeg';  // Rivers (Jane Eyre)
-import faceVM  from './assets/heart-disorder-VM.jpeg';  // Clint Eastwood
-import faceVI  from './assets/heart-disorder-VI.jpeg';  // Freedom
-import faceVC  from './assets/heart-disorder-VC.jpeg';  // Pharisee
-import faceSV  from './assets/heart-disorder-SV.jpeg';  // Unknown (Kramskoj)
-import faceSI  from './assets/heart-disorder-SI.jpeg';  // Rousseau (Руссо)
-import faceSC  from './assets/heart-disorder-SC.jpeg';  // Rudin
+import faceR   from './assets/heart-disorder-R.webp';   // Kant
+import faceVR  from './assets/heart-disorder-VR.webp';  // Rivers (Jane Eyre)
+import faceVM  from './assets/heart-disorder-VM.webp';  // Clint Eastwood
+import faceVI  from './assets/heart-disorder-VI.webp';  // Freedom
+import faceVC  from './assets/heart-disorder-VC.webp';  // Pharisee
+import faceSV  from './assets/heart-disorder-SV.webp';  // Unknown (Kramskoj)
+import faceSI  from './assets/heart-disorder-SI.webp';  // Rousseau (Руссо)
+import faceSC  from './assets/heart-disorder-SC.webp';  // Rudin
 const DISORDER_FACES = {
   R: faceR, VR: faceVR, VM: faceVM, VI: faceVI,
   VC: faceVC, SV: faceSV, SI: faceSI, SC: faceSC,
 };
 
-// ────────────────── paleta y tipografías (sync con otros tests) ──────────────────
-const NAVY = '#1B2A4A';
-const NAVY_SOFT = '#2A3B5F';
+// ────────────────── paleta local (solo valores que difieren del theme) ──────────────────
 const GOLD = '#C5A55A';
 const GOLD_SOFT = '#E0C98A';
-const BEIGE = '#F4F1EA';
-const PAPER = '#FBF8F1';
-const INK = '#22262E';
-const MUTED = '#6B6B6B';
-const LINE = '#D8D2C2';
 
 const DISORDER_COLORS = {
   R:  { color: '#9C3A3A', soft: '#E9CFCF' },

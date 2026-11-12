@@ -12,7 +12,7 @@ import SEO from '../components/SEO';
 import { TestShell } from '../TestTBP';
 import { confirmGuardian } from '../account/account';
 import { Card, Title, PrimaryButton, Notice } from '../account/ui';
-import { NAVY, FONT_SANS, styles } from '../theme';
+import { NAVY, FONT_BODY, styles } from '../theme';
 
 export default function ConsentimientoTutor() {
   const { t } = useT();
@@ -41,7 +41,7 @@ export default function ConsentimientoTutor() {
           ) : done ? (
             <>
               <Notice tone="ok">{t('guardian.done')}</Notice>
-              <Link to="/app" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('guardian.go_panel')} →</Link>
+              <Link to="/app" style={{ fontFamily: FONT_BODY, color: NAVY }}>{t('guardian.go_panel')} →</Link>
             </>
           ) : (
             <>

@@ -2,7 +2,7 @@ import { LocalLink as Link } from '../i18n';
 import {
   NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
-  FONT_SERIF, FONT_SANS, styles,
+  FONT_SLAB, FONT_BODY, styles,
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
@@ -81,12 +81,12 @@ export default function Acreditacion() {
               onMouseOver={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 16px 32px rgba(0,0,0,0.25)'; }}
               onMouseOut={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
             >
-              <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_SOFT, fontWeight: 600 }}>
                 {a.sub}
               </div>
               <h3 style={{ ...styles.h3, color: PAPER, fontSize: 26, marginTop: 8, marginBottom: 14 }}>{a.label}</h3>
               <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{a.text}</p>
-              <div style={{ marginTop: 22, fontFamily: FONT_SANS, fontSize: 13, color: GOLD, fontWeight: 600, letterSpacing: '0.04em' }}>
+              <div style={{ marginTop: 22, fontFamily: FONT_BODY, fontSize: 13, color: GOLD, fontWeight: 600, letterSpacing: '0.04em' }}>
                 {a.cta} →
               </div>
             </Link>

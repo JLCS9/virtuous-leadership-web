@@ -16,13 +16,13 @@ import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos'
 import { useCatalogo, useProgreso } from './useFormacion';
 
 
-import img01 from '../assets/formacion/escultura-01-atleta.jpg';
-import img07 from '../assets/formacion/escultura-07-hercules.jpg';
+import img01 from '../assets/formacion/escultura-01-atleta.webp';
+import img07 from '../assets/formacion/escultura-07-hercules.webp';
 import img09 from '../assets/formacion/escultura-09-apolo-bn.jpg';
-import img10 from '../assets/formacion/escultura-10-ojo-macro.jpg';
-import img11 from '../assets/formacion/escultura-11-zeus-bronce.jpg';
-import img12 from '../assets/formacion/escultura-12-fragmento-museo.jpg';
-import img13 from '../assets/formacion/escultura-13-coliseo.jpg';
+import img10 from '../assets/formacion/escultura-10-ojo-macro.webp';
+import img11 from '../assets/formacion/escultura-11-zeus-bronce.webp';
+import img12 from '../assets/formacion/escultura-12-fragmento-museo.webp';
+import img13 from '../assets/formacion/escultura-13-coliseo.webp';
 
 import cuadro01 from '../assets/formacion/cuadro-01-caminante-friedrich.jpg';
 import cuadro02 from '../assets/formacion/cuadro-02-templo-lorrain.jpg';
@@ -31,9 +31,9 @@ import cuadro04 from '../assets/formacion/cuadro-04-niagara-cole.jpg';
 import cuadro05 from '../assets/formacion/cuadro-05-veleros-heade.jpg';
 import cuadro06 from '../assets/formacion/cuadro-06-valle-cropsey.jpg';
 import cuadro07 from '../assets/formacion/cuadro-07-rio-corot.webp';
-import cuadro08 from '../assets/formacion/cuadro-08-fel-c1.jpg';
-import cuadro09 from '../assets/formacion/cuadro-09-fel-c2.jpg';
-import cuadro10 from '../assets/formacion/cuadro-10-mel-c3.jpg';
+import cuadro08 from '../assets/formacion/cuadro-08-fel-c1.webp';
+import cuadro09 from '../assets/formacion/cuadro-09-fel-c2.webp';
+import cuadro10 from '../assets/formacion/cuadro-10-mel-c3.webp';
 
 const PORTADAS_A = { 1: img01, 2: img12, 3: img10, 4: img11, 5: img09, 6: img13, 7: img07 };
 const PORTADAS_B = { 1: cuadro09, 2: cuadro10, 3: cuadro03, 4: cuadro08, 5: cuadro05, 6: cuadro07, 7: cuadro01 };

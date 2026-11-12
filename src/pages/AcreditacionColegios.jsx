@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react';
 import {
   NAVY, NAVY_DEEP, NAVY_SOFT, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
-  FONT_SERIF, FONT_SANS, styles,
+  FONT_SLAB, FONT_BODY, styles,
 } from '../theme';
 import { useT, LocalLink } from '../i18n';
 import Section from '../components/Section';
@@ -85,7 +85,7 @@ export default function AcreditacionColegios() {
               borderTop: `3px solid ${GOLD}`,
               display: 'flex', flexDirection: 'column',
             }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 32, fontWeight: 700, color: GOLD, lineHeight: 1 }}>{o.n}</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 32, fontWeight: 700, color: GOLD, lineHeight: 1 }}>{o.n}</div>
               <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 12, marginBottom: 10 }}>{o.title}</h3>
               {o.text && (
                 <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0, flex: 1 }}>{o.text}</p>
@@ -94,7 +94,7 @@ export default function AcreditacionColegios() {
                 <LocalLink to={o.cta_to} style={{
                   marginTop: o.text ? 18 : 'auto',
                   paddingTop: o.text ? 0 : 18,
-                  fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
+                  fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
                   letterSpacing: '0.04em', color: GOLD,
                   textDecoration: 'none', alignSelf: 'flex-start',
                   borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
@@ -123,14 +123,14 @@ export default function AcreditacionColegios() {
               padding: '20px 24px', background: BEIGE, border: `1px solid ${LINE}`,
               alignItems: 'center',
             }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: GOLD_DEEP }}>0{i + 1}</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: GOLD_DEEP }}>0{i + 1}</div>
               <div>
                 <div style={{ ...styles.para, fontSize: 15, margin: 0 }}>{e}</div>
                 {/* CTA solo en item 01: cross-link a la pagina Programa */}
                 {i === 0 && k('entregables_cta_label') && k('entregables_cta_to') && (
                   <LocalLink to={k('entregables_cta_to')} style={{
                     display: 'inline-block', marginTop: 10,
-                    fontFamily: FONT_SANS, fontSize: 14, fontWeight: 600,
+                    fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
                     letterSpacing: '0.04em', color: NAVY,
                     textDecoration: 'none',
                     borderBottom: `2px solid ${GOLD}`, paddingBottom: 2,
@@ -162,7 +162,7 @@ export default function AcreditacionColegios() {
               borderTop: `3px solid ${GOLD}`,
               textAlign: 'center',
             }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 24, fontWeight: 700, color: GOLD }}>{d.n}</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: GOLD }}>{d.n}</div>
               <h3 style={{ ...styles.h3, color: PAPER, fontSize: 22, marginTop: 8, marginBottom: d.text ? 6 : 0 }}>{d.title}</h3>
               {d.text && (
                 <p style={{ ...styles.para, color: '#C8CFDC', fontSize: 15, margin: 0 }}>{d.text}</p>
@@ -191,7 +191,7 @@ export default function AcreditacionColegios() {
               padding: '20px 0',
               borderBottom: i < proceso.length - 1 ? `1px solid ${NAVY_SOFT}` : 'none',
             }}>
-              <div style={{ fontFamily: FONT_SERIF, fontSize: 28, fontWeight: 700, color: GOLD }}>{p.n}</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: GOLD }}>{p.n}</div>
               <div style={{ ...styles.para, color: '#D9DEE8', fontSize: 16, margin: 0, alignSelf: 'center' }}>{p.text}</div>
             </li>
           ))}
@@ -230,13 +230,13 @@ function TestimoniosCarousel({ items }) {
         <blockquote key={idx} style={{
           margin: 0, padding: '40px 44px',
           background: BEIGE, borderLeft: `3px solid ${GOLD}`,
-          fontFamily: FONT_SERIF, fontStyle: 'italic',
+          fontFamily: FONT_SLAB, fontStyle: 'italic',
           fontSize: 'clamp(18px, 2.2vw, 22px)', lineHeight: 1.5, color: NAVY,
           animation: 'fade-in-up 480ms ease',
         }}>
           «{tt.text}»
           <footer style={{
-            fontFamily: FONT_SANS, fontStyle: 'normal', fontSize: 13,
+            fontFamily: FONT_BODY, fontStyle: 'normal', fontSize: 13,
             color: MUTED, marginTop: 18, letterSpacing: '0.04em',
           }}>
             — <strong style={{ color: NAVY }}>{tt.author}</strong>, {tt.role}
@@ -245,7 +245,7 @@ function TestimoniosCarousel({ items }) {
       </div>
       <div style={{ display: 'flex', justifyContent: 'center', gap: 8, marginTop: 22 }}>
         {items.map((_, i) => (
-          <button key={i} onClick={() => setIdx(i)}
+          <button type="button" key={i} onClick={() => setIdx(i)}
                   aria-label={`Testimonio ${i + 1}`}
                   style={{
                     width: i === idx ? 24 : 8, height: 8,
@@ -280,14 +280,14 @@ export function FactRow({ label, value, detail, last, dark }) {
       alignItems: 'center',
     }}>
       <div>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: labelColor, fontWeight: 600 }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: labelColor, fontWeight: 600 }}>
           {label}
         </div>
-        <div style={{ fontFamily: FONT_SERIF, fontSize: 20, fontWeight: 600, color: valueColor, marginTop: 2 }}>
+        <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 600, color: valueColor, marginTop: 2 }}>
           {value}
         </div>
       </div>
-      <div style={{ fontFamily: FONT_SANS, fontSize: 14, color: detailColor, lineHeight: 1.55 }}>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: detailColor, lineHeight: 1.55 }}>
         {detail}
       </div>
       <style>{`

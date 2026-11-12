@@ -7,7 +7,7 @@ import { useSession } from '../account/useSession';
 import { AccountError, signIn, sendPasswordReset } from '../account/account';
 import {
   NAVY, GOLD, BEIGE, MUTED,
-  FONT_SANS,
+  FONT_BODY,
   styles,
 } from '../theme';
 import { Card, Title, Field, PrimaryButton, LinkButton, Notice } from '../account/ui';
@@ -37,7 +37,7 @@ export default function Login() {
             import('../account/supabase').then(({ supabase }) => supabase.auth.signOut());
             try { localStorage.clear(); sessionStorage.clear(); } catch {}
             window.location.reload();
-          }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_SANS, fontSize: 12, color: MUTED, textDecoration: 'underline' }}>
+          }} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textDecoration: 'underline' }}>
             Purgar sesión y recargar
           </button>
         </div>
@@ -51,7 +51,7 @@ function Shell({ children }) {
     <div style={{
       minHeight: '100vh',
       background: BEIGE,
-      fontFamily: FONT_SANS,
+      fontFamily: FONT_BODY,
       WebkitFontSmoothing: 'antialiased',
     }}>
       <style>{`
@@ -83,7 +83,7 @@ function LoginForm() {
       <Card>
         <Title eyebrow={t('panel.eyebrow')}>{t('panel.login_title')}</Title>
         <p style={{ ...styles.para, marginTop: 12 }}>{t('panel.no_accounts')}</p>
-        <Link to="/tests/temperamento" style={{ fontFamily: FONT_SANS, color: NAVY }}>{t('panel.take_test')} →</Link>
+        <Link to="/tests/temperamento" style={{ fontFamily: FONT_BODY, color: NAVY }}>{t('panel.take_test')} →</Link>
       </Card>
     );
   }
@@ -131,7 +131,7 @@ function LoginForm() {
         <PrimaryButton type="submit" busy={busy}>{busy ? t('panel.submitting') : t('panel.submit')}</PrimaryButton>
       </form>
 
-      <div style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, fontFamily: FONT_SANS, fontSize: 14 }}>
+      <div style={{ marginTop: 18, display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, fontFamily: FONT_BODY, fontSize: 14 }}>
         <LinkButton onClick={forgot}>{t('panel.forgot')}</LinkButton>
         <Link to="/tests/temperamento" style={{ color: NAVY }}>{t('panel.no_account')}</Link>
       </div>

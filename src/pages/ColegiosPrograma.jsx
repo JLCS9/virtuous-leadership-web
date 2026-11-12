@@ -26,7 +26,7 @@ import { useT } from '../i18n';
 import Section from '../components/Section';
 import CTA from '../components/CTA';
 import { TestimoniosCarousel, FactRow } from './AcreditacionColegios';
-import genteImg from '../assets/gente.jpeg';
+import genteImg from '../assets/gente.webp';
 
 // ns: rama del i18n de la que se leen los textos propios de la pagina (hero,
 // testimonios, CTA final). Permite reutilizar esta misma pagina para /empresas

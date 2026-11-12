@@ -1,7 +1,6 @@
 // Logo / sello "VIRTUOUS LEADERSHIP".
-// Importado directamente desde src/assets/logo.png — Vite lo procesa y le da hash.
 
-import sealUrl from '../assets/vl-seal.png';
+import sealUrl from '../assets/vl-seal.webp';
 
 export default function Seal({ size = 96 }) {
   return (

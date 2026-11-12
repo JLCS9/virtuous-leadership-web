@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useT } from '../i18n';
-import { NAVY, NAVY_SOFT, GOLD, PAPER, LINE, MUTED, FONT_SANS } from '../theme';
+import { NAVY, NAVY_SOFT, GOLD, PAPER, LINE, MUTED, FONT_BODY } from '../theme';
 
 export default function LangSwitcher({ inverted = true }) {
   // inverted=true → estilo para Header navy (texto blanco, hover oro)
@@ -70,7 +70,7 @@ export default function LangSwitcher({ inverted = true }) {
                     width: '100%', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: 10,
                     padding: '10px 12px',
-                    fontFamily: FONT_SANS, fontSize: 14,
+                    fontFamily: FONT_BODY, fontSize: 14,
                     color: active ? NAVY : MUTED,
                     fontWeight: active ? 600 : 500,
                     background: active ? '#F4F1EA' : 'transparent',

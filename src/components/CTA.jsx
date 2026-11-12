@@ -57,5 +57,5 @@ export default function CTA({ to, href, variant = 'primary', children, style, ho
       </a>
     );
   }
-  return <button {...interaction}>{children}</button>;
+  return <button type="button" {...interaction}>{children}</button>;
 }

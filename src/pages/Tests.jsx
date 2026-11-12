@@ -2,7 +2,7 @@ import { LocalLink as Link } from '../i18n';
 import {
   NAVY, NAVY_DEEP, GOLD, GOLD_SOFT, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
-  FONT_SERIF, FONT_SANS, styles,
+  FONT_SLAB, FONT_BODY, styles,
 } from '../theme';
 import { useT } from '../i18n';
 import Section from '../components/Section';
@@ -13,18 +13,18 @@ import SEO from '../components/SEO';
 //   'temperament' → sello "tt" (los 4 temperamentos)
 //   'character'   → pirámide de las 6 virtudes
 //   'heart'       → HRW (Havard Reading of Rebellious Wills), imagen del test corazón
-import ttEs from '../assets/tt.png';
+import ttEs from '../assets/tt.webp';
 import ttEn from '../assets/tt-en.png';
 import ttFr from '../assets/tt-fr.png';
-import ttRu from '../assets/tt-ru.png';
-import pyramidEs from '../assets/piramida ES.png';
-import pyramidEn from '../assets/Pyramid Eng.png';
-import pyramidFr from '../assets/Pyramide FR.png';
-import pyramidRu from '../assets/Pyramid Ruso.png';
-import heartEs from '../assets/HRW-es.png';
-import heartEn from '../assets/HRW-en.png';
-import heartFr from '../assets/HRW-fr.png';
-import heartRu from '../assets/HRW-ru.png';
+import ttRu from '../assets/tt-ru.webp';
+import pyramidEs from '../assets/piramida ES.webp';
+import pyramidEn from '../assets/Pyramid Eng.webp';
+import pyramidFr from '../assets/Pyramide FR.webp';
+import pyramidRu from '../assets/Pyramid Ruso.webp';
+import heartEs from '../assets/HRW-es.webp';
+import heartEn from '../assets/HRW-en.webp';
+import heartFr from '../assets/HRW-fr.webp';
+import heartRu from '../assets/HRW-ru.webp';
 const TEST_IMAGES = {
   temperament: { es: ttEs,      en: ttEn,      fr: ttFr,      ru: ttRu      },
   character:   { es: pyramidEs, en: pyramidEn, fr: pyramidFr, ru: pyramidRu },
@@ -63,7 +63,7 @@ export default function Tests() {
           <div style={styles.eyebrow}>{t('tests.eyebrow')}</div>
           <h1 style={styles.h1}>{t('tests.hero_title')}</h1>
           <p style={{
-            fontFamily: FONT_SANS, fontSize: 'clamp(16px, 1.8vw, 18px)', lineHeight: 1.65,
+            fontFamily: FONT_BODY, fontSize: 'clamp(16px, 1.8vw, 18px)', lineHeight: 1.65,
             color: MUTED, maxWidth: 720, margin: '20px auto 0',
           }}>{t('tests.hero_subtitle')}</p>
         </div>
@@ -124,7 +124,7 @@ function TestCard({ available, to, label, title, text, tags_label, tags, cta, im
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <img src={image} alt=""
+            <img src={image} alt="" loading="lazy"
                  style={{
                    width: '86%', height: '86%',
                    objectFit: 'contain',
@@ -135,7 +135,7 @@ function TestCard({ available, to, label, title, text, tags_label, tags, cta, im
         </div>
       )}
       <div style={{ padding: '16px 24px 28px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-        <div style={{ fontFamily: FONT_SANS, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600, textAlign: 'center' }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 11, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_DEEP, fontWeight: 600, textAlign: 'center' }}>
           {label}
           {!available && <span style={{ marginLeft: 8, color: MUTED }}>· {comingSoon}</span>}
         </div>
@@ -143,13 +143,13 @@ function TestCard({ available, to, label, title, text, tags_label, tags, cta, im
         <p style={{ ...styles.para, margin: '0 0 16px', fontSize: 15 }}>{text}</p>
         {tags_label && tags && (
           <div style={{ marginBottom: 4 }}>
-            <div style={{ fontFamily: FONT_SANS, fontSize: 12, fontWeight: 600, color: NAVY, letterSpacing: '0.04em', marginBottom: 8 }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: NAVY, letterSpacing: '0.04em', marginBottom: 8 }}>
               {tags_label}
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
               {tags.map((tag, i) => (
                 <span key={i} style={{
-                  fontFamily: FONT_SANS, fontSize: 12, lineHeight: 1,
+                  fontFamily: FONT_BODY, fontSize: 12, lineHeight: 1,
                   color: GOLD_DEEP, background: BEIGE,
                   padding: '5px 10px', borderRadius: 3,
                   border: `1px solid ${LINE}`,
@@ -160,7 +160,7 @@ function TestCard({ available, to, label, title, text, tags_label, tags, cta, im
         )}
         <div style={{ flex: 1 }} />
         {available && cta && (
-          <div style={{ marginTop: 20, fontFamily: FONT_SANS, fontSize: 14, color: GOLD, fontWeight: 600, textAlign: 'center' }}>
+          <div style={{ marginTop: 20, fontFamily: FONT_BODY, fontSize: 14, color: GOLD, fontWeight: 600, textAlign: 'center' }}>
             {cta} →
           </div>
         )}
