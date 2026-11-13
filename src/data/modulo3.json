@@ -109,12 +109,17 @@
         "La pirámide de la humildad: metafísica → ontológica → espiritual → psicológica"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-05", "label": "Pirámide de la humildad" },
-        { "id": "m3-04", "label": "Cuestionario" }
+        {
+          "id": "m3-05",
+          "label": "Pirámide de la humildad"
+        },
+        {
+          "id": "m3-04",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 0
     },
-
     {
       "id": "m3-06",
       "num": 5,
@@ -187,11 +192,13 @@
         "Cada tipo conecta con una forma de servicio fraterno"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-07", "label": "Cuestionario" }
+        {
+          "id": "m3-07",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 1
     },
-
     {
       "id": "m3-08",
       "num": 7,
@@ -220,25 +227,37 @@
         ],
         [
           "Desde el punto de vista de la magnanimidad, la pusilanimidad es falta de virtud, una falta de magnanimidad. En este caso, la pusilanimidad es el resultado de una falta de voluntad.",
-          { "cita": "Soy pusilánime porque no tengo la suficiente fuerza de voluntad para ser magnánimo." }
+          {
+            "cita": "Soy pusilánime porque no tengo la suficiente fuerza de voluntad para ser magnánimo."
+          }
         ],
         [
           "Desde el punto de vista de la humildad, la pusilanimidad es una falsa virtud, una falsa humildad, porque parece humildad. En este caso, la pusilanimidad es el resultado de una falta de sabiduría.",
-          { "cita": "Soy pusilánime porque no tengo la suficiente sabiduría para conocerme a mí mismo." }
+          {
+            "cita": "Soy pusilánime porque no tengo la suficiente sabiduría para conocerme a mí mismo."
+          }
         ],
         [
           "Puedes luchar por la humildad y al mismo tiempo fallar por ser imprudente. Y en ese caso habrás logrado no tanto humildad, sino pusilanimidad."
         ],
         [
           "La prudencia nos enseña que la humildad no es pusilanimidad, ni falta de noble ambición. La humildad es el hábito de vivir en la verdad sobre uno mismo. Y la verdad sobre uno mismo es que, además de limitaciones, tenemos talentos que hay que utilizar y desarrollar.",
-          { "enfasis": "Si nos olvidamos de esta verdad básica, nos ponemos en riesgo de convertirnos no en humildes, sino en __pusilánimes__." }
+          {
+            "enfasis": "Si nos olvidamos de esta verdad básica, nos ponemos en riesgo de convertirnos no en humildes, sino en __pusilánimes__."
+          }
         ],
         [
           "Una manifestación muy típica de pusilanimidad es la pasividad y la falsa modestia.",
           {
             "carrusel": [
-              { "cita": "¿Quién soy yo para emprender una aventura tan audaz?", "etiqueta": "Pasividad" },
-              { "cita": "Es mejor permanecer con un perfil bajo que llamar la atención y correr el riesgo de ser y parecer orgulloso.", "etiqueta": "Falsa modestia" }
+              {
+                "cita": "¿Quién soy yo para emprender una aventura tan audaz?",
+                "etiqueta": "Pasividad"
+              },
+              {
+                "cita": "Es mejor permanecer con un perfil bajo que llamar la atención y correr el riesgo de ser y parecer orgulloso.",
+                "etiqueta": "Falsa modestia"
+              }
             ]
           },
           "La pasividad y la falsa modestia provienen de la falta de prudencia, la falta de sabiduría y verdad."
@@ -321,12 +340,17 @@
         "Los talentos son dones que debemos reconocer, desarrollar y poner al servicio de los demás"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-10", "label": "Reflexión: pusilanimidad" },
-        { "id": "m3-09", "label": "Cuestionario" }
+        {
+          "id": "m3-10",
+          "label": "Reflexión: pusilanimidad"
+        },
+        {
+          "id": "m3-09",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 2
     },
-
     {
       "id": "m3-11",
       "num": 10,
@@ -337,8 +361,15 @@
       "vimeoId": "924591617",
       "intro": [
         "La humildad fraterna es la virtud de quien percibe a los demás como hermanos y se entrega a su servicio.",
-        ["Para practicarla necesitamos examinar la calidad de nuestras motivaciones:", "¿Actuamos movidos por lo que obtenemos? — **Motivación inmanente**", "¿O actuamos movidos por lo que damos? — **Motivación trascendente**"],
-        ["El altruismo auténtico consiste en __servir al ser humano por sí mismo, no por el beneficio psicológico que podemos obtener al hacerlo__.", "**La motivación trascendente es el corazón de la humildad fraterna.**"]
+        [
+          "Para practicarla necesitamos examinar la calidad de nuestras motivaciones:",
+          "¿Actuamos movidos por lo que obtenemos? — **Motivación inmanente**",
+          "¿O actuamos movidos por lo que damos? — **Motivación trascendente**"
+        ],
+        [
+          "El altruismo auténtico consiste en __servir al ser humano por sí mismo, no por el beneficio psicológico que podemos obtener al hacerlo__.",
+          "**La motivación trascendente es el corazón de la humildad fraterna.**"
+        ]
       ],
       "modulo": 3
     },
@@ -355,12 +386,16 @@
       "titulo_lectura": "Reflexiona sobre la humildad fraterna y la motivación",
       "lecturas": [
         [
-          { "imagen": "diagrama-motivacion" },
+          {
+            "imagen": "diagrama-motivacion"
+          },
           "La motivación inmanente se refiere a lo que obtengo. La motivación trascendente se refiere a lo que doy."
         ],
         [
           "La motivación inmanente (lo que obtengo) es un componente necesario de la vida, pero no es suficiente. Somos seres sociales, somos personas.",
-          { "enfasis": "Ser persona significa **hacer de ti mismo un regalo para los demás**." },
+          {
+            "enfasis": "Ser persona significa **hacer de ti mismo un regalo para los demás**."
+          },
           "La motivación inmanente por sí misma no nos permite alcanzar la excelencia humana y realizarnos como personas."
         ],
         [
@@ -451,12 +486,17 @@
         "La motivación trascendente es el corazón de la humildad fraterna"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-13", "label": "Reflexión: motivaciones" },
-        { "id": "m3-12", "label": "Cuestionario" }
+        {
+          "id": "m3-13",
+          "label": "Reflexión: motivaciones"
+        },
+        {
+          "id": "m3-12",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 3
     },
-
     {
       "id": "m3-14",
       "num": 13,
@@ -483,16 +523,16 @@
       "pregunta_fuerte_sec": "Puntos fuertes de mi temperamento secundario en términos de humildad fraterna:",
       "pregunta_debil_sec": "Puntos débiles de mi temperamento secundario en términos de humildad fraterna:",
       "ejemplos_fuerte": {
-        "COL": "Por ejemplo, como colérico tu fuerza en la humildad está en la capacidad de acción: cuando decides servir, lo haces con energía y determinación, emprendiendo proyectos al servicio de los demás.",
-        "MEL": "Por ejemplo, como melancólico tu fuerza en la humildad está en la profundidad del conocimiento propio: eres capaz de una autoevaluación honesta y de percibir la dignidad de los demás.",
-        "SAN": "Por ejemplo, como sanguíneo tu fuerza en la humildad está en la cercanía humana: conectas fácilmente con los demás y tu generosidad natural te inclina al servicio.",
-        "FLE": "Por ejemplo, como flemático tu fuerza en la humildad está en la constancia: cuando te comprometes a servir, lo haces con fidelidad y sin buscar protagonismo."
+        "COL": "Por ejemplo, como colérico reconoces con facilidad tus talentos y tienes mucha energía para la acción. Si pones esa energía al servicio de las personas, y no de tus metas, puede convertirse en una gran fuerza para hacerlas crecer.",
+        "MEL": "Por ejemplo, como melancólico tienes conciencia de tus talentos y sabes que son dones, no mérito tuyo. Esa verdad sobre ti mismo es la base sobre la que se construye el servicio a los demás.",
+        "SAN": "Por ejemplo, como sanguíneo quieres servir a los demás de buen corazón y te resulta fácil dar el primer paso: conectas con las personas y percibes lo que necesitan. Tu fuerza está en empezar; tu trabajo, en no dejarlo.",
+        "FLE": "Por ejemplo, como flemático sabes escuchar, eres respetuoso y tienes un profundo sentido del deber y del trabajo en equipo. Cuando descubres que tienes algo valioso que ofrecer, sirves con constancia y sin buscar protagonismo."
       },
       "ejemplos_debil": {
-        "COL": "Por ejemplo, como colérico tu debilidad ante la humildad es la instrumentalización: puedes usar a las personas como medios para tus fines en lugar de servirlas como un fin en sí mismas.",
+        "COL": "Por ejemplo, como colérico tu debilidad ante la humildad es la instrumentalización: puedes usar a las personas como medios para tus fines en lugar de servirlas como un fin en sí mismas. Y te cuesta reconocer que tus talentos son dones, no solo fruto de tu esfuerzo.",
         "MEL": "Por ejemplo, como melancólico tu debilidad ante la humildad es la auto-absorción: puedes estar tan centrado en tu mundo interior que no ves las necesidades de los demás.",
-        "SAN": "Por ejemplo, como sanguíneo tu debilidad ante la humildad es la inestabilidad en el servicio: sirves mientras te resulta atractivo, pero abandonas cuando aparecen dificultades.",
-        "FLE": "Por ejemplo, como flemático tu debilidad ante la humildad es la subestima de tus talentos: piensas «¿qué puedo ofrecer yo?» y dejas de servir por no creer que tengas algo valioso que dar."
+        "SAN": "Por ejemplo, como sanguíneo tu debilidad ante la humildad es la inestabilidad en el servicio: sirves mientras te resulta atractivo, pero lo dejas cuando deja de ser novedoso o aparecen dificultades. Además, conoces mejor a los demás que a ti mismo.",
+        "FLE": "Por ejemplo, como flemático tu debilidad ante la humildad es la subestima de tus talentos: piensas «¿qué puedo ofrecer yo?» y no los pones al servicio de los demás por no creer que tengas algo valioso que dar."
       },
       "obstaculos": {
         "COL": "Para los Coléricos, el obstáculo a la humildad fraterna es la instrumentalización de las personas. Las personas son instrumentos con los que puedo alcanzar mis objetivos.",
@@ -580,12 +620,17 @@
         "COL: instrumentalización; MEL: auto-absorción; SAN: inestabilidad; FLE: subestima"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-16", "label": "Temperamento × humildad" },
-        { "id": "m3-15", "label": "Cuestionario" }
+        {
+          "id": "m3-16",
+          "label": "Temperamento × humildad"
+        },
+        {
+          "id": "m3-15",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 4
     },
-
     {
       "id": "m3-17",
       "num": 16,
@@ -656,22 +701,6 @@
       "visible": false,
       "preguntas": [
         {
-          "texto": "Test: ¿Hasta qué punto está presente la humildad fundamental en tu vida? Marca las afirmaciones que coincidan con tu comportamiento habitual.",
-          "opciones": [
-            "Valoro el punto de vista de los demás y no trato de imponer mis opiniones",
-            "No discuto si no tengo la razón",
-            "No insisto obstinadamente cuando creo que tengo razón",
-            "Me complazco más en el diálogo que en el debate",
-            "Soy consciente de que mis talentos son dones",
-            "No trato de justificarme cuando me reprenden",
-            "No oculto mis fallos",
-            "Comparto la alegría de los demás cuando son recompensados",
-            "Me gusta reírme cuando la gente hace bromas sobre mí"
-          ],
-          "correcta": [0, 1, 2, 3, 4, 5, 6, 7, 8],
-          "multiple": true
-        },
-        {
           "texto": "¿Qué cualidad positiva no corresponde al melancólico?",
           "opciones": [
             "Le gusta el poder y prospera en la competencia",
@@ -716,12 +745,17 @@
         "El perfeccionismo como enemigo de la humildad"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-25", "label": "Test de humildad fundamental" },
-        { "id": "m3-18", "label": "Cuestionario" }
+        {
+          "id": "m3-25",
+          "label": "Test de humildad fundamental"
+        },
+        {
+          "id": "m3-18",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 5
     },
-
     {
       "id": "m3-19",
       "num": 18,
@@ -835,12 +869,17 @@
         "Combinaciones de temperamento imposibles: opuestos no se combinan"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-26", "label": "Test de humildad fraterna" },
-        { "id": "m3-20", "label": "Cuestionario" }
+        {
+          "id": "m3-26",
+          "label": "Test de humildad fraterna"
+        },
+        {
+          "id": "m3-20",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 6
     },
-
     {
       "id": "m3-21",
       "num": 20,
@@ -974,12 +1013,17 @@
         "Humildad fraterna aplicada al trabajo en equipo"
       ],
       "ejercicios_evaluables": [
-        { "id": "m3-23", "label": "Test: humildad en organizaciones" },
-        { "id": "m3-22", "label": "Cuestionario" }
+        {
+          "id": "m3-23",
+          "label": "Test: humildad en organizaciones"
+        },
+        {
+          "id": "m3-22",
+          "label": "Cuestionario"
+        }
       ],
       "modulo": 7
     },
-
     {
       "id": "m3-24",
       "num": 23,
@@ -994,10 +1038,12 @@
           [
             "Tu nivel de autoconciencia influye radicalmente en tu nivel de servicio.",
             "Has aprendido que la humildad tiene dos caras:",
-            { "lista": [
-              "La fundamental: vivir en la verdad sobre ti mismo.",
-              "La fraterna: servir activamente a los demás."
-            ]},
+            {
+              "lista": [
+                "La fundamental: vivir en la verdad sobre ti mismo.",
+                "La fraterna: servir activamente a los demás."
+              ]
+            },
             "**Sin la primera, la segunda es imposible.**"
           ],
           [
@@ -1020,10 +1066,22 @@
         "pregunta_choice": {
           "enunciado": "Piensa en tu vida diaria. ¿En cuál de estas áreas sientes que necesitas crecer más?",
           "opciones": [
-            { "texto": "Conocer mejor mis talentos y limitaciones", "key": "fundamental" },
-            { "texto": "Servir a los demás de forma constante y desinteresada", "key": "fraterna" },
-            { "texto": "No confundir humildad con pasividad o falsa modestia", "key": "prudencia" },
-            { "texto": "Examinar si mi motivación es realmente trascendente", "key": "motivacion" }
+            {
+              "texto": "Conocer mejor mis talentos y limitaciones",
+              "key": "fundamental"
+            },
+            {
+              "texto": "Servir a los demás de forma constante y desinteresada",
+              "key": "fraterna"
+            },
+            {
+              "texto": "No confundir humildad con pasividad o falsa modestia",
+              "key": "prudencia"
+            },
+            {
+              "texto": "Examinar si mi motivación es realmente trascendente",
+              "key": "motivacion"
+            }
           ]
         },
         "pregunta_compromiso": {

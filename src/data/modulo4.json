@@ -1161,36 +1161,6 @@
         }
       ],
       "modulo": 9
-    },
-    {
-      "id": "m4-27",
-      "num": 27,
-      "tipo": "cierre",
-      "titulo": "Conclusiones del Curso 4",
-      "visible": true,
-      "resumen_ficha": "Mi compromiso con las virtudes fundamentales",
-      "prioridad_ficha": 1,
-      "cierre_pendiente": true,
-      "sintesis": {
-        "campos": [
-          {
-            "key": "libro",
-            "label": "¿Has leído o te gustaría leer el libro «Liderazgo Virtuoso» de Alexandre Havard?",
-            "placeholder": "Comparte tu impresión o tu interés por el libro..."
-          },
-          {
-            "key": "virtud_mas_necesaria",
-            "label": "De las 4 virtudes fundamentales (prudencia, fortaleza, dominio de sí, justicia), ¿cuál sientes que necesitas practicar más?",
-            "placeholder": "Ej: La fortaleza, porque me cuesta mantener el rumbo cuando..."
-          },
-          {
-            "key": "proposito",
-            "label": "¿Cuál es tu propósito concreto para practicar esa virtud esta semana?",
-            "placeholder": "Ej: Me comprometo a tomar una decisión difícil que he estado posponiendo..."
-          }
-        ]
-      },
-      "modulo": 10
     }
   ]
 }

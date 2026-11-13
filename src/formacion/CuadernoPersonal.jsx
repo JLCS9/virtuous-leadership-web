@@ -245,7 +245,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
       const preguntas = paso.preguntas ?? paso.senales ?? [];
       for (let i = 0; i < preguntas.length; i++) {
         const resp = resultado.respuestas[i];
-        const qLines = splitText(`${i + 1}. ${preguntas[i]}`, fontBold, 10, TW);
+        const qLines = splitText(`${i + 1}. ${preguntas[i]?.texto ?? preguntas[i]}`, fontBold, 10, TW);
         const aLines = resp ? splitText(resp, font, 9, TW - 10) : [];
         const need = qLines.length * 13 + 3 + Math.max(aLines.length * 12, 16) + 10;
 
@@ -360,27 +360,28 @@ export function CuadernoPersonal({ userId, pasos, temperamento, moduloId = 'modu
   }
 
   return (
-    <button
-      type="button"
-      onClick={descargar}
-      disabled={generando}
-      style={{
-        display: 'flex', alignItems: 'center', gap: 8,
-        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
-        color: generando ? MUTED : GOLD_REF_DK,
-        background: 'none', border: `1.5px solid ${generando ? LINE : GOLD_REF}`,
-        borderRadius: 0, padding: '10px 20px',
-        cursor: generando ? 'wait' : 'pointer',
-        transition: 'border-color 200ms ease, color 200ms ease',
-        letterSpacing: '0.02em', width: '100%', justifyContent: 'center',
-      }}
-    >
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-        <polyline points="7 10 12 15 17 10" />
-        <line x1="12" y1="15" x2="12" y2="3" />
-      </svg>
-      {generando ? 'Generando...' : 'Ver cuaderno personal'}
-    </button>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
+      <button
+        type="button"
+        disabled
+        style={{
+          display: 'flex', alignItems: 'center', gap: 8,
+          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+          color: MUTED,
+          background: 'none', border: `1.5px solid ${LINE}`,
+          borderRadius: 0, padding: '10px 20px',
+          cursor: 'default', opacity: 0.55,
+          letterSpacing: '0.02em', width: '100%', justifyContent: 'center',
+        }}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Descargar cuaderno personal
+      </button>
+      <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>Disponible próximamente</span>
+    </div>
   );
 }
