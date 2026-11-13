@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useOutletContext, useParams, Link } from 'react-router-dom';
+import { useOutletContext, useParams, useLocation, Link } from 'react-router-dom';
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
@@ -21,6 +21,7 @@ const MODULOS = {
   'curso-2': () => import('../data/modulo2.json'),
   'curso-3': () => import('../data/modulo3.json'),
   'curso-4': () => import('../data/modulo4.json'),
+  'curso-7': () => import('../data/modulo7.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -734,22 +735,39 @@ function moduloDeEjercicio(pasos, pasoId) {
   return null;
 }
 
+function CuadernoDetails({ children, ...props }) {
+  return (
+    <>
+      <style>{`
+        .vl-cuad-det { border-top: 1px solid ${LINE}; }
+        .vl-cuad-det .vl-cuad-chev { transform: rotate(0deg); }
+        .vl-cuad-det[open] .vl-cuad-chev { transform: rotate(180deg); }
+      `}</style>
+      <details className="vl-cuad-det" {...props}>{children}</details>
+    </>
+  );
+}
+
 function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, moduloId, temperamento }) {
   const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo));
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
-      <button type="button" onClick={onVolver} style={{
-        fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
-        background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
-        display: 'inline-flex', alignItems: 'center', gap: 6,
-      }}>
-        ← Volver al curso
-      </button>
+      {onVolver && (
+        <button type="button" onClick={onVolver} style={{
+          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+          background: 'none', border: 'none', padding: 0, cursor: 'pointer', marginBottom: 16,
+          display: 'inline-flex', alignItems: 'center', gap: 6,
+        }}>
+          ← Volver al curso
+        </button>
+      )}
       <div style={tarjeta}>
-        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
-          Tu cuaderno personal
-        </h2>
+        {onVolver && (
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
+            Tu cuaderno personal
+          </h2>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
           {entradas.map(paso => {
             const datos = completados[paso.id];
@@ -759,12 +777,16 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
             if (hecho) {
               const corto = resumenCorto(paso, datos);
               return (
-                <details key={paso.id} style={{ borderTop: `1px solid ${LINE}` }}>
+                <CuadernoDetails key={paso.id}>
                   <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
-                      <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                      <IconoChevron width={14} height={14} className="vl-cuad-chev" style={{ color: MUTED, flexShrink: 0, transition: 'transform 200ms ease' }} />
+                      <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <IconoCheck width={12} height={12} style={{ color: GOLD_REF }} />
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                        </span>
                         {onEditar && (
                           <button type="button" onClick={(e) => { e.stopPropagation(); onEditar(paso.id); }} title="Editar" style={{
                             background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
@@ -787,15 +809,15 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
                   <div style={{ padding: '0 0 16px 0' }}>
                     <RespuestasCuaderno paso={paso} datos={datos} />
                   </div>
-                </details>
+                </CuadernoDetails>
               );
             }
 
             return (
               <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 4, opacity: 0.55 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY }}>{paso.titulo || paso.tipo}</span>
-                  <span style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
                     <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Pendiente</span>
                     {onIrA && <button type="button" onClick={() => onIrA(paso.id)} style={{
                       fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
@@ -813,9 +835,11 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
           })}
         </div>
       </div>
-      <div style={{ marginTop: 18 }}>
-        <CuadernoPersonal userId={userId} pasos={pasos} temperamento={temperamento} moduloId={moduloId} />
-      </div>
+      {onVolver && (
+        <div style={{ marginTop: 18 }}>
+          <CuadernoPersonal userId={userId} pasos={pasos} temperamento={temperamento} moduloId={moduloId} />
+        </div>
+      )}
     </div>
   );
 }
@@ -1231,6 +1255,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   const progreso = useModuloProgreso(user.id, moduloData.id, cursoNum);
   const notasHook = useNotas(user.id, moduloData.id);
   const [temp, setTemp] = useState(undefined);
+  const location = useLocation();
 
   useEffect(() => {
     let vivo = true;
@@ -1245,6 +1270,14 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   const visibles = pasosVisibles(pasos);
   const pasoActualId = progreso.pasoActual;
   const pasoActual = pasoActualId ? pasos.find((p) => p.id === pasoActualId) : null;
+
+  useEffect(() => {
+    const hash = location.hash?.replace('#', '');
+    if (hash && pasos.some(p => p.id === hash)) {
+      progreso.irA(hash, pasos.length);
+      window.history.replaceState(null, '', location.pathname);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function irA(pasoId) {
     progreso.irA(pasoId, pasos.length);
@@ -1334,3 +1367,5 @@ function ModuloContenido({ moduloData, user, cursoId }) {
     />
   );
 }
+
+export { VistaCuaderno, RespuestasCuaderno, TIPOS_EXCLUIR_CUADERNO, tieneDatos, resumenEjercicio, resumenCorto, moduloDeEjercicio };
