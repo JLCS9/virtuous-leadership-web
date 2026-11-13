@@ -10,10 +10,12 @@ import moduloData from '../data/modulo1.json';
 import modulo2Data from '../data/modulo2.json';
 import modulo3Data from '../data/modulo3.json';
 import modulo4Data from '../data/modulo4.json';
+import modulo7Data from '../data/modulo7.json';
 import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoChevron, IconoFlecha, IconoPlay } from '../app/Iconos';
 import { useCatalogo, useProgreso } from './useFormacion';
+import PlanPersonal from './PlanPersonal';
 
 
 import img01 from '../assets/formacion/escultura-01-atleta.webp';
@@ -351,26 +353,29 @@ function ModuloCursoCard({ cursoNum, titulo, completados, jsonData, portadas, br
   );
 }
 
-function Listado({ cursos: todosLosCursos, progreso, userId }) {
-  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2 && c.numero !== 3 && c.numero !== 4);
+function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
+  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2 && c.numero !== 3 && c.numero !== 4 && c.numero !== 7);
 
   const m1Hook = useModuloProgreso(userId, 'modulo1', 1);
   const m2Hook = useModuloProgreso(userId, 'modulo2', 2);
   const m3Hook = useModuloProgreso(userId, 'modulo3', 3);
   const m4Hook = useModuloProgreso(userId, 'modulo4', 4);
+  const m7Hook = useModuloProgreso(userId, 'modulo7', 7);
 
   const m1Pasos = pasosDelUsuario(moduloData, null);
   const m2Pasos = pasosDelUsuario(modulo2Data, null);
   const m3Pasos = pasosDelUsuario(modulo3Data, null);
   const m4Pasos = pasosDelUsuario(modulo4Data, null);
+  const m7Pasos = pasosDelUsuario(modulo7Data, null);
   const m1Prog = progresoModuloCards(m1Pasos, m1Hook.completados);
   const m2Prog = progresoModuloCards(m2Pasos, m2Hook.completados);
   const m3Prog = progresoModuloCards(m3Pasos, m3Hook.completados);
   const m4Prog = progresoModuloCards(m4Pasos, m4Hook.completados);
+  const m7Prog = progresoModuloCards(m7Pasos, m7Hook.completados);
 
   const resumenCursos = resumenGlobal(cursos, progreso.vistas);
-  const totalLecciones = resumenCursos.total + m1Prog.total + m2Prog.total + m3Prog.total + m4Prog.total;
-  const hechasLecciones = resumenCursos.hechas + m1Prog.hechos + m2Prog.hechos + m3Prog.hechos + m4Prog.hechos;
+  const totalLecciones = resumenCursos.total + m1Prog.total + m2Prog.total + m3Prog.total + m4Prog.total + m7Prog.total;
+  const hechasLecciones = resumenCursos.hechas + m1Prog.hechos + m2Prog.hechos + m3Prog.hechos + m4Prog.hechos + m7Prog.hechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
 
   return (
@@ -382,11 +387,23 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
       </div>
 
       <section className="vl-ancho" style={{ ...tarjeta }} aria-label="Tu progreso">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: 16 }}>
-          <Anillo valor={porcentaje} />
-          <div>
-            <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+            <Anillo valor={porcentaje} />
+            <div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, lineHeight: 1.15 }}>{hechasLecciones} de {totalLecciones} módulos</div>
+            </div>
           </div>
+          <button type="button" onClick={abrirPlan} style={{
+            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+            color: GOLD_REF_DK, background: 'none',
+            border: `1.5px solid ${GOLD_REF}`, borderRadius: 0,
+            padding: '10px 20px', cursor: 'pointer',
+            whiteSpace: 'nowrap', letterSpacing: '0.02em',
+            transition: 'border-color 200ms ease, color 200ms ease',
+          }}>
+            Plan de crecimiento personal
+          </button>
         </div>
       </section>
 
@@ -400,6 +417,8 @@ function Listado({ cursos: todosLosCursos, progreso, userId }) {
       <ModuloCursoCard cursoNum={3} titulo="Practicar la humildad" completados={m3Hook.completados} jsonData={modulo3Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       <ModuloCursoCard cursoNum={4} titulo="Practicar las 4 virtudes fundamentales" completados={m4Hook.completados} jsonData={modulo4Data}
+        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+      <ModuloCursoCard cursoNum={7} titulo="La educación del corazón" completados={m7Hook.completados} jsonData={modulo7Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       {cursos.map((c) => (
         <CursoCard key={`b-${c.id}`} curso={c} vistas={progreso.vistas}
@@ -417,8 +436,10 @@ export default function Formacion() {
   const [params, setParams] = useSearchParams();
   const idLeccion = params.get('leccion');
   const idCurso = params.get('curso');
+  const verPlan = params.get('plan');
   const abrirLeccion = (id) => setParams({ leccion: id });
   const abrirCurso = (id) => setParams({ curso: id });
+  const abrirPlan = () => setParams({ plan: '1' });
   const volver = () => setParams({});
   const volverACurso = (cursoId) => setParams({ curso: cursoId });
 
@@ -435,11 +456,12 @@ export default function Formacion() {
       </section>
     );
   }
+  if (verPlan) return <PlanPersonal userId={user.id} onVolver={volver} />;
   const encontrada = idLeccion ? buscarLeccion(cat.cursos, idLeccion) : null;
   if (encontrada) return <VistaLeccion cursos={cat.cursos} encontrada={encontrada} progreso={progreso} volver={() => volverACurso(encontrada.curso.id)} ir={abrirLeccion} />;
   if (idCurso) {
     const curso = cat.cursos.find((c) => c.id === idCurso);
     if (curso) return <VistaCurso curso={curso} progreso={progreso} volver={volver} irALeccion={abrirLeccion} />;
   }
-  return <Listado cursos={cat.cursos} progreso={progreso} userId={user.id} />;
+  return <Listado cursos={cat.cursos} progreso={progreso} userId={user.id} abrirPlan={abrirPlan} />;
 }
