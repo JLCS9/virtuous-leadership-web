@@ -44,6 +44,10 @@ import heartFaceVC from '../assets/heart-disorder-VC.webp';
 import heartFaceSV from '../assets/heart-disorder-SV.webp';
 import heartFaceSI from '../assets/heart-disorder-SI.webp';
 import heartFaceSC from '../assets/heart-disorder-SC.webp';
+import c5CuerpoAlmaImg from '../assets/formacion/c5-cuerpo-alma-espiritu.webp';
+import c5TrianguloImg from '../assets/formacion/c5-triangulo-blanco.webp';
+import c5RuedaImg from '../assets/formacion/c5-rueda-temperamentos.webp';
+import c5IdeologicoImg from '../assets/formacion/c5-ideologico-estatua.webp';
 import faceP from '../assets/Pastorelle.webp';
 import faceC from '../assets/Courage.webp';
 import faceS from '../assets/Judith.webp';
@@ -184,6 +188,8 @@ const CARATULA_TEXTOS = {
   test_corazon: { icono: '♡', tipo: 'Test del corazón', desc: 'Evalúa la libertad de tu corazón. 32 preguntas sobre las ocho enfermedades espirituales que pueden afectar a la razón, la voluntad y el corazón.' },
   reflexion_piramide: { icono: '△', tipo: 'Reflexión', desc: 'Observa el diagrama y reflexiona sobre las relaciones entre las virtudes.' },
   temperamento_magnanimidad: { icono: '✶', tipo: 'Tu temperamento', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar esta virtud.' },
+  armonia_temperamento: { icono: '✶', tipo: 'Tu temperamento', desc: 'Descubre hacia qué facultad te inclina tu temperamento y cuál prevalece en tu vida.' },
+  objetivos_corazon: { icono: '♡', tipo: 'Mis objetivos prácticos', desc: 'Fija tus objetivos para las enfermedades en las que más puntúas.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -729,7 +735,7 @@ export function Desliza({ paso, onComplete, modulo }) {
 
 /* ─── IDENTIFICA (diagrama + reflexión virtudes) ─── */
 
-function Lightbox({ src, alt, onClose }) {
+export function Lightbox({ src, alt, onClose }) {
   const [zoomed, setZoomed] = useState(false);
 
   return createPortal(
@@ -1166,6 +1172,67 @@ function CarruselCitas({ items }) {
   );
 }
 
+export function renderElementoSlide(item, i, { setLightboxSrc }) {
+  if (typeof item === 'string') {
+    return <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{RenderTextoRico(item)}</p>;
+  }
+  if (item.cita) {
+    return (
+      <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
+        <span style={{ fontFamily: 'Georgia, serif', fontSize: 40, lineHeight: 1, color: GOLD_REF, flexShrink: 0, marginTop: -4 }}>"</span>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 20, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>{RenderTextoRico(item.cita)}</p>
+      </div>
+    );
+  }
+  if (item.enfasis) {
+    return <p key={i} style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.6, margin: 0 }}>{RenderTextoRico(item.enfasis)}</p>;
+  }
+  if (item.carrusel) {
+    return <CarruselCitas key={i} items={item.carrusel} />;
+  }
+  if (item.chips) {
+    return (
+      <div key={i} style={{ display: 'flex', flexWrap: 'wrap', gap: 10, margin: '4px 0 8px' }}>
+        {item.chips.map((t, ci) => (
+          <span key={t} className="vl-chip-anim" style={{
+            animationDelay: `${ci * 160}ms`,
+            fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: GOLD_REF_DK,
+            background: 'rgba(165,139,38,0.08)', borderRadius: 20,
+            padding: '8px 18px', display: 'inline-block',
+            letterSpacing: '0.01em',
+          }}>
+            {t}
+          </span>
+        ))}
+      </div>
+    );
+  }
+  if (item.imagen) {
+    const src = REFLEXION_IMAGENES[item.imagen];
+    const imgSrc = Array.isArray(src) ? src[0] : src;
+    if (!imgSrc) return null;
+    return (
+      <div key={i} style={{ textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
+        <img src={imgSrc} alt={item.imagen} style={{ maxWidth: '100%', maxHeight: 420, display: 'block', margin: '0 auto', mixBlendMode: 'multiply' }} />
+        {item.pie && (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, fontStyle: 'italic', margin: '8px 0 0', lineHeight: 1.5 }}>{item.pie}</p>
+        )}
+        <button type="button" onClick={() => setLightboxSrc(imgSrc)} style={{
+          background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+          display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8,
+          textDecoration: 'underline', textUnderlineOffset: 3,
+        }}>
+          <IconoLupa /> {item.pie ? 'Ampliar imagen' : 'Ver diagrama'}
+        </button>
+      </div>
+    );
+  }
+  return null;
+}
+
+export { REFLEXION_IMAGENES };
+
 function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible = true, titulo }) {
   const items = Array.isArray(slide) ? slide : [slide];
   const esUltima = actual === total;
@@ -1190,44 +1257,7 @@ function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible =
           transition: 'opacity 300ms ease, transform 300ms ease',
           padding: '24px 0', display: 'flex', flexDirection: 'column', gap: 14,
         }}>
-          {items.map((item, i) => {
-            if (typeof item === 'string') {
-              return <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{RenderTextoRico(item)}</p>;
-            }
-            if (item.cita) {
-              return (
-                <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
-                  <span style={{ fontFamily: 'Georgia, serif', fontSize: 40, lineHeight: 1, color: GOLD_REF, flexShrink: 0, marginTop: -4 }}>"</span>
-                  <p style={{ fontFamily: FONT_BODY, fontSize: 20, fontStyle: 'italic', color: NAVY, lineHeight: 1.65, margin: 0 }}>{RenderTextoRico(item.cita)}</p>
-                </div>
-              );
-            }
-            if (item.enfasis) {
-              return <p key={i} style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.6, margin: 0 }}>{RenderTextoRico(item.enfasis)}</p>;
-            }
-            if (item.carrusel) {
-              return <CarruselCitas key={i} items={item.carrusel} />;
-            }
-            if (item.imagen) {
-              const src = REFLEXION_IMAGENES[item.imagen];
-              const imgSrc = Array.isArray(src) ? src[0] : src;
-              if (!imgSrc) return null;
-              return (
-                <div key={i} style={{ textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
-                  <img src={imgSrc} alt={item.imagen} style={{ maxWidth: '100%', maxHeight: 420, display: 'block', margin: '0 auto', mixBlendMode: 'multiply' }} />
-                  <button type="button" onClick={() => setLightboxSrc(imgSrc)} style={{
-                    background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-                    fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
-                    display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8,
-                    textDecoration: 'underline', textUnderlineOffset: 3,
-                  }}>
-                    <IconoLupa /> Ver diagrama
-                  </button>
-                </div>
-              );
-            }
-            return null;
-          })}
+          {items.map((item, i) => renderElementoSlide(item, i, { setLightboxSrc }))}
         </div>
 
         {lightboxSrc && <Lightbox src={lightboxSrc} alt="Diagrama" onClose={() => setLightboxSrc(null)} />}
@@ -1247,6 +1277,370 @@ function SlideLectura({ slide, actual, total, onSiguiente, onAnterior, visible =
       </div>
     </div>
   );
+}
+
+export function Lectura({ paso, onComplete, temperamento }) {
+  const lecturas = paso.lecturas ?? [];
+  const total = lecturas.length;
+  const [idx, setIdx] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  const aviso = paso.aviso_temperamento;
+  const tempPrimario = temperamento?.primary;
+  const textoAviso = aviso && tempPrimario && aviso[tempPrimario] ? aviso[tempPrimario] : null;
+
+  function siguiente() {
+    if (idx >= total - 1) {
+      onComplete({});
+    } else {
+      setVisible(false);
+      setTimeout(() => { setIdx(i => i + 1); setVisible(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+    }
+  }
+  function anterior() {
+    setVisible(false);
+    setTimeout(() => { setIdx(i => Math.max(0, i - 1)); setVisible(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }, 300);
+  }
+
+  return (
+    <div>
+      {textoAviso && idx === 0 && (
+        <div style={{
+          maxWidth: 800, margin: '0 auto 16px',
+          background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[tempPrimario] || GOLD_REF}`,
+          padding: '16px 20px', borderRadius: '0 8px 8px 0',
+        }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: TEMP_COLORS[tempPrimario] || GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Tu tendencia</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6 }}>{textoAviso}</div>
+        </div>
+      )}
+      <SlideLectura
+        slide={lecturas[idx]}
+        actual={idx + 1}
+        total={total}
+        onSiguiente={siguiente}
+        onAnterior={anterior}
+        visible={visible}
+        titulo={paso.titulo}
+      />
+    </div>
+  );
+}
+
+const DISORDER_ORDER = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
+
+export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
+  const testResult = completados?.[paso.paso_test]?.scoreResult;
+  const disorders = testResult?.disorders;
+  const cuantas = paso.cuantas || 2;
+  const [fase, setFase] = useState(guardado ? 1 : -1);
+  const [pantalla, setPantalla] = useState(0);
+
+  const topCodes = (() => {
+    if (!disorders) return [];
+    return Object.entries(disorders)
+      .sort((a, b) => {
+        const diff = (b[1].pct ?? 0) - (a[1].pct ?? 0);
+        if (diff !== 0) return diff;
+        return DISORDER_ORDER.indexOf(a[0]) - DISORDER_ORDER.indexOf(b[0]);
+      })
+      .slice(0, cuantas)
+      .map(([code]) => code);
+  })();
+
+  const [objetivos, setObjetivos] = useState(() => {
+    const saved = guardado?.objetivos || {};
+    const init = {};
+    topCodes.forEach(c => { init[c] = saved[c] ?? ''; });
+    return init;
+  });
+
+  if (!disorders) {
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 14px' }}>Haz primero el Test del corazón</h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>Necesitas completar el Test del corazón antes de fijar tus objetivos prácticos.</p>
+        </div>
+      </div>
+    );
+  }
+
+  function terminar() {
+    onComplete({ codigos: topCodes, objetivos });
+  }
+
+  if (fase === -1) {
+    return <Caratula paso={paso} tipo="objetivos_corazon" onEmpezar={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
+  }
+
+  const totalPantallas = 1 + topCodes.length;
+
+  if (fase === 0 && pantalla === 0) {
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Pantalla 1 de {totalPantallas}</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>{paso.titulo}</h2>
+          <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+            <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(1 / totalPantallas) * 100}%` }} />
+          </div>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 18, color: NAVY, lineHeight: 1.7, margin: '0 0 20px' }}>{paso.texto_intro}</p>
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <button type="button" onClick={() => setPantalla(1)} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+            }}>Siguiente →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const disorderIdx = pantalla - 1;
+  const code = topCodes[disorderIdx];
+  const ficha = paso.fichas?.[code];
+  const disorderData = disorders[code];
+  const imgSrc = REFLEXION_IMAGENES[ficha?.imagen];
+  const pantallaNum = pantalla + 1;
+  const esUltima = pantalla === topCodes.length;
+  const textoObj = objetivos[code] ?? '';
+
+  return (
+    <div style={{ maxWidth: 800, margin: '0 auto' }}>
+      <div style={tarjeta}>
+        <div style={eyebrow}>Pantalla {pantallaNum} de {totalPantallas}</div>
+        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>{ficha?.nombre_test || ficha?.nombre}</h2>
+        <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+          <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(pantallaNum / totalPantallas) * 100}%` }} />
+        </div>
+
+        {imgSrc && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
+            <img src={imgSrc} alt={ficha?.nombre} style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }} />
+            {ficha?.pie && <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, fontStyle: 'italic' }}>{ficha.pie}</span>}
+          </div>
+        )}
+
+        <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, marginBottom: 16, padding: '10px 16px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}` }}>
+          Tu resultado: <strong>{disorderData?.pct ?? 0} %</strong>
+        </div>
+
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Síntoma</div>
+          <div style={{ borderLeft: `3px solid ${LINE}`, padding: '8px 16px', fontFamily: FONT_BODY, fontSize: 16, fontStyle: 'italic', color: NAVY, lineHeight: 1.6 }}>«{ficha?.sintoma}»</div>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 700, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Remedio</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.6 }}><strong>{ficha?.remedio}</strong></div>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: NAVY, display: 'block', marginBottom: 8 }}>Mis objetivos prácticos</label>
+          <textarea
+            value={textoObj}
+            onChange={e => setObjetivos(prev => ({ ...prev, [code]: e.target.value }))}
+            placeholder={paso.placeholder}
+            style={{
+              fontFamily: FONT_BODY, fontSize: 16, color: NAVY, width: '100%', minHeight: 160,
+              padding: '14px 16px', border: `1.5px solid ${LINE}`, borderRadius: 0,
+              background: PAPER, resize: 'vertical', lineHeight: 1.6, boxSizing: 'border-box',
+            }}
+          />
+        </div>
+
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
+          <button type="button" onClick={() => setPantalla(p => p - 1)} style={{
+            fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
+            background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+          }}>← Anterior</button>
+          {esUltima ? (
+            <button type="button" onClick={terminar} disabled={!textoObj.trim()} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: textoObj.trim() ? GOLD_REF : `${GOLD_REF}66`, border: 'none', borderRadius: 0, padding: '14px 36px',
+              cursor: textoObj.trim() ? 'pointer' : 'not-allowed', transition: 'background 200ms ease',
+            }}>Continuar →</button>
+          ) : (
+            <button type="button" onClick={() => { if (textoObj.trim()) { setPantalla(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); } }} disabled={!textoObj.trim()} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: textoObj.trim() ? GOLD_REF : `${GOLD_REF}66`, border: 'none', borderRadius: 0, padding: '14px 36px',
+              cursor: textoObj.trim() ? 'pointer' : 'not-allowed', transition: 'background 200ms ease',
+            }}>Siguiente →</button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function ArmoniaTemperamento({ paso, temperamento, onComplete, guardado }) {
+  const yaHecho = Boolean(guardado);
+  const [fase, setFase] = useState(yaHecho ? 1 : -1);
+  const [activo, setActivo] = useState(temperamento?.primary || null);
+  const [elegido, setElegido] = useState(guardado?.facultad ?? null);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
+
+  const temps = paso.temperamentos || {};
+  const p = temperamento?.primary;
+  const s = temperamento?.secondary;
+  const ruedaImg = REFLEXION_IMAGENES[paso.rueda];
+  const totalPantallas = p ? 3 : 2;
+
+  function terminar() {
+    onComplete({ facultad: elegido, temperamento: p });
+  }
+
+  if (fase === -1) {
+    return <Caratula paso={paso} tipo="armonia_temperamento" onEmpezar={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />;
+  }
+
+  if (fase === 0) {
+    const info = activo ? temps[activo] : null;
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Pantalla 1 de {totalPantallas}</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>{paso.titulo}</h2>
+          <div style={{ marginBottom: 10, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+            <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(1 / totalPantallas) * 100}%` }} />
+          </div>
+          {paso.texto_inicial?.map((t, i) => (
+            <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 18, color: NAVY, lineHeight: 1.7, margin: i === 0 ? '20px 0 0' : '10px 0 0' }}>{t}</p>
+          ))}
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '16px 0 8px', textAlign: 'center' }}>{paso.instruccion_rueda}</p>
+          <div style={{ position: 'relative', maxWidth: 460, margin: '0 auto 20px' }}>
+            <img src={ruedaImg} alt="Rueda de temperamentos" style={{ width: '100%', display: 'block', borderRadius: 8 }} onClick={() => setLightboxSrc(ruedaImg)} />
+            <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
+              {[['COL', 0], ['MEL', 1], ['SAN', 2], ['FLE', 3]].map(([code, qi]) => (
+                <button key={code} type="button" aria-label={temps[code]?.nombre || code}
+                  onMouseEnter={() => setActivo(code)} onFocus={() => setActivo(code)}
+                  onClick={() => setActivo(code)}
+                  style={{
+                    background: activo && activo !== code ? 'rgba(0,0,0,0.35)' : 'transparent',
+                    border: 'none', cursor: 'pointer', transition: 'background 300ms ease',
+                    borderRadius: qi === 0 ? '8px 0 0 0' : qi === 1 ? '0 8px 0 0' : qi === 2 ? '0 0 0 8px' : '0 0 8px 0',
+                    position: 'relative',
+                  }}>
+                  {code === p && <span style={{
+                    position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+                    fontFamily: FONT_BODY, fontSize: 11, fontWeight: 700, color: '#fff',
+                    background: TEMP_COLORS[code] || GOLD_REF, borderRadius: 12, padding: '3px 10px',
+                    textTransform: 'uppercase', letterSpacing: '0.08em', pointerEvents: 'none',
+                  }}>Tú</span>}
+                </button>
+              ))}
+            </div>
+          </div>
+          {info ? (
+            <div style={{ padding: '16px 20px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}` }}>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: TEMP_COLORS[activo] || NAVY }}>{info.nombre}</div>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 18, fontStyle: 'italic', color: NAVY, lineHeight: 1.6, margin: '8px 0' }}>«{info.frase}»</p>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: 0 }}>Tendencia: <strong style={{ color: NAVY }}>{info.tendencia}</strong></p>
+            </div>
+          ) : (
+            <div style={{ padding: '16px 20px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}`, textAlign: 'center' }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, margin: 0 }}>{paso.instruccion_rueda}</p>
+            </div>
+          )}
+          {lightboxSrc && <Lightbox src={lightboxSrc} alt="Rueda de temperamentos" onClose={() => setLightboxSrc(null)} />}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+            <button type="button" onClick={() => { setFase(p ? 1 : 2); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+            }}>Siguiente →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (fase === 1 && p) {
+    const info = temps[p];
+    const infoSec = s ? temps[s] : null;
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Pantalla 2 de {totalPantallas}</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>Tu temperamento</h2>
+          <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+            <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(2 / totalPantallas) * 100}%` }} />
+          </div>
+          <div style={{ padding: '20px 24px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}`, marginBottom: 16 }}>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: TEMP_COLORS[p] || NAVY }}>{info?.nombre}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 22, color: NAVY, marginTop: 8, lineHeight: 1.4 }}>{info?.criatura}</div>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '8px 0 0' }}>Tendencia: <strong style={{ color: NAVY }}>{info?.tendencia}</strong></p>
+            {infoSec && (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '12px 0 0', borderTop: `1px solid ${LINE}`, paddingTop: 12 }}>
+                Tu temperamento secundario, <strong style={{ color: TEMP_COLORS[s] || NAVY }}>{infoSec.nombre}</strong>: {infoSec.criatura}
+              </p>
+            )}
+          </div>
+          {paso.cita_tendencia && (
+            <div style={{ borderLeft: `3px solid ${GOLD_REF}`, padding: '12px 20px', margin: '0 0 16px', background: 'rgba(165,139,38,0.04)' }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 18, fontStyle: 'italic', color: NAVY, lineHeight: 1.6, margin: 0 }}>«{paso.cita_tendencia}»</p>
+            </div>
+          )}
+          {paso.texto_cultura && (
+            <div style={{ borderLeft: `3px solid ${GOLD_REF}`, padding: '12px 20px', margin: '0 0 16px' }}>
+              <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, lineHeight: 1.7, margin: 0 }}>{paso.texto_cultura}</p>
+            </div>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 20 }}>
+            <button type="button" onClick={() => { setFase(0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
+              background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+            }}>← Anterior</button>
+            <button type="button" onClick={() => { setFase(2); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+            }}>Siguiente →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (fase === 2 || (fase === 1 && !p)) {
+    return (
+      <div style={{ maxWidth: 800, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={eyebrow}>Pantalla {totalPantallas} de {totalPantallas}</div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>{paso.pregunta}</h2>
+          <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
+            <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: '100%' }} />
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+            {(paso.opciones || []).map(op => {
+              const sel = elegido === op.valor;
+              return (
+                <button key={op.valor} type="button" onClick={() => setElegido(op.valor)} style={{
+                  fontFamily: FONT_BODY, fontSize: 20, lineHeight: 1.55, color: NAVY,
+                  background: sel ? 'rgba(165,139,38,0.10)' : PAPER,
+                  border: sel ? `1.5px solid ${GOLD_REF}` : `1.5px solid ${LINE}`,
+                  borderRadius: 0, padding: '20px 26px', cursor: 'pointer',
+                  width: '100%', textAlign: 'left', transition: 'all 150ms ease',
+                }}>{op.texto}</button>
+              );
+            })}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
+            <button type="button" onClick={() => { setFase(p ? 1 : 0); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
+              background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
+            }}>← Anterior</button>
+            <button type="button" onClick={terminar} disabled={!elegido} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: elegido ? GOLD_REF : `${GOLD_REF}66`, border: 'none', borderRadius: 0, padding: '14px 36px',
+              cursor: elegido ? 'pointer' : 'not-allowed', transition: 'background 200ms ease',
+            }}>Continuar →</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
 }
 
 export function TestProfundo({ paso, onComplete, modulo, user }) {
@@ -1451,6 +1845,17 @@ const REFLEXION_IMAGENES = {
   'magnanimidad-temperamentos': diagramaTemperamentosImg,
   'humildad-temperamentos': diagramaHumildadTempImg,
   'diagrama-motivacion': diagramaMotivacionImg,
+  'c5-cuerpo-alma-espiritu': c5CuerpoAlmaImg,
+  'c5-triangulo-blanco': c5TrianguloImg,
+  'c5-rueda-temperamentos': c5RuedaImg,
+  'c5-R': heartFaceR,
+  'c5-VR': heartFaceVR,
+  'c5-VM': heartFaceVM,
+  'c5-VC': heartFaceVC,
+  'c5-SV': heartFaceSV,
+  'c5-SI': heartFaceSI,
+  'c5-SC': heartFaceSC,
+  'c5-VI': c5IdeologicoImg,
 };
 
 const REFLEXION_KEY = (pasoId) => `vl-reflexion:${pasoId}`;

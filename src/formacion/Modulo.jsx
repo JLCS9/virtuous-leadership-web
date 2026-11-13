@@ -4,7 +4,7 @@ import { useOutletContext, useParams, useLocation, Link } from 'react-router-dom
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito, renderElementoSlide, REFLEXION_IMAGENES, Lightbox, Lectura, ArmoniaTemperamento, ObjetivosCorazon } from './Actividad';
 import { supabase } from '../account/supabase';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
@@ -22,6 +22,7 @@ const MODULOS = {
   'curso-2': () => import('../data/modulo2.json'),
   'curso-3': () => import('../data/modulo3.json'),
   'curso-4': () => import('../data/modulo4.json'),
+  'curso-5': () => import('../data/modulo5.json'),
   'curso-7': () => import('../data/modulo7.json'),
 };
 
@@ -111,6 +112,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
   const paginas = agruparIntro(paso.intro);
   const [introIdx, setIntroIdx] = useState(0);
   const [visible, setVisible] = useState(true);
+  const [lightboxSrc, setLightboxSrc] = useState(null);
   const enIntro = paginas.length > 0 && introIdx < paginas.length;
 
   function onProgreso(frac) {
@@ -164,60 +166,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
               @keyframes vlChipIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
               .vl-chip-anim { animation: vlChipIn 450ms ease both; }
             `}</style>
-            {paso.id === 'm1-01' && introIdx === 1 ? (
-              <>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>
-                  El temperamento es una predisposición natural e innata a reaccionar de una determinada manera.
-                </p>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '6px 0 0' }}>
-                  Puede ser:
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, margin: '4px 0 8px' }}>
-                  {['Colérico', 'Melancólico', 'Sanguíneo', 'Flemático'].map((t, i) => (
-                    <span key={t} className="vl-chip-anim" style={{
-                      animationDelay: `${i * 160}ms`,
-                      fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: GOLD_REF_DK,
-                      background: 'rgba(165,139,38,0.08)', borderRadius: 20,
-                      padding: '8px 18px', display: 'inline-block',
-                      letterSpacing: '0.01em',
-                    }}>
-                      {t}
-                    </span>
-                  ))}
-                </div>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>
-                  Nacemos con nuestro temperamento y <strong>no podemos cambiarlo</strong>: morimos con las cualidades y defectos de nuestro temperamento.
-                </p>
-              </>
-            ) : paso.id === 'm1-01' && introIdx === 2 ? (
-              <>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>
-                  Sobre la base de nuestro temperamento, construimos nuestro carácter.
-                </p>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '14px 0 0' }}>
-                  El carácter se compone de virtudes como:
-                </p>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, margin: '4px 0 8px' }}>
-                  {['Prudencia', 'Valor', 'Autocontrol', 'Justicia', 'Magnanimidad', 'Humildad'].map((v, i) => (
-                    <span key={v} className="vl-chip-anim" style={{
-                      animationDelay: `${i * 160}ms`,
-                      fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: GOLD_REF_DK,
-                      background: 'rgba(165,139,38,0.08)', borderRadius: 20,
-                      padding: '8px 18px', display: 'inline-block',
-                      letterSpacing: '0.01em',
-                    }}>
-                      {v}
-                    </span>
-                  ))}
-                </div>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>
-                  Las virtudes son hábitos morales, fortalezas espirituales que se adquieren y desarrollan con la práctica.
-                </p>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: '14px 0 0' }}>
-                  <strong>No nacemos con nuestro carácter, lo construimos.</strong>
-                </p>
-              </>
-            ) : (paso.id === 'm4-01' || paso.id === 'm4-02') && introIdx === 1 ? (
+            {(paso.id === 'm4-01' || paso.id === 'm4-02') && introIdx === 1 ? (
               <>
                 <style>{`
                   .vl-vc { background: rgba(165,139,38,0.06); border: 1.5px solid rgba(165,139,38,0.12); border-radius: 12px; padding: 20px 22px; cursor: default; transition: all 350ms cubic-bezier(.4,0,.2,1); animation: vlChipIn 450ms ease both; }
@@ -254,9 +203,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
                 </div>
               </>
             ) : (
-              pags.map((p, i) => (
-                <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 20, color: NAVY, lineHeight: 1.75, margin: 0 }}>{renderIntroTexto(p)}</p>
-              ))
+              pags.map((item, i) => renderElementoSlide(item, i, { setLightboxSrc }))
             )}
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
@@ -275,6 +222,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
               {esUltima ? 'Ver vídeo →' : 'Siguiente →'}
             </button>
           </div>
+          {lightboxSrc && <Lightbox src={lightboxSrc} alt="Diagrama" onClose={() => setLightboxSrc(null)} />}
         </div>
       </div>
     );
@@ -344,6 +292,9 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} guardado={progreso.completados[paso.id]} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
+    case 'lectura': return <Lectura paso={paso} onComplete={completar} temperamento={temperamento} />;
+    case 'armonia_temperamento': return <ArmoniaTemperamento paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
+    case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={completar} completados={progreso.completados} guardado={progreso.completados[paso.id]} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
@@ -360,7 +311,7 @@ function agruparModulos(pasos) {
         actual = { video: p, actividades: [] };
         modulos.push(actual);
       }
-    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter') {
+    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter' && p.tipo !== 'lectura') {
       actual.actividades.push(p);
     }
   }
@@ -419,9 +370,10 @@ function EmojiShortcut({ emoji, hecho, onClick, title }) {
   );
 }
 
-function ListaLecciones({ pasos, completados, irA }) {
+function ListaLecciones({ pasos, completados, irA, temperamento }) {
   const [abierto, setAbierto] = useState(null);
   const modulos = agruparModulos(Array.from(pasos || []));
+  const tempPrimario = temperamento?.primary;
 
   return (
     <div style={{ ...tarjeta, padding: 0, overflow: 'hidden' }}>
@@ -448,6 +400,14 @@ function ListaLecciones({ pasos, completados, irA }) {
               </span>
               <span style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500 }}>
                 Módulo {i + 1}: {mod.video.titulo}
+                {tempPrimario && mod.video.tendencia_temperamentos?.includes(tempPrimario) && (
+                  <span style={{
+                    marginLeft: 8, fontFamily: FONT_BODY, fontSize: 11, fontWeight: 700,
+                    color: TEMP_COLORS[tempPrimario] || GOLD_REF_DK, textTransform: 'uppercase',
+                    letterSpacing: '0.06em', background: `${TEMP_COLORS[tempPrimario] || GOLD_REF}14`,
+                    padding: '2px 8px', borderRadius: 10, verticalAlign: 'middle',
+                  }}>Tu tendencia</span>
+                )}
               </span>
               <span style={{ display: 'flex', gap: 6, alignItems: 'center', flex: '0 0 auto' }}></span>
               <IconoChevron width={16} height={16} style={{
@@ -577,6 +537,73 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
           )}
         </>
       )}
+
+      {(() => {
+        const armoniaStep = pasos.find(x => x.tipo === 'armonia_temperamento');
+        const armoniaData = armoniaStep?.temperamentos?.[p];
+        const armoniaHecho = armoniaStep && completados[armoniaStep.id];
+        const testCorazonStep = pasos.find(x => x.tipo === 'test_corazon');
+        const testCorazonHecho = testCorazonStep && completados[testCorazonStep.id];
+        const objStep = pasos.find(x => x.tipo === 'objetivos_corazon');
+        const objHecho = objStep && completados[objStep.id];
+        if (!armoniaData) return null;
+
+        const disorderOrder = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
+        const topDisorders = testCorazonHecho?.scoreResult?.disorders
+          ? Object.entries(testCorazonHecho.scoreResult.disorders)
+              .sort((a, b) => {
+                const diff = (b[1].pct ?? 0) - (a[1].pct ?? 0);
+                return diff !== 0 ? diff : disorderOrder.indexOf(a[0]) - disorderOrder.indexOf(b[0]);
+              })
+              .slice(0, 2)
+          : [];
+
+        return (
+          <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+            <div style={{ padding: '10px 12px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[p] ?? LINE}`, marginBottom: 10 }}>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>Mi tendencia</div>
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY, marginTop: 2 }}>{armoniaData.criatura}</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>Riesgo: {armoniaData.tendencia}</div>
+            </div>
+            {armoniaHecho && (
+              <div style={{ padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${GOLD_REF}`, marginBottom: 10 }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>La facultad que prevalece en mi vida</div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45 }}>
+                  {armoniaStep.opciones?.find(o => o.valor === armoniaHecho.facultad)?.texto || armoniaHecho.facultad}
+                </div>
+              </div>
+            )}
+            {topDisorders.length > 0 && (
+              <div style={{ padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${LINE}`, marginBottom: 10 }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>Mi Test del corazón</div>
+                {topDisorders.map(([code, data]) => {
+                  const fichaName = objStep?.fichas?.[code]?.nombre_test || code;
+                  return (
+                    <div key={code} style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45 }}>{fichaName}: {data.pct ?? 0} %</div>
+                  );
+                })}
+              </div>
+            )}
+            {objHecho && objHecho.objetivos && (
+              <div style={{ padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${LINE}`, marginBottom: 10 }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>Mis objetivos prácticos</div>
+                {Object.entries(objHecho.objetivos).map(([code, txt]) => {
+                  const fichaName = objStep?.fichas?.[code]?.nombre_test || code;
+                  return (
+                    <div key={code} style={{ marginBottom: 4 }}>
+                      <div style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600, color: MUTED }}>{fichaName}</div>
+                      <div style={{
+                        fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45,
+                        display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
+                      }}>{txt}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {reflexiones.length > 0 && (
         <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
@@ -711,7 +738,7 @@ function VistaResumenPlan({ paso, userId, onVolver, completados, cursoNum }) {
   );
 }
 
-const TIPOS_EXCLUIR_CUADERNO = new Set(['video', 'quiz', 'conclusion_modulo', 'noop', 'plan_crecimiento', 'test_caracter', 'temperamento_perfil', 'reflexion_guiada', 'circulo_personas']);
+const TIPOS_EXCLUIR_CUADERNO = new Set(['video', 'quiz', 'conclusion_modulo', 'noop', 'plan_crecimiento', 'test_caracter', 'temperamento_perfil', 'reflexion_guiada', 'circulo_personas', 'lectura']);
 
 function tieneDatos(datos) {
   if (!datos) return false;
@@ -730,6 +757,9 @@ function resumenEjercicio(paso) {
     case 'test_profundo': return 'Responde a las señales concretas de este temperamento en tu vida.';
     case 'retos_temperamento': return 'Reflexión sobre lo que tu temperamento facilita y dificulta.';
     case 'temperamento_magnanimidad': return 'Cómo tu temperamento influye en la práctica de la magnanimidad.';
+    case 'armonia_temperamento': return 'Tu temperamento y la facultad que prevalece en tu vida.';
+    case 'objetivos_corazon': return 'Tus objetivos prácticos según el Test del corazón.';
+    case 'test_corazon': return 'Tu resultado del Test del corazón.';
     case 'cierre': return 'Síntesis del curso: tu virtud desafío y tu propósito.';
     case 'reflexion_piramide': return 'Reflexión guiada sobre los conceptos del módulo.';
     default: return 'Ejercicio completado.';
@@ -950,6 +980,54 @@ function RespuestasCuaderno({ paso, datos }) {
     );
   }
 
+  if (paso.tipo === 'armonia_temperamento') {
+    const opciones = paso.opciones ?? [];
+    const elegida = opciones.find(o => o.valor === datos.facultad);
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {elegida && <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0 }}><span style={{ color: MUTED, fontSize: 12 }}>La facultad que prevalece en mi vida:</span> {elegida.texto}</p>}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'objetivos_corazon') {
+    const codigos = datos.codigos ?? [];
+    const objetivos = datos.objetivos ?? {};
+    const fichas = paso.fichas ?? {};
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {codigos.map(cod => (
+          <div key={cod}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>{fichas[cod]?.nombre_test ?? cod}</p>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, paddingLeft: 16, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+              {objetivos[cod] || <span style={{ color: MUTED, fontStyle: 'italic' }}>Sin objetivos</span>}
+            </p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'test_corazon') {
+    const disorders = datos.scoreResult?.disorders ?? {};
+    const ORDER = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
+    const NOMBRES = { R: 'Racionalismo', VR: 'Vol. religioso', VM: 'Vol. machista', VI: 'Vol. ideológico', VC: 'Vol. conformista', SV: 'Sent. voluptuoso', SI: 'Sent. demente', SC: 'Sent. cobarde' };
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {ORDER.map(cod => {
+          const d = disorders[cod];
+          if (!d) return null;
+          return (
+            <div key={cod} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY }}>{NOMBRES[cod]}</span>
+              <span style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY }}>{d.pct} %</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   if (paso.tipo === 'cierre') {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1164,7 +1242,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
           </section>
         )}
 
-        <ListaLecciones pasos={pasos} completados={completados} irA={irA} />
+        <ListaLecciones pasos={pasos} completados={completados} irA={irA} temperamento={temperamento} />
 
         {planStep && (
           <section style={{ marginTop: 18 }}>

@@ -8,6 +8,7 @@ import moduloData from '../data/modulo1.json';
 import modulo2Data from '../data/modulo2.json';
 import modulo3Data from '../data/modulo3.json';
 import modulo4Data from '../data/modulo4.json';
+import modulo5Data from '../data/modulo5.json';
 import { LINE, MUTED, NAVY, GOLD_REF_DK, FONT_SLAB, FONT_BODY } from '../theme';
 import { eyebrow, tarjeta, titulo, parrafo } from '../app/estilos';
 
@@ -16,7 +17,7 @@ const MODULOS_CFG = [
   { label: 'Cuaderno 2', moduloId: 'modulo2', cursoNum: 2, data: modulo2Data },
   { label: 'Cuaderno 3', moduloId: 'modulo3', cursoNum: 3, data: modulo3Data },
   { label: 'Cuaderno 4', moduloId: 'modulo4', cursoNum: 4, data: modulo4Data },
-  { label: 'Cuaderno 5', moduloId: null, cursoNum: 5, data: null },
+  { label: 'Cuaderno 5', moduloId: 'modulo5', cursoNum: 5, data: modulo5Data },
   { label: 'Cuaderno 6', moduloId: null, cursoNum: 6, data: null },
 ];
 

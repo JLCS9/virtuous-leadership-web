@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { LocalLink as Link, useT } from '../i18n';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { LocalLink as Link, useLocalPath, useT } from '../i18n';
 import { fetchLatestTemperament } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento } from '../lib/virtudes.js';
-import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
+import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF, LINE } from '../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck } from './Iconos';
 import MapaCaracter from './MapaCaracter';
+import { usePersonas } from './usePersonas';
+import { Avatar, EtiquetaEstado, MapaPersonas } from './personas/comun';
 
 function MiResultado() {
   const { t } = useT();
@@ -87,6 +89,67 @@ function BannerTestOk({ onClose }) {
   );
 }
 
+function EntornoMagnanimo() {
+  const { cargando, lista } = usePersonas();
+  const navigate = useNavigate();
+  const lp = useLocalPath();
+
+  const irAPersona = (p) => navigate(lp('/mi-panel/camino') + `?persona=${p.id}`);
+  const irAPersonas = () => navigate(lp('/mi-panel/camino') + '?personas=1');
+  const irANueva = () => navigate(lp('/mi-panel/camino') + '?nueva=1');
+
+  if (cargando) return null;
+
+  const MAX_VISIBLES = 5;
+  const visibles = lista.slice(0, MAX_VISIBLES);
+  const hayMas = lista.length > MAX_VISIBLES;
+
+  if (!lista.length) {
+    return (
+      <section style={tarjeta} aria-label="Tu entorno magnánimo">
+        <div style={eyebrow}>Tu entorno magnánimo</div>
+        <h2 style={{ ...titulo(24), margin: '10px 0 8px' }}>Personas magnánimas a tu alrededor</h2>
+        <p style={{ ...parrafo, marginBottom: 16 }}>
+          Havard nos invita a rodearnos de personas magnánimas. Aquí puedes crear fichas de las personas
+          que te inspiran y conocer cómo relacionarte mejor con cada temperamento.
+        </p>
+        <button type="button" onClick={irANueva} style={botonSobreClaro}>Añadir persona</button>
+      </section>
+    );
+  }
+
+  return (
+    <section style={tarjeta} aria-label="Tu entorno magnánimo">
+      <div style={eyebrow}>Tu entorno magnánimo</div>
+
+      <div style={{ margin: '8px auto 0', maxWidth: 480 }}>
+        <MapaPersonas personas={lista} />
+      </div>
+
+      <div style={{ marginTop: 14, display: 'grid', gap: 2 }}>
+        {visibles.map((p) => (
+          <button key={p.id} type="button" onClick={() => irAPersona(p)} style={{
+            display: 'flex', alignItems: 'center', gap: 12, padding: '9px 4px',
+            background: 'none', border: 'none', borderTop: `1px solid ${LINE}`,
+            cursor: 'pointer', textAlign: 'left', width: '100%',
+          }}>
+            <Avatar persona={p} tam={36} />
+            <span style={{ flex: 1, minWidth: 0 }}>
+              <span style={{ display: 'block', fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: NAVY }}>{p.nombre}</span>
+              <EtiquetaEstado persona={p} />
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+        <button type="button" onClick={irANueva} style={{ ...botonContorno, fontSize: 13.5 }}>+ Añadir persona</button>
+        {hayMas && <button type="button" onClick={irAPersonas} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: NAVY, fontWeight: 600, padding: 0 }}>Ver más →</button>}
+      </div>
+    </section>
+  );
+}
+
 export default function Hoy() {
   const [params, setParams] = useSearchParams();
   const [showBanner, setShowBanner] = useState(params.get('test') === 'ok');
@@ -103,11 +166,15 @@ export default function Hoy() {
         .vl-hoy { display: flex; flex-direction: column; gap: 18px; }
         @media (min-width: 860px) {
           .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+          .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
         }
       `}</style>
       {showBanner && <BannerTestOk onClose={closeBanner} />}
-      <MiResultado />
-      <MapaCaracter />
+      <div className="vl-hoy-izq">
+        <MiResultado />
+        <MapaCaracter />
+      </div>
+      <EntornoMagnanimo />
     </div>
   );
 }
