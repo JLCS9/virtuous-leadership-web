@@ -351,9 +351,14 @@ export function Quiz({ paso, onComplete, modulo }) {
         <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '0 0 16px', lineHeight: 1.5 }}>
           Responde las siguientes preguntas del cuestionario.
         </p>
-        <p style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 24px', lineHeight: 1.4 }}>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 ' + (preg.contexto ? '10px' : '24px'), lineHeight: 1.4 }}>
           {preg.texto}
         </p>
+        {preg.contexto && (
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.55, margin: '0 0 24px', fontStyle: 'italic' }}>
+            {preg.contexto}
+          </p>
+        )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           {orden.map((origIdx) => (
             <BotonOpcion key={origIdx} texto={preg.opciones[origIdx]} seleccionada={seleccion === origIdx}
@@ -1612,12 +1617,13 @@ export function ReflexionPiramide({ paso, onComplete, modulo }) {
 
 /* ─── TEMPERAMENTO × MAGNANIMIDAD ─── */
 
-export function TemperamentoMagnanimidad({ paso, temperamento, onComplete }) {
-  const [fase, setFase] = useState(-1);
-  const [textoFuerte, setTextoFuerte] = useState('');
-  const [textoDebil, setTextoDebil] = useState('');
-  const [textoFuerteSec, setTextoFuerteSec] = useState('');
-  const [textoDebilSec, setTextoDebilSec] = useState('');
+export function TemperamentoMagnanimidad({ paso, temperamento, onComplete, guardado }) {
+  const yaHecho = Boolean(guardado);
+  const [fase, setFase] = useState(yaHecho ? 0 : -1);
+  const [textoFuerte, setTextoFuerte] = useState(guardado?.textoFuerte ?? '');
+  const [textoDebil, setTextoDebil] = useState(guardado?.textoDebil ?? '');
+  const [textoFuerteSec, setTextoFuerteSec] = useState(guardado?.textoFuerteSec ?? '');
+  const [textoDebilSec, setTextoDebilSec] = useState(guardado?.textoDebilSec ?? '');
   const [lbSrc, setLbSrc] = useState(null);
   const [ejemploAb, setEjemploAb] = useState({});
 
@@ -4241,13 +4247,20 @@ export function guardarPlan(userId, data) {
   try { localStorage.setItem(PLAN_STORAGE_KEY(userId), JSON.stringify(data)); } catch {}
 }
 
-export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userIdProp }) {
+export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userIdProp, guardado }) {
   const userId = userIdProp ?? 'anon';
   const pantallas = paso.pantallas ?? [];
   const [idx, setIdx] = useState(0);
   const [fase, setFase] = useState('caratula');
   const [visible, setVisible] = useState(true);
   const [plan, setPlan] = useState(() => {
+    if (guardado && typeof guardado === 'object') {
+      const { fecha, aprobado, ...rest } = guardado;
+      if (Object.keys(rest).length > 0) {
+        guardarPlan(userId, rest);
+        return rest;
+      }
+    }
     let data = leerPlan(userId);
     if (userId !== 'anon' && (!data || Object.keys(data).length === 0)) {
       const legacy = leerPlan('anon');

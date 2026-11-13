@@ -200,7 +200,7 @@
       "tipo": "conclusion_modulo",
       "visible": false,
       "titulo": "Resumen: Contemplación y acción",
-      "modulo_numero": 2,
+      "modulo_numero": 1,
       "modulo_titulo": "La magnanimidad es contemplación y acción",
       "aprendizajes": [
         "Aristóteles: dignos de grandes cosas (ser)",
@@ -299,7 +299,7 @@
       "tipo": "conclusion_modulo",
       "visible": false,
       "titulo": "Resumen: Magnanimidad y prudencia",
-      "modulo_numero": 3,
+      "modulo_numero": 2,
       "modulo_titulo": "Magnanimidad y prudencia",
       "aprendizajes": [
         "Magnanimidad sin prudencia = soberbia",
@@ -347,7 +347,7 @@
         "COL": "Por ejemplo, como colérico tu fuerza magnánima está en la acción: emprendes proyectos ambiciosos con audacia, tomas decisiones rápidas y no te paraliza el miedo al fracaso.",
         "MEL": "Por ejemplo, como melancólico tu fuerza magnánima está en la contemplación: sabes soñar en grande, reflexionas con profundidad sobre tus talentos y tienes una visión a largo plazo.",
         "SAN": "Por ejemplo, como sanguíneo tu fuerza magnánima está en el entusiasmo: te lanzas a la aventura con energía, contagias a los demás con tu optimismo y no temes empezar cosas nuevas.",
-        "FLE": "Por ejemplo, como flemático tu fuerza magnánima está en la resistencia: cuando te comprometes con algo, perseveras con constancia y mantienes la calma bajo presión."
+        "FLE": "Por ejemplo, como flemático la magnanimidad es tu virtud-desafío: el diagrama no te marca puntos fuertes en ella. Pero tienes un apoyo: cuando te comprometes con algo, perseveras con constancia y mantienes la calma bajo presión. Si te atreves a soñar algo grande, esa constancia te ayudará a llevarlo a término."
       },
       "ejemplos_debil": {
         "COL": "Por ejemplo, como colérico tu debilidad ante la magnanimidad es el activismo ciego: actuar por actuar, sin un sueño profundo que guíe la acción, confundiendo hacer muchas cosas con hacer cosas grandes.",
@@ -432,7 +432,7 @@
       "tipo": "conclusion_modulo",
       "visible": false,
       "titulo": "Resumen: Temperamentos",
-      "modulo_numero": 4,
+      "modulo_numero": 3,
       "modulo_titulo": "Magnanimidad y los 4 temperamentos",
       "aprendizajes": [
         "Cada temperamento tiene fortalezas y obstáculos propios para la magnanimidad",
@@ -459,6 +459,136 @@
       "leccion": 6,
       "vimeoId": "924578323",
       "modulo": 4
+    },
+    {
+      "id": "m2-15",
+      "num": 15,
+      "tipo": "quiz",
+      "titulo": "Cuestionario — Magnanimidad contemplativa",
+      "visible": false,
+      "preguntas": [
+        {
+          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad contemplativa?",
+          "opciones": [
+            "El sentido de la dignidad propia",
+            "La paz y la serenidad",
+            "La humildad y la autocrítica",
+            "La generosidad y la benevolencia"
+          ],
+          "correcta": 0
+        },
+        {
+          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad contemplativa?",
+          "opciones": [
+            "La toma de conciencia de los propios talentos",
+            "La conciencia de los intereses personales",
+            "La sanación de heridas emocionales",
+            "La mejora de las relaciones con los demás"
+          ],
+          "correcta": 0
+        },
+        {
+          "texto": "¿Qué ayuda en tercer lugar a desarrollar la magnanimidad contemplativa?",
+          "opciones": [
+            "La compañía de personas magnánimas",
+            "Elegir amigos que nos desafíen a mejorar",
+            "Crear un «entorno magnánimo» a nuestro alrededor",
+            "Todo lo anterior"
+          ],
+          "correcta": 3
+        },
+        {
+          "texto": "La mayor cosa que un ser humano puede lograr es…",
+          "opciones": [
+            "El crecimiento personal",
+            "La creación de nuevos proyectos y la realización de grandes descubrimientos",
+            "La obtención de resultados materiales excepcionales",
+            "Una carrera exitosa en una empresa prestigiosa"
+          ],
+          "correcta": 0
+        }
+      ],
+      "modulo": 4
+    },
+    {
+      "id": "m2-concl-5",
+      "tipo": "conclusion_modulo",
+      "visible": false,
+      "titulo": "Resumen: Contemplación",
+      "modulo_numero": 4,
+      "modulo_titulo": "La práctica de la magnanimidad: la contemplación",
+      "aprendizajes": [
+        "Conciencia de la propia dignidad y de los propios talentos",
+        "Dignidad, talentos y entorno magnánimo como pilares de la contemplación"
+      ],
+      "ejercicios_evaluables": [
+        {
+          "id": "m2-15",
+          "label": "Cuestionario"
+        }
+      ],
+      "modulo": 4
+    },
+    {
+      "id": "m2-16",
+      "num": 16,
+      "tipo": "video",
+      "titulo": "La práctica de la magnanimidad: la acción",
+      "visible": true,
+      "leccion": 7,
+      "vimeoId": "924578528",
+      "modulo": 5
+    },
+    {
+      "id": "m2-18",
+      "num": 18,
+      "tipo": "quiz",
+      "titulo": "Cuestionario — Magnanimidad activa",
+      "visible": false,
+      "preguntas": [
+        {
+          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad activa?",
+          "opciones": [
+            "Una mejora en los ingresos",
+            "Una optimización de los procesos",
+            "La transformación del sueño en misión",
+            "Un aumento en el rendimiento"
+          ],
+          "correcta": 2
+        },
+        {
+          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad activa?",
+          "opciones": [
+            "Un aumento en la precaución",
+            "No temer al fracaso",
+            "La capacidad de hacer siempre las cosas bien",
+            "Una intuición excepcional"
+          ],
+          "correcta": 1
+        },
+        {
+          "texto": "Según Peter Drucker (fundador del management moderno), ¿qué pensar de las personas que nunca han cometido grandes errores?",
+          "opciones": [
+            "Son personas con suerte",
+            "Son personas exitosas",
+            "Son personas sabias",
+            "Son personas mediocres"
+          ],
+          "correcta": 3,
+          "contexto": "Peter Drucker (1909–2005), profesor y consultor austriaco-estadounidense, considerado el padre del management moderno. Su idea enlaza con lo que explica Havard en este vídeo: para practicar la magnanimidad activa hay que no temer al fracaso."
+        },
+        {
+          "texto": "¿Cómo enseña la magnanimidad activa a ver los obstáculos?",
+          "opciones": [
+            "Esquivándolos y evitándolos",
+            "Luchando contra ellos hasta la victoria total",
+            "Transformándolos en oportunidades",
+            "Todo lo anterior"
+          ],
+          "correcta": 2
+        }
+      ],
+      "modulo": 5
     },
     {
       "id": "m2-14",
@@ -545,139 +675,6 @@
           "placeholder": "¿Tiendes a compararte con otros? ¿Cómo te afecta? ¿Qué haces para evitarlo?"
         }
       ],
-      "modulo": 4
-    },
-    {
-      "id": "m2-15",
-      "num": 15,
-      "tipo": "quiz",
-      "titulo": "Cuestionario — Magnanimidad contemplativa",
-      "visible": false,
-      "preguntas": [
-        {
-          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad contemplativa?",
-          "opciones": [
-            "El sentido de la dignidad propia",
-            "La paz y la serenidad",
-            "La humildad y la autocrítica",
-            "La generosidad y la benevolencia"
-          ],
-          "correcta": 0
-        },
-        {
-          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad contemplativa?",
-          "opciones": [
-            "La toma de conciencia de los propios talentos",
-            "La conciencia de los intereses personales",
-            "La sanación de heridas emocionales",
-            "La mejora de las relaciones con los demás"
-          ],
-          "correcta": 0
-        },
-        {
-          "texto": "¿Qué ayuda en tercer lugar a desarrollar la magnanimidad contemplativa?",
-          "opciones": [
-            "La compañía de personas magnánimas",
-            "Elegir amigos que nos desafíen a mejorar",
-            "Crear un «entorno magnánimo» a nuestro alrededor",
-            "Todo lo anterior"
-          ],
-          "correcta": 3
-        },
-        {
-          "texto": "La mayor cosa que un ser humano puede lograr es…",
-          "opciones": [
-            "El crecimiento personal",
-            "La creación de nuevos proyectos y la realización de grandes descubrimientos",
-            "La obtención de resultados materiales excepcionales",
-            "Una carrera exitosa en una empresa prestigiosa"
-          ],
-          "correcta": 0
-        }
-      ],
-      "modulo": 4
-    },
-    {
-      "id": "m2-concl-5",
-      "tipo": "conclusion_modulo",
-      "visible": false,
-      "titulo": "Resumen: Contemplación",
-      "modulo_numero": 5,
-      "modulo_titulo": "La práctica de la magnanimidad: la contemplación",
-      "aprendizajes": [
-        "Las 17 señales de la magnanimidad",
-        "Dignidad, talentos y entorno magnánimo como pilares de la contemplación"
-      ],
-      "ejercicios_evaluables": [
-        {
-          "id": "m2-14",
-          "label": "Test de magnanimidad"
-        },
-        {
-          "id": "m2-15",
-          "label": "Cuestionario"
-        }
-      ],
-      "modulo": 4
-    },
-    {
-      "id": "m2-16",
-      "num": 16,
-      "tipo": "video",
-      "titulo": "La práctica de la magnanimidad: la acción",
-      "visible": true,
-      "leccion": 7,
-      "vimeoId": "924578528",
-      "modulo": 5
-    },
-    {
-      "id": "m2-18",
-      "num": 18,
-      "tipo": "quiz",
-      "titulo": "Cuestionario — Magnanimidad activa",
-      "visible": false,
-      "preguntas": [
-        {
-          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad activa?",
-          "opciones": [
-            "Una mejora en los ingresos",
-            "Una optimización de los procesos",
-            "La transformación del sueño en misión",
-            "Un aumento en el rendimiento"
-          ],
-          "correcta": 2
-        },
-        {
-          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad activa?",
-          "opciones": [
-            "Un aumento en la precaución",
-            "No temer al fracaso",
-            "La capacidad de hacer siempre las cosas bien",
-            "Una intuición excepcional"
-          ],
-          "correcta": 1
-        },
-        {
-          "texto": "Según Peter Drucker (fundador del management moderno), ¿qué pensar de las personas que nunca han cometido grandes errores?",
-          "opciones": [
-            "Son personas con suerte",
-            "Son personas exitosas",
-            "Son personas sabias",
-            "Son personas mediocres"
-          ],
-          "correcta": 3
-        },
-        {
-          "texto": "¿Cómo enseña la magnanimidad activa a ver los obstáculos?",
-          "opciones": [
-            "Esquivándolos y evitándolos",
-            "Luchando contra ellos hasta la victoria total",
-            "Transformándolos en oportunidades",
-            "Todo lo anterior"
-          ],
-          "correcta": 2
-        }
-      ],
       "modulo": 5
     },
     {
@@ -685,14 +682,19 @@
       "tipo": "conclusion_modulo",
       "visible": false,
       "titulo": "Resumen: Acción",
-      "modulo_numero": 6,
+      "modulo_numero": 5,
       "modulo_titulo": "La práctica de la magnanimidad: la acción",
       "aprendizajes": [
+        "Las 17 señales de la magnanimidad",
         "Transformar el sueño en misión",
         "No temer al fracaso",
         "Convertir obstáculos en oportunidades"
       ],
       "ejercicios_evaluables": [
+        {
+          "id": "m2-14",
+          "label": "Test de magnanimidad"
+        },
         {
           "id": "m2-18",
           "label": "Cuestionario"

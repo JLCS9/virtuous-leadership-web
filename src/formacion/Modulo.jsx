@@ -5,6 +5,7 @@ import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, cont
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
 import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito } from './Actividad';
+import { supabase } from '../account/supabase';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
@@ -324,7 +325,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} user={user} />;
     case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
@@ -340,7 +341,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
       return <ConclusionModulo paso={paso} completados={progreso.completados} pendientes={pendientes} onContinuar={completar} onVolver={volver} irA={irA} />;
     }
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
-    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} />;
+    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} guardado={progreso.completados[paso.id]} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
@@ -641,8 +642,13 @@ function ModalEditarPlan({ pantalla, datos, onGuardar, onCerrar }) {
   );
 }
 
-function VistaResumenPlan({ paso, userId, onVolver }) {
+function VistaResumenPlan({ paso, userId, onVolver, completados, cursoNum }) {
   const [plan, setPlan] = useState(() => {
+    const bd = completados?.[paso.id];
+    if (bd && typeof bd === 'object') {
+      const { fecha, aprobado, ...rest } = bd;
+      if (Object.keys(rest).length > 0) return rest;
+    }
     let data = leerPlan(userId);
     if (userId !== 'anon' && (!data || Object.keys(data).length === 0)) {
       data = leerPlan('anon');
@@ -658,6 +664,20 @@ function VistaResumenPlan({ paso, userId, onVolver }) {
     const next = { ...plan, [pant.id]: valor };
     setPlan(next);
     guardarPlan(userId, next);
+    if (userId !== 'anon' && cursoNum != null) {
+      supabase.from('respuestas').upsert({
+        user_id: userId,
+        contenido_id: paso.id,
+        curso: cursoNum,
+        modulo: paso.modulo ?? 0,
+        respuesta: next,
+        aprobado: true,
+        completado: true,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id, contenido_id' }).then(({ error }) => {
+        if (error) console.warn('[plan] Error guardando edición:', error.message);
+      });
+    }
     setEditIdx(null);
   }
 
@@ -876,7 +896,7 @@ function RespuestasCuaderno({ paso, datos }) {
         {preguntas.map((pregunta, i) => (
           <div key={i}>
             <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>
-              {i + 1}. {pregunta}
+              {i + 1}. {pregunta.texto ?? pregunta}
             </p>
             <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: respuestas[i] ? NAVY : MUTED, lineHeight: 1.6, margin: 0, paddingLeft: 16, fontStyle: respuestas[i] ? 'normal' : 'italic' }}>
               {respuestas[i] || 'Sin respuesta'}
@@ -949,7 +969,7 @@ function RespuestasCuaderno({ paso, datos }) {
         {preguntas.map((pregunta, i) => (
           <div key={i}>
             <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>
-              {i + 1}. {pregunta}
+              {i + 1}. {pregunta.texto ?? pregunta}
             </p>
             <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: respuestas[i] ? NAVY : MUTED, lineHeight: 1.6, margin: 0, paddingLeft: 16, fontStyle: respuestas[i] ? 'normal' : 'italic' }}>
               {respuestas[i] || 'Sin respuesta'}
@@ -1035,7 +1055,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   const cierreHecho = cierreStep ? Boolean(completados[cierreStep.id]) : false;
 
   if (verPlan && planStep) {
-    return <VistaResumenPlan paso={planStep} userId={userId} onVolver={() => setVerPlan(false)} />;
+    return <VistaResumenPlan paso={planStep} userId={userId} onVolver={() => setVerPlan(false)} completados={completados} cursoNum={cursoNum} />;
   }
 
   if (verCuaderno) {
