@@ -11,17 +11,19 @@ import MapaCaracter from './MapaCaracter';
 import { usePersonas } from './usePersonas';
 import { Avatar, EtiquetaEstado, MapaPersonas } from './personas/comun';
 
-function MiResultado() {
-  const { t } = useT();
+function useTemperamentoClave() {
   const [fila, setFila] = useState(undefined);
   useEffect(() => {
     let vivo = true;
     fetchLatestTemperament().then((r) => { if (vivo) setFila(r ?? null); }).catch(() => { if (vivo) setFila(null); });
     return () => { vivo = false; };
   }, []);
+  return { fila, clave: claveTemperamento(fila?.result) };
+}
 
+function MiResultado({ fila, clave }) {
+  const { t } = useT();
   if (fila === undefined) return null;
-  const clave = claveTemperamento(fila?.result);
   if (!clave) {
     return (
       <section style={tarjeta}>
@@ -89,20 +91,19 @@ function BannerTestOk({ onClose }) {
   );
 }
 
-function EntornoMagnanimo() {
+function EntornoMagnanimo({ miPrimario }) {
   const { cargando, lista } = usePersonas();
   const navigate = useNavigate();
   const lp = useLocalPath();
 
-  const irAPersona = (p) => navigate(lp('/mi-panel/camino') + `?persona=${p.id}`);
-  const irAPersonas = () => navigate(lp('/mi-panel/camino') + '?personas=1');
+  const irAPersona = (p) => navigate(lp(`/app/personas/${p.id}`));
+  const irAPersonas = () => navigate(lp('/app/personas'));
   const irANueva = () => navigate(lp('/mi-panel/camino') + '?nueva=1');
 
   if (cargando) return null;
 
   const MAX_VISIBLES = 5;
   const visibles = lista.slice(0, MAX_VISIBLES);
-  const hayMas = lista.length > MAX_VISIBLES;
 
   if (!lista.length) {
     return (
@@ -122,8 +123,8 @@ function EntornoMagnanimo() {
     <section style={tarjeta} aria-label="Tu entorno magnánimo">
       <div style={eyebrow}>Tu entorno magnánimo</div>
 
-      <div style={{ margin: '8px auto 0', maxWidth: 480 }}>
-        <MapaPersonas personas={lista} />
+      <div className="vl-mapa-personas-wrap" style={{ margin: '8px 0 0' }}>
+        <MapaPersonas personas={lista} miPrimario={miPrimario} />
       </div>
 
       <div style={{ marginTop: 14, display: 'grid', gap: 2 }}>
@@ -144,7 +145,7 @@ function EntornoMagnanimo() {
 
       <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <button type="button" onClick={irANueva} style={{ ...botonContorno, fontSize: 13.5 }}>+ Añadir persona</button>
-        {hayMas && <button type="button" onClick={irAPersonas} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: NAVY, fontWeight: 600, padding: 0 }}>Ver más →</button>}
+        <button type="button" onClick={irAPersonas} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: NAVY, fontWeight: 600, padding: 0 }}>Ver más →</button>
       </div>
     </section>
   );
@@ -153,6 +154,7 @@ function EntornoMagnanimo() {
 export default function Hoy() {
   const [params, setParams] = useSearchParams();
   const [showBanner, setShowBanner] = useState(params.get('test') === 'ok');
+  const { fila: tempFila, clave: tempClave } = useTemperamentoClave();
 
   function closeBanner() {
     setShowBanner(false);
@@ -165,16 +167,22 @@ export default function Hoy() {
       <style>{`
         .vl-hoy { display: flex; flex-direction: column; gap: 18px; }
         @media (min-width: 860px) {
-          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
           .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
+          .vl-hoy-der { display: flex; flex-direction: column; overflow: hidden; }
+          .vl-hoy-der > section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+          .vl-hoy-der .vl-mapa-personas-wrap { flex: 1; position: relative; min-height: 0; }
+          .vl-hoy-der .vl-mapa-personas-wrap svg { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; }
         }
       `}</style>
       {showBanner && <BannerTestOk onClose={closeBanner} />}
       <div className="vl-hoy-izq">
-        <MiResultado />
-        <MapaCaracter />
+        <MiResultado fila={tempFila} clave={tempClave} />
+        <MapaCaracter tempClave={tempClave} />
       </div>
-      <EntornoMagnanimo />
+      <div className="vl-hoy-der">
+        <EntornoMagnanimo miPrimario={tempClave} />
+      </div>
     </div>
   );
 }

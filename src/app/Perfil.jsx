@@ -9,9 +9,9 @@ import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
-import modulo1 from '../data/modulo1.json';
-import modulo2 from '../data/modulo2.json';
-import modulo3 from '../data/modulo3.json';
+import curso1 from '../data/curso1.json';
+import curso2 from '../data/curso2.json';
+import curso3 from '../data/curso3.json';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 const SEXO = { hombre: 'Hombre', mujer: 'Mujer' };
@@ -380,9 +380,27 @@ function RetomarLink({ to, children }) {
   );
 }
 
-function leerSintesis(userId, moduloId) {
+const RENAME_PROGRESO = { curso1: 'modulo1', curso2: 'modulo2', curso3: 'modulo3', curso4: 'modulo4', curso5: 'modulo5', curso7: 'modulo7' };
+const RENAME_NOTAS = { ...RENAME_PROGRESO };
+
+function migrarClave(prefix, userId, cursoId, map) {
+  const viejo = map[cursoId];
+  if (!viejo) return;
   try {
-    const bruto = JSON.parse(localStorage.getItem(`vl-modulo:${userId}:${moduloId}`));
+    const claveVieja = `${prefix}:${userId}:${viejo}`;
+    const claveNueva = `${prefix}:${userId}:${cursoId}`;
+    const datos = localStorage.getItem(claveVieja);
+    if (datos && !localStorage.getItem(claveNueva)) {
+      localStorage.setItem(claveNueva, datos);
+      localStorage.removeItem(claveVieja);
+    }
+  } catch {}
+}
+
+function leerSintesis(userId, cursoId) {
+  migrarClave('vl-modulo', userId, cursoId, RENAME_PROGRESO);
+  try {
+    const bruto = JSON.parse(localStorage.getItem(`vl-modulo:${userId}:${cursoId}`));
     const cierre = bruto?.completados?.['m1-27'];
     if (!cierre || !cierre.lo_que_facilita) return null;
     return cierre;
@@ -390,7 +408,7 @@ function leerSintesis(userId, moduloId) {
 }
 
 function SeccionFormacion({ userId }) {
-  const sint = leerSintesis(userId, 'modulo1');
+  const sint = leerSintesis(userId, 'curso1');
   if (!sint) return null;
   const fmt = d => new Date(d).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
   return (
@@ -530,9 +548,9 @@ function TabDatos({ tests, personas, camino, user }) {
 /* ─── Tab 3: Mis notas ─── */
 
 const MODULOS = [
-  { id: 'modulo1', titulo: 'Curso 1 — Del temperamento al carácter', data: modulo1 },
-  { id: 'modulo2', titulo: 'Curso 2 — Practicando la magnanimidad', data: modulo2 },
-  { id: 'modulo3', titulo: 'Curso 3 — Practicar la humildad', data: modulo3 },
+  { id: 'curso1', titulo: 'Curso 1 — Del temperamento al carácter', data: curso1 },
+  { id: 'curso2', titulo: 'Curso 2 — Practicando la magnanimidad', data: curso2 },
+  { id: 'curso3', titulo: 'Curso 3 — Practicar la humildad', data: curso3 },
 ];
 
 const TIPO_LABEL = {
@@ -613,6 +631,7 @@ function TabNotas({ userId }) {
     }
   } else if (!supabase) {
     for (const mod of MODULOS) {
+      migrarClave('vl-notas', userId, mod.id, RENAME_NOTAS);
       const key = `vl-notas:${userId}:${mod.id}`;
       let raw;
       try { raw = localStorage.getItem(key); } catch { continue; }

@@ -24,6 +24,8 @@ const Hoy = lazy(() => import('./app/Hoy'));
 const Formacion = lazy(() => import('./formacion/Formacion'));
 const Modulo = lazy(() => import('./formacion/Modulo'));
 const Perfil = lazy(() => import('./app/Perfil'));
+const Personas = lazy(() => import('./app/Personas'));
+const ResultadoCaracter = lazy(() => import('./app/ResultadoCaracter'));
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
@@ -105,6 +107,9 @@ export default function App() {
             <Route path="camino" element={<Navigate to=".." replace />} />
             <Route path="formacion" element={<Formacion />} />
             <Route path="formacion/:cursoId" element={<Modulo />} />
+            <Route path="caracter" element={<ResultadoCaracter />} />
+            <Route path="personas" element={<Personas />} />
+            <Route path="personas/:personaId" element={<Personas />} />
             <Route path="perfil" element={<Perfil />} />
           </Route>
         );

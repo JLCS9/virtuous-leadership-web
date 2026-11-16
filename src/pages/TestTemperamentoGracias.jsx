@@ -6,6 +6,7 @@ import { supabase, accountsEnabled } from '../account/supabase';
 import { useSession } from '../account/useSession';
 import { fetchLatestTemperament, fetchFirstName } from '../account/account';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
+import { claveTemperamento } from '../lib/virtudes.js';
 import {
   NAVY, NAVY_SOFT, GOLD, GOLD_DEEP,
   PAPER, BEIGE, INK, MUTED, LINE,
@@ -112,22 +113,40 @@ function ResultsLanding({ user }) {
   }
 
   const r = state.row.result;
-  const profile = t(`result.profiles.${r.profileKey}`);
-  const tempPrimario = t(`temperaments.${r.primario}`);
-  const isPure = !r.profileKey.includes('-');
-  const parts = r.profileKey.split('-');
+  const profileKey = claveTemperamento(r);
+  if (!profileKey) {
+    return (
+      <Shell>
+        <Card>
+          <Title eyebrow={t('panel.eyebrow')}>{t('panel.empty_title')}</Title>
+          <p style={{ ...styles.para, marginTop: 12 }}>{t('panel.empty_intro')}</p>
+          <div style={{ marginTop: 20 }}>
+            <PrimaryButton onClick={() => navigate(lp('/tests/temperamento'))}>{t('panel.take_test')}</PrimaryButton>
+          </div>
+        </Card>
+      </Shell>
+    );
+  }
+
+  const parts = profileKey.split('-');
+  const primario = parts[0];
+  const profile = t(`result.profiles.${profileKey}`);
+  const tempPrimario = t(`temperaments.${primario}`);
+  const isPure = parts.length === 1;
   const secundario = parts[1] ? t(`temperaments.${parts[1]}`) : null;
 
-  const virtueKey = CHALLENGE_VIRTUE[r.profileKey];
+  const virtueKey = CHALLENGE_VIRTUE[profileKey];
   const virtue = t(`result.challenge_defs.${virtueKey}`);
 
   const vimeoId = VIMEO_IDS[lang] || VIMEO_IDS.es;
 
+  const primName = tempPrimario?.name || primario;
+  const secName = secundario?.name || parts[1];
   const tempLabel = isPure
-    ? tempPrimario.name.toLowerCase()
-    : `${tempPrimario.name.toLowerCase()}-${secundario.name.toLowerCase()}`;
+    ? primName.toLowerCase()
+    : `${primName.toLowerCase()}-${(secName || '').toLowerCase()}`;
 
-  const primColor = TEMP_COLORS[r.primario] || NAVY;
+  const primColor = TEMP_COLORS[primario] || NAVY;
   const secColor = parts[1] ? (TEMP_COLORS[parts[1]] || NAVY) : null;
 
   return (
@@ -175,7 +194,7 @@ function ResultsLanding({ user }) {
             letterSpacing: '-0.01em',
             paddingTop: 8,
           }}>
-            {profile.name}
+            {profile?.name || profileKey}
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 12 }}>
@@ -188,8 +207,8 @@ function ResultsLanding({ user }) {
               fontFamily: FONT_BODY, fontSize: 15, fontWeight: 500, lineHeight: 1,
               color: INK,
             }}>
-              <span>{tempPrimario.name}</span>
-              {secundario && <><span style={{ color: GOLD_DEEP }}>·</span><span>{secundario.name}</span></>}
+              <span>{primName}</span>
+              {secName && <><span style={{ color: GOLD_DEEP }}>·</span><span>{secName}</span></>}
             </div>
           </div>
         </section>
@@ -202,8 +221,8 @@ function ResultsLanding({ user }) {
           display: 'flex', flexDirection: 'column', gap: 16,
           paddingBottom: 'clamp(48px, 8vw, 72px)',
         }}>
-          <StrengthCard title={t('landing.strengths_title')} text={profile.fortaleza} />
-          <StrengthCard title={t('landing.weakness_title')} text={profile.debilidad} />
+          <StrengthCard title={t('landing.strengths_title')} text={profile?.fortaleza} />
+          <StrengthCard title={t('landing.weakness_title')} text={profile?.debilidad} />
         </section>
       </main>
 
@@ -227,7 +246,7 @@ function ResultsLanding({ user }) {
               fontFamily: FONT_SLAB, fontSize: 'clamp(40px, 9vw, 60px)',
               fontWeight: 700, lineHeight: 1, color: PAPER, letterSpacing: '-0.01em',
             }}>
-              {virtue.name}
+              {virtue?.name}
             </div>
 
             <div style={{ width: 80, height: 2, background: GOLD }} />
@@ -236,10 +255,10 @@ function ResultsLanding({ user }) {
               fontFamily: FONT_BODY, fontSize: 'clamp(16px, 2.5vw, 18px)',
               lineHeight: 1.6, color: PAPER, margin: 0,
             }}>
-              {virtue.def}
+              {virtue?.def}
             </p>
 
-            {profile.reto && (
+            {profile?.reto && (
               <p style={{
                 fontFamily: FONT_SLAB, fontStyle: 'italic',
                 fontSize: 'clamp(17px, 2.8vw, 20px)', lineHeight: 1.55,

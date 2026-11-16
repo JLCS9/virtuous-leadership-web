@@ -18,12 +18,12 @@ import { UMBRAL_VISTA } from './cursos';
 import { useCatalogo } from './useFormacion';
 
 const MODULOS = {
-  'curso-1': () => import('../data/modulo1.json'),
-  'curso-2': () => import('../data/modulo2.json'),
-  'curso-3': () => import('../data/modulo3.json'),
-  'curso-4': () => import('../data/modulo4.json'),
-  'curso-5': () => import('../data/modulo5.json'),
-  'curso-7': () => import('../data/modulo7.json'),
+  'curso-1': () => import('../data/curso1.json'),
+  'curso-2': () => import('../data/curso2.json'),
+  'curso-3': () => import('../data/curso3.json'),
+  'curso-4': () => import('../data/curso4.json'),
+  'curso-5': () => import('../data/curso5.json'),
+  'curso-7': () => import('../data/curso7.json'),
 };
 
 function catalogoAModulo(curso) {
@@ -294,7 +294,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
     case 'lectura': return <Lectura paso={paso} onComplete={completar} temperamento={temperamento} />;
     case 'armonia_temperamento': return <ArmoniaTemperamento paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
-    case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={completar} completados={progreso.completados} guardado={progreso.completados[paso.id]} />;
+    case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={completar} completados={progreso.completados} guardado={progreso.completados[paso.id]} irA={irA} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
@@ -311,7 +311,7 @@ function agruparModulos(pasos) {
         actual = { video: p, actividades: [] };
         modulos.push(actual);
       }
-    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter' && p.tipo !== 'lectura') {
+    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter' && p.tipo !== 'test_corazon' && p.tipo !== 'lectura') {
       actual.actividades.push(p);
     }
   }
@@ -346,6 +346,8 @@ function etiquetaPaso(paso) {
   if (paso.tipo === 'conclusion_modulo') return 'Resumen';
   if (paso.tipo === 'test_caracter') return 'Test de carácter';
   if (paso.tipo === 'test_corazon') return 'Test del corazón';
+  if (paso.tipo === 'armonia_temperamento') return 'Temperamento';
+  if (paso.tipo === 'objetivos_corazon') return 'Objetivos';
   return paso.titulo;
 }
 
@@ -999,7 +1001,7 @@ function RespuestasCuaderno({ paso, datos }) {
         {codigos.map(cod => (
           <div key={cod}>
             <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>{fichas[cod]?.nombre_test ?? cod}</p>
-            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0, paddingLeft: 16, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, margin: 0, paddingLeft: 16, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical' }}>
               {objetivos[cod] || <span style={{ color: MUTED, fontStyle: 'italic' }}>Sin objetivos</span>}
             </p>
           </div>

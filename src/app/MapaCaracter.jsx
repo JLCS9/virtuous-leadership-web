@@ -10,7 +10,7 @@ import { VirtudesRadar } from './Radar';
 
 const DEMO = { self: { magnanimidad: 72, humildad: 55, prudencia: 63, fortaleza: 48, dominio: 60, justicia: 70 } };
 
-const TEXTO_VIRTUD = {
+export const TEXTO_VIRTUD = {
   magnanimidad: {
     bien: 'Reconoces tu dignidad y tu vocación trascendente, y te mueves a la acción con ambición noble.',
     cultivar: 'Es la virtud de las almas contemplativas que se dirigen a la acción. Trabajar la magnanimidad es atreverte a luchar por grandes cosas.',
@@ -37,7 +37,77 @@ const TEXTO_VIRTUD = {
   },
 };
 
-export default function MapaCaracter() {
+// Qué virtudes son más naturales y más difíciles para cada temperamento dominante, según Havard.
+export const TEMP_VIRTUD = {
+  COL: {
+    natural: ['fortaleza', 'magnanimidad'],
+    dificil: ['humildad', 'prudencia'],
+    mayor: {
+      fortaleza: 'Como colérico, la acción y el resultado son tu terreno natural — es lógico que la fortaleza sea tu punto fuerte.',
+      magnanimidad: 'Tu naturaleza colérica te empuja a pensar en grande y pasar a la acción. La magnanimidad es muy tuya.',
+      _generico: 'Tu energía colérica te ha servido para construir esta virtud. Aprovéchala para seguir creciendo.',
+    },
+    menor: {
+      humildad: 'Tu impulso hacia la acción puede hacerte descuidar el autoconocimiento y el servicio. Es un campo de crecimiento muy valioso para ti.',
+      prudencia: 'Tu inclinación a actuar rápido puede adelantarse a la deliberación. Hacer una pausa para reflexionar antes de decidir te hará más eficaz.',
+      magnanimidad: 'Aunque como colérico tiendes a la acción, la magnanimidad requiere también contemplación. Combinar las dos es tu siguiente paso.',
+      _generico: 'Tu temperamento te da mucha energía para actuar. Canalizar esa fuerza hacia esta virtud es tu próximo reto.',
+    },
+  },
+  MEL: {
+    natural: ['prudencia', 'humildad'],
+    dificil: ['fortaleza', 'magnanimidad'],
+    mayor: {
+      prudencia: 'Como melancólico, tu inclinación a la contemplación y el análisis te da una base natural para la prudencia.',
+      humildad: 'Tu naturaleza introspectiva te facilita el autoconocimiento, la raíz de la humildad.',
+      _generico: 'Tu sensibilidad y profundidad melancólica te han ayudado a construir esta virtud.',
+    },
+    menor: {
+      fortaleza: 'Tu tendencia a la reflexión puede frenar el paso a la acción. Cultivar la audacia y la resistencia es el complemento que necesitas.',
+      magnanimidad: 'Tienes la contemplación, pero la magnanimidad exige dar el salto a la acción. Atreverte a soñar en grande es tu reto.',
+      _generico: 'Tu temperamento contemplativo necesita el empuje de esta virtud para equilibrarse. Es un crecimiento muy natural para ti.',
+    },
+  },
+  SAN: {
+    natural: ['justicia', 'humildad'],
+    dificil: ['dominio', 'fortaleza'],
+    mayor: {
+      justicia: 'Como sanguíneo, tu amor por las personas y tu afectividad te llevan naturalmente a la comunión y el servicio.',
+      humildad: 'Tu atención a los demás y tu capacidad de escucha te facilitan la humildad fraterna.',
+      _generico: 'Tu calidez sanguínea te da una base fuerte en esta virtud. Sigue construyendo sobre ella.',
+    },
+    menor: {
+      dominio: 'Tu impulsividad sanguínea puede dificultar el dominio de tus emociones. Aprender a canalizar tus pasiones es un gran paso.',
+      fortaleza: 'Tu naturaleza amable puede hacerte evitar el conflicto. La resistencia ante lo difícil es tu campo de crecimiento.',
+      _generico: 'Tu temperamento abierto y afectivo necesita el contrapeso de esta virtud para completarse.',
+    },
+  },
+  FLE: {
+    natural: ['dominio', 'prudencia'],
+    dificil: ['magnanimidad', 'fortaleza'],
+    mayor: {
+      dominio: 'Como flemático, tu calma natural y tu equilibrio emocional te dan una base sólida para el dominio de ti mismo.',
+      prudencia: 'Tu serenidad te permite contemplar las situaciones sin impulsividad. La prudencia es muy tuya.',
+      _generico: 'Tu estabilidad flemática te ha ayudado a construir esta virtud. Es un cimiento sólido.',
+    },
+    menor: {
+      magnanimidad: 'Tu temperamento tranquilo puede frenarte ante la ambición noble. Atreverte a soñar en grande es tu próximo paso.',
+      fortaleza: 'Tu tendencia a la calma puede dificultar la audacia. Dar el primer paso sin esperar a que todo esté perfecto es tu reto.',
+      _generico: 'Tu serenidad es una fortaleza, pero esta virtud te pide salir de tu zona de confort. Merece la pena.',
+    },
+  },
+};
+
+export function notaTemperamento(tempClave, virtudClave, tipo) {
+  if (!tempClave) return null;
+  const primario = tempClave.split('-')[0];
+  const datos = TEMP_VIRTUD[primario];
+  if (!datos) return null;
+  const mapa = datos[tipo];
+  return mapa?.[virtudClave] ?? mapa?._generico ?? null;
+}
+
+export default function MapaCaracter({ tempClave }) {
   const [params] = useSearchParams();
   const [fila, setFila] = useState(undefined);
   const navigate = useNavigate();
@@ -69,6 +139,8 @@ export default function MapaCaracter() {
   const fecha = fila?.taken_at ? new Date(fila.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : null;
   const textoMayor = TEXTO_VIRTUD[mayor.clave];
   const textoMenor = TEXTO_VIRTUD[menor.clave];
+  const notaMayor = notaTemperamento(tempClave, mayor.clave, 'mayor');
+  const notaMenor = notaTemperamento(tempClave, menor.clave, 'menor');
 
   return (
     <section style={tarjeta} aria-label="Tus virtudes">
@@ -78,7 +150,7 @@ export default function MapaCaracter() {
         <style>{`
           .vl-caracter-grid { margin-top: 8px; }
           @media (min-width: 860px) {
-            .vl-caracter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
+            .vl-caracter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
           }
         `}</style>
 
@@ -86,26 +158,22 @@ export default function MapaCaracter() {
           <VirtudesRadar valores={valores} />
         </div>
 
-        <div style={{ marginTop: 12 }}>
+        <div>
           <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Tu virtud más fuerte es <strong style={{ color: NAVY }}>{mayor.nombre}</strong> ({Math.round(mayor.valor)}%).
           </p>
-          {textoMayor && (
-            <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 16px', lineHeight: 1.5 }}>
-              {textoMayor.bien}
-            </p>
-          )}
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 14px', lineHeight: 1.5 }}>
+            {notaMayor || textoMayor?.bien}
+          </p>
 
           <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Lo que más puedes cultivar ahora es <strong style={{ color: NAVY }}>{menor.nombre}</strong> ({Math.round(menor.valor)}%).
           </p>
-          {textoMenor && (
-            <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 4px', lineHeight: 1.5 }}>
-              {textoMenor.cultivar}
-            </p>
-          )}
+          <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 4px', lineHeight: 1.5 }}>
+            {notaMenor || textoMenor?.cultivar}
+          </p>
 
-          <button type="button" onClick={() => navigate(lp('/mi-panel/caracter'))} style={{
+          <button type="button" onClick={() => navigate(lp('/app/caracter'))} style={{
             display: 'flex', alignItems: 'center', gap: 6, marginTop: 16,
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
             fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,

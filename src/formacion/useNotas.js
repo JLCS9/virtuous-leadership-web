@@ -2,11 +2,27 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../account/supabase';
 
 // --- localStorage fallback (mismo comportamiento que antes) ---
-const claveLS = (userId, moduloId) => `vl-notas:${userId}:${moduloId}`;
+const claveLS = (userId, cursoId) => `vl-notas:${userId}:${cursoId}`;
 
-function leerNotasLS(userId, moduloId) {
+const RENAME_MAP = { curso1: 'modulo1', curso2: 'modulo2', curso3: 'modulo3', curso4: 'modulo4', curso5: 'modulo5', curso7: 'modulo7' };
+function migrarClaveNotasLS(userId, cursoId) {
+  const viejo = RENAME_MAP[cursoId];
+  if (!viejo) return;
   try {
-    const raw = localStorage.getItem(claveLS(userId, moduloId));
+    const claveVieja = `vl-notas:${userId}:${viejo}`;
+    const claveNueva = claveLS(userId, cursoId);
+    const datos = localStorage.getItem(claveVieja);
+    if (datos && !localStorage.getItem(claveNueva)) {
+      localStorage.setItem(claveNueva, datos);
+      localStorage.removeItem(claveVieja);
+    }
+  } catch {}
+}
+
+function leerNotasLS(userId, cursoId) {
+  migrarClaveNotasLS(userId, cursoId);
+  try {
+    const raw = localStorage.getItem(claveLS(userId, cursoId));
     return raw ? JSON.parse(raw) : {};
   } catch { return {}; }
 }

@@ -71,7 +71,7 @@ const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', 
 if (typeof document !== 'undefined' && !document.getElementById('autoguardado-css')) {
   const s = document.createElement('style');
   s.id = 'autoguardado-css';
-  s.textContent = '@keyframes fadeInCheck{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}';
+  s.textContent = '@keyframes fadeInCheck{from{opacity:0;transform:scale(0.8)}to{opacity:1;transform:scale(1)}}@keyframes vlChipIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}.vl-chip-anim{animation:vlChipIn 450ms ease both}';
   document.head.appendChild(s);
 }
 
@@ -1211,19 +1211,24 @@ export function renderElementoSlide(item, i, { setLightboxSrc }) {
     const src = REFLEXION_IMAGENES[item.imagen];
     const imgSrc = Array.isArray(src) ? src[0] : src;
     if (!imgSrc) return null;
+    if (item.pie) {
+      return (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <img src={imgSrc} alt={item.pie} style={{ width: 48, height: 48, objectFit: 'cover', flexShrink: 0 }} />
+          <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, fontStyle: 'italic', lineHeight: 1.5 }}>{item.pie}</span>
+        </div>
+      );
+    }
     return (
-      <div key={i} style={{ textAlign: 'center', background: BEIGE, padding: '12px 8px', borderRadius: 4 }}>
-        <img src={imgSrc} alt={item.imagen} style={{ maxWidth: '100%', maxHeight: 420, display: 'block', margin: '0 auto', mixBlendMode: 'multiply' }} />
-        {item.pie && (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, fontStyle: 'italic', margin: '8px 0 0', lineHeight: 1.5 }}>{item.pie}</p>
-        )}
+      <div key={i} style={{ textAlign: 'center' }}>
+        <img src={imgSrc} alt={item.imagen} style={{ maxWidth: '100%', maxHeight: 420, display: 'block', margin: '0 auto' }} />
         <button type="button" onClick={() => setLightboxSrc(imgSrc)} style={{
           background: 'none', border: 'none', padding: 0, cursor: 'pointer',
           fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
           display: 'inline-flex', alignItems: 'center', gap: 5, marginTop: 8,
           textDecoration: 'underline', textUnderlineOffset: 3,
         }}>
-          <IconoLupa /> {item.pie ? 'Ampliar imagen' : 'Ver diagrama'}
+          <IconoLupa /> Ver diagrama
         </button>
       </div>
     );
@@ -1308,7 +1313,7 @@ export function Lectura({ paso, onComplete, temperamento }) {
         <div style={{
           maxWidth: 800, margin: '0 auto 16px',
           background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[tempPrimario] || GOLD_REF}`,
-          padding: '16px 20px', borderRadius: '0 8px 8px 0',
+          padding: '16px 20px',
         }}>
           <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: TEMP_COLORS[tempPrimario] || GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>Tu tendencia</div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6 }}>{textoAviso}</div>
@@ -1329,11 +1334,11 @@ export function Lectura({ paso, onComplete, temperamento }) {
 
 const DISORDER_ORDER = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
 
-export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
+export function ObjetivosCorazon({ paso, onComplete, completados, guardado, irA }) {
   const testResult = completados?.[paso.paso_test]?.scoreResult;
   const disorders = testResult?.disorders;
   const cuantas = paso.cuantas || 2;
-  const [fase, setFase] = useState(guardado ? 1 : -1);
+  const [fase, setFase] = useState(guardado ? 0 : -1);
   const [pantalla, setPantalla] = useState(0);
 
   const topCodes = (() => {
@@ -1360,7 +1365,14 @@ export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <div style={tarjeta}>
           <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 14px' }}>Haz primero el Test del corazón</h2>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6 }}>Necesitas completar el Test del corazón antes de fijar tus objetivos prácticos.</p>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6, marginBottom: 24 }}>Necesitas completar el Test del corazón para fijar tus objetivos prácticos.</p>
+          {irA && (
+            <button type="button" onClick={() => irA(paso.paso_test)} style={{
+              fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
+              display: 'block', width: '100%', textAlign: 'center',
+            }}>Hacer el Test del corazón</button>
+          )}
         </div>
       </div>
     );
@@ -1387,7 +1399,7 @@ export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
           </div>
           <p style={{ fontFamily: FONT_BODY, fontSize: 18, color: NAVY, lineHeight: 1.7, margin: '0 0 20px' }}>{paso.texto_intro}</p>
           <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <button type="button" onClick={() => setPantalla(1)} style={{
+            <button type="button" onClick={() => { setPantalla(1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
               fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff',
               background: GOLD_REF, border: 'none', borderRadius: 0, padding: '14px 36px', cursor: 'pointer',
             }}>Siguiente →</button>
@@ -1410,19 +1422,19 @@ export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
       <div style={tarjeta}>
         <div style={eyebrow}>Pantalla {pantallaNum} de {totalPantallas}</div>
-        <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '8px 0 14px' }}>{ficha?.nombre_test || ficha?.nombre}</h2>
         <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
           <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(pantallaNum / totalPantallas) * 100}%` }} />
         </div>
 
-        {imgSrc && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16 }}>
-            <img src={imgSrc} alt={ficha?.nombre} style={{ width: 80, height: 80, borderRadius: '50%', objectFit: 'cover' }} />
-            {ficha?.pie && <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, fontStyle: 'italic' }}>{ficha.pie}</span>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
+          {imgSrc && <img src={imgSrc} alt={ficha?.nombre} style={{ width: 48, height: 48, objectFit: 'cover', flexShrink: 0 }} />}
+          <div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{ficha?.nombre_test || ficha?.nombre}</div>
+            {ficha?.pie && <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, fontStyle: 'italic' }}>{ficha.pie}</span>}
           </div>
-        )}
+        </div>
 
-        <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, marginBottom: 16, padding: '10px 16px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}` }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: NAVY, marginBottom: 16, padding: '10px 16px', background: PAPER, border: `1px solid ${LINE}` }}>
           Tu resultado: <strong>{disorderData?.pct ?? 0} %</strong>
         </div>
 
@@ -1443,15 +1455,15 @@ export function ObjetivosCorazon({ paso, onComplete, completados, guardado }) {
             onChange={e => setObjetivos(prev => ({ ...prev, [code]: e.target.value }))}
             placeholder={paso.placeholder}
             style={{
-              fontFamily: FONT_BODY, fontSize: 16, color: NAVY, width: '100%', minHeight: 160,
-              padding: '14px 16px', border: `1.5px solid ${LINE}`, borderRadius: 0,
-              background: PAPER, resize: 'vertical', lineHeight: 1.6, boxSizing: 'border-box',
+              fontFamily: FONT_BODY, fontSize: 18, color: NAVY, width: '100%', minHeight: 160,
+              padding: '16px 18px', border: `1px solid ${LINE}`, borderRadius: 0,
+              background: BEIGE, resize: 'vertical', lineHeight: 1.6, boxSizing: 'border-box',
             }}
           />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 12 }}>
-          <button type="button" onClick={() => setPantalla(p => p - 1)} style={{
+          <button type="button" onClick={() => { setPantalla(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }} style={{
             fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: MUTED,
             background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 28px', cursor: 'pointer',
           }}>← Anterior</button>
@@ -1509,8 +1521,8 @@ export function ArmoniaTemperamento({ paso, temperamento, onComplete, guardado }
             <p key={i} style={{ fontFamily: FONT_BODY, fontSize: 18, color: NAVY, lineHeight: 1.7, margin: i === 0 ? '20px 0 0' : '10px 0 0' }}>{t}</p>
           ))}
           <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, margin: '16px 0 8px', textAlign: 'center' }}>{paso.instruccion_rueda}</p>
-          <div style={{ position: 'relative', maxWidth: 460, margin: '0 auto 20px' }}>
-            <img src={ruedaImg} alt="Rueda de temperamentos" style={{ width: '100%', display: 'block', borderRadius: 8 }} onClick={() => setLightboxSrc(ruedaImg)} />
+          <div style={{ position: 'relative', maxWidth: 460, margin: '0 auto' }}>
+            <img src={ruedaImg} alt="Rueda de temperamentos" style={{ width: '100%', display: 'block' }} />
             <div style={{ position: 'absolute', inset: 0, display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' }}>
               {[['COL', 0], ['MEL', 1], ['SAN', 2], ['FLE', 3]].map(([code, qi]) => (
                 <button key={code} type="button" aria-label={temps[code]?.nombre || code}
@@ -1519,7 +1531,7 @@ export function ArmoniaTemperamento({ paso, temperamento, onComplete, guardado }
                   style={{
                     background: activo && activo !== code ? 'rgba(0,0,0,0.35)' : 'transparent',
                     border: 'none', cursor: 'pointer', transition: 'background 300ms ease',
-                    borderRadius: qi === 0 ? '8px 0 0 0' : qi === 1 ? '0 8px 0 0' : qi === 2 ? '0 0 0 8px' : '0 0 8px 0',
+                    borderRadius: 0,
                     position: 'relative',
                   }}>
                   {code === p && <span style={{
@@ -1532,14 +1544,24 @@ export function ArmoniaTemperamento({ paso, temperamento, onComplete, guardado }
               ))}
             </div>
           </div>
+          <div style={{ textAlign: 'center', margin: '8px 0 20px' }}>
+            <button type="button" onClick={() => setLightboxSrc(ruedaImg)} style={{
+              background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'inline-flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa /> Ampliar imagen
+            </button>
+          </div>
           {info ? (
-            <div style={{ padding: '16px 20px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}` }}>
+            <div style={{ padding: '16px 20px', background: PAPER, border: `1px solid ${LINE}` }}>
               <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: TEMP_COLORS[activo] || NAVY }}>{info.nombre}</div>
               <p style={{ fontFamily: FONT_BODY, fontSize: 18, fontStyle: 'italic', color: NAVY, lineHeight: 1.6, margin: '8px 0' }}>«{info.frase}»</p>
               <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: 0 }}>Tendencia: <strong style={{ color: NAVY }}>{info.tendencia}</strong></p>
             </div>
           ) : (
-            <div style={{ padding: '16px 20px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}`, textAlign: 'center' }}>
+            <div style={{ padding: '16px 20px', background: PAPER, border: `1px solid ${LINE}`, textAlign: 'center' }}>
               <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, margin: 0 }}>{paso.instruccion_rueda}</p>
             </div>
           )}
@@ -1566,7 +1588,7 @@ export function ArmoniaTemperamento({ paso, temperamento, onComplete, guardado }
           <div style={{ marginBottom: 20, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
             <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${(2 / totalPantallas) * 100}%` }} />
           </div>
-          <div style={{ padding: '20px 24px', background: PAPER, borderRadius: 8, border: `1px solid ${LINE}`, marginBottom: 16 }}>
+          <div style={{ padding: '20px 24px', background: PAPER, border: `1px solid ${LINE}`, marginBottom: 16 }}>
             <div style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: TEMP_COLORS[p] || NAVY }}>{info?.nombre}</div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 22, color: NAVY, marginTop: 8, lineHeight: 1.4 }}>{info?.criatura}</div>
             <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, margin: '8px 0 0' }}>Tendencia: <strong style={{ color: NAVY }}>{info?.tendencia}</strong></p>
