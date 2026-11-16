@@ -90,11 +90,13 @@ export default function AppShell({ user }) {
         @media (prefers-reduced-motion: reduce) {
           .vl-entra, .vl-entra-der, .vl-entra-izq { animation: none; }
         }
+
+        .vl-mi-cuenta:hover { background: rgba(165,139,38,0.12) !important; }
       `}</style>
       <div className="vl-app">
         <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '32px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 14 }}>
-          <Link to="/" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
-            <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block', borderRadius: '50%' }} />
+          <Link to="/app" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
+            <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block' }} />
           </Link>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={eyebrow}>{fechaLarga()}</div>
@@ -102,15 +104,15 @@ export default function AppShell({ user }) {
               {nombre ? `Hola, ${nombre}` : 'Hola'}
             </div>
           </div>
-          <Link to="/app/perfil" style={{
+          <Link to="/app/perfil" className="vl-mi-cuenta" style={{
             display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
             color: pathname.startsWith(lp('/app/perfil')) ? NAVY : MUTED,
             fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, padding: '6px 10px',
-            borderRadius: 999, background: pathname.startsWith(lp('/app/perfil')) ? 'rgba(165,139,38,0.12)' : 'transparent',
+            background: pathname.startsWith(lp('/app/perfil')) ? 'rgba(165,139,38,0.12)' : 'transparent',
             transition: 'background 200ms ease, color 200ms ease',
           }}>
             <span style={{
-              width: 32, height: 32, borderRadius: '50%', background: NAVY,
+              width: 32, height: 32, background: NAVY,
               display: 'grid', placeItems: 'center', color: '#fff', fontSize: 14, fontWeight: 700,
               flexShrink: 0,
             }}>
@@ -161,14 +163,14 @@ function NavBurbuja({ pathname, lp }) {
         <div role="status" style={{
           pointerEvents: 'none', fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600,
           color: NAVY, background: 'rgba(255,255,255,0.92)', padding: '10px 20px',
-          borderRadius: 999, boxShadow: '0 2px 12px rgba(15,29,56,0.15)',
+          boxShadow: '0 2px 12px rgba(15,29,56,0.15)',
           backdropFilter: 'blur(8px)', animation: 'vl-entra 280ms ease both',
         }}>
           Próximamente
         </div>
       )}
       <div ref={contenedorRef} style={{
-        pointerEvents: 'auto', display: 'flex', gap: 4, padding: 6, borderRadius: 999,
+        pointerEvents: 'auto', display: 'flex', gap: 4, padding: 6,
         background: 'rgba(255,255,255,0.82)', boxShadow: '0 4px 24px rgba(15,29,56,0.18)',
         backdropFilter: 'blur(16px)', WebkitBackdropFilter: 'blur(16px)',
         position: 'relative',
@@ -177,7 +179,7 @@ function NavBurbuja({ pathname, lp }) {
           <span aria-hidden style={{
             position: 'absolute', top: 6, height: 'calc(100% - 12px)',
             left: pill.left, width: pill.width,
-            borderRadius: 999, background: 'rgba(165,139,38,0.14)',
+            background: 'rgba(165,139,38,0.14)',
             transition: 'left 320ms cubic-bezier(.4,0,.2,1), width 320ms cubic-bezier(.4,0,.2,1)',
             pointerEvents: 'none',
           }} />
@@ -188,7 +190,7 @@ function NavBurbuja({ pathname, lp }) {
             return (
               <button key={ruta} type="button" data-tab onClick={() => setToast(true)} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
-                padding: '9px 14px 8px', borderRadius: 999, border: 'none', cursor: 'pointer',
+                padding: '9px 14px 8px', border: 'none', cursor: 'pointer',
                 color: MUTED, background: 'transparent', opacity: 0.55,
                 fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 500, letterSpacing: '0.02em',
                 position: 'relative', zIndex: 1,
@@ -201,7 +203,7 @@ function NavBurbuja({ pathname, lp }) {
           return (
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
               display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
-              padding: '9px 14px 8px', borderRadius: 999, textDecoration: 'none',
+              padding: '9px 14px 8px', textDecoration: 'none',
               fontFamily: FONT_BODY, fontSize: 11.5, letterSpacing: '0.02em',
               position: 'relative', zIndex: 1,
               color: activa ? NAVY : MUTED, background: 'transparent',

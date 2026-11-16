@@ -4,20 +4,21 @@ import { useLocalPath } from '../i18n';
 import { pasosDelUsuario } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { VistaCuaderno } from './Modulo';
-import moduloData from '../data/modulo1.json';
-import modulo2Data from '../data/modulo2.json';
-import modulo3Data from '../data/modulo3.json';
-import modulo4Data from '../data/modulo4.json';
+import curso1Data from '../data/curso1.json';
+import curso2Data from '../data/curso2.json';
+import curso3Data from '../data/curso3.json';
+import curso4Data from '../data/curso4.json';
+import curso5Data from '../data/curso5.json';
 import { LINE, MUTED, NAVY, GOLD_REF_DK, FONT_SLAB, FONT_BODY } from '../theme';
 import { eyebrow, tarjeta, titulo, parrafo } from '../app/estilos';
 
-const MODULOS_CFG = [
-  { label: 'Cuaderno 1', moduloId: 'modulo1', cursoNum: 1, data: moduloData },
-  { label: 'Cuaderno 2', moduloId: 'modulo2', cursoNum: 2, data: modulo2Data },
-  { label: 'Cuaderno 3', moduloId: 'modulo3', cursoNum: 3, data: modulo3Data },
-  { label: 'Cuaderno 4', moduloId: 'modulo4', cursoNum: 4, data: modulo4Data },
-  { label: 'Cuaderno 5', moduloId: null, cursoNum: 5, data: null },
-  { label: 'Cuaderno 6', moduloId: null, cursoNum: 6, data: null },
+const CURSOS_CFG = [
+  { label: 'Cuaderno 1', cursoId: 'curso1', cursoNum: 1, data: curso1Data },
+  { label: 'Cuaderno 2', cursoId: 'curso2', cursoNum: 2, data: curso2Data },
+  { label: 'Cuaderno 3', cursoId: 'curso3', cursoNum: 3, data: curso3Data },
+  { label: 'Cuaderno 4', cursoId: 'curso4', cursoNum: 4, data: curso4Data },
+  { label: 'Cuaderno 5', cursoId: 'curso5', cursoNum: 5, data: curso5Data },
+  { label: 'Cuaderno 6', cursoId: null, cursoNum: 6, data: null },
 ];
 
 function TabProximamente() {
@@ -29,8 +30,8 @@ function TabProximamente() {
   );
 }
 
-function TabCuaderno({ userId, moduloId, cursoNum, data, irAlEjercicio }) {
-  const progreso = useModuloProgreso(userId, moduloId, cursoNum);
+function TabCuaderno({ userId, cursoId, cursoNum, data, irAlEjercicio }) {
+  const progreso = useModuloProgreso(userId, cursoId, cursoNum);
   const pasos = pasosDelUsuario(data, null);
   const irA = irAlEjercicio ? (pasoId) => irAlEjercicio(cursoNum, pasoId) : null;
 
@@ -42,7 +43,7 @@ function TabCuaderno({ userId, moduloId, cursoNum, data, irAlEjercicio }) {
       onIrA={irA}
       onEditar={irA}
       userId={userId}
-      moduloId={moduloId}
+      cursoId={cursoId}
       temperamento={null}
     />
   );
@@ -52,8 +53,8 @@ export default function PlanPersonal({ userId, onVolver }) {
   const [tab, setTab] = useState(0);
   const navigate = useNavigate();
   const localPath = useLocalPath();
-  const TABS = MODULOS_CFG.map(m => m.label);
-  const cfg = MODULOS_CFG[tab];
+  const TABS = CURSOS_CFG.map(m => m.label);
+  const cfg = CURSOS_CFG[tab];
 
   const irAlEjercicio = (cursoNum, pasoId) => navigate(localPath(`/app/formacion/curso-${cursoNum}`) + (pasoId ? `#${pasoId}` : ''));
 
@@ -91,9 +92,9 @@ export default function PlanPersonal({ userId, onVolver }) {
 
       {cfg.data ? (
         <TabCuaderno
-          key={cfg.moduloId}
+          key={cfg.cursoId}
           userId={userId}
-          moduloId={cfg.moduloId}
+          cursoId={cfg.cursoId}
           cursoNum={cfg.cursoNum}
           data={cfg.data}
           irAlEjercicio={irAlEjercicio}

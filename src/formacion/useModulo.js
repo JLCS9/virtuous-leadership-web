@@ -12,12 +12,29 @@ function calcularAprobado(tipo, resultado) {
 }
 
 // --- localStorage fallback (mismo comportamiento que antes) ---
-const claveLS = (userId, moduloId) => `vl-modulo:${userId}:${moduloId}`;
+const claveLS = (userId, cursoId) => `vl-modulo:${userId}:${cursoId}`;
 const vacio = () => ({ completados: {}, pasoActual: null });
 
-function leerLS(userId, moduloId) {
+// Migración: las claves antiguas usaban "modulo1" en vez de "curso1".
+const RENAME_MAP = { curso1: 'modulo1', curso2: 'modulo2', curso3: 'modulo3', curso4: 'modulo4', curso5: 'modulo5', curso7: 'modulo7' };
+function migrarClaveLS(userId, cursoId) {
+  const viejo = RENAME_MAP[cursoId];
+  if (!viejo) return;
   try {
-    const bruto = JSON.parse(localStorage.getItem(claveLS(userId, moduloId)));
+    const claveVieja = `vl-modulo:${userId}:${viejo}`;
+    const claveNueva = claveLS(userId, cursoId);
+    const datos = localStorage.getItem(claveVieja);
+    if (datos && !localStorage.getItem(claveNueva)) {
+      localStorage.setItem(claveNueva, datos);
+      localStorage.removeItem(claveVieja);
+    }
+  } catch {}
+}
+
+function leerLS(userId, cursoId) {
+  migrarClaveLS(userId, cursoId);
+  try {
+    const bruto = JSON.parse(localStorage.getItem(claveLS(userId, cursoId)));
     return bruto && typeof bruto.completados === 'object'
       ? { completados: bruto.completados, pasoActual: null }
       : vacio();

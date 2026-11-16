@@ -10,7 +10,7 @@ export const TEXTO_GRUPO = Object.fromEntries(GRUPOS);
 export const gruposPara = (estadoVida) => GRUPOS.filter(([g]) => g !== 'comunidad' || estadoVida === 'religioso');
 
 export const RELACIONES = ['pareja', 'hijo', 'hija', 'padre', 'madre', 'hermano', 'hermana', 'amigo', 'amiga', 'jefe', 'compañero', 'profesor'];
-export const AVATARES = ['🙂', '😊', '😎', '🧑', '👩', '👨', '🧓', '👵', '👴', '🧒', '⭐', '🌿'];
+export const AVATARES = ['👩🏻', '👨🏻', '👩🏼', '👨🏼', '👩🏽', '👨🏽', '👩🏾', '👨🏾', '🧓🏻', '🧓🏽', '👧🏼', '👦🏽'];
 
 export const INTRO = (nombre) =>
   `Piensa en cómo reacciona ${nombre}, no en cómo es por fuera. Responde con lo primero que le sale, no con lo que ha aprendido a hacer.`;

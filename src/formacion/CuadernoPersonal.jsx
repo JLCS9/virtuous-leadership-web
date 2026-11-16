@@ -23,16 +23,33 @@ const FACILITA_DIFICULTA = {
   FLE: { facilita: 'el dominio propio', dificulta: 'la magnanimidad y la iniciativa' },
 };
 
-function leerProgreso(userId, moduloId = 'modulo1') {
+const RENAME_MAP = { curso1: 'modulo1', curso2: 'modulo2', curso3: 'modulo3', curso4: 'modulo4', curso5: 'modulo5', curso7: 'modulo7' };
+function migrarClaveDirecta(prefix, userId, cursoId) {
+  const viejo = RENAME_MAP[cursoId];
+  if (!viejo) return;
   try {
-    const raw = localStorage.getItem(`vl-modulo:${userId}:${moduloId}`);
+    const claveVieja = `${prefix}:${userId}:${viejo}`;
+    const claveNueva = `${prefix}:${userId}:${cursoId}`;
+    const datos = localStorage.getItem(claveVieja);
+    if (datos && !localStorage.getItem(claveNueva)) {
+      localStorage.setItem(claveNueva, datos);
+      localStorage.removeItem(claveVieja);
+    }
+  } catch {}
+}
+
+function leerProgreso(userId, cursoId = 'curso1') {
+  migrarClaveDirecta('vl-modulo', userId, cursoId);
+  try {
+    const raw = localStorage.getItem(`vl-modulo:${userId}:${cursoId}`);
     return raw ? JSON.parse(raw).completados ?? {} : {};
   } catch { return {}; }
 }
 
-function leerNotas(userId, moduloId = 'modulo1') {
+function leerNotas(userId, cursoId = 'curso1') {
+  migrarClaveDirecta('vl-notas', userId, cursoId);
   try {
-    const raw = localStorage.getItem(`vl-notas:${userId}:${moduloId}`);
+    const raw = localStorage.getItem(`vl-notas:${userId}:${cursoId}`);
     return raw ? JSON.parse(raw) : {};
   } catch { return {}; }
 }
@@ -59,9 +76,9 @@ function formatFecha(iso) {
   return new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
 }
 
-const CUADERNO_PDF = { modulo1: '/cuadernos/cuaderno-1.pdf', modulo2: '/cuadernos/cuaderno-2.pdf', modulo3: '/cuadernos/cuaderno-3.pdf', modulo4: '/cuadernos/cuaderno-4.pdf' };
+const CUADERNO_PDF = { curso1: '/cuadernos/cuaderno-1.pdf', curso2: '/cuadernos/cuaderno-2.pdf', curso3: '/cuadernos/cuaderno-3.pdf', curso4: '/cuadernos/cuaderno-4.pdf' };
 
-async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
+async function generarPDF(userId, pasos, temperamento, moduloId = 'curso1') {
   const { PDFDocument, StandardFonts, rgb, PageSizes } = await import('pdf-lib');
 
   const comp = leerProgreso(userId, moduloId);
@@ -70,7 +87,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   const s = temperamento?.secondary;
   const perfil = s ? `${p}-${s}` : p;
 
-  const pdfPath = CUADERNO_PDF[moduloId] ?? CUADERNO_PDF.modulo1;
+  const pdfPath = CUADERNO_PDF[moduloId] ?? CUADERNO_PDF.curso1;
   const pdfBytes = await fetch(pdfPath).then(r => r.arrayBuffer());
   const doc = await PDFDocument.load(pdfBytes);
 
@@ -111,7 +128,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   }
 
   // ━━━ MODULO 1: page-specific fills ━━━
-  if (moduloId === 'modulo1') {
+  if (moduloId === 'curso1') {
     // PAGE 4 (index 3): Conceptos básicos
     const definePasos = pasos.filter(pp => DEFINE_IDS.includes(pp.id));
     const allConceptos = definePasos.flatMap(pp => pp.conceptos ?? []);
@@ -209,7 +226,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   }
 
   // ━━━ APPENDIX: Test profundo answers (generic for all courses) ━━━
-  const testProfundoPasos = moduloId === 'modulo1'
+  const testProfundoPasos = moduloId === 'curso1'
     ? TEST_PROFUNDO_IDS
     : pasos.filter(pp => pp.tipo === 'test_profundo').map(pp => pp.id);
 
@@ -339,13 +356,13 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'modulo1') {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const num = moduloId === 'modulo4' ? '4' : moduloId === 'modulo3' ? '3' : moduloId === 'modulo2' ? '2' : '1';
+  const num = moduloId === 'curso4' ? '4' : moduloId === 'curso3' ? '3' : moduloId === 'curso2' ? '2' : '1';
   a.download = `cuaderno-personal-curso${num}-vl.pdf`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-export function CuadernoPersonal({ userId, pasos, temperamento, moduloId = 'modulo1' }) {
+export function CuadernoPersonal({ userId, pasos, temperamento, moduloId = 'curso1' }) {
   const [generando, setGenerando] = useState(false);
 
   async function descargar() {

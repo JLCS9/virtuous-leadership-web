@@ -1,5 +1,5 @@
 {
-  "id": "modulo1",
+  "id": "curso1",
   "titulo": "Del temperamento al carácter",
   "curso": 1,
   "pasos": [
@@ -12,9 +12,38 @@
       "visible": true,
       "leccion": 1,
       "intro": [
-        "La personalidad humana se compone de un temperamento y un carácter.",
-        "El temperamento es una predisposición natural e innata a reaccionar de una determinada manera. Puede ser colérico, melancólico, sanguíneo o flemático. Nacemos con nuestro temperamento y no podemos cambiarlo: morimos con las cualidades y defectos de nuestro temperamento.",
-        "Sobre la base de nuestro temperamento, construimos nuestro carácter. El carácter se compone de virtudes, como la prudencia, el valor, el autocontrol, la justicia, la magnanimidad y la humildad. Las virtudes son hábitos morales, fortalezas espirituales que se adquieren y desarrollan con la práctica. No nacemos con nuestro carácter, lo construimos."
+        [
+          "La personalidad humana se compone de un temperamento y un carácter."
+        ],
+        [
+          "El temperamento es una predisposición natural e innata a reaccionar de una determinada manera.",
+          "Puede ser:",
+          {
+            "chips": [
+              "Colérico",
+              "Melancólico",
+              "Sanguíneo",
+              "Flemático"
+            ]
+          },
+          "Nacemos con nuestro temperamento y **no podemos cambiarlo**: morimos con las cualidades y defectos de nuestro temperamento."
+        ],
+        [
+          "Sobre la base de nuestro temperamento, construimos nuestro carácter.",
+          "El carácter se compone de virtudes como:",
+          {
+            "chips": [
+              "Prudencia",
+              "Valor",
+              "Autocontrol",
+              "Justicia",
+              "Magnanimidad",
+              "Humildad"
+            ]
+          },
+          "Las virtudes son hábitos morales, fortalezas espirituales que se adquieren y desarrollan con la práctica.",
+          "**No nacemos con nuestro carácter, lo construimos.**"
+        ]
       ],
       "modulo": 0
     },
