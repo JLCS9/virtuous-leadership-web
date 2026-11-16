@@ -11,6 +11,7 @@ import curso2Data from '../data/curso2.json';
 import curso3Data from '../data/curso3.json';
 import curso4Data from '../data/curso4.json';
 import curso5Data from '../data/curso5.json';
+import curso6Data from '../data/curso6.json';
 import curso7Data from '../data/curso7.json';
 import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT } from '../theme';
 import { barraFondo, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
@@ -355,13 +356,14 @@ function ModuloCursoCard({ cursoNum, titulo, completados, jsonData, portadas, br
 }
 
 function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
-  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2 && c.numero !== 3 && c.numero !== 4 && c.numero !== 5 && c.numero !== 7);
+  const cursos = todosLosCursos.filter((c) => c.numero !== 1 && c.numero !== 2 && c.numero !== 3 && c.numero !== 4 && c.numero !== 5 && c.numero !== 6 && c.numero !== 7);
 
   const c1Hook = useModuloProgreso(userId, 'curso1', 1);
   const c2Hook = useModuloProgreso(userId, 'curso2', 2);
   const c3Hook = useModuloProgreso(userId, 'curso3', 3);
   const c4Hook = useModuloProgreso(userId, 'curso4', 4);
   const c5Hook = useModuloProgreso(userId, 'curso5', 5);
+  const c6Hook = useModuloProgreso(userId, 'curso6', 6);
   const c7Hook = useModuloProgreso(userId, 'curso7', 7);
 
   const c1Pasos = pasosDelUsuario(curso1Data, null);
@@ -369,17 +371,19 @@ function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
   const c3Pasos = pasosDelUsuario(curso3Data, null);
   const c4Pasos = pasosDelUsuario(curso4Data, null);
   const c5Pasos = pasosDelUsuario(curso5Data, null);
+  const c6Pasos = pasosDelUsuario(curso6Data, null);
   const c7Pasos = pasosDelUsuario(curso7Data, null);
   const c1Prog = progresoModuloCards(c1Pasos, c1Hook.completados);
   const c2Prog = progresoModuloCards(c2Pasos, c2Hook.completados);
   const c3Prog = progresoModuloCards(c3Pasos, c3Hook.completados);
   const c4Prog = progresoModuloCards(c4Pasos, c4Hook.completados);
   const c5Prog = progresoModuloCards(c5Pasos, c5Hook.completados);
+  const c6Prog = progresoModuloCards(c6Pasos, c6Hook.completados);
   const c7Prog = progresoModuloCards(c7Pasos, c7Hook.completados);
 
   const resumenCursos = resumenGlobal(cursos, progreso.vistas);
-  const totalLecciones = resumenCursos.total + c1Prog.total + c2Prog.total + c3Prog.total + c4Prog.total + c5Prog.total + c7Prog.total;
-  const hechasLecciones = resumenCursos.hechas + c1Prog.hechos + c2Prog.hechos + c3Prog.hechos + c4Prog.hechos + c5Prog.hechos + c7Prog.hechos;
+  const totalLecciones = resumenCursos.total + c1Prog.total + c2Prog.total + c3Prog.total + c4Prog.total + c5Prog.total + c6Prog.total + c7Prog.total;
+  const hechasLecciones = resumenCursos.hechas + c1Prog.hechos + c2Prog.hechos + c3Prog.hechos + c4Prog.hechos + c5Prog.hechos + c6Prog.hechos + c7Prog.hechos;
   const porcentaje = totalLecciones ? Math.round((hechasLecciones / totalLecciones) * 100) : 0;
 
   return (
@@ -423,6 +427,8 @@ function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
       <ModuloCursoCard cursoNum={4} titulo="Practicar las 4 virtudes fundamentales" completados={c4Hook.completados} jsonData={curso4Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       <ModuloCursoCard cursoNum={5} titulo="Corazón, intelecto y voluntad" completados={c5Hook.completados} jsonData={curso5Data}
+        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+      <ModuloCursoCard cursoNum={6} titulo="Descubre tu misión" completados={c6Hook.completados} jsonData={curso6Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       <ModuloCursoCard cursoNum={7} titulo="La educación del corazón" completados={c7Hook.completados} jsonData={curso7Data}
         portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />

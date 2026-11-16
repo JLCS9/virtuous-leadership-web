@@ -1,0 +1,675 @@
+{
+  "id": "curso6",
+  "titulo": "Descubre tu misión",
+  "curso": 6,
+  "pasos": [
+    {
+      "id": "m6-01",
+      "num": 1,
+      "tipo": "video",
+      "titulo": "Descubre tu misión",
+      "vimeoId": "924678340",
+      "visible": true,
+      "leccion": 1,
+      "modulo": 0,
+      "intro": [
+        [
+          "Mi misión es mi contribución específica al bien común de la humanidad.",
+          "No está determinada en el tiempo: **es algo que hago sin interrupción**."
+        ],
+        [
+          "Mi misión…",
+          {
+            "chips": [
+              "Orienta mi existencia",
+              "Determina mis objetivos",
+              "Me mantiene centrado"
+            ]
+          }
+        ],
+        [
+          "Para descubrir mi misión, tengo que responder a dos preguntas:",
+          {
+            "chips": [
+              "¿Cuál es mi historia y cuál es mi talento?",
+              "¿Cuál es el reto cultural o social al que me siento llamado a responder con pasión y determinación?"
+            ]
+          }
+        ]
+      ]
+    },
+    {
+      "id": "m6-02",
+      "num": 2,
+      "tipo": "video",
+      "titulo": "¿Qué es una misión?",
+      "vimeoId": "924678464",
+      "visible": false,
+      "leccion": 2,
+      "modulo": 0,
+      "continua_modulo": true
+    },
+    {
+      "id": "m6-03",
+      "num": 3,
+      "tipo": "lectura",
+      "titulo": "¿Qué es una misión?",
+      "visible": false,
+      "modulo": 0,
+      "lecturas": [
+        [
+          {
+            "enfasis": "Vocación: una llamada a ser"
+          },
+          "Viene del latín «vocare», llamar. Estoy llamado a ser una persona concreta. **La vocación es el marco de mi vida.** Para Havard, descubrirla supone un mínimo de sentido religioso.",
+          {
+            "enfasis": "Misión: una llamada a la acción"
+          },
+          "Viene del latín «missio», enviar. Estoy enviado a hacer algo concreto. **La misión es mi contribución al bien común de la humanidad.**",
+          "Hacen falta las dos: una vocación sin misión no tiene contenido; una misión sin vocación no tiene marco."
+        ],
+        [
+          "Mi misión es **específica**. «Ser una buena madre» o «ser el número uno» no son misiones: son demasiado genéricas.",
+          "Tengo **una sola misión** y la cumplo todo el tiempo, de mil maneras distintas, hasta el final de mi vida. No es como el soldado, que recibe una misión tras otra.",
+          {
+            "cita": "Tú eres tu misión."
+          }
+        ]
+      ]
+    },
+    {
+      "id": "m6-04",
+      "num": 4,
+      "tipo": "quiz",
+      "titulo": "Cuestionario 1",
+      "visible": false,
+      "modulo": 0,
+      "preguntas": [
+        {
+          "texto": "¿Qué es una Misión?",
+          "opciones": [
+            "Una respuesta activa a un desafío de carácter cultural o social",
+            "Tu contribución específica al bien común de la humanidad",
+            "Una definición de lo que te hace único",
+            "Todas las respuestas son correctas"
+          ],
+          "correcta": 3
+        },
+        {
+          "texto": "¿En qué se diferencia la Misión de la Vocación?",
+          "opciones": [
+            "La vocación es una forma de ser, la Misión es lo que debo hacer",
+            "La vocación nace en el hombre como una iniciativa desde lo alto (de Dios, según cómo lo entienda), mientras que la Misión es formulada por la propia persona como el fruto de la puesta en práctica de sus talentos",
+            "La vocación es un marco de vida para la persona y para su Misión",
+            "Todas las respuestas son correctas"
+          ],
+          "correcta": 3
+        },
+        {
+          "texto": "Completa la frase: «Yo soy…»",
+          "opciones": [
+            "Mi Misión",
+            "Mis deseos",
+            "Mis pensamientos",
+            "Todas las respuestas son correctas"
+          ],
+          "correcta": 0
+        },
+        {
+          "texto": "¿Cuánto tiempo se necesita para cumplir una Misión?",
+          "opciones": [
+            "1 año",
+            "5 años",
+            "10 años",
+            "Toda la vida"
+          ],
+          "correcta": 3
+        }
+      ]
+    },
+    {
+      "id": "m6-concl-1",
+      "tipo": "conclusion_modulo",
+      "visible": false,
+      "titulo": "Resumen: ¿Qué es una misión?",
+      "modulo_numero": 0,
+      "modulo_titulo": "¿Qué es una misión?",
+      "modulo": 0,
+      "aprendizajes": [
+        "Mi misión es mi contribución específica al bien común de la humanidad",
+        "La vocación es una llamada a ser; la misión, una llamada a la acción",
+        "Tengo una sola misión y la cumplo toda la vida: yo soy mi misión"
+      ],
+      "ejercicios_evaluables": [
+        {
+          "id": "m6-04",
+          "label": "Cuestionario"
+        }
+      ]
+    },
+    {
+      "id": "m6-05",
+      "num": 5,
+      "tipo": "video",
+      "titulo": "Ejemplos de misiones",
+      "vimeoId": "924678683",
+      "visible": false,
+      "leccion": 3,
+      "modulo": 1
+    },
+    {
+      "id": "m6-06",
+      "num": 6,
+      "tipo": "lectura",
+      "titulo": "Ejemplos de misiones",
+      "visible": false,
+      "modulo": 1,
+      "lecturas": [
+        [
+          "Havard pone cuatro ejemplos. En todos, la misión nace al unir dos cosas:",
+          {
+            "chips": [
+              "Mi talento",
+              "El desafío del mundo en que vivo"
+            ]
+          }
+        ],
+        [
+          {
+            "enfasis": "Aleksandr Solzhenitsyn"
+          },
+          "Escritor ruso, Premio Nobel de Literatura (1918–2008).",
+          {
+            "enfasis": "Misión"
+          },
+          {
+            "cita": "Quería ser la memoria de un pueblo víctima de una tragedia indecible."
+          },
+          {
+            "enfasis": "Talento"
+          },
+          "Escribir. En el gulag, sin papel, escribía de memoria, y sus compañeros de cárcel le decían que lo hacía muy bien.",
+          {
+            "enfasis": "Desafío"
+          },
+          "Los millones de personas sin voz que morían bajo el comunismo, y la grandeza de quienes lo afrontaron con dignidad."
+        ],
+        [
+          {
+            "enfasis": "Jérôme Lejeune"
+          },
+          "Médico y genetista francés (1926–1994).",
+          {
+            "enfasis": "Misión"
+          },
+          {
+            "cita": "Quería defender la verdad científica y la gran verdad moral que se deriva de ella."
+          },
+          {
+            "enfasis": "Talento"
+          },
+          "La ciencia. Fue un genetista de altísimo nivel: descubrió la causa del síndrome de Down.",
+          {
+            "enfasis": "Desafío"
+          },
+          "Defender la vida humana con la verdad científica."
+        ],
+        [
+          {
+            "enfasis": "Madre Teresa de Calcuta"
+          },
+          "Fundadora de las Misioneras de la Caridad (1910–1997).",
+          {
+            "enfasis": "Misión"
+          },
+          {
+            "cita": "Quería ser madre de los más pobres entre los pobres de la tierra."
+          },
+          {
+            "enfasis": "Talento"
+          },
+          "La maternidad espiritual.",
+          {
+            "enfasis": "Desafío"
+          },
+          "La pobreza extrema: que quienes habían vivido como animales murieran como ángeles, conociendo el amor.",
+          "Un día le ofrecieron millones de dólares para dirigir grandes hospitales. Ella respondió:",
+          {
+            "cita": "Mi misión es ser una madre, no una enfermera."
+          },
+          "**Una misión clara ayuda a tomar buenas decisiones.**"
+        ],
+        [
+          {
+            "enfasis": "Alexandre Havard"
+          },
+          "Fundador del Liderazgo Virtuoso.",
+          {
+            "enfasis": "Misión"
+          },
+          {
+            "cita": "Encender los corazones para la grandeza."
+          },
+          {
+            "enfasis": "Talento"
+          },
+          "Enseñar e inspirar: ir al corazón de las personas, y no solo a su inteligencia.",
+          {
+            "enfasis": "Desafío"
+          },
+          "La pusilanimidad: un mundo que hace a las personas pequeñas."
+        ]
+      ]
+    },
+    {
+      "id": "m6-07",
+      "num": 7,
+      "tipo": "quiz",
+      "titulo": "Cuestionario 2",
+      "visible": false,
+      "modulo": 1,
+      "preguntas": [
+        {
+          "texto": "¿A quién pertenece esta misión? «Ser la memoria de un pueblo víctima de una gran tragedia.»",
+          "opciones": [
+            "Aleksandr Solzhenitsyn",
+            "Jérôme Lejeune",
+            "Madre Teresa",
+            "Alexandre Havard"
+          ],
+          "correcta": 0
+        },
+        {
+          "texto": "¿A quién pertenece esta misión? «Afirmar la verdad científica y la verdad moral que de ella se deriva.»",
+          "opciones": [
+            "Aleksandr Solzhenitsyn",
+            "Jérôme Lejeune",
+            "Madre Teresa",
+            "Alexandre Havard"
+          ],
+          "correcta": 1
+        },
+        {
+          "texto": "¿A quién pertenece esta misión? «Ser una madre para los más pobres entre los pobres de la tierra.»",
+          "opciones": [
+            "Aleksandr Solzhenitsyn",
+            "Jérôme Lejeune",
+            "Madre Teresa",
+            "Alexandre Havard"
+          ],
+          "correcta": 2
+        },
+        {
+          "texto": "¿A quién pertenece esta misión? «Encender los corazones para la grandeza.»",
+          "opciones": [
+            "Aleksandr Solzhenitsyn",
+            "Jérôme Lejeune",
+            "Madre Teresa",
+            "Alexandre Havard"
+          ],
+          "correcta": 3
+        }
+      ]
+    },
+    {
+      "id": "m6-concl-2",
+      "tipo": "conclusion_modulo",
+      "visible": false,
+      "titulo": "Resumen: Ejemplos de misiones",
+      "modulo_numero": 1,
+      "modulo_titulo": "Ejemplos de misiones",
+      "modulo": 1,
+      "aprendizajes": [
+        "Una misión nace al unir mi talento y el desafío del mundo en que vivo",
+        "Cuatro misiones: ser memoria, defender la verdad científica, ser madre, encender los corazones",
+        "Una misión clara ayuda a tomar buenas decisiones"
+      ],
+      "ejercicios_evaluables": [
+        {
+          "id": "m6-07",
+          "label": "Cuestionario"
+        }
+      ]
+    },
+    {
+      "id": "m6-08",
+      "num": 8,
+      "tipo": "video",
+      "titulo": "¿Por qué una misión?",
+      "vimeoId": "924679235",
+      "visible": false,
+      "leccion": 4,
+      "modulo": 2
+    },
+    {
+      "id": "m6-09",
+      "num": 9,
+      "tipo": "lectura",
+      "titulo": "¿Por qué una misión?",
+      "visible": false,
+      "modulo": 2,
+      "lecturas": [
+        [
+          "Havard da tres razones para tener una misión:",
+          {
+            "enfasis": "Orienta mi existencia"
+          },
+          "Me da una dirección. Lejeune sabía que lo suyo era hablar como científico, no como filósofo ni como teólogo.",
+          {
+            "enfasis": "Determina mis objetivos"
+          },
+          "La misión fija los objetivos, y no al revés. Sin misión, los objetivos se contradicen unos a otros porque nada los unifica: se hacen muchas cosas y al final no se hace nada.",
+          {
+            "enfasis": "Me mantiene centrado"
+          },
+          "Un visitante hablaba con Solzhenitsyn, que le escuchaba con cortesía. En cuanto dijo que había estado en un campo de concentración, Solzhenitsyn sacó papel y lápiz y se lo preguntó todo. Era la memoria de esa época."
+        ]
+      ]
+    },
+    {
+      "id": "m6-10",
+      "num": 10,
+      "tipo": "quiz",
+      "titulo": "Cuestionario 3",
+      "visible": false,
+      "modulo": 2,
+      "preguntas": [
+        {
+          "texto": "¿Cuál de las siguientes afirmaciones es incorrecta?",
+          "opciones": [
+            "Mi misión define mis objetivos",
+            "Mi misión me permite estar enfocado",
+            "Mis objetivos definen mi misión",
+            "Mi misión da dirección a mi existencia"
+          ],
+          "correcta": 2
+        },
+        {
+          "texto": "A la Madre Teresa le ofrecieron millones para dirigir grandes hospitales. ¿Por qué dijo que no?",
+          "opciones": [
+            "No quería depender del dinero",
+            "Su misión era ser madre de los más pobres, no enfermera",
+            "No sabía de medicina",
+            "Prefería trabajar sola"
+          ],
+          "correcta": 1
+        },
+        {
+          "texto": "¿Qué le pasa a quien se fija objetivos sin tener una misión?",
+          "opciones": [
+            "Sus objetivos se contradicen, porque nada los unifica",
+            "Los cumple antes",
+            "Se fija objetivos más ambiciosos",
+            "No le pasa nada"
+          ],
+          "correcta": 0
+        },
+        {
+          "texto": "Solzhenitsyn sacaba papel y lápiz en cuanto alguien le hablaba de un campo de concentración. ¿Qué muestra este ejemplo?",
+          "opciones": [
+            "Que una misión te mantiene centrado",
+            "Que era periodista",
+            "Que desconfiaba de la gente",
+            "Que buscaba ideas para una novela"
+          ],
+          "correcta": 0
+        }
+      ]
+    },
+    {
+      "id": "m6-concl-3",
+      "tipo": "conclusion_modulo",
+      "visible": false,
+      "titulo": "Resumen: ¿Por qué una misión?",
+      "modulo_numero": 2,
+      "modulo_titulo": "¿Por qué una misión?",
+      "modulo": 2,
+      "aprendizajes": [
+        "Mi misión orienta mi existencia: me da una dirección",
+        "Mi misión determina mis objetivos, y no al revés",
+        "Mi misión me mantiene centrado en lo esencial"
+      ],
+      "ejercicios_evaluables": [
+        {
+          "id": "m6-10",
+          "label": "Cuestionario"
+        }
+      ]
+    },
+    {
+      "id": "m6-11",
+      "num": 11,
+      "tipo": "video",
+      "titulo": "Mi misión",
+      "vimeoId": "924679399",
+      "visible": false,
+      "leccion": 5,
+      "modulo": 3
+    },
+    {
+      "id": "m6-12",
+      "num": 12,
+      "tipo": "lectura",
+      "titulo": "Lecturas recomendadas",
+      "visible": false,
+      "modulo": 3,
+      "lecturas": [
+        [
+          "Havard termina el curso recomendando dos libros:",
+          {
+            "enfasis": "«Coaching con Juana de Arco»"
+          },
+          "Juana de Arco fue una joven con un sentido de misión muy desarrollado. El libro cuenta cómo descubrió su misión y cómo la cumplió.",
+          {
+            "enfasis": "«Mi camino hacia el liderazgo virtuoso»"
+          },
+          "La biografía espiritual de Havard: el trabajo que hizo sobre sí mismo para conocerse y descubrir su misión. Te puede inspirar para escribir la tuya."
+        ]
+      ]
+    },
+    {
+      "id": "m6-concl-4",
+      "tipo": "conclusion_modulo",
+      "visible": false,
+      "titulo": "Resumen: Mi misión",
+      "modulo_numero": 3,
+      "modulo_titulo": "Mi misión",
+      "modulo": 3,
+      "aprendizajes": [
+        "La misión es fruto del autoconocimiento; si no, es un capricho",
+        "Para descubrirla, cuento mi historia, reconozco mis talentos y miro el desafío de mi tiempo",
+        "Mi misión debe ser corta, para recordarla, y densa, para cumplirla cada día"
+      ],
+      "ejercicios_evaluables": []
+    },
+    {
+      "id": "m6-proyecto",
+      "num": 13,
+      "tipo": "proyecto_mision",
+      "titulo": "Descubre tu misión",
+      "visible": false,
+      "modulo": "final",
+      "proyecto_final": true,
+      "resumen_ficha": true,
+      "prioridad_ficha": 1,
+      "recuerdo_curso2": {
+        "paso": "m2-14",
+        "indices": [
+          7,
+          8,
+          9
+        ],
+        "titulo": "Lo que escribiste en el Curso 2",
+        "texto": "En el Curso 2 reflexionaste sobre tu misión. Esto es lo que escribiste:"
+      },
+      "secciones": [
+        {
+          "id": "historia",
+          "titulo": "Mi historia",
+          "lecturas": [
+            [
+              "Para responder a la pregunta «¿Quién soy?» necesito conocer bien mi historia y contemplarla.",
+              "**Es mi historia, y no mis caprichos, la que define mi misión.**",
+              {
+                "cita": "Mi historia no es sólo mi historia. Es también la historia de las personas que viven en mí de un modo u otro porque su influencia sobre mí fue considerable."
+              }
+            ],
+            [
+              "Recordar es un esfuerzo moral: me esfuerzo por recordar lo bueno que he recibido y por ser agradecido. Si hay heridas, la única manera de curarlas es perdonar.",
+              "El género de mi relato es el de la **autobiografía espiritual**. Escribo para conocerme y comprenderme, no para que otros me lean. Escribo en círculo, como vuela el águila: vuelvo una y otra vez a mis raíces."
+            ]
+          ],
+          "preguntas": [
+            {
+              "texto": "Las personas que han dejado en mí una huella profunda, un rastro indeleble.",
+              "placeholder": "¿Quiénes son? ¿Qué te dejó cada una de ellas?",
+              "obligatoria": true,
+              "ejemplo": "Havard dedica los tres primeros capítulos de su biografía espiritual a sus abuelos, sus padres y sus hermanos. Sus abuelos habían sufrido la Primera Guerra Mundial y habían huido del bolchevismo; de cada uno recibió algo distinto, y en todos vio grandeza. Estas personas siguen viviendo en ti, aunque hayan muerto."
+            },
+            {
+              "texto": "Los acontecimientos que forjaron mi personalidad.",
+              "placeholder": "¿Qué momentos te marcaron? ¿Qué descubriste en ellos?",
+              "obligatoria": false,
+              "ejemplo": "Al llegar a la universidad, en los años 70, Havard vio que el mundo que le rodeaba no se parecía a la grandeza que había conocido en su familia: era un mundo de consumismo y de gente sin raíces. Ese contraste le marcó."
+            },
+            {
+              "texto": "Mi país, sus grandezas y sus miserias.",
+              "placeholder": "¿Qué hay de excepcional en tu país y en su tradición? ¿Qué te hace sufrir de él hoy?",
+              "obligatoria": false,
+              "ejemplo": "Para Havard, cada país tiene unos dones propios y una misión en la historia. Eres miembro de esa familia nacional y has recibido mucho de ella: descubre su grandeza. Pero sé objetivo y habla también de lo que va contra lo mejor de tu patria."
+            },
+            {
+              "texto": "Libros, películas y música que me inspiran.",
+              "placeholder": "¿Qué obras te han tocado? ¿Qué dicen de ti?",
+              "obligatoria": false,
+              "ejemplo": "Andréi Tarkovski estrenó «El espejo» en los años 70. Un día recibió la carta de una mujer que le preguntaba cómo conocía su vida: no la conocía, pero la película contaba la esencia de su vida. Si una obra te toca, es porque habla de ti."
+            },
+            {
+              "texto": "Intento descubrir el tema principal de mi existencia.",
+              "placeholder": "¿Qué vuelve una y otra vez en tu historia?",
+              "obligatoria": true,
+              "ejemplo": "Así descubrió Havard el suyo: «Vi grandeza en mis padres, mis abuelos, mis amigos, mis profesores. Al mismo tiempo, vi un océano de pusilanimidad, producto del consumismo y del relativismo moral, que barría el mundo. Observé con asombro la aparición de nuevas criaturas, las del Mundo feliz de Aldous Huxley: seres sin pasado, sin patria, sin familia, sin Dios. Vi a los hombres sin pecho de C.S. Lewis, a los amputados de corazón de Jacques Brel. Me aterroricé y decidí actuar. Mi misión —encender corazones para la grandeza— se convirtió en mi respuesta personal a esta catástrofe antropológica.» (Alexandre Havard, «Mi camino hacia el liderazgo virtuoso»)"
+            }
+          ]
+        },
+        {
+          "id": "talentos",
+          "titulo": "Mis talentos",
+          "lecturas": [
+            [
+              "Tu misión está relacionada con tu historia y con tus talentos. Pregúntate: **¿Qué se me da bien?**",
+              "Hablar de tus talentos no es orgullo: es humildad, vivir en la verdad sobre ti mismo. Tus talentos son un don; tú solo los multiplicas. Si no los conoces bien, pide a otros su opinión.",
+              "**Mi misión está donde está mi excelencia.**"
+            ]
+          ],
+          "preguntas": [
+            {
+              "texto": "Temperamento",
+              "placeholder": "¿Qué talentos te da tu temperamento?",
+              "obligatoria": false,
+              "ayuda_temperamento": true,
+              "ejemplo": "Havard es melancólico: su temperamento le orienta hacia las ideas y la creatividad, y eso le ayuda a avanzar en su misión de encender los corazones para la grandeza."
+            },
+            {
+              "texto": "Carácter",
+              "placeholder": "¿Qué virtudes ya tienes desarrolladas?",
+              "obligatoria": false
+            },
+            {
+              "texto": "Cuerpo",
+              "placeholder": "¿Qué dones físicos tienes?",
+              "obligatoria": false
+            },
+            {
+              "texto": "Corazón",
+              "placeholder": "¿Qué te mueve? ¿Qué sabes amar?",
+              "obligatoria": false
+            },
+            {
+              "texto": "Voluntad",
+              "placeholder": "¿En qué eres constante y firme?",
+              "obligatoria": false
+            },
+            {
+              "texto": "Inteligencia",
+              "placeholder": "¿Qué entiendes con facilidad?",
+              "obligatoria": false
+            },
+            {
+              "texto": "Talento específico",
+              "placeholder": "¿Qué haces de forma excelente?",
+              "obligatoria": true,
+              "ejemplo": "Havard daba clase en la Universidad de Helsinki. Sus alumnos le decían: «Usted no nos da solo información, nos da formación». Era un buen abogado, pero vio que en esto era excelente, y dejó la abogacía para dedicarse a enseñar."
+            }
+          ],
+          "temperamentos": {
+            "MEL": "Para Havard, el melancólico es idealista y creativo: crea cosas nuevas todo el tiempo. Su misión probablemente va en la dirección de las ideas.",
+            "COL": "Para Havard, el colérico es acción y energía: sabe hacer avanzar una idea y venderla al mundo. Muchas veces crea organizaciones.",
+            "SAN": "Para Havard, el sanguíneo es un comunicador nato: sabe reunir a la gente y convencerla de que vale la pena un proyecto.",
+            "FLE": "Para Havard, el flemático es tranquilo y sistemático: convierte las ideas en procesos que duran años, incluso siglos."
+          }
+        },
+        {
+          "id": "desafio",
+          "titulo": "Mi desafío",
+          "lecturas": [
+            [
+              "Ya te conoces mejor: tu historia y tus talentos. Ahora mira el mundo en el que vives hoy.",
+              "**Tu misión nace del contraste entre quién eres y lo que pasa en el mundo.**"
+            ]
+          ],
+          "preguntas": [
+            {
+              "texto": "¿Cuál es el reto cultural o social al que me siento llamado a responder con pasión y determinación?",
+              "placeholder": "¿Qué pasa en el mundo que te disgusta profundamente y contra lo que quieres luchar?",
+              "obligatoria": true,
+              "ejemplo": "Solzhenitsyn: el mundo del comunismo y de los campos de concentración. Madre Teresa: los más pobres entre los pobres. Lejeune: defender la vida humana con la verdad científica. Havard: la pusilanimidad, la pequeñez del ser humano en los siglos XX y XXI."
+            }
+          ]
+        },
+        {
+          "id": "declaracion",
+          "titulo": "Mi declaración de misión",
+          "lecturas": [
+            [
+              "Mi misión debe formularse de tal manera que:",
+              "1. Destaque claramente el reto cultural o social al que respondo con pasión y determinación a través de mis acciones.",
+              "2. Pueda cumplirla de formas muy distintas cada día.",
+              "Havard añade: **corta**, para recordarla; **densa**, para cumplirla mil veces al día. Si no eres poeta, pide ayuda a un amigo que lo sea."
+            ]
+          ],
+          "preguntas": [
+            {
+              "texto": "Escribe aquí tu declaración de misión personal.",
+              "placeholder": "En pocas palabras.",
+              "obligatoria": true,
+              "contador_palabras": {
+                "min": 3,
+                "max": 5,
+                "texto": "Orientación: de 3 a 5 palabras"
+              },
+              "ejemplo": "Solzhenitsyn: «Quería ser la memoria de un pueblo víctima de una tragedia indecible». Lejeune: «Quería defender la verdad científica y la gran verdad moral que se deriva de ella». Madre Teresa: «Quería ser madre de los más pobres entre los pobres de la tierra». Las palabras clave son «memoria», «verdad científica», «madre»: precisas y generosas a la vez. Se puede ser madre todos los días, ser memoria todos los días, y todos los días se puede gritar una verdad científica."
+            }
+          ]
+        },
+        {
+          "id": "organizacion",
+          "titulo": "Mi misión y la de mi organización",
+          "opcional": true,
+          "lecturas": [],
+          "preguntas": [
+            {
+              "texto": "Si trabajo en una empresa o en una asociación: ¿en qué medida, al cumplir la misión de mi organización, estoy cumpliendo mi misión personal?",
+              "placeholder": "¿Tu trabajo te ayuda a cumplir tu misión o te aleja de ella?",
+              "obligatoria": false
+            }
+          ]
+        }
+      ],
+      "cierre": {
+        "titulo": "Tu misión",
+        "texto": "Este trabajo no termina hoy. Cada mes, tómate unas horas para reconsiderar, corregir y completar lo que has empezado. Tu misión aparecerá en «Mi perfil»."
+      }
+    }
+  ]
+}

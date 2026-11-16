@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../account/supabase';
+import { trackCompletado, trackPaso } from '../lib/track';
 
 const EVALUABLES = ['quiz', 'define', 'desliza'];
 const UMBRAL = 0.70;
@@ -41,9 +42,12 @@ function leerLS(userId, cursoId) {
   } catch { return vacio(); }
 }
 
-function useModuloProgresoLS(userId, moduloId) {
+function useModuloProgresoLS(userId, moduloId, cursoNum) {
   const [estado, setEstado] = useState(() => leerLS(userId, moduloId));
   useEffect(() => { setEstado(leerLS(userId, moduloId)); }, [userId, moduloId]);
+  const estadoRef = useRef(estado);
+  estadoRef.current = estado;
+  const curso = cursoNum ?? moduloId;
 
   const cambiar = useCallback((f) => {
     setEstado((previo) => {
@@ -57,11 +61,23 @@ function useModuloProgresoLS(userId, moduloId) {
     completados: estado.completados,
     pasoActual: estado.pasoActual,
     cargando: false,
-    completar: (pasoId, resultado) => cambiar((p) => ({
-      completados: { ...p.completados, [pasoId]: { fecha: new Date().toISOString(), ...(resultado ?? {}) } },
-      pasoActual: p.pasoActual,
-    })),
-    irA: (pasoId) => cambiar((p) => ({ ...p, pasoActual: pasoId })),
+    completar: (pasoId, resultado, paso) => {
+      trackCompletado({
+        curso, pasoId, tipo: paso?.tipo, modulo: paso?.modulo, resultado,
+        previo: estadoRef.current.completados[pasoId],
+      });
+      cambiar((p) => ({
+        completados: { ...p.completados, [pasoId]: { fecha: new Date().toISOString(), ...(resultado ?? {}) } },
+        pasoActual: p.pasoActual,
+      }));
+    },
+    irA: (pasoId, totalPasos) => {
+      trackPaso({
+        curso, pasoId, totalPasos,
+        completados: Object.keys(estadoRef.current.completados).length,
+      });
+      cambiar((p) => ({ ...p, pasoActual: pasoId }));
+    },
     reset: () => cambiar(() => vacio()),
   };
 }
@@ -116,6 +132,11 @@ function useModuloProgresoBD(userId, cursoNum) {
     const modulo = paso?.modulo ?? 0;
     const aprobado = calcularAprobado(tipo, resultado);
 
+    trackCompletado({
+      curso: cursoNum, pasoId, tipo, modulo, resultado, aprobado,
+      previo: completadosRef.current[pasoId],
+    });
+
     setCompletados((prev) => ({
       ...prev,
       [pasoId]: { fecha: ahora, ...(resultado ?? {}), aprobado },
@@ -138,6 +159,7 @@ function useModuloProgresoBD(userId, cursoNum) {
   const irA = useCallback((pasoId, totalPasos) => {
     setPasoActual(pasoId);
     const numCompletados = Object.keys(completadosRef.current).length;
+    trackPaso({ curso: cursoNum, pasoId, totalPasos, completados: numCompletados });
 
     supabase.from('progreso_curso').upsert({
       user_id: userId,
@@ -164,4 +186,4 @@ function useModuloProgresoBD(userId, cursoNum) {
 // viola la regla de hooks de React (siempre se llama la misma implementación).
 export const useModuloProgreso = supabase
   ? function useModuloProgreso(userId, _moduloId, cursoNum) { return useModuloProgresoBD(userId, cursoNum ?? 0); }
-  : function useModuloProgreso(userId, moduloId) { return useModuloProgresoLS(userId, moduloId); };
+  : function useModuloProgreso(userId, moduloId, cursoNum) { return useModuloProgresoLS(userId, moduloId, cursoNum); };

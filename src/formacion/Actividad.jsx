@@ -32,6 +32,7 @@ import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
 import { scoreCharacter } from '../lib/characterScoring';
+import curso2Data from '../data/curso2.json';
 import HEART_TEST from '../data/heart-test.json';
 import HEART_SUPPORT from '../data/heart-support-text.json';
 import { scoreHeart, HEART_DISORDER_CODES } from '../lib/heartScoring';
@@ -171,9 +172,16 @@ function BotonOpcion({ texto, seleccionada, correcta, revelada, onClick }) {
 
 /* ─── QUIZ ─── */
 
-function shuffleIndices(n) {
+function shuffleIndices(n, opciones) {
+  const todasIdx = opciones ? opciones.findIndex(o => typeof o === 'string' && o.startsWith('Todas las respuestas')) : -1;
   const arr = Array.from({ length: n }, (_, i) => i);
-  for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  if (todasIdx >= 0) {
+    arr.splice(todasIdx, 1);
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+    arr.push(todasIdx);
+  } else {
+    for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  }
   return arr;
 }
 
@@ -190,6 +198,7 @@ const CARATULA_TEXTOS = {
   temperamento_magnanimidad: { icono: '✶', tipo: 'Tu temperamento', desc: 'Descubre cómo tu temperamento puede ayudarte a practicar esta virtud.' },
   armonia_temperamento: { icono: '✶', tipo: 'Tu temperamento', desc: 'Descubre hacia qué facultad te inclina tu temperamento y cuál prevalece en tu vida.' },
   objetivos_corazon: { icono: '♡', tipo: 'Mis objetivos prácticos', desc: 'Fija tus objetivos para las enfermedades en las que más puntúas.' },
+  proyecto_mision: { icono: '✦', tipo: 'Proyecto final', desc: 'Este es el ejercicio más importante del curso. Reserva una o dos horas tranquilas: vas a escribir tu historia, reconocer tus talentos y formular tu misión. Todo se guarda: puedes parar y volver cuando quieras. Havard dice que este trabajo puede durar años. Empieza hoy.' },
 };
 
 function Caratula({ paso, tipo, onEmpezar, modulo }) {
@@ -316,7 +325,7 @@ export function Quiz({ paso, onComplete, modulo }) {
   />;
 
   const preg = preguntas[idx];
-  if (!ordenRef.current[idx]) ordenRef.current[idx] = shuffleIndices(preg.opciones.length);
+  if (!ordenRef.current[idx]) ordenRef.current[idx] = shuffleIndices(preg.opciones.length, preg.opciones);
   const orden = ordenRef.current[idx];
 
   function elegir(originalIdx) {
@@ -4837,6 +4846,552 @@ export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userId
             padding: '14px 36px', cursor: 'pointer',
           }}>
             {esUltima ? 'Finalizar plan →' : 'Siguiente →'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── PROYECTO MISIÓN (Curso 6) ─── */
+
+const PROY_KEY = (pasoId) => `vl-proyecto-mision:${pasoId}`;
+
+function leerProyecto(pasoId, secciones) {
+  const vacio = {};
+  for (const sec of secciones) vacio[sec.id] = Array(sec.preguntas.length).fill('');
+  try {
+    const d = JSON.parse(localStorage.getItem(PROY_KEY(pasoId)));
+    if (d && typeof d === 'object' && !Array.isArray(d)) {
+      for (const sec of secciones) {
+        if (!Array.isArray(d[sec.id]) || d[sec.id].length !== sec.preguntas.length) {
+          d[sec.id] = vacio[sec.id];
+        }
+      }
+      return d;
+    }
+  } catch {}
+  return vacio;
+}
+
+function contarPalabras(text) {
+  if (!text || !text.trim()) return 0;
+  return text.trim().split(/\s+/).length;
+}
+
+export function ProyectoMision({ paso, onComplete, temperamento, completados, guardado, volver }) {
+  const secciones = paso.secciones ?? [];
+  const totalPreguntas = secciones.reduce((n, s) => n + s.preguntas.length, 0);
+
+  const yaCompletado = Boolean(guardado?.completado);
+
+  const [fase, setFase] = useState(() => {
+    if (yaCompletado) return 'indice';
+    return 'caratula';
+  });
+  const [secIdx, setSecIdx] = useState(0);
+  const [pregIdx, setPregIdx] = useState(0);
+  const [lectIdx, setLectIdx] = useState(0);
+  const [lectVisible, setLectVisible] = useState(true);
+  const [ejemploAbierto, setEjemploAbierto] = useState({});
+
+  const [respuestas, setRespuestas] = useState(() => {
+    if (guardado?.respuestas && typeof guardado.respuestas === 'object') {
+      const r = { ...guardado.respuestas };
+      for (const sec of secciones) {
+        if (!Array.isArray(r[sec.id]) || r[sec.id].length !== sec.preguntas.length) {
+          r[sec.id] = Array(sec.preguntas.length).fill('');
+        }
+      }
+      return r;
+    }
+    return leerProyecto(paso.id, secciones);
+  });
+
+  const guardarLocalCb = useCallback((d) => {
+    try { localStorage.setItem(PROY_KEY(paso.id), JSON.stringify(d)); } catch {}
+  }, [paso.id]);
+  const guardados = useAutoguardado(guardarLocalCb, respuestas);
+
+  const guardarSupabaseRef = useRef(null);
+  guardarSupabaseRef.current = () => {
+    onComplete({ respuestas, completado: false });
+  };
+
+  useEffect(() => {
+    if (fase === 'caratula') {
+      const hayDatos = secciones.some(s => respuestas[s.id]?.some(r => r && r.trim()));
+      if (hayDatos) {
+        const primera = primeraObligatoriaVacia();
+        if (primera) {
+          setSecIdx(primera.secIdx);
+          setPregIdx(primera.pregIdx);
+          setFase('pregunta');
+        } else {
+          setFase('cierre');
+        }
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  function primeraObligatoriaVacia() {
+    for (let si = 0; si < secciones.length; si++) {
+      for (let pi = 0; pi < secciones[si].preguntas.length; pi++) {
+        if (secciones[si].preguntas[pi].obligatoria && !(respuestas[secciones[si].id]?.[pi]?.trim())) {
+          return { secIdx: si, pregIdx: pi };
+        }
+      }
+    }
+    return null;
+  }
+
+  function todasObligatoriasLlenas() {
+    for (const sec of secciones) {
+      for (let pi = 0; pi < sec.preguntas.length; pi++) {
+        if (sec.preguntas[pi].obligatoria && !(respuestas[sec.id]?.[pi]?.trim())) return false;
+      }
+    }
+    return true;
+  }
+
+  function preguntaGlobalIdx() {
+    let n = 0;
+    for (let si = 0; si < secIdx; si++) n += secciones[si].preguntas.length;
+    return n + pregIdx;
+  }
+
+  function guardarYSalir() {
+    onComplete({ respuestas, completado: false });
+    volver();
+  }
+
+  function guardarAlCambiarSeccion() {
+    onComplete({ respuestas, completado: false });
+  }
+
+  const seccion = secciones[secIdx];
+  const tempPrimario = temperamento?.primary;
+
+  // --- Recuerdo Curso 2 ---
+  if (fase === 'recuerdo') {
+    const rec = paso.recuerdo_curso2;
+    const m214Data = completados?.['m2-14'];
+    const m214Respuestas = m214Data?.respuestas;
+    let localM214 = null;
+    if (!m214Respuestas) {
+      try { localM214 = JSON.parse(localStorage.getItem('vl-test-profundo:m2-14')); } catch {}
+    }
+    const resps = m214Respuestas || localM214;
+
+    const items = (rec.indices ?? [])
+      .filter(i => resps?.[i]?.trim())
+      .map(i => ({ idx: i, resp: resps[i] }));
+
+    if (items.length === 0) {
+      setFase(secciones[0]?.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+      return null;
+    }
+
+    return (
+      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+          <button type="button" onClick={guardarYSalir} style={{
+            fontFamily: FONT_BODY, fontSize: 14, color: MUTED, background: 'none', border: 'none', cursor: 'pointer',
+          }}>Guardar y salir</button>
+        </div>
+        <div style={tarjeta}>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>
+            {rec.titulo}
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.6, margin: '0 0 20px' }}>
+            {rec.texto}
+          </p>
+          {items.map(({ idx: qi, resp }) => {
+            const m214Paso = curso2Data.pasos?.find(p => p.id === 'm2-14');
+            const enunciado = m214Paso?.preguntas?.[qi]?.texto || '';
+            return (
+              <div key={qi} style={{ marginBottom: 16, padding: '12px 16px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
+                {enunciado && (
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 700, color: NAVY, margin: '0 0 6px', lineHeight: 1.4 }}>
+                    {enunciado}
+                  </p>
+                )}
+                <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
+                  «{resp}»
+                </p>
+              </div>
+            );
+          })}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+            <button type="button" onClick={() => {
+              setSecIdx(0);
+              setPregIdx(0);
+              setLectIdx(0);
+              setFase(secciones[0]?.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }} style={{
+              fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 40px', cursor: 'pointer',
+            }}>
+              Continuar →
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Carátula ---
+  if (fase === 'caratula') {
+    return <Caratula paso={paso} tipo="proyecto_mision" onEmpezar={() => {
+      const rec = paso.recuerdo_curso2;
+      const m214Data = completados?.['m2-14'];
+      const m214Respuestas = m214Data?.respuestas;
+      let localM214 = null;
+      if (!m214Respuestas) {
+        try { localM214 = JSON.parse(localStorage.getItem('vl-test-profundo:m2-14')); } catch {}
+      }
+      const resps = m214Respuestas || localM214;
+      const hayRecuerdo = rec && (rec.indices ?? []).some(i => resps?.[i]?.trim());
+      if (hayRecuerdo) {
+        setFase('recuerdo');
+      } else {
+        setSecIdx(0);
+        setPregIdx(0);
+        setLectIdx(0);
+        setFase(secciones[0]?.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }} />;
+  }
+
+  // --- Índice post-completado (editar secciones) ---
+  if (fase === 'indice') {
+    return (
+      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+            <span style={{
+              display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+              background: SUCCESS_BG, border: `2px solid ${SUCCESS}`,
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: SUCCESS_DK,
+            }}>✓</span>
+          </div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '16px 0 8px', textAlign: 'center' }}>
+            Proyecto completado
+          </h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, lineHeight: 1.6, textAlign: 'center', maxWidth: 480, margin: '0 auto 24px' }}>
+            Puedes editar cualquier sección cuando quieras.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {secciones.map((sec, si) => {
+              const tieneResp = respuestas[sec.id]?.some(r => r?.trim());
+              return (
+                <div key={sec.id} style={{ display: 'flex', alignItems: 'center', padding: '14px 0', borderTop: si > 0 ? `1px solid ${LINE}` : 'none' }}>
+                  <span style={{ flex: 1, fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: NAVY }}>{sec.titulo}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    {tieneResp && (
+                      <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        {respuestas[sec.id].filter(r => r?.trim()).length} respuesta{respuestas[sec.id].filter(r => r?.trim()).length !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                    <button type="button" onClick={() => {
+                      setSecIdx(si);
+                      setPregIdx(0);
+                      setLectIdx(0);
+                      setFase(sec.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }} style={{
+                      fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+                      background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
+                      padding: '6px 16px', cursor: 'pointer',
+                    }}>
+                      Editar
+                    </button>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Cierre ---
+  if (fase === 'cierre') {
+    const declaracionSec = secciones.find(s => s.id === 'declaracion');
+    const declaracion = declaracionSec ? respuestas.declaracion?.[0] : '';
+    return (
+      <div style={{ maxWidth: 860, margin: '0 auto' }}>
+        <div style={tarjeta}>
+          <div style={{ textAlign: 'center', padding: '20px 0 10px' }}>
+            <span style={{
+              display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%',
+              background: SUCCESS_BG, border: `2px solid ${SUCCESS}`,
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: SUCCESS_DK,
+            }}>✦</span>
+          </div>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, margin: '16px 0 20px', textAlign: 'center' }}>
+            {paso.cierre?.titulo ?? 'Tu misión'}
+          </h2>
+          {declaracion?.trim() && (
+            <p style={{
+              fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: NAVY, lineHeight: 1.4,
+              textAlign: 'center', maxWidth: 540, margin: '0 auto 24px',
+            }}>
+              «{declaracion.trim()}»
+            </p>
+          )}
+          {paso.cierre?.texto && (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.7, textAlign: 'center', maxWidth: 480, margin: '0 auto 28px' }}>
+              {paso.cierre.texto}
+            </p>
+          )}
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <button type="button" onClick={() => {
+              onComplete({ respuestas, completado: true });
+            }} style={{
+              fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+              background: GOLD_REF, border: 'none', borderRadius: 0, padding: '18px 48px', cursor: 'pointer',
+            }}>
+              Completar el curso
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Lectura de la sección ---
+  if (fase === 'lectura') {
+    const lecturas = seccion?.lecturas ?? [];
+    if (lecturas.length === 0) {
+      setFase('pregunta');
+      return null;
+    }
+    return (
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', maxWidth: 800, margin: '0 auto 12px' }}>
+          <button type="button" onClick={guardarYSalir} style={{
+            fontFamily: FONT_BODY, fontSize: 14, color: MUTED, background: 'none', border: 'none', cursor: 'pointer',
+          }}>Guardar y salir</button>
+        </div>
+        <SlideLectura
+          slide={lecturas[lectIdx]}
+          actual={lectIdx + 1}
+          total={lecturas.length}
+          visible={lectVisible}
+          titulo={seccion.titulo}
+          onSiguiente={() => {
+            setLectVisible(false);
+            setTimeout(() => {
+              if (lectIdx + 1 < lecturas.length) {
+                setLectIdx(i => i + 1);
+              } else {
+                setFase('pregunta');
+                setPregIdx(0);
+              }
+              setLectVisible(true);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 300);
+          }}
+          onAnterior={() => {
+            if (lectIdx > 0) {
+              setLectVisible(false);
+              setTimeout(() => {
+                setLectIdx(i => i - 1);
+                setLectVisible(true);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }, 300);
+            }
+          }}
+        />
+      </div>
+    );
+  }
+
+  // --- Pregunta ---
+  if (fase !== 'pregunta') return null;
+
+  const preg = seccion?.preguntas?.[pregIdx];
+  if (!preg) return null;
+
+  const globalIdx = preguntaGlobalIdx();
+  const pct = totalPreguntas > 0 ? Math.round(((globalIdx + 1) / totalPreguntas) * 100) : 0;
+  const valor = respuestas[seccion.id]?.[pregIdx] ?? '';
+  const puede = !preg.obligatoria || valor.trim();
+
+  function irAnterior() {
+    if (pregIdx > 0) {
+      setPregIdx(i => i - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (seccion?.lecturas?.length > 0) {
+      setLectIdx(seccion.lecturas.length - 1);
+      setFase('lectura');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (secIdx > 0) {
+      guardarAlCambiarSeccion();
+      const prevSec = secciones[secIdx - 1];
+      setSecIdx(secIdx - 1);
+      setPregIdx(prevSec.preguntas.length - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function irSiguiente() {
+    if (pregIdx + 1 < seccion.preguntas.length) {
+      setPregIdx(i => i + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (secIdx + 1 < secciones.length) {
+      guardarAlCambiarSeccion();
+      const nextSec = secciones[secIdx + 1];
+      setSecIdx(secIdx + 1);
+      setPregIdx(0);
+      setLectIdx(0);
+      setFase(nextSec.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      if (todasObligatoriasLlenas()) {
+        setFase('cierre');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }
+
+  function saltarSeccion() {
+    if (secIdx + 1 < secciones.length) {
+      guardarAlCambiarSeccion();
+      const nextSec = secciones[secIdx + 1];
+      setSecIdx(secIdx + 1);
+      setPregIdx(0);
+      setLectIdx(0);
+      setFase(nextSec.lecturas?.length > 0 ? 'lectura' : 'pregunta');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      if (todasObligatoriasLlenas()) {
+        setFase('cierre');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }
+
+  return (
+    <div style={{ maxWidth: 860, margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 12 }}>
+        <button type="button" onClick={guardarYSalir} style={{
+          fontFamily: FONT_BODY, fontSize: 14, color: MUTED, background: 'none', border: 'none', cursor: 'pointer',
+        }}>Guardar y salir</button>
+      </div>
+
+      <div style={{ ...eyebrow, fontSize: 13 }}>Proyecto final · {seccion.titulo}</div>
+      <div style={{ ...barraFondo, margin: '12px 0 8px', height: 7 }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: GOLD_REF_DK, transition: 'width 400ms ease' }} />
+      </div>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, marginBottom: 28 }}>{globalIdx + 1} de {totalPreguntas}</div>
+
+      <div style={tarjeta}>
+        <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 12px', lineHeight: 1.5, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600 }}>
+          Proyecto final · {seccion.titulo}
+        </p>
+        <p style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 20px', lineHeight: 1.45 }}>
+          {preg.texto}
+        </p>
+
+        {preg.ayuda_temperamento && tempPrimario && seccion.temperamentos?.[tempPrimario] && (
+          <div style={{
+            padding: '12px 16px', marginBottom: 16, background: BEIGE,
+            borderLeft: `3px solid ${TEMP_COLORS[tempPrimario] ?? LINE}`,
+          }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', fontWeight: 600, marginBottom: 4 }}>
+              Tu temperamento: {TEMP_NOMBRE[tempPrimario]}
+            </div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5 }}>
+              {seccion.temperamentos[tempPrimario]}
+            </div>
+          </div>
+        )}
+
+        <textarea
+          autoFocus
+          value={valor}
+          onChange={(e) => {
+            const v = e.target.value;
+            setRespuestas(prev => {
+              const arr = [...(prev[seccion.id] ?? [])];
+              arr[pregIdx] = v;
+              return { ...prev, [seccion.id]: arr };
+            });
+          }}
+          placeholder={preg.placeholder ?? 'Escribe tu reflexión...'}
+          style={{
+            fontFamily: FONT_BODY, fontSize: 18, color: NAVY, background: BEIGE,
+            border: `1px solid ${LINE}`, borderRadius: 0, padding: '16px 18px',
+            width: '100%', minHeight: 160, resize: 'vertical', outline: 'none',
+          }}
+        />
+
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', minHeight: 20, marginTop: 6 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {preg.contador_palabras && (() => {
+              const n = contarPalabras(valor);
+              const enRango = n >= preg.contador_palabras.min && n <= preg.contador_palabras.max;
+              return (
+                <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: enRango ? SUCCESS_DK : MUTED }}>
+                  {n} palabra{n !== 1 ? 's' : ''} · {preg.contador_palabras.texto}
+                </span>
+              );
+            })()}
+          </div>
+          <CheckGuardado campo={`${seccion.id}:${pregIdx}`} guardados={guardados} />
+        </div>
+
+        {preg.ejemplo && (
+          <>
+            <button type="button" onClick={() => setEjemploAbierto(prev => ({ ...prev, [`${secIdx}:${pregIdx}`]: !prev[`${secIdx}:${pregIdx}`] }))} style={{
+              background: 'none', border: 'none', padding: '0 0 8px', cursor: 'pointer',
+              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: GOLD_REF_DK,
+              display: 'flex', alignItems: 'center', gap: 5,
+              textDecoration: 'underline', textUnderlineOffset: 3,
+            }}>
+              <IconoLupa />
+              Ver ejemplo
+            </button>
+            {ejemploAbierto[`${secIdx}:${pregIdx}`] && (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6, margin: '0 0 12px', padding: '10px 14px', background: BEIGE, borderLeft: `2px solid ${GOLD_REF}` }}>
+                {preg.ejemplo}
+              </p>
+            )}
+          </>
+        )}
+
+        <div style={{ marginTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+          <div style={{ display: 'flex', gap: 8 }}>
+            {(pregIdx > 0 || secIdx > 0 || seccion?.lecturas?.length > 0) ? (
+              <button type="button" onClick={irAnterior} style={{
+                fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+                background: 'none', border: `1px solid ${LINE}`, borderRadius: 0,
+                padding: '14px 28px', cursor: 'pointer',
+              }}>
+                ← Anterior
+              </button>
+            ) : <span />}
+            {seccion.opcional && pregIdx === 0 && (
+              <button type="button" onClick={saltarSeccion} style={{
+                fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED,
+                background: 'none', border: `1px solid ${LINE}`, borderRadius: 0,
+                padding: '14px 28px', cursor: 'pointer',
+              }}>
+                Saltar este paso
+              </button>
+            )}
+          </div>
+          <button type="button" onClick={irSiguiente} disabled={!puede} style={{
+            fontFamily: FONT_BODY, fontSize: 19, fontWeight: 600, color: '#fff',
+            background: puede ? GOLD_REF : LINE, border: 'none', borderRadius: 0,
+            padding: '18px 40px', cursor: puede ? 'pointer' : 'default',
+          }}>
+            {pregIdx + 1 < seccion.preguntas.length || secIdx + 1 < secciones.length ? 'Siguiente' : (todasObligatoriasLlenas() ? 'Ver mi misión' : 'Siguiente')}
           </button>
         </div>
       </div>

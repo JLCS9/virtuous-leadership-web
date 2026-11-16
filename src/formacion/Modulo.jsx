@@ -4,7 +4,7 @@ import { useOutletContext, useParams, useLocation, Link } from 'react-router-dom
 import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito, renderElementoSlide, REFLEXION_IMAGENES, Lightbox, Lectura, ArmoniaTemperamento, ObjetivosCorazon } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito, renderElementoSlide, REFLEXION_IMAGENES, Lightbox, Lectura, ArmoniaTemperamento, ObjetivosCorazon, ProyectoMision } from './Actividad';
 import { supabase } from '../account/supabase';
 import { BlocDeNotas } from './BlocDeNotas';
 import { useNotas } from './useNotas';
@@ -23,6 +23,7 @@ const MODULOS = {
   'curso-3': () => import('../data/curso3.json'),
   'curso-4': () => import('../data/curso4.json'),
   'curso-5': () => import('../data/curso5.json'),
+  'curso-6': () => import('../data/curso6.json'),
   'curso-7': () => import('../data/curso7.json'),
 };
 
@@ -296,6 +297,7 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     case 'armonia_temperamento': return <ArmoniaTemperamento paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
     case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={completar} completados={progreso.completados} guardado={progreso.completados[paso.id]} irA={irA} />;
     case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
+    case 'proyecto_mision': return <ProyectoMision paso={paso} onComplete={(r) => { progreso.completar(paso.id, r, { tipo: paso.tipo, modulo: paso.modulo ?? 0 }); if (r.completado) avanzar(); }} temperamento={temperamento} completados={progreso.completados} guardado={progreso.completados[paso.id]} volver={volver} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
 }
@@ -304,6 +306,7 @@ function agruparModulos(pasos) {
   const modulos = [];
   let actual = null;
   for (const p of pasos) {
+    if (p.proyecto_final) continue;
     if (p.tipo === 'video') {
       if (p.continua_modulo && actual) {
         actual.actividades.push(p);
@@ -348,6 +351,7 @@ function etiquetaPaso(paso) {
   if (paso.tipo === 'test_corazon') return 'Test del corazón';
   if (paso.tipo === 'armonia_temperamento') return 'Temperamento';
   if (paso.tipo === 'objetivos_corazon') return 'Objetivos';
+  if (paso.tipo === 'proyecto_mision') return 'Proyecto final';
   return paso.titulo;
 }
 
@@ -376,6 +380,7 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
   const [abierto, setAbierto] = useState(null);
   const modulos = agruparModulos(Array.from(pasos || []));
   const tempPrimario = temperamento?.primary;
+  const proyectosFinal = (pasos || []).filter(p => p.proyecto_final);
 
   return (
     <div style={{ ...tarjeta, padding: 0, overflow: 'hidden' }}>
@@ -458,6 +463,36 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
           </div>
         );
       })}
+      {proyectosFinal.map(pf => {
+        const pfData = completados[pf.id];
+        const pfCompletado = pfData?.completado;
+        const pfAMedias = pfData && !pfCompletado;
+        return (
+          <div key={pf.id} style={{ borderTop: `1px solid ${LINE}` }}>
+            <button type="button" onClick={() => irA(pf.id)} style={{
+              all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px',
+            }}>
+              <span style={{
+                flex: '0 0 28px', height: 28, borderRadius: '50%', display: 'grid', placeItems: 'center',
+                border: pfCompletado ? 'none' : `1.5px solid ${LINE}`,
+                background: pfCompletado ? GOLD_REF : 'transparent', color: pfCompletado ? '#fff' : NAVY,
+                fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
+              }}>
+                {pfCompletado ? <IconoCheck width={14} height={14} /> : '✦'}
+              </span>
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500, display: 'block' }}>
+                  Proyecto final: {pf.titulo}
+                </span>
+                <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: pfCompletado ? SUCCESS_DK : pfAMedias ? GOLD_REF_DK : MUTED }}>
+                  {pfCompletado ? 'Completado' : pfAMedias ? 'En progreso' : 'Pendiente'}
+                </span>
+              </span>
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -482,6 +517,8 @@ function extraerReflexiones(pasos, completados) {
       const planData = datos.plan;
       const texto = planData.proposito_final || planData.ambiente || '';
       if (texto) items.push({ id: paso.id, titulo, texto: typeof texto === 'string' ? texto : JSON.stringify(texto), prio });
+    } else if (paso.tipo === 'proyecto_mision' && datos.respuestas?.declaracion?.[0]?.trim()) {
+      items.push({ id: paso.id, titulo, texto: `Mi misión: «${datos.respuestas.declaracion[0].trim()}»`, prio });
     }
   }
   items.sort((a, b) => a.prio - b.prio);
@@ -501,9 +538,44 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
 
   const reflexiones = extraerReflexiones(pasos, completados);
 
+  const proyectoStep = pasos.find(x => x.tipo === 'proyecto_mision');
+  const proyectoData = proyectoStep && completados[proyectoStep.id];
+  const declaracionMision = proyectoData?.respuestas?.declaracion?.[0]?.trim();
+  const desafioMision = proyectoData?.respuestas?.desafio?.[0]?.trim();
+  const talentoEsp = proyectoData?.respuestas?.talentos?.[6]?.trim();
+
   return (
     <div style={{ ...tarjeta, marginTop: 18 }}>
       <div style={eyebrow}>Mi perfil</div>
+
+      {proyectoStep && (
+        <div style={{ marginTop: 12, marginBottom: 12 }}>
+          {declaracionMision ? (
+            <>
+              <div style={{ padding: '14px 16px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 8 }}>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 4 }}>Mi misión</div>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY, lineHeight: 1.4 }}>«{declaracionMision}»</div>
+              </div>
+              {desafioMision && (
+                <div style={{ padding: '8px 16px', background: BEIGE, borderLeft: `2px solid ${GOLD_REF}`, marginBottom: 4 }}>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Mi desafío</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{desafioMision}</div>
+                </div>
+              )}
+              {talentoEsp && (
+                <div style={{ padding: '8px 16px', background: BEIGE, borderLeft: `2px solid ${GOLD_REF}` }}>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 2 }}>Mi talento específico</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>{talentoEsp}</div>
+                </div>
+              )}
+            </>
+          ) : (
+            <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.5, margin: 0, fontStyle: 'italic' }}>
+              Tu misión aparecerá aquí cuando completes el proyecto final.
+            </p>
+          )}
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
         <div style={{ flex: 1, padding: '10px 12px', background: BEIGE, borderLeft: `3px solid ${TEMP_COLORS[p] ?? LINE}` }}>
@@ -764,6 +836,7 @@ function resumenEjercicio(paso) {
     case 'test_corazon': return 'Tu resultado del Test del corazón.';
     case 'cierre': return 'Síntesis del curso: tu virtud desafío y tu propósito.';
     case 'reflexion_piramide': return 'Reflexión guiada sobre los conceptos del módulo.';
+    case 'proyecto_mision': return 'Tu proyecto final: tu historia, tus talentos y tu misión.';
     default: return 'Ejercicio completado.';
   }
 }
@@ -773,6 +846,7 @@ function resumenCorto(paso, datos) {
   if (paso.tipo === 'desliza') return `${datos.aciertos} de ${datos.total} aciertos`;
   if (paso.tipo === 'test_profundo') { const r = datos.respuestas ?? []; const n = r.filter(x => x && x.trim()).length; return `${n} respuesta${n !== 1 ? 's' : ''}`; }
   if (paso.tipo === 'identifica') { const r = datos.respuestas ?? []; const n = r.filter(x => x && (x.facil || x.dificil)).length; return `${n} virtud${n !== 1 ? 'es' : ''} valorada${n !== 1 ? 's' : ''}`; }
+  if (paso.tipo === 'proyecto_mision') { const r = datos.respuestas ?? {}; const n = Object.values(r).flat().filter(x => x && x.trim()).length; return `${n} respuesta${n !== 1 ? 's' : ''}`; }
   return null;
 }
 
@@ -1080,6 +1154,34 @@ function RespuestasCuaderno({ paso, datos }) {
             ))}
           </div>
         )}
+      </div>
+    );
+  }
+
+  if (paso.tipo === 'proyecto_mision') {
+    const secciones = paso.secciones ?? [];
+    const respuestas = datos.respuestas ?? {};
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {secciones.map(sec => {
+          const resps = respuestas[sec.id] ?? [];
+          const hayResp = resps.some(r => r?.trim());
+          if (!hayResp) return null;
+          return (
+            <div key={sec.id}>
+              <p style={{ fontFamily: FONT_SLAB, fontSize: 14, fontWeight: 700, color: NAVY, margin: '0 0 8px' }}>{sec.titulo}</p>
+              {sec.preguntas.map((preg, pi) => {
+                if (!resps[pi]?.trim()) return null;
+                return (
+                  <div key={pi} style={{ marginBottom: 8, paddingLeft: 16 }}>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, margin: '0 0 2px' }}>{preg.texto}</p>
+                    <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.6, margin: 0 }}>{resps[pi]}</p>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
       </div>
     );
   }
@@ -1430,15 +1532,16 @@ function ModuloContenido({ moduloData, user, cursoId }) {
       const videosPasos = pasos.filter((p) => p.tipo === 'video');
       return <PasoVideo paso={pasoActual} pasos={pasos} progreso={progreso} avanzar={avanzar} retroceder={pasoAnterior(pasos, pasoActual.id) ? retroceder : null} volver={volver} cursoNum={cursoNum} notasProps={{ videos: videosPasos, completados: progreso.completados, notas: notasHook.notas, onAgregar: notasHook.agregar, onEliminar: notasHook.eliminar }} />;
     }
-    const videoCtx = videoAnterior(pasos, pasoActual.id);
+    const esProyectoFinal = pasoActual.proyecto_final;
+    const videoCtx = esProyectoFinal ? null : videoAnterior(pasos, pasoActual.id);
     const videoCtxMod = videoCtx ? moduloDelPaso(pasos, videoCtx.id) : null;
     return (
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <button type="button" onClick={rewind} style={{
+        <button type="button" onClick={esProyectoFinal ? volver : rewind} style={{
           background: 'none', border: 'none', padding: 0, cursor: 'pointer',
           color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14,
         }}>
-          ← {videoCtx ? 'Atrás' : 'Salir al curso'}
+          ← {esProyectoFinal ? 'Salir al curso' : (videoCtx ? 'Atrás' : 'Salir al curso')}
         </button>
         {videoCtx && (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 16, fontFamily: FONT_BODY, fontSize: 14, color: NAVY, flexWrap: 'wrap' }}>
@@ -1449,7 +1552,7 @@ function ModuloContenido({ moduloData, user, cursoId }) {
             <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
           </div>
         )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={rewind} user={user} irA={irA} cursoNum={cursoNum} />
+        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={esProyectoFinal ? volver : rewind} user={user} irA={irA} cursoNum={cursoNum} />
       </div>
     );
   }
