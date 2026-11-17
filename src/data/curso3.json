@@ -1,6 +1,15 @@
 {
   "id": "curso3",
   "titulo": "Practicar la humildad",
+  "ideas_clave": [
+    { "texto": "Una persona humilde tira en lugar de empujar, enseña en lugar de dar órdenes, inspira en lugar de amonestar.", "paso": "m3-02" },
+    { "texto": "La humildad es la consecuencia natural de la magnanimidad: un hombre que reconoce su grandeza y dignidad no necesita tratar mal a las personas para sentirse importante.", "paso": "m3-02" },
+    { "texto": "La humildad es el fundamento y la cumbre de todas las virtudes.", "paso": "m3-03" },
+    { "texto": "La humildad es la virtud de los que sirven.", "paso": "m3-04" },
+    { "texto": "La humildad es la verdad sobre ti mismo: la verdad sobre tu miseria y la verdad sobre tu grandeza.", "paso": "m3-08" },
+    { "texto": "La mejor manera de servir es hacer crecer a las personas: ayudarles a descubrir en sí mismas su talento, el diamante que se esconde.", "paso": "m3-20" },
+    { "texto": "Delegar poder es un acto de servicio: haces crecer a las personas que están maduras para el poder.", "paso": "m3-22" }
+  ],
   "curso": 3,
   "pasos": [
     {
@@ -12,9 +21,12 @@
       "leccion": 1,
       "vimeoId": "924591423",
       "intro": [
-        "La humildad es la virtud de los que sirven. Una persona humilde tira en lugar de empujar, enseña en lugar de dar órdenes, inspira en lugar de amonestar.",
-        "No impone su poder sobre la gente: les otorga poder. Hace florecer la grandeza de los demás y les da la capacidad de descubrir su potencial humano. En este sentido, los líderes son siempre educadores, maestros, entrenadores.",
-        "La humildad es la consecuencia natural de la magnanimidad: un hombre que reconoce su grandeza y dignidad no necesita tratar mal a las personas para sentirse importante. **La humildad es la segunda virtud específica de los líderes.**",
+        [
+          "La humildad es la virtud de los que sirven. Una persona humilde:",
+          { "chips": ["Tira en lugar de empujar", "Enseña en lugar de dar órdenes", "Inspira en lugar de amonestar"] }
+        ],
+        "No impone su poder sobre la gente: **les otorga poder.**\n\nHace florecer la grandeza de los demás y les da la capacidad de descubrir su potencial humano. En este sentido, los líderes son siempre educadores, maestros, entrenadores.",
+        "La humildad es la consecuencia natural de la magnanimidad: un hombre que reconoce su grandeza y dignidad no necesita tratar mal a las personas para sentirse importante.\n\n**La humildad es la segunda virtud específica de los líderes.**",
         "Cuando sirve a los demás con su corazón, mente y voluntad, el líder descubre el sentido de su vida, y experimenta el vínculo místico que le une con toda la humanidad."
       ],
       "modulo": 0
@@ -42,7 +54,10 @@
       "enunciado": "Contempla la pirámide de la humildad",
       "descripcion": "Observa cómo la humildad sostiene toda la pirámide del liderazgo virtuoso: abajo, el conocimiento propio (humildad fundamental); en el centro, la integridad de las cuatro virtudes cardinales; arriba, el servicio al otro (humildad fraterna).",
       "preguntas": [
-        "¿Cómo crees que tu nivel de autoconciencia influye en tu capacidad de servir a los demás?"
+        "¿Cómo crees que tu nivel de autoconciencia influye en tu capacidad de servir a los demás?",
+        "¿Cómo ayudan la humildad ontológica y la humildad psicológica a la práctica de la magnanimidad?",
+        "¿Es posible la magnanimidad sin la humildad metafísica? ¿Por qué?",
+        "¿Es posible la magnanimidad sin la humildad espiritual? ¿Por qué?"
       ],
       "modulo": 0
     },
@@ -222,7 +237,7 @@
       "titulo_lectura": "Reflexiona sobre la humildad fundamental y la prudencia",
       "lecturas": [
         [
-          "La humildad fundamental no es pusilanimidad.",
+          { "enfasis": "__La humildad fundamental no es pusilanimidad.__", "grande": true },
           "Si durante el proceso de crecimiento en humildad fallas en practicar la virtud de la prudencia, es probable que en lugar de volverte humilde caigas en la trampa de la pusilanimidad."
         ],
         [
@@ -387,9 +402,16 @@
       "lecturas": [
         [
           {
-            "imagen": "diagrama-motivacion"
-          },
-          "La motivación inmanente se refiere a lo que obtengo. La motivación trascendente se refiere a lo que doy."
+            "columnas": {
+              "imagen": "diagrama-motivacion",
+              "textos": [
+                {
+                  "enfasis": "Contempla este diagrama"
+                },
+                "La **__motivación inmanente__** se refiere a lo que obtengo. La **__motivación trascendente__** se refiere a lo que doy."
+              ]
+            }
+          }
         ],
         [
           "La motivación inmanente (lo que obtengo) es un componente necesario de la vida, pero no es suficiente. Somos seres sociales, somos personas.",
@@ -617,7 +639,10 @@
       "modulo_titulo": "La humildad y los 4 temperamentos",
       "aprendizajes": [
         "Cada temperamento tiene obstáculos propios para la humildad fraterna",
-        "COL: instrumentalización; MEL: auto-absorción; SAN: inestabilidad; FLE: subestima"
+        "El colérico corre el riesgo de usar a las personas como medios para sus fines, en lugar de servirlas",
+        "El melancólico puede estar tan centrado en su mundo interior que no ve las necesidades de los demás",
+        "El sanguíneo sirve mientras le resulta atractivo, pero lo deja cuando pierde la novedad o aparecen dificultades",
+        "El flemático tiende a subestimar sus talentos y no los pone al servicio de los demás"
       ],
       "ejercicios_evaluables": [
         {
@@ -842,16 +867,6 @@
             "Alexandre Havard"
           ],
           "correcta": 0
-        },
-        {
-          "texto": "¿Qué combinaciones de temperamento dominante y secundario son imposibles?",
-          "opciones": [
-            "Colérico-Flemático",
-            "Sanguíneo-Melancólico",
-            "Flemático-Colérico",
-            "Todas estas combinaciones son imposibles"
-          ],
-          "correcta": 3
         }
       ],
       "modulo": 6

@@ -1,6 +1,15 @@
 {
   "id": "curso6",
   "titulo": "Descubre tu misión",
+  "ideas_clave": [
+    { "texto": "Mi misión es mi contribución específica al bien común de la humanidad.", "paso": "m6-04" },
+    { "texto": "La vocación es una llamada a ser; la misión, una llamada a la acción.", "paso": "m6-04" },
+    { "texto": "Tú eres tu misión.", "paso": "m6-04" },
+    { "texto": "Una misión nace al unir dos cosas: tu talento y el desafío del mundo en que vives.", "paso": "m6-05" },
+    { "texto": "Cuando tienes una misión clara, te ayuda a tomar buenas decisiones.", "paso": "m6-10" },
+    { "texto": "No puedes sacar tu misión de tus objetivos: fijas tus objetivos en función de tu misión.", "paso": "m6-10" },
+    { "texto": "La misión es fruto del autoconocimiento: si no, es un capricho.", "paso": "m6-11" }
+  ],
   "curso": 6,
   "pasos": [
     {
@@ -28,12 +37,25 @@
           }
         ],
         [
-          "Para descubrir mi misión, tengo que responder a dos preguntas:",
           {
-            "chips": [
-              "¿Cuál es mi historia y cuál es mi talento?",
-              "¿Cuál es el reto cultural o social al que me siento llamado a responder con pasión y determinación?"
-            ]
+            "enfasis": "Para descubrir mi misión, tengo que responder a dos preguntas:",
+            "grande": true
+          }
+        ],
+        [
+          {
+            "etiqueta": "Pregunta 1"
+          },
+          {
+            "caja": "¿Cuál es mi historia y cuál es mi talento?"
+          }
+        ],
+        [
+          {
+            "etiqueta": "Pregunta 2"
+          },
+          {
+            "caja": "¿Cuál es el reto cultural o social al que me siento llamado a responder con pasión y determinación?"
           }
         ]
       ]
@@ -59,18 +81,37 @@
       "lecturas": [
         [
           {
-            "enfasis": "Vocación: una llamada a ser"
+            "titulo_pagina": "¿Qué es una vocación?"
           },
-          "Viene del latín «vocare», llamar. Estoy llamado a ser una persona concreta. **La vocación es el marco de mi vida.** Para Havard, descubrirla supone un mínimo de sentido religioso.",
           {
-            "enfasis": "Misión: una llamada a la acción"
+            "enfasis": "La vocación es una __llamada a ser__."
           },
-          "Viene del latín «missio», enviar. Estoy enviado a hacer algo concreto. **La misión es mi contribución al bien común de la humanidad.**",
-          "Hacen falta las dos: una vocación sin misión no tiene contenido; una misión sin vocación no tiene marco."
+          "Viene del latín «vocare», llamar.\nEstoy llamado a ser una persona concreta.",
+          "**La vocación es el marco de mi vida** y descubrirla supone un mínimo de sentido religioso."
         ],
         [
-          "Mi misión es **específica**. «Ser una buena madre» o «ser el número uno» no son misiones: son demasiado genéricas.",
-          "Tengo **una sola misión** y la cumplo todo el tiempo, de mil maneras distintas, hasta el final de mi vida. No es como el soldado, que recibe una misión tras otra.",
+          {
+            "titulo_pagina": "¿Qué es una misión?"
+          },
+          {
+            "enfasis": "Una misión es una __llamada a la acción__."
+          },
+          "Viene del latín «missio», enviar.\nEstoy enviado a hacer algo concreto.",
+          "**La misión es mi contribución al bien común de la humanidad.**",
+          {
+            "enfasis": "Hacen falta las dos:",
+            "grande": true
+          },
+          "Una vocación sin misión no tiene contenido.\nUna misión sin vocación no tiene marco."
+        ],
+        [
+          {
+            "titulo_pagina": "¿Cómo es mi misión?"
+          },
+          "Mi misión es **específica**.",
+          "«Ser una buena madre» o «ser el número uno» no son misiones: son **__demasiado genéricas__**.",
+          "Tengo **una sola misión** y la cumplo todo el tiempo, de mil maneras distintas, hasta el final de mi vida.",
+          "No es como el soldado, que recibe una misión tras otra.",
           {
             "cita": "Tú eres tu misión."
           }
@@ -166,9 +207,12 @@
       "modulo": 1,
       "lecturas": [
         [
-          "Havard pone cuatro ejemplos. En todos, la misión nace al unir dos cosas:",
           {
-            "chips": [
+            "titulo_pagina": "4 ejemplos de misiones"
+          },
+          "En todos, la misión nace al unir dos cosas:",
+          {
+            "checks": [
               "Mi talento",
               "El desafío del mundo en que vivo"
             ]
@@ -176,61 +220,61 @@
         ],
         [
           {
-            "enfasis": "Aleksandr Solzhenitsyn"
+            "titulo_pagina": "Aleksandr Solzhenitsyn"
           },
           "Escritor ruso, Premio Nobel de Literatura (1918–2008).",
           {
-            "enfasis": "Misión"
+            "etiqueta": "Misión"
           },
           {
             "cita": "Quería ser la memoria de un pueblo víctima de una tragedia indecible."
           },
           {
-            "enfasis": "Talento"
+            "etiqueta": "Talento"
           },
           "Escribir. En el gulag, sin papel, escribía de memoria, y sus compañeros de cárcel le decían que lo hacía muy bien.",
           {
-            "enfasis": "Desafío"
+            "etiqueta": "Desafío"
           },
           "Los millones de personas sin voz que morían bajo el comunismo, y la grandeza de quienes lo afrontaron con dignidad."
         ],
         [
           {
-            "enfasis": "Jérôme Lejeune"
+            "titulo_pagina": "Jérôme Lejeune"
           },
           "Médico y genetista francés (1926–1994).",
           {
-            "enfasis": "Misión"
+            "etiqueta": "Misión"
           },
           {
             "cita": "Quería defender la verdad científica y la gran verdad moral que se deriva de ella."
           },
           {
-            "enfasis": "Talento"
+            "etiqueta": "Talento"
           },
           "La ciencia. Fue un genetista de altísimo nivel: descubrió la causa del síndrome de Down.",
           {
-            "enfasis": "Desafío"
+            "etiqueta": "Desafío"
           },
           "Defender la vida humana con la verdad científica."
         ],
         [
           {
-            "enfasis": "Madre Teresa de Calcuta"
+            "titulo_pagina": "Madre Teresa de Calcuta"
           },
           "Fundadora de las Misioneras de la Caridad (1910–1997).",
           {
-            "enfasis": "Misión"
+            "etiqueta": "Misión"
           },
           {
             "cita": "Quería ser madre de los más pobres entre los pobres de la tierra."
           },
           {
-            "enfasis": "Talento"
+            "etiqueta": "Talento"
           },
           "La maternidad espiritual.",
           {
-            "enfasis": "Desafío"
+            "etiqueta": "Desafío"
           },
           "La pobreza extrema: que quienes habían vivido como animales murieran como ángeles, conociendo el amor.",
           "Un día le ofrecieron millones de dólares para dirigir grandes hospitales. Ella respondió:",
@@ -241,74 +285,24 @@
         ],
         [
           {
-            "enfasis": "Alexandre Havard"
+            "titulo_pagina": "Alexandre Havard"
           },
           "Fundador del Liderazgo Virtuoso.",
           {
-            "enfasis": "Misión"
+            "etiqueta": "Misión"
           },
           {
             "cita": "Encender los corazones para la grandeza."
           },
           {
-            "enfasis": "Talento"
+            "etiqueta": "Talento"
           },
           "Enseñar e inspirar: ir al corazón de las personas, y no solo a su inteligencia.",
           {
-            "enfasis": "Desafío"
+            "etiqueta": "Desafío"
           },
           "La pusilanimidad: un mundo que hace a las personas pequeñas."
         ]
-      ]
-    },
-    {
-      "id": "m6-07",
-      "num": 7,
-      "tipo": "quiz",
-      "titulo": "Cuestionario 2",
-      "visible": false,
-      "modulo": 1,
-      "preguntas": [
-        {
-          "texto": "¿A quién pertenece esta misión? «Ser la memoria de un pueblo víctima de una gran tragedia.»",
-          "opciones": [
-            "Aleksandr Solzhenitsyn",
-            "Jérôme Lejeune",
-            "Madre Teresa",
-            "Alexandre Havard"
-          ],
-          "correcta": 0
-        },
-        {
-          "texto": "¿A quién pertenece esta misión? «Afirmar la verdad científica y la verdad moral que de ella se deriva.»",
-          "opciones": [
-            "Aleksandr Solzhenitsyn",
-            "Jérôme Lejeune",
-            "Madre Teresa",
-            "Alexandre Havard"
-          ],
-          "correcta": 1
-        },
-        {
-          "texto": "¿A quién pertenece esta misión? «Ser una madre para los más pobres entre los pobres de la tierra.»",
-          "opciones": [
-            "Aleksandr Solzhenitsyn",
-            "Jérôme Lejeune",
-            "Madre Teresa",
-            "Alexandre Havard"
-          ],
-          "correcta": 2
-        },
-        {
-          "texto": "¿A quién pertenece esta misión? «Encender los corazones para la grandeza.»",
-          "opciones": [
-            "Aleksandr Solzhenitsyn",
-            "Jérôme Lejeune",
-            "Madre Teresa",
-            "Alexandre Havard"
-          ],
-          "correcta": 3
-        }
       ]
     },
     {
@@ -324,12 +318,7 @@
         "Cuatro misiones: ser memoria, defender la verdad científica, ser madre, encender los corazones",
         "Una misión clara ayuda a tomar buenas decisiones"
       ],
-      "ejercicios_evaluables": [
-        {
-          "id": "m6-07",
-          "label": "Cuestionario"
-        }
-      ]
+      "ejercicios_evaluables": []
     },
     {
       "id": "m6-08",
@@ -350,19 +339,28 @@
       "modulo": 2,
       "lecturas": [
         [
-          "Havard da tres razones para tener una misión:",
           {
-            "enfasis": "Orienta mi existencia"
+            "subtitulo_pagina": "Existen tres razones por las que tener una misión:"
           },
-          "Me da una dirección. Lejeune sabía que lo suyo era hablar como científico, no como filósofo ni como teólogo.",
           {
-            "enfasis": "Determina mis objetivos"
+            "enfasis": "1. Orienta mi existencia"
           },
-          "La misión fija los objetivos, y no al revés. Sin misión, los objetivos se contradicen unos a otros porque nada los unifica: se hacen muchas cosas y al final no se hace nada.",
+          "Me da una dirección. Sin misión, la vocación se queda sin concretar: falta un contenido, falta una dirección, y no se sabe cuál es mi contribución al bien común.",
+          "Jérôme Lejeune sabía que lo suyo era la ciencia: tenía que hablar como científico, no como filósofo ni como teólogo."
+        ],
+        [
           {
-            "enfasis": "Me mantiene centrado"
+            "enfasis": "2. Determina mis objetivos"
           },
-          "Un visitante hablaba con Solzhenitsyn, que le escuchaba con cortesía. En cuanto dijo que había estado en un campo de concentración, Solzhenitsyn sacó papel y lápiz y se lo preguntó todo. Era la memoria de esa época."
+          "La misión fija los objetivos, y no al revés: no puedo sacar mi misión de mis objetivos. Cuando mi misión está clara, veo qué objetivos debo tomar y cuáles son una pérdida de tiempo.",
+          "Sin misión, los objetivos se contradicen porque nada los unifica: se hacen muchas cosas y al final no se hace nada. Madre Teresa rechazó lo que iba contra su misión."
+        ],
+        [
+          {
+            "enfasis": "3. Me mantiene centrado"
+          },
+          "La misión no es solo una dirección: también me centra en algo concreto que tengo que realizar. Cuando me proponen otras cosas, me pregunto si sirven a mi misión o son una pérdida de tiempo.",
+          "Un visitante contó a Solzhenitsyn que había estado en un campo de concentración: él sacó papel y lápiz y se lo preguntó todo. Era la memoria de esa época."
         ]
       ]
     },
@@ -447,27 +445,6 @@
       "modulo": 3
     },
     {
-      "id": "m6-12",
-      "num": 12,
-      "tipo": "lectura",
-      "titulo": "Lecturas recomendadas",
-      "visible": false,
-      "modulo": 3,
-      "lecturas": [
-        [
-          "Havard termina el curso recomendando dos libros:",
-          {
-            "enfasis": "«Coaching con Juana de Arco»"
-          },
-          "Juana de Arco fue una joven con un sentido de misión muy desarrollado. El libro cuenta cómo descubrió su misión y cómo la cumplió.",
-          {
-            "enfasis": "«Mi camino hacia el liderazgo virtuoso»"
-          },
-          "La biografía espiritual de Havard: el trabajo que hizo sobre sí mismo para conocerse y descubrir su misión. Te puede inspirar para escribir la tuya."
-        ]
-      ]
-    },
-    {
       "id": "m6-concl-4",
       "tipo": "conclusion_modulo",
       "visible": false,
@@ -486,7 +463,7 @@
       "id": "m6-proyecto",
       "num": 13,
       "tipo": "proyecto_mision",
-      "titulo": "Descubre tu misión",
+      "titulo": "Plan para descubrir tu misión",
       "visible": false,
       "modulo": "final",
       "proyecto_final": true,
@@ -499,8 +476,8 @@
           8,
           9
         ],
-        "titulo": "Lo que escribiste en el Curso 2",
-        "texto": "En el Curso 2 reflexionaste sobre tu misión. Esto es lo que escribiste:"
+        "titulo": "Tus reflexiones del Curso 2: Practicando la magnanimidad",
+        "texto": "En el Test de magnanimidad, tres preguntas te hicieron reflexionar sobre tu misión. Esto es lo que escribiste:"
       },
       "secciones": [
         {
@@ -522,35 +499,36 @@
           "preguntas": [
             {
               "texto": "Las personas que han dejado en mí una huella profunda, un rastro indeleble.",
-              "placeholder": "¿Quiénes son? ¿Qué te dejó cada una de ellas?",
               "obligatoria": true,
-              "ejemplo": "Havard dedica los tres primeros capítulos de su biografía espiritual a sus abuelos, sus padres y sus hermanos. Sus abuelos habían sufrido la Primera Guerra Mundial y habían huido del bolchevismo; de cada uno recibió algo distinto, y en todos vio grandeza. Estas personas siguen viviendo en ti, aunque hayan muerto."
+              "ejemplo": "Alex Havard dedica los tres primeros capítulos de su autobiografía espiritual a sus abuelos, sus padres y sus hermanos. Sus abuelos habían sufrido la Primera Guerra Mundial y habían huido del bolchevismo; de cada uno recibió algo distinto, y en todos vio grandeza. Estas personas siguen viviendo en ti, aunque hayan muerto.",
+              "guia": "¿Quiénes son? ¿Qué te dejó cada una de ellas? ¿Qué huella llevas de ellas en tu manera de ser y de actuar?"
             },
             {
               "texto": "Los acontecimientos que forjaron mi personalidad.",
-              "placeholder": "¿Qué momentos te marcaron? ¿Qué descubriste en ellos?",
               "obligatoria": false,
-              "ejemplo": "Al llegar a la universidad, en los años 70, Havard vio que el mundo que le rodeaba no se parecía a la grandeza que había conocido en su familia: era un mundo de consumismo y de gente sin raíces. Ese contraste le marcó."
+              "ejemplo": "Al llegar a la universidad, en los años 70, Alex vio que el mundo que le rodeaba no se parecía a la grandeza que había conocido en su familia: era un mundo de consumismo y de gente sin raíces. Ese contraste le marcó.",
+              "guia": "¿Qué momentos te marcaron? ¿Qué descubriste en ellos? ¿Cómo te cambiaron?"
             },
             {
               "texto": "Mi país, sus grandezas y sus miserias.",
-              "placeholder": "¿Qué hay de excepcional en tu país y en su tradición? ¿Qué te hace sufrir de él hoy?",
               "obligatoria": false,
-              "ejemplo": "Para Havard, cada país tiene unos dones propios y una misión en la historia. Eres miembro de esa familia nacional y has recibido mucho de ella: descubre su grandeza. Pero sé objetivo y habla también de lo que va contra lo mejor de tu patria."
+              "ejemplo": "Cada país tiene unos dones propios y una misión en la historia. Eres miembro de esa familia nacional y has recibido mucho de ella: descubre su grandeza. Pero sé objetivo y habla también de lo que va contra lo mejor de tu patria.",
+              "guia": "¿Qué hay de excepcional en tu país y en su tradición? ¿Qué te hace sufrir de él hoy? ¿Qué sientes por él? ¿Qué hay de tu país en ti?"
             },
             {
               "texto": "Libros, películas y música que me inspiran.",
-              "placeholder": "¿Qué obras te han tocado? ¿Qué dicen de ti?",
               "obligatoria": false,
-              "ejemplo": "Andréi Tarkovski estrenó «El espejo» en los años 70. Un día recibió la carta de una mujer que le preguntaba cómo conocía su vida: no la conocía, pero la película contaba la esencia de su vida. Si una obra te toca, es porque habla de ti."
+              "ejemplo": "Andréi Tarkovski estrenó «El espejo» en los años 70. Un día recibió la carta de una mujer que le preguntaba cómo conocía su vida: no la conocía, pero la película contaba la esencia de su vida. Si una obra te toca, es porque habla de ti.",
+              "guia": "¿Qué obras te han tocado? ¿Por qué te tocaron? ¿Qué dicen de ti?"
             },
             {
               "texto": "Intento descubrir el tema principal de mi existencia.",
-              "placeholder": "¿Qué vuelve una y otra vez en tu historia?",
               "obligatoria": true,
-              "ejemplo": "Así descubrió Havard el suyo: «Vi grandeza en mis padres, mis abuelos, mis amigos, mis profesores. Al mismo tiempo, vi un océano de pusilanimidad, producto del consumismo y del relativismo moral, que barría el mundo. Observé con asombro la aparición de nuevas criaturas, las del Mundo feliz de Aldous Huxley: seres sin pasado, sin patria, sin familia, sin Dios. Vi a los hombres sin pecho de C.S. Lewis, a los amputados de corazón de Jacques Brel. Me aterroricé y decidí actuar. Mi misión —encender corazones para la grandeza— se convirtió en mi respuesta personal a esta catástrofe antropológica.» (Alexandre Havard, «Mi camino hacia el liderazgo virtuoso»)"
+              "ejemplo": "Así descubrió Alex el suyo: «Vi grandeza en mis padres, mis abuelos, mis amigos, mis profesores. Al mismo tiempo, vi un océano de pusilanimidad, producto del consumismo y del relativismo moral, que barría el mundo. Observé con asombro la aparición de nuevas criaturas, las del Mundo feliz de Aldous Huxley: seres sin pasado, sin patria, sin familia, sin Dios. Vi a los hombres sin pecho de C.S. Lewis, a los amputados de corazón de Jacques Brel. Me aterroricé y decidí actuar. Mi misión —encender corazones para la grandeza— se convirtió en mi respuesta personal a esta catástrofe antropológica.» (Alexandre Havard, «Mi camino hacia el liderazgo virtuoso»)",
+              "guia": "Mira todo lo que has escrito hasta ahora. ¿Qué vuelve una y otra vez en tu historia?"
             }
-          ]
+          ],
+          "enunciado": "Reflexiona sobre el siguiente tema:"
         },
         {
           "id": "talentos",
@@ -565,49 +543,82 @@
           "preguntas": [
             {
               "texto": "Temperamento",
-              "placeholder": "¿Qué talentos te da tu temperamento?",
               "obligatoria": false,
-              "ayuda_temperamento": true,
-              "ejemplo": "Havard es melancólico: su temperamento le orienta hacia las ideas y la creatividad, y eso le ayuda a avanzar en su misión de encender los corazones para la grandeza."
+              "ejemplo": "Alex es melancólico: su temperamento le orienta hacia las ideas y la creatividad, y eso le ayuda a avanzar en su misión de encender los corazones para la grandeza.",
+              "guia": "¿Qué talentos te da tu temperamento? Repasa tu temperamento primario y tu temperamento secundario.",
+              "slider": "temperamento"
             },
             {
               "texto": "Carácter",
-              "placeholder": "¿Qué virtudes ya tienes desarrolladas?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿Qué virtudes tienes ya desarrolladas? Repasa las seis virtudes del liderazgo.",
+              "slider": "virtudes",
+              "ejemplo": "Por ejemplo: «Soy justo: la gente confía en mí porque cumplo mi palabra y trato a todos por igual. También soy audaz: no me cuesta asumir riesgos cuando algo merece la pena»."
             },
             {
               "texto": "Cuerpo",
-              "placeholder": "¿Qué dones físicos tienes?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿Qué dones físicos tienes?",
+              "ejemplo": "Por ejemplo: «Tengo mucha energía y aguanto bien el cansancio: puedo trabajar muchas horas seguidas. Tengo buena voz y presencia cuando hablo en público»."
             },
             {
               "texto": "Corazón",
-              "placeholder": "¿Qué te mueve? ¿Qué sabes amar?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿Qué te mueve? ¿Qué sabes amar?",
+              "ejemplo": "Por ejemplo: «Me conmueve el sufrimiento de los demás y sé escuchar. Disfruto de la belleza: de la música, de la naturaleza, de una conversación profunda»."
             },
             {
               "texto": "Voluntad",
-              "placeholder": "¿En qué eres constante y firme?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿En qué eres constante y firme?",
+              "ejemplo": "Por ejemplo: «Cuando empiezo algo, lo termino. Mantengo mis compromisos aunque me cueste y no abandono a la primera dificultad»."
             },
             {
               "texto": "Inteligencia",
-              "placeholder": "¿Qué entiendes con facilidad?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿Qué entiendes con facilidad?",
+              "ejemplo": "Por ejemplo: «Entiendo rápido los problemas complejos y sé explicarlos con sencillez. Veo enseguida lo esencial de una situación»."
             },
             {
               "texto": "Talento específico",
-              "placeholder": "¿Qué haces de forma excelente?",
               "obligatoria": true,
-              "ejemplo": "Havard daba clase en la Universidad de Helsinki. Sus alumnos le decían: «Usted no nos da solo información, nos da formación». Era un buen abogado, pero vio que en esto era excelente, y dejó la abogacía para dedicarse a enseñar."
+              "ejemplo": "«Usted no nos da solo información, nos da formación». Esto es lo que le decían a Alex sus alumnos en clase, en la Universidad de Helsinki. Era un buen abogado, pero vio que en esto era excelente, y dejó la abogacía para dedicarse a enseñar.",
+              "guia": "¿Qué haces de forma excelente? ¿Qué te dicen los demás que haces especialmente bien?"
             }
           ],
           "temperamentos": {
-            "MEL": "Para Havard, el melancólico es idealista y creativo: crea cosas nuevas todo el tiempo. Su misión probablemente va en la dirección de las ideas.",
-            "COL": "Para Havard, el colérico es acción y energía: sabe hacer avanzar una idea y venderla al mundo. Muchas veces crea organizaciones.",
-            "SAN": "Para Havard, el sanguíneo es un comunicador nato: sabe reunir a la gente y convencerla de que vale la pena un proyecto.",
-            "FLE": "Para Havard, el flemático es tranquilo y sistemático: convierte las ideas en procesos que duran años, incluso siglos."
-          }
+            "MEL": "El melancólico es idealista y creativo: crea cosas nuevas todo el tiempo. Su misión probablemente va en la dirección de las ideas.",
+            "COL": "El colérico es acción y energía: sabe hacer avanzar una idea y venderla al mundo. Muchas veces crea organizaciones.",
+            "SAN": "El sanguíneo es un comunicador nato: sabe reunir a la gente y convencerla de que vale la pena un proyecto.",
+            "FLE": "El flemático es tranquilo y sistemático: convierte las ideas en procesos que duran años, incluso siglos."
+          },
+          "enunciado": "Reflexiona sobre tus dones y talentos:",
+          "virtudes": [
+            {
+              "nombre": "Prudencia",
+              "texto": "Mejora la capacidad del líder para tomar las decisiones correctas. Es la madre de todas las virtudes."
+            },
+            {
+              "nombre": "Fortaleza",
+              "texto": "Permite mantener el rumbo y resistir presiones de todo tipo. Tiene dos caras: la resistencia, que es perseverar, y la audacia, que es asumir riesgos."
+            },
+            {
+              "nombre": "Dominio de sí",
+              "texto": "Subordina las emociones a la razón y proyecta su energía vital en el cumplimiento de la misión."
+            },
+            {
+              "nombre": "Justicia",
+              "texto": "Permite dar a cada uno lo que le corresponde. Es la virtud social por excelencia."
+            },
+            {
+              "nombre": "Magnanimidad",
+              "texto": "Es el hábito de esforzarse por conseguir grandes cosas."
+            },
+            {
+              "nombre": "Humildad",
+              "texto": "Es el hábito de vivir en el autoconocimiento. También es el hábito del servicio."
+            }
+          ]
         },
         {
           "id": "desafio",
@@ -621,11 +632,12 @@
           "preguntas": [
             {
               "texto": "¿Cuál es el reto cultural o social al que me siento llamado a responder con pasión y determinación?",
-              "placeholder": "¿Qué pasa en el mundo que te disgusta profundamente y contra lo que quieres luchar?",
               "obligatoria": true,
-              "ejemplo": "Solzhenitsyn: el mundo del comunismo y de los campos de concentración. Madre Teresa: los más pobres entre los pobres. Lejeune: defender la vida humana con la verdad científica. Havard: la pusilanimidad, la pequeñez del ser humano en los siglos XX y XXI."
+              "ejemplo": "Solzhenitsyn: el mundo del comunismo y de los campos de concentración. Madre Teresa: los más pobres entre los pobres. Lejeune: defender la vida humana con la verdad científica. Alex Havard: la pusilanimidad, la pequeñez del ser humano en los siglos XX y XXI.",
+              "guia": "¿Qué pasa en el mundo que te disgusta profundamente y contra lo que quieres luchar?"
             }
-          ]
+          ],
+          "enunciado": "Reflexiona sobre la siguiente pregunta:"
         },
         {
           "id": "declaracion",
@@ -635,22 +647,24 @@
               "Mi misión debe formularse de tal manera que:",
               "1. Destaque claramente el reto cultural o social al que respondo con pasión y determinación a través de mis acciones.",
               "2. Pueda cumplirla de formas muy distintas cada día.",
-              "Havard añade: **corta**, para recordarla; **densa**, para cumplirla mil veces al día. Si no eres poeta, pide ayuda a un amigo que lo sea."
+              "Y, además, **corta**, para recordarla; **densa**, para cumplirla mil veces al día. Si no eres poeta, pide ayuda a un amigo que lo sea."
             ]
           ],
           "preguntas": [
             {
               "texto": "Escribe aquí tu declaración de misión personal.",
-              "placeholder": "En pocas palabras.",
               "obligatoria": true,
               "contador_palabras": {
                 "min": 3,
                 "max": 5,
                 "texto": "Orientación: de 3 a 5 palabras"
               },
-              "ejemplo": "Solzhenitsyn: «Quería ser la memoria de un pueblo víctima de una tragedia indecible». Lejeune: «Quería defender la verdad científica y la gran verdad moral que se deriva de ella». Madre Teresa: «Quería ser madre de los más pobres entre los pobres de la tierra». Las palabras clave son «memoria», «verdad científica», «madre»: precisas y generosas a la vez. Se puede ser madre todos los días, ser memoria todos los días, y todos los días se puede gritar una verdad científica."
+              "ejemplo": "Solzhenitsyn: «Quería ser la memoria de un pueblo víctima de una tragedia indecible». Lejeune: «Quería defender la verdad científica y la gran verdad moral que se deriva de ella». Madre Teresa: «Quería ser madre de los más pobres entre los pobres de la tierra». Las palabras clave son «memoria», «verdad científica», «madre»: precisas y generosas a la vez. Se puede ser madre todos los días, ser memoria todos los días, y todos los días se puede gritar una verdad científica.",
+              "guia": "Corta, para recordarla; densa, para cumplirla mil veces al día.",
+              "placeholder": "Escribe tu misión…"
             }
-          ]
+          ],
+          "enunciado": "Con todo lo que has escrito, formula tu misión:"
         },
         {
           "id": "organizacion",
@@ -660,10 +674,11 @@
           "preguntas": [
             {
               "texto": "Si trabajo en una empresa o en una asociación: ¿en qué medida, al cumplir la misión de mi organización, estoy cumpliendo mi misión personal?",
-              "placeholder": "¿Tu trabajo te ayuda a cumplir tu misión o te aleja de ella?",
-              "obligatoria": false
+              "obligatoria": false,
+              "guia": "¿Tu trabajo te ayuda a cumplir tu misión o te aleja de ella?"
             }
-          ]
+          ],
+          "enunciado": "Reflexiona sobre la siguiente pregunta:"
         }
       ],
       "cierre": {

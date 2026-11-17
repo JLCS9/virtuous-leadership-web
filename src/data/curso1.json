@@ -13,9 +13,10 @@
       "leccion": 1,
       "intro": [
         [
-          "La personalidad humana se compone de un temperamento y un carácter."
-        ],
-        [
+          {
+            "enfasis": "La personalidad humana se compone de un temperamento y un carácter.",
+            "grande": true
+          },
           "El temperamento es una predisposición natural e innata a reaccionar de una determinada manera.",
           "Puede ser:",
           {
@@ -1292,7 +1293,7 @@
       "id": "m1-27",
       "num": 27,
       "tipo": "cierre",
-      "titulo": "Conclusiones Módulo 1",
+      "titulo": "Conclusiones del Curso 1",
       "visible": true,
       "resumen_ficha": "Mi propósito del curso",
       "prioridad_ficha": 1,

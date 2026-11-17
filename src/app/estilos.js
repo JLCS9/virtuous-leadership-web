@@ -9,6 +9,15 @@ export const tarjeta = {
   padding: '24px 22px',
 };
 
+// Plantilla de las tarjetas con icono redondo y texto centrado (carátulas, completado, resultados).
+export const tarjetaCentrada = {
+  ...tarjeta,
+  padding: '48px 32px',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+};
+
 export const eyebrow = {
   fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em',
   textTransform: 'uppercase', color: GOLD_REF_DK,

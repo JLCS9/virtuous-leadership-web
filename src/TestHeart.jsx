@@ -25,6 +25,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useT } from './i18n';
 import { NAVY, NAVY_SOFT, BEIGE, PAPER, INK, MUTED, LINE } from './theme';
 import { scoreHeart, toBrevoAttributes, HEART_DISORDER_CODES } from './lib/heartScoring.js';
+import { supabase } from './account/supabase';
+import { saveHeartResultIfLoggedIn } from './account/account';
 import HEART_TEST from './data/heart-test.json';
 import HEART_SUPPORT from './data/heart-support-text.json';
 
@@ -407,6 +409,27 @@ function GateForm({ onSubmitOk }) {
   const [touched, setTouched] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+
+  // Con sesión iniciada (p. ej. llegando desde la formación), rellena los datos de la cuenta.
+  // La casilla de consentimiento NO se marca: la decide siempre la persona.
+  useEffect(() => {
+    let vivo = true;
+    (async () => {
+      try {
+        if (!supabase) return;
+        const { data } = await supabase.auth.getSession();
+        const user = data.session?.user;
+        if (!user || !vivo) return;
+        const { data: perfil } = await supabase.from('profiles').select('first_name, birth_year, sex').eq('id', user.id).maybeSingle();
+        if (!vivo) return;
+        setName(n => n || perfil?.first_name || user.user_metadata?.first_name || '');
+        setEmail(e => e || user.email || '');
+        setBirthYear(y => y || (perfil?.birth_year ? String(perfil.birth_year) : ''));
+        setSex(x => x || (perfil?.sex in SEX_TO_BREVO ? perfil.sex : ''));
+      } catch {}
+    })();
+    return () => { vivo = false; };
+  }, []);
 
   const currentYear = new Date().getFullYear();
   const sexOpts = t('tbp_heart.gate.sex_options');
@@ -793,6 +816,13 @@ export default function TestHeart() {
   // Modal milestone que aparece al terminar las 4 preguntas de un trastorno.
   // Guarda el código del trastorno recién completado; null = no visible.
   const [milestone, setMilestone] = useState(null);
+  // ?volver=/ruta — al venir desde la formación, botón para regresar al curso (solo rutas internas).
+  const volverFormacion = useMemo(() => {
+    try {
+      const v = new URLSearchParams(window.location.search).get('volver');
+      return v && v.startsWith('/') && !v.startsWith('//') ? v : null;
+    } catch { return null; }
+  }, []);
 
   const scoreResult = useMemo(() => {
     if (phase !== PHASE.RESULT || answers.length !== CANONICAL_ORDER.length) return null;
@@ -889,6 +919,8 @@ export default function TestHeart() {
     });
 
     setContact(contactData);
+    // Si hay sesión, el resultado queda en la cuenta (lo usa la formación: «Mis objetivos prácticos»).
+    void saveHeartResultIfLoggedIn(result);
     try {
       await submitHeartContact(payload);
       setPhase(PHASE.RESULT);
@@ -926,11 +958,19 @@ export default function TestHeart() {
     body = <GateForm onSubmitOk={handleGateSubmit} />;
   } else if (phase === PHASE.RESULT && scoreResult) {
     body = (
+      <>
+      {volverFormacion && (
+        <div style={{ maxWidth: 720, margin: '0 auto 20px', padding: '18px 22px', background: PAPER, border: `1px solid ${LINE}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+          <span style={{ fontSize: 17, color: NAVY }}>Tu resultado ya está guardado en tu cuenta.</span>
+          <a href={volverFormacion} style={{ fontSize: 17, fontWeight: 600, color: '#fff', background: NAVY, padding: '12px 24px', textDecoration: 'none' }}>Volver a la formación →</a>
+        </div>
+      )}
       <ResultScreen
         scoreResult={scoreResult}
         contactName={contact?.name || ''}
         onRestart={handleRestart}
       />
+      </>
     );
   }
 

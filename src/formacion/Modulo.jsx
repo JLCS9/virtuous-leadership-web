@@ -1,16 +1,16 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useOutletContext, useParams, useLocation, Link } from 'react-router-dom';
-import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior } from './flujoModulo';
+import { pasosDelUsuario, pasosVisibles, progresoModulo, progresoActividad, continuarModulo, siguientePaso, pasoAnterior, moduloDelPaso, videoAnterior, modulosCompletados, TIPOS_NO_CONTABLES } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import { Reproductor } from './Formacion';
-import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito, renderElementoSlide, REFLEXION_IMAGENES, Lightbox, Lectura, ArmoniaTemperamento, ObjetivosCorazon, ProyectoMision } from './Actividad';
+import { Quiz, Define, Desliza, Identifica, TestProfundo, TemperamentoPerfil, RetosTemperamento, CirculoPersonas, ConclusionModulo, ReflexionGuiada, Sintesis, TestCaracterFormacion, TestCorazonFormacion, TestCorazonEnlace, ReflexionPiramide, TemperamentoMagnanimidad, PlanCrecimiento, PantallaResumen, leerPlan, guardarPlan, PantallaTablaDinamica, PantallaChecklist, PantallaChecklistCategorias, PantallaReflexionDoble, PantallaReflexionTemperamento, PantallaProposito, renderElementoSlide, REFLEXION_IMAGENES, Lightbox, Lectura, ArmoniaTemperamento, ObjetivosCorazon, ProyectoMision, Shell } from './Actividad';
 import { supabase } from '../account/supabase';
-import { BlocDeNotas } from './BlocDeNotas';
+import { BlocDeNotas, NotasLateral } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
 import { fetchLatestTemperament } from '../account/account';
-import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE } from '../theme';
+import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE, SUCCESS_DK } from '../theme';
 import { barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoFlecha, IconoPlay, IconoChevron, IconoVideo, IconoEjercicio, IconoCuestionario } from '../app/Iconos';
 import { UMBRAL_VISTA } from './cursos';
@@ -107,19 +107,67 @@ function renderIntroTexto(text) {
   });
 }
 
-function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps }) {
+// Publica en el split la altura de esta columna sin las notas pasadas: es el mínimo del contenido.
+function ColumnaNotas({ children }) {
+  const ref = useRef(null);
+  useEffect(() => {
+    const col = ref.current;
+    const split = col?.parentElement;
+    if (!col || !split) return;
+    function medir() {
+      const pasadas = col.querySelector('.vl-notas-pasadas');
+      const extra = pasadas ? pasadas.offsetHeight + parseFloat(getComputedStyle(pasadas).marginTop) : 0;
+      split.style.setProperty('--vl-lado-base', `${col.scrollHeight - extra}px`);
+    }
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(col);
+    for (const c of col.children) ro.observe(c);
+    return () => ro.disconnect();
+  }, []);
+  return <div ref={ref} className="vl-split-notas-col">{children}</div>;
+}
+
+function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNum = 1, notasProps, temperamento }) {
   const completado = Boolean(progreso.completados[paso.id]);
   const lec = moduloDelPaso(pasos, paso.id);
   const paginas = agruparIntro(paso.intro);
   const [introIdx, setIntroIdx] = useState(0);
   const [visible, setVisible] = useState(true);
   const [lightboxSrc, setLightboxSrc] = useState(null);
+  const [modoCine, setModoCine] = useState(false);
+  // Al salir del modo cine, el vídeo sigue por encima del velo mientras este se desvanece (1,8 s):
+  // así no se ve un instante toda la pantalla en gris.
+  const [cineElevado, setCineElevado] = useState(false);
+  useEffect(() => {
+    if (modoCine) { setCineElevado(true); return; }
+    const t = setTimeout(() => setCineElevado(false), 1800);
+    return () => clearTimeout(t);
+  }, [modoCine]);
   const enIntro = paginas.length > 0 && introIdx < paginas.length;
+  // Altura de la página más larga de la introducción: el botón no se mueve entre páginas.
+  const medidorIntroRef = useRef(null);
+  const [altoIntro, setAltoIntro] = useState(0);
+  useEffect(() => {
+    const el = medidorIntroRef.current;
+    if (!el) { setAltoIntro(0); return; }
+    const medir = () => setAltoIntro(Math.max(0, ...[...el.children].map(c => c.offsetHeight)));
+    medir();
+    const ro = new ResizeObserver(medir);
+    [...el.children].forEach(c => ro.observe(c));
+    return () => ro.disconnect();
+  }, [paso.id, enIntro]);
+
+  useEffect(() => {
+    document.body.classList.toggle('vl-cine-activo', modoCine);
+    return () => document.body.classList.remove('vl-cine-activo');
+  }, [modoCine]);
 
   function onProgreso(frac) {
     if (frac >= UMBRAL_VISTA && !completado) {
       progreso.completar(paso.id, undefined, { tipo: 'video', modulo: paso.modulo ?? 0 });
     }
+    if (frac >= 1 && modoCine) setModoCine(false);
   }
 
   function avanzarYMarcar() {
@@ -149,53 +197,67 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
     const pags = paginas[introIdx];
     const esUltima = introIdx === paginas.length - 1;
     return (
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <button type="button" onClick={volver} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14 }}>← Salir al curso</button>
-        <div style={tarjeta}>
-          <div style={eyebrow}>{lec ? `Módulo ${lec.numero}` : 'Introducción'}</div>
-          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 30, fontWeight: 700, color: NAVY, margin: '8px 0 8px' }}>{paso.titulo}</h2>
-          <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, marginBottom: 20 }}>{introIdx + 1} de {paginas.length}</div>
-          <div style={{ marginBottom: 10, height: 3, background: `${LINE}55`, borderRadius: 2 }}>
-            <div style={{ height: 3, background: GOLD_REF, borderRadius: 2, transition: 'width 400ms ease', width: `${((introIdx + 1) / paginas.length) * 100}%` }} />
-          </div>
-          <div style={{
+      <div className="vl-ejercicio-split" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <style>{`@media (min-width: 1100px) { .vl-ejercicio-split { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-ejercicio-split > .vl-split-back { grid-column: 1 / -1; } .vl-ejercicio-split > .vl-split-notas-col { position: sticky; top: 60px; } }`}</style>
+        <button type="button" className="vl-split-back" onClick={volver} style={{
+          justifySelf: 'start', alignSelf: 'flex-start', background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: -10,
+        }}>← Salir al curso</button>
+        <div className="vl-split-contenido" style={{ minWidth: 0 }}>
+        <Shell titulo="Introducción" actual={introIdx + 1} total={paginas.length}>
+        <div className="vl-pag" style={{ ...tarjeta, position: 'relative' }}>
+          {paso.id !== 'm4-01' && paso.id !== 'm4-02' && (
+            <div ref={medidorIntroRef} aria-hidden style={{ position: 'absolute', left: 22, right: 22, top: 0, visibility: 'hidden', pointerEvents: 'none' }}>
+              {paginas.map((pg, n) => (
+                <div key={n} style={{ position: 'absolute', left: 0, right: 0, top: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
+                  {(Array.isArray(pg) ? pg : [pg]).map((item, i) => renderElementoSlide(item, i, { setLightboxSrc: () => {} }))}
+                </div>
+              ))}
+            </div>
+          )}
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '0 0 20px' }}>
+            {(Array.isArray(pags) ? pags : [pags]).find(i => i?.titulo_pagina)?.titulo_pagina || paso.titulo}
+          </h2>
+          <div className="vl-pag-cuerpo" style={{
             opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)',
-            transition: 'opacity 300ms ease, transform 300ms ease', padding: '24px 0',
-            display: 'flex', flexDirection: 'column', gap: 14,
+            transition: 'opacity 300ms ease, transform 300ms ease',
+            display: 'flex', flexDirection: 'column', gap: 14, minHeight: altoIntro || undefined,
           }}>
             <style>{`
               @keyframes vlChipIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
               .vl-chip-anim { animation: vlChipIn 450ms ease both; }
             `}</style>
-            {(paso.id === 'm4-01' || paso.id === 'm4-02') && introIdx === 1 ? (
+            {(Array.isArray(pags) ? pags : [pags]).some(it => it?.tarjetas_virtudes) ? (
               <>
+                {pags.filter(it => !it?.tarjetas_virtudes).map((item, i) => renderElementoSlide(item, i, { setLightboxSrc }))}
                 <style>{`
-                  .vl-vc { background: rgba(165,139,38,0.06); border: 1.5px solid rgba(165,139,38,0.12); border-radius: 12px; padding: 20px 22px; cursor: default; transition: all 350ms cubic-bezier(.4,0,.2,1); animation: vlChipIn 450ms ease both; }
+                  .vl-vc { background: rgba(165,139,38,0.06); border: 1.5px solid rgba(165,139,38,0.12); border-radius: 12px; padding: 14px 20px; cursor: default; transition: all 350ms cubic-bezier(.4,0,.2,1); animation: vlChipIn 450ms ease both; }
                   .vl-vc:hover { background: rgba(165,139,38,0.13); border-color: ${GOLD_REF}88; transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.09); }
                   .vl-vc-det { max-height: 0; opacity: 0; overflow: hidden; transition: max-height 400ms cubic-bezier(.4,0,.2,1), opacity 300ms ease, margin 300ms ease; margin-top: 0; }
-                  .vl-vc:hover .vl-vc-det { max-height: 120px; opacity: 1; margin-top: 14px; }
-                  .vl-vc-pill { display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; background: ${GOLD_REF}18; color: ${GOLD_REF_DK}; }
+                  .vl-vc:hover .vl-vc-det { max-height: 260px; opacity: 1; margin-top: 10px; }
+                  .vl-vc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+                  @media (max-width: 600px) { .vl-vc-grid { grid-template-columns: 1fr; } }
+                  .vl-vc-pill { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 4px; background: ${GOLD_REF}18; color: ${GOLD_REF_DK}; }
                 `}</style>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
+                {/* alignItems start: al pasar el ratón solo se despliega la tarjeta activa; las demás se quedan plegadas. */}
+                {/* minHeight reserva el sitio de una tarjeta desplegada: al pasar el ratón no se mueve el botón. */}
+                <div className="vl-vc-grid" style={{ display: 'grid', gap: 12, alignItems: 'start', alignContent: 'start', marginTop: 2, minHeight: 310 }}>
                   {VIRTUDES_CARDS.map((v, i) => {
                     const ic = paso.id === 'm4-02' ? INTEGRA_CARDS[i] : null;
                     return (
                       <div key={v.nombre} className="vl-vc" style={{ animationDelay: `${i * 120}ms` }}>
                         <div style={{ fontFamily: FONT_SLAB, fontSize: 22, fontWeight: 700, color: NAVY }}>{v.nombre}</div>
-                        <div style={{ fontFamily: FONT_BODY, fontSize: 15, color: MUTED, marginTop: 6, lineHeight: 1.5 }}>
+                        <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, marginTop: 6, lineHeight: 1.5 }}>
                           {ic ? ic.accion : v.def}
                         </div>
                         {ic && ic.nota && <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, fontWeight: 600, marginTop: 4 }}>{ic.nota}</div>}
                         <div className="vl-vc-det">
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                            <div>
-                              <span className="vl-vc-pill" style={{ fontFamily: FONT_BODY }}>{v.a1}</span>
-                              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 4, lineHeight: 1.4 }}>{v.a1d}</div>
-                            </div>
-                            <div>
-                              <span className="vl-vc-pill" style={{ fontFamily: FONT_BODY }}>{v.a2}</span>
-                              <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 4, lineHeight: 1.4 }}>{v.a2d}</div>
-                            </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            {[[v.a1, v.a1d], [v.a2, v.a2d]].map(([eje, texto]) => (
+                              <div key={eje} style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, lineHeight: 1.45 }}>
+                                <span className="vl-vc-pill" style={{ fontFamily: FONT_BODY, marginRight: 8 }}>{eje}</span>{texto}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       </div>
@@ -207,7 +269,7 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
               pags.map((item, i) => renderElementoSlide(item, i, { setLightboxSrc }))
             )}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 32 }}>
             {introIdx > 0 ? (
               <button type="button" onClick={retrocederIntro} style={{
                 fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: NAVY,
@@ -225,21 +287,78 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
           </div>
           {lightboxSrc && <Lightbox src={lightboxSrc} alt="Diagrama" onClose={() => setLightboxSrc(null)} />}
         </div>
+        </Shell>
+        </div>
+        <ColumnaNotas>
+          <section style={tarjeta}>
+            <div style={eyebrow}>{lec && !lec.introduccion ? `Módulo ${lec.numero}` : 'Introducción'}</div>
+            <h2 style={{ ...titulo(26), margin: '8px 0 6px' }}>{paso.titulo}</h2>
+            {!lec?.introduccion && <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: GOLD_REF_DK, fontWeight: 600, marginTop: 6 }}>Introducción</div>}
+          </section>
+          {notasProps && <BlocDeNotas {...notasProps} pasoActualId={paso.id} />}
+        </ColumnaNotas>
       </div>
     );
   }
 
   return (
     <div className="vl-leccion" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      <style>{`@media (min-width: 1100px) { .vl-leccion { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-leccion > .vl-back { grid-column: 1 / -1; } .vl-leccion > .vl-video-col { position: sticky; top: 20px; } }`}</style>
-      <button type="button" className="vl-back" onClick={volver} style={{ justifySelf: 'start', background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: -10 }}>← Salir al curso</button>
-      <div className="vl-video-col">
-        <Reproductor leccion={{ id: paso.id, vimeoId: paso.vimeoId, titulo: paso.titulo }} onProgreso={onProgreso} />
+      <style>{`
+        @media (min-width: 1100px) { .vl-leccion { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-leccion > .vl-back { grid-column: 1; grid-row: 1; } .vl-leccion > .vl-video-col { grid-column: 1; grid-row: 2; position: sticky; top: 60px; } .vl-leccion > .vl-video-lado { grid-column: 2; grid-row: 2; position: sticky; top: 60px; } }
+        .vl-cine-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(90,90,95,0.45); z-index: 900; pointer-events: none; opacity: 0; transition: opacity 1.8s ease; }
+        .vl-cine-overlay--on { opacity: 1; pointer-events: auto; }
+        .vl-cine-elevated { position: relative; z-index: 910; }
+        .vl-cine-bloc { transition: opacity 1.8s ease, visibility 0s linear 0s; }
+        .vl-cine-bloc--oculto { opacity: 0; visibility: hidden; transition: opacity 1.8s ease, visibility 0s linear 1.8s; }
+        nav[aria-label="Navegación principal"] { transition: opacity 1.8s ease, visibility 0s linear 0s; }
+        body.vl-cine-activo nav[aria-label="Navegación principal"] { opacity: 0; visibility: hidden; transition: opacity 1.8s ease, visibility 0s linear 1.8s; }
+        .vl-cine-toggle { display: none; }
+        @media (min-width: 1100px) { .vl-cine-toggle { display: flex; } }
+      `}</style>
+      {createPortal(
+        <div className={`vl-cine-overlay${modoCine ? ' vl-cine-overlay--on' : ''}`}
+          onClick={() => setModoCine(false)} />,
+        document.body
+      )}
+      <div className="vl-back" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: -10 }}>
+        <button type="button" onClick={volver} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600 }}>← Salir al curso</button>
+        <button type="button" className={`vl-cine-toggle${cineElevado ? ' vl-cine-elevated' : ''}`} onClick={() => setModoCine(c => !c)} style={{
+          alignItems: 'center', gap: 8, background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+        }}>
+          <span style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: MUTED, transition: 'color 1.8s ease' }}>Modo cine</span>
+          <span style={{
+            width: 36, height: 20, borderRadius: 10, background: modoCine ? GOLD_REF : `${LINE}`, position: 'relative',
+            display: 'inline-block', transition: 'background 1s ease', flexShrink: 0,
+          }}>
+            <span style={{
+              position: 'absolute', top: 2, left: modoCine ? 18 : 2,
+              width: 16, height: 16, borderRadius: '50%', background: '#fff',
+              transition: 'left 400ms cubic-bezier(.4,0,.2,1)', boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+            }} />
+          </span>
+        </button>
       </div>
-      <div>
+      <div className={`vl-video-col${cineElevado ? ' vl-cine-elevated' : ''}`}>
+        <Reproductor leccion={{ id: paso.id, vimeoId: paso.vimeoId, titulo: paso.titulo }} onProgreso={onProgreso} />
+        {(() => {
+          // «Tu tendencia»: si el temperamento del usuario inclina a la tendencia de este módulo, se avisa bajo el vídeo.
+          const tp = temperamento?.primary;
+          const fuente = (pasos ?? []).find(p => p.modulo === paso.modulo && p.aviso_temperamento?.[tp]);
+          const texto = tp && fuente ? fuente.aviso_temperamento[tp] : null;
+          if (!texto) return null;
+          return (
+            // En modo cine se desvanece igual que el bloc de notas: solo el vídeo queda a la vista.
+            <div className={`vl-cine-bloc${modoCine ? ' vl-cine-bloc--oculto' : ''}`} aria-hidden={modoCine || undefined} style={{ marginTop: 16, padding: '20px 24px', background: BEIGE, borderLeft: `4px solid ${TEMP_COLORS[tp] || GOLD_REF}` }}>
+              <div style={{ ...eyebrow, fontSize: 13, color: TEMP_COLORS[tp] || GOLD_REF_DK, marginBottom: 8 }}>Tu tendencia · {TEMP_NOMBRE[tp]}</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 19, color: NAVY, lineHeight: 1.65 }}>{texto}</div>
+            </div>
+          );
+        })()}
+      </div>
+      <div className="vl-video-lado">
         <section style={tarjeta}>
           <div style={eyebrow}>
-            {lec ? `Módulo ${lec.numero}` : 'Vídeo'}
+            {lec?.introduccion ? 'Introducción' : lec ? `Módulo ${lec.numero}` : 'Vídeo'}
           </div>
           <h2 style={{ ...titulo(26), margin: '8px 0 6px' }}>{paso.titulo}</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 18 }}>
@@ -251,7 +370,11 @@ function PasoVideo({ paso, pasos, progreso, avanzar, retroceder, volver, cursoNu
             </button>
           </div>
         </section>
-        {notasProps && <BlocDeNotas {...notasProps} pasoActualId={paso.id} />}
+        {notasProps && (
+          <div className={`vl-cine-bloc${modoCine ? ' vl-cine-bloc--oculto' : ''}`} aria-hidden={modoCine || undefined}>
+            <BlocDeNotas {...notasProps} pasoActualId={paso.id} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -266,17 +389,20 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
     progreso.completar(paso.id, resultado, { tipo: paso.tipo, modulo: paso.modulo ?? 0 });
     avanzar();
   }
+  // Si el paso ya está completado, sus respuestas guardadas sirven para rellenar el ejercicio al volver.
+  const borrador = progreso.borradores?.[paso.id] ?? progreso.completados?.[paso.id];
+  const onBorrador = (datos) => progreso.guardarBorrador?.(paso.id, datos, paso);
 
   switch (paso.tipo) {
     case 'quiz': return <Quiz paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'define': return <Define paso={paso} onComplete={completar} modulo={moduloNum} />;
     case 'desliza': return <Desliza paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} user={user} />;
-    case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} />;
-    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
+    case 'identifica': return <Identifica paso={paso} onComplete={completar} modulo={moduloNum} guardado={progreso.completados[paso.id]} borrador={borrador} onBorrador={onBorrador} />;
+    case 'test_profundo': return <TestProfundo paso={paso} onComplete={completar} modulo={moduloNum} user={user} borrador={borrador} onBorrador={onBorrador} />;
+    case 'reflexion_piramide': return <ReflexionPiramide paso={paso} onComplete={completar} modulo={moduloNum} borrador={borrador} onBorrador={onBorrador} />;
+    case 'temperamento_magnanimidad': return <TemperamentoMagnanimidad paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} borrador={borrador} onBorrador={onBorrador} />;
     case 'temperamento_perfil': return <TemperamentoPerfil paso={paso} temperamento={temperamento} onComplete={completar} />;
-    case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} />;
+    case 'retos_temperamento': return <RetosTemperamento paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} borrador={borrador} onBorrador={onBorrador} />;
     case 'circulo_personas': return <CirculoPersonas paso={paso} user={user} onComplete={completar} />;
     case 'conclusion_modulo': {
       const idxConcl = pasos.indexOf(paso);
@@ -290,14 +416,14 @@ function PasoActividad({ paso, pasos, temperamento, progreso, avanzar, volver, u
       return <ConclusionModulo paso={paso} completados={progreso.completados} pendientes={pendientes} onContinuar={completar} onVolver={volver} irA={irA} />;
     }
     case 'reflexion_guiada': return <ReflexionGuiada paso={paso} temperamento={temperamento} onComplete={completar} />;
-    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} guardado={progreso.completados[paso.id]} />;
+    case 'plan_crecimiento': return <PlanCrecimiento paso={paso} temperamento={temperamento} onComplete={completar} userId={user.id} guardado={progreso.completados[paso.id]} user={user} cursoNum={cursoNum} />;
     case 'test_caracter': return <TestCaracterFormacion paso={paso} onComplete={completar} />;
-    case 'test_corazon': return <TestCorazonFormacion paso={paso} onComplete={completar} />;
+    case 'test_corazon': return <TestCorazonEnlace paso={paso} onComplete={completar} />;
     case 'lectura': return <Lectura paso={paso} onComplete={completar} temperamento={temperamento} />;
     case 'armonia_temperamento': return <ArmoniaTemperamento paso={paso} temperamento={temperamento} onComplete={completar} guardado={progreso.completados[paso.id]} />;
-    case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={completar} completados={progreso.completados} guardado={progreso.completados[paso.id]} irA={irA} />;
-    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} />;
-    case 'proyecto_mision': return <ProyectoMision paso={paso} onComplete={(r) => { progreso.completar(paso.id, r, { tipo: paso.tipo, modulo: paso.modulo ?? 0 }); if (r.completado) avanzar(); }} temperamento={temperamento} completados={progreso.completados} guardado={progreso.completados[paso.id]} volver={volver} />;
+    case 'objetivos_corazon': return <ObjetivosCorazon paso={paso} onComplete={(r, opts) => { progreso.completar(paso.id, r, { tipo: paso.tipo, modulo: paso.modulo ?? 0 }); if (opts?.avanzar !== false) avanzar(); }} completados={progreso.completados} guardado={progreso.completados[paso.id]} irA={irA} />;
+    case 'cierre': return <Sintesis paso={paso} temperamento={temperamento} onComplete={completar} cursoNum={cursoNum} user={user} borrador={borrador} onBorrador={onBorrador} />;
+    case 'proyecto_mision': return <ProyectoMision paso={paso} onComplete={(r, opts) => { progreso.completar(paso.id, r, { tipo: paso.tipo, modulo: paso.modulo ?? 0 }); if (r.completado && opts?.avanzar !== false) avanzar(); }} temperamento={temperamento} completados={progreso.completados} guardado={progreso.completados[paso.id]} volver={volver} />;
     default: return <p>Tipo desconocido: {paso.tipo}</p>;
   }
 }
@@ -314,7 +440,7 @@ function agruparModulos(pasos) {
         actual = { video: p, actividades: [] };
         modulos.push(actual);
       }
-    } else if (actual && p.tipo !== 'noop' && p.tipo !== 'cierre' && p.tipo !== 'conclusion_modulo' && p.tipo !== 'reflexion_guiada' && p.tipo !== 'plan_crecimiento' && p.tipo !== 'test_caracter' && p.tipo !== 'test_corazon' && p.tipo !== 'lectura') {
+    } else if (actual && !TIPOS_NO_CONTABLES.has(p.tipo)) {
       actual.actividades.push(p);
     }
   }
@@ -338,7 +464,7 @@ function tituloActividad(act) {
 function etiquetaPaso(paso) {
   if (paso.tipo === 'quiz') return 'Cuestionario';
   if (paso.tipo === 'define') return 'Definiciones';
-  if (paso.tipo === 'test_profundo') return 'Test';
+  if (paso.tipo === 'test_profundo') return /^test\b/i.test(paso.titulo ?? '') ? 'Test' : 'Reflexión';
   if (paso.tipo === 'reflexion_piramide') return 'Reflexión';
   if (paso.tipo === 'temperamento_magnanimidad') return 'Temperamento';
   if (paso.tipo === 'temperamento_perfil') return 'Tu perfil';
@@ -350,8 +476,8 @@ function etiquetaPaso(paso) {
   if (paso.tipo === 'test_caracter') return 'Test de carácter';
   if (paso.tipo === 'test_corazon') return 'Test del corazón';
   if (paso.tipo === 'armonia_temperamento') return 'Temperamento';
-  if (paso.tipo === 'objetivos_corazon') return 'Objetivos';
-  if (paso.tipo === 'proyecto_mision') return 'Proyecto final';
+  if (paso.tipo === 'objetivos_corazon') return 'Proyecto final';
+  if (paso.tipo === 'proyecto_mision') return 'Plan';
   return paso.titulo;
 }
 
@@ -381,11 +507,31 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
   const modulos = agruparModulos(Array.from(pasos || []));
   const tempPrimario = temperamento?.primary;
   const proyectosFinal = (pasos || []).filter(p => p.proyecto_final);
+  // Proyectos finales que dependen del Test del corazón: bloqueados hasta que haya un resultado guardado.
+  const necesitaCorazon = proyectosFinal.some(p => p.requiere_test_corazon);
+  const [tieneCorazon, setTieneCorazon] = useState(null);
+  const [avisoCorazon, setAvisoCorazon] = useState(false);
+  useEffect(() => {
+    if (!necesitaCorazon || !supabase) return;
+    let vivo = true;
+    supabase.from('test_results').select('id', { count: 'exact', head: true }).eq('kind', 'heart')
+      .then(({ count }) => { if (vivo) setTieneCorazon((count ?? 0) > 0); });
+    return () => { vivo = false; };
+  }, [necesitaCorazon]);
+  function irAlTestCorazon() {
+    const lang = window.location.pathname.split('/')[1] || 'es';
+    window.location.assign(`/${lang}/tests/corazon-libre?volver=${encodeURIComponent(window.location.pathname)}`);
+  }
 
   return (
+    <>
     <div style={{ ...tarjeta, padding: 0, overflow: 'hidden' }}>
       {modulos.map((mod, i) => {
         const isOpen = abierto === i;
+        // Con introducción, el primer bloque no lleva número y los demás empiezan en el Módulo 1.
+        const conIntro = Boolean(modulos[0]?.video?.es_introduccion);
+        const esIntro = conIntro && i === 0;
+        const numMod = conIntro ? i : i + 1;
         const videoHecho = Boolean(completados[mod.video.id]);
         const actsDone = mod.actividades.filter((a) => completados[a.id]).length;
         const allActsDone = mod.actividades.length > 0 && actsDone === mod.actividades.length;
@@ -403,10 +549,10 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
                 background: todoHecho ? GOLD_REF : 'transparent', color: todoHecho ? '#fff' : NAVY,
                 fontFamily: FONT_SLAB, fontSize: 13, fontWeight: 700,
               }}>
-                {todoHecho ? <IconoCheck width={14} height={14} /> : i + 1}
+                {todoHecho ? <IconoCheck width={14} height={14} /> : esIntro ? '·' : numMod}
               </span>
               <span style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500 }}>
-                Módulo {i + 1}: {mod.video.titulo}
+                {esIntro ? 'Introducción' : `Módulo ${numMod}`}: {mod.video.titulo}
                 {tempPrimario && mod.video.tendencia_temperamentos?.includes(tempPrimario) && (
                   <span style={{
                     marginLeft: 8, fontFamily: FONT_BODY, fontSize: 11, fontWeight: 700,
@@ -463,38 +609,79 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
           </div>
         );
       })}
-      {proyectosFinal.map(pf => {
-        const pfData = completados[pf.id];
-        const pfCompletado = pfData?.completado;
-        const pfAMedias = pfData && !pfCompletado;
-        return (
-          <div key={pf.id} style={{ borderTop: `1px solid ${LINE}` }}>
-            <button type="button" onClick={() => irA(pf.id)} style={{
-              all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
-              display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px',
-            }}>
-              <span style={{
-                flex: '0 0 28px', height: 28, borderRadius: '50%', display: 'grid', placeItems: 'center',
-                border: pfCompletado ? 'none' : `1.5px solid ${LINE}`,
-                background: pfCompletado ? GOLD_REF : 'transparent', color: pfCompletado ? '#fff' : NAVY,
-                fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
-              }}>
-                {pfCompletado ? <IconoCheck width={14} height={14} /> : '✦'}
-              </span>
-              <span style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: NAVY, fontWeight: 500, display: 'block' }}>
-                  Proyecto final: {pf.titulo}
-                </span>
-                <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: pfCompletado ? SUCCESS_DK : pfAMedias ? GOLD_REF_DK : MUTED }}>
-                  {pfCompletado ? 'Completado' : pfAMedias ? 'En progreso' : 'Pendiente'}
-                </span>
-              </span>
-            </button>
-          </div>
-        );
-      })}
     </div>
+    {proyectosFinal.map(pf => {
+      const pfData = completados[pf.id];
+      const pfCompletado = pfData?.completado || (pf.tipo === 'objetivos_corazon' && Array.isArray(pfData?.codigos));
+      const pfAMedias = pfData && !pfCompletado;
+      const bloqueado = pf.requiere_test_corazon && tieneCorazon === false && !pfCompletado;
+      return (
+        <section key={pf.id} style={{ marginTop: 18 }}>
+          <button type="button" onClick={() => (bloqueado ? setAvisoCorazon(true) : irA(pf.id))} style={{
+            all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
+            ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
+            borderTop: `2px solid ${GOLD_REF}`,
+          }}>
+            <span style={{
+              flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
+              border: pfCompletado ? 'none' : `1.5px solid ${LINE}`,
+              background: pfCompletado ? GOLD_REF : 'transparent',
+              color: pfCompletado ? '#fff' : bloqueado ? MUTED : NAVY,
+              fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700,
+            }}>
+              {pfCompletado ? <IconoCheck width={16} height={16} /> : bloqueado ? (
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+              ) : '✦'}
+            </span>
+            <div>
+              {pf.subtitulo_proyecto && <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 2 }}>{pf.subtitulo_proyecto}</div>}
+              <div style={{ fontFamily: FONT_SLAB, fontSize: 16, fontWeight: 700, color: bloqueado ? MUTED : NAVY }}>{pf.titulo}</div>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: pfCompletado ? SUCCESS_DK : bloqueado ? MUTED : pfAMedias ? GOLD_REF_DK : MUTED, marginTop: 2 }}>
+                {pfCompletado ? 'Completado' : bloqueado ? 'Bloqueado · Necesitas hacer el Test del corazón' : pfAMedias ? 'En progreso' : 'Pendiente'}
+              </div>
+            </div>
+          </button>
+        </section>
+      );
+    })}
+    {avisoCorazon && createPortal(
+      <div role="dialog" aria-modal="true" onClick={() => setAvisoCorazon(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(20,28,48,0.45)', display: 'grid', placeItems: 'center', zIndex: 1000, padding: 16 }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ ...tarjeta, maxWidth: 480, width: '100%', padding: '36px 32px', textAlign: 'center' }}>
+          <span style={{ display: 'inline-grid', placeItems: 'center', width: 64, height: 64, borderRadius: '50%', background: BEIGE, border: `2px solid ${GOLD_REF}`, fontFamily: FONT_SLAB, fontSize: 28, fontWeight: 700, color: GOLD_REF_DK }}>♡</span>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: NAVY, margin: '16px 0 10px' }}>Haz primero el Test del corazón</h2>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 17, color: MUTED, lineHeight: 1.6, margin: '0 0 24px' }}>
+            Tu perfil del corazón se construye con el resultado del test: verás las dos enfermedades espirituales en las que más puntúas y fijarás tus objetivos prácticos para cada una.
+          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center' }}>
+            <button type="button" onClick={irAlTestCorazon} style={{ fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: '#fff', background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 36px', cursor: 'pointer' }}>Hacer el Test del corazón →</button>
+            <button type="button" onClick={() => setAvisoCorazon(false)} style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED, background: 'none', border: 'none', cursor: 'pointer', padding: 8 }}>Ahora no</button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )}
+    </>
   );
+}
+
+// `paso.ficha` elige qué respuestas van a "Mis reflexiones": [{ respuesta: índice } | { campo: 'textoFuerte' }, titulo?]. [] lo excluye.
+function itemsFicha(paso, datos) {
+  const out = [];
+  for (const f of paso.ficha) {
+    let texto;
+    let titulo = f.titulo;
+    if (typeof f.respuesta === 'number') {
+      texto = datos.respuestas?.[f.respuesta];
+      if (!titulo) {
+        const q = paso.preguntas?.[f.respuesta];
+        titulo = typeof q === 'string' ? q : q?.texto;
+      }
+    } else if (f.campo) {
+      texto = datos[f.campo];
+    }
+    if (typeof texto === 'string' && texto.trim()) out.push({ titulo: titulo || paso.titulo, texto: texto.trim() });
+  }
+  return out;
 }
 
 function extraerReflexiones(pasos, completados) {
@@ -504,6 +691,10 @@ function extraerReflexiones(pasos, completados) {
     if (!datos) continue;
     const titulo = paso.resumen_ficha || paso.titulo;
     const prio = paso.prioridad_ficha ?? 5;
+    if (Array.isArray(paso.ficha)) {
+      itemsFicha(paso, datos).forEach((it, j) => items.push({ ...it, id: `${paso.id}-${j}`, prio }));
+      continue;
+    }
     if (paso.tipo === 'test_profundo' || paso.tipo === 'reflexion_piramide') {
       const textos = (datos.respuestas ?? []).filter(t => typeof t === 'string' && t.trim());
       if (textos.length > 0) items.push({ id: paso.id, titulo, texto: textos[0], prio });
@@ -522,10 +713,100 @@ function extraerReflexiones(pasos, completados) {
     }
   }
   items.sort((a, b) => a.prio - b.prio);
-  return items.slice(0, 3);
+  return items.slice(0, 8);
 }
 
-function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
+function FichaSlider({ r, cita, activo }) {
+  const [expandido, setExpandido] = useState(false);
+  const [largo, setLargo] = useState(false);
+  const textoRef = useRef(null);
+  useEffect(() => { if (!activo) setExpandido(false); }, [activo]);
+  useEffect(() => {
+    const el = textoRef.current;
+    if (el && !expandido) setLargo(el.scrollHeight > el.clientHeight + 1);
+  }, [r.texto, expandido]);
+  if (cita) {
+    return (
+      <div style={{ padding: '12px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}` }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.55, textWrap: 'pretty' }}>{r.texto}</div>
+      </div>
+    );
+  }
+  return (
+    <div style={{ padding: '12px 14px', background: BEIGE, borderLeft: `2px solid ${LINE}` }}>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 700, color: NAVY, lineHeight: 1.4, marginBottom: 6 }}>{r.titulo}</div>
+      <div ref={textoRef} style={{
+        fontFamily: FONT_BODY, fontSize: 17, color: NAVY, lineHeight: 1.55,
+        ...(!expandido ? { overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' } : {}),
+      }}>{r.texto}</div>
+      {largo && (
+        <button type="button" tabIndex={activo ? 0 : -1} onClick={() => setExpandido(e => !e)} style={{
+          fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, color: GOLD_REF_DK,
+          background: 'none', border: 'none', padding: '6px 0 0', cursor: 'pointer',
+          textDecoration: 'underline', textUnderlineOffset: 3,
+        }}>{expandido ? 'Ver menos' : 'Ver más'}</button>
+      )}
+    </div>
+  );
+}
+
+function SliderReflexiones({ reflexiones, onVerCuaderno, etiqueta = 'Mis reflexiones', cita = false }) {
+  const total = reflexiones.length;
+  const [idx, setIdx] = useState(0);
+  const actual = Math.min(idx, total - 1);
+  const slideRefs = useRef([]);
+  const [alto, setAlto] = useState(null);
+  const prev = () => setIdx(i => Math.max(0, i - 1));
+  const next = () => setIdx(i => Math.min(total - 1, i + 1));
+
+  useEffect(() => {
+    const el = slideRefs.current[actual];
+    if (!el) return;
+    const medir = () => setAlto(el.offsetHeight);
+    medir();
+    const ro = new ResizeObserver(medir);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [actual, total]);
+
+  return (
+    <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 12, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{etiqueta}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>{actual + 1}/{total}</span>
+          <button type="button" onClick={prev} disabled={actual === 0} aria-label="Anterior" style={{ background: 'none', border: 'none', padding: 2, cursor: actual === 0 ? 'default' : 'pointer', opacity: actual === 0 ? 0.3 : 1 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
+          </button>
+          <button type="button" onClick={next} disabled={actual === total - 1} aria-label="Siguiente" style={{ background: 'none', border: 'none', padding: 2, cursor: actual === total - 1 ? 'default' : 'pointer', opacity: actual === total - 1 ? 0.3 : 1 }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="2"><polyline points="9 18 15 12 9 6" /></svg>
+          </button>
+        </div>
+      </div>
+      <div className="vl-slider-ventana" style={{ overflow: 'hidden', height: alto ?? 'auto', transition: 'height 350ms cubic-bezier(.4,0,.2,1)' }}>
+        <div className="vl-slider-pista" style={{
+          display: 'flex', alignItems: 'flex-start',
+          transform: `translateX(-${actual * 100}%)`,
+          transition: 'transform 450ms cubic-bezier(.4,0,.2,1)',
+        }}>
+          {reflexiones.map((r, i) => (
+            <div key={r.id ?? i} ref={el => { slideRefs.current[i] = el; }} aria-hidden={i !== actual || undefined} style={{ flex: '0 0 100%', minWidth: 0 }}>
+              <FichaSlider r={r} cita={cita} activo={i === actual} />
+            </div>
+          ))}
+        </div>
+      </div>
+      {onVerCuaderno && (
+        <button type="button" onClick={onVerCuaderno} style={{
+          fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: GOLD_REF_DK,
+          background: 'none', border: 'none', padding: '6px 0 0', cursor: 'pointer',
+        }}>Ver todas en el cuaderno →</button>
+      )}
+    </div>
+  );
+}
+
+function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno, ideasClave = [] }) {
   if (!temperamento) return null;
   const p = temperamento.primary;
   const s = temperamento.secondary;
@@ -537,6 +818,7 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
   const virtudDesafio = retosStep?.virtud_desafio_map?.[perfil] ?? retosStep?.virtud_desafio_map?.[p];
 
   const reflexiones = extraerReflexiones(pasos, completados);
+  const ideas = ideasClave.filter(i => i.paso && completados[i.paso]).map((i, n) => ({ id: `idea-${n}`, texto: i.texto }));
 
   const proyectoStep = pasos.find(x => x.tipo === 'proyecto_mision');
   const proyectoData = proyectoStep && completados[proyectoStep.id];
@@ -571,7 +853,7 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
             </>
           ) : (
             <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.5, margin: 0, fontStyle: 'italic' }}>
-              Tu misión aparecerá aquí cuando completes el proyecto final.
+              Tu misión aparecerá aquí cuando completes el plan.
             </p>
           )}
         </div>
@@ -623,8 +905,10 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
         if (!armoniaData) return null;
 
         const disorderOrder = ['R', 'VR', 'VM', 'VI', 'VC', 'SV', 'SI', 'SC'];
-        const topDisorders = testCorazonHecho?.scoreResult?.disorders
-          ? Object.entries(testCorazonHecho.scoreResult.disorders)
+        // El resultado del test viene del paso del test (cursos antiguos) o del proyecto final «Tu perfil del corazón».
+        const resultadoCorazon = testCorazonHecho?.scoreResult ?? objHecho?.scoreResult;
+        const topDisorders = resultadoCorazon?.disorders
+          ? Object.entries(resultadoCorazon.disorders)
               .sort((a, b) => {
                 const diff = (b[1].pct ?? 0) - (a[1].pct ?? 0);
                 return diff !== 0 ? diff : disorderOrder.indexOf(a[0]) - disorderOrder.indexOf(b[0]);
@@ -679,26 +963,8 @@ function ResumenPersonal({ temperamento, pasos, completados, onVerCuaderno }) {
         );
       })()}
 
-      {reflexiones.length > 0 && (
-        <div style={{ marginTop: 16, borderTop: `1px solid ${LINE}`, paddingTop: 14 }}>
-          <div style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 700, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 10 }}>Mis reflexiones</div>
-          {reflexiones.map((r) => (
-            <div key={r.id} style={{ marginBottom: 10, padding: '8px 10px', background: BEIGE, borderLeft: `2px solid ${LINE}` }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 3 }}>{r.titulo}</div>
-              <div style={{
-                fontFamily: FONT_BODY, fontSize: 13, color: NAVY, lineHeight: 1.45,
-                display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden',
-              }}>{r.texto}</div>
-            </div>
-          ))}
-          {onVerCuaderno && (
-            <button type="button" onClick={onVerCuaderno} style={{
-              fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
-              background: 'none', border: 'none', padding: '4px 0 0', cursor: 'pointer',
-            }}>Ver todas en el cuaderno →</button>
-          )}
-        </div>
-      )}
+      {reflexiones.length > 0 && <SliderReflexiones reflexiones={reflexiones} onVerCuaderno={onVerCuaderno} />}
+      {ideas.length > 0 && <SliderReflexiones reflexiones={ideas} etiqueta="Ideas clave del curso" cita />}
     </div>
   );
 }
@@ -836,7 +1102,7 @@ function resumenEjercicio(paso) {
     case 'test_corazon': return 'Tu resultado del Test del corazón.';
     case 'cierre': return 'Síntesis del curso: tu virtud desafío y tu propósito.';
     case 'reflexion_piramide': return 'Reflexión guiada sobre los conceptos del módulo.';
-    case 'proyecto_mision': return 'Tu proyecto final: tu historia, tus talentos y tu misión.';
+    case 'proyecto_mision': return 'Tu plan: tu historia, tus talentos y tu misión.';
     default: return 'Ejercicio completado.';
   }
 }
@@ -874,8 +1140,61 @@ function CuadernoDetails({ children, ...props }) {
   );
 }
 
+const ETIQUETA_TIPO_CUADERNO = { video: 'Vídeo', quiz: 'Cuestionario', define: 'Definiciones', desliza: 'Identifica temperamentos', identifica: 'Diagrama', reflexion_piramide: 'Reflexión', test_profundo: 'Autoexamen', retos_temperamento: 'Retos', temperamento_magnanimidad: 'Temperamento', test_caracter: 'Test de carácter', test_corazon: 'Test del corazón', armonia_temperamento: 'Armonía', objetivos_corazon: 'Objetivos', proyecto_mision: 'Proyecto', intro: 'Introducción', conclusion_modulo: 'Conclusión', lectura: 'Lectura' };
+
+function formatFechaNota(iso) {
+  const d = new Date(iso);
+  return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, moduloId, temperamento }) {
   const entradas = pasos.filter(p => !TIPOS_EXCLUIR_CUADERNO.has(p.tipo));
+  const [tab, setTab] = useState('ejercicios');
+  const notasHook = useNotas(userId, moduloId);
+
+  const pasosMap = {};
+  for (const p of pasos) pasosMap[p.id] = p;
+
+  const modHeaders = pasos.filter(p => p.tipo === 'video' && !p.continua_modulo);
+
+  function modNumDePaso(pasoId) {
+    const idx = pasos.findIndex(p => p.id === pasoId);
+    for (let i = idx - 1; i >= 0; i--) {
+      if (pasos[i].tipo === 'video' && !pasos[i].continua_modulo) {
+        return modHeaders.indexOf(pasos[i]) + 1;
+      }
+    }
+    const p = pasosMap[pasoId];
+    if (p && p.tipo === 'video' && !p.continua_modulo) return modHeaders.indexOf(p) + 1;
+    return null;
+  }
+
+  const notasAgrupadas = (() => {
+    const grupos = {};
+    for (const [pasoId, lista] of Object.entries(notasHook.notas)) {
+      const mn = modNumDePaso(pasoId) ?? 0;
+      if (!grupos[mn]) grupos[mn] = [];
+      for (const nota of lista) {
+        grupos[mn].push({ ...nota, _pasoId: pasoId });
+      }
+    }
+    const sorted = Object.entries(grupos).sort((a, b) => Number(a[0]) - Number(b[0]));
+    return sorted.map(([mn, notas]) => ({
+      modulo: Number(mn),
+      titulo: mn > 0 ? modHeaders[Number(mn) - 1]?.nombre || `Módulo ${mn}` : 'General',
+      notas: notas.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)),
+    }));
+  })();
+
+  const totalNotas = Object.values(notasHook.notas).reduce((s, arr) => s + arr.length, 0);
+
+  const tabStyle = (active) => ({
+    fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600,
+    color: active ? NAVY : MUTED, background: 'none',
+    border: 'none', borderBottom: active ? `2px solid ${GOLD_REF}` : '2px solid transparent',
+    padding: '10px 20px', cursor: 'pointer',
+    transition: 'color 200ms, border-color 200ms',
+  });
 
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
@@ -890,76 +1209,132 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
       )}
       <div style={tarjeta}>
         {onVolver && (
-          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 16px' }}>
+          <h2 style={{ fontFamily: FONT_SLAB, fontSize: 24, fontWeight: 700, color: NAVY, margin: '0 0 0' }}>
             Tu cuaderno personal
           </h2>
         )}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-          {entradas.map(paso => {
-            const datos = completados[paso.id];
-            const hecho = datos && tieneDatos(datos);
-            const modNum = moduloDeEjercicio(pasos, paso.id);
-
-            if (hecho) {
-              const corto = resumenCorto(paso, datos);
-              return (
-                <CuadernoDetails key={paso.id}>
-                  <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                      <IconoChevron width={14} height={14} className="vl-cuad-chev" style={{ color: MUTED, flexShrink: 0, transition: 'transform 200ms ease' }} />
-                      <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-                          <IconoCheck width={12} height={12} style={{ color: GOLD_REF }} />
-                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
-                        </span>
-                        {onEditar && (
-                          <button type="button" onClick={(e) => { e.stopPropagation(); onEditar(paso.id); }} title="Editar" style={{
-                            background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
-                          }}>
-                            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }}>
-                              <path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-                              <path d="M9.5 3.5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-                            </svg>
-                          </button>
-                        )}
-                      </span>
-                    </div>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
-                      {modNum && <span>Módulo {modNum}</span>}
-                      {modNum && corto && <span> · </span>}
-                      {corto && <span>{corto}</span>}
-                    </p>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
-                  </summary>
-                  <div style={{ padding: '0 0 16px 0' }}>
-                    <RespuestasCuaderno paso={paso} datos={datos} />
-                  </div>
-                </CuadernoDetails>
-              );
-            }
-
-            return (
-              <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 4, opacity: 0.55 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
-                    <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Pendiente</span>
-                    {onIrA && <button type="button" onClick={() => onIrA(paso.id)} style={{
-                      fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
-                      background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
-                      padding: '4px 12px', cursor: 'pointer', opacity: 1,
-                    }}>Ir al ejercicio</button>}
-                  </span>
-                </div>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
-                  {modNum && <span>Módulo {modNum}</span>}
-                </p>
-                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
-              </div>
-            );
-          })}
+        <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${LINE}`, marginBottom: 16, marginTop: 8 }}>
+          <button type="button" onClick={() => setTab('ejercicios')} style={tabStyle(tab === 'ejercicios')}>Ejercicios</button>
+          <button type="button" onClick={() => setTab('notas')} style={tabStyle(tab === 'notas')}>
+            Bloc de notas{totalNotas > 0 ? ` (${totalNotas})` : ''}
+          </button>
         </div>
+
+        {tab === 'ejercicios' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {entradas.map(paso => {
+              const datos = completados[paso.id];
+              const hecho = datos && tieneDatos(datos);
+              const modNum = moduloDeEjercicio(pasos, paso.id);
+
+              if (hecho) {
+                const corto = resumenCorto(paso, datos);
+                return (
+                  <CuadernoDetails key={paso.id}>
+                    <summary style={{ padding: '14px 0', cursor: 'pointer', listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <IconoChevron width={14} height={14} className="vl-cuad-chev" style={{ color: MUTED, flexShrink: 0, transition: 'transform 200ms ease' }} />
+                        <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                            <IconoCheck width={12} height={12} style={{ color: GOLD_REF }} />
+                            <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: GOLD_REF_DK, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Completado</span>
+                          </span>
+                          {onEditar && (
+                            <button type="button" onClick={(e) => { e.stopPropagation(); onEditar(paso.id); }} title="Editar" style={{
+                              background: 'none', border: 'none', padding: 4, cursor: 'pointer', color: MUTED, flexShrink: 0,
+                            }}>
+                              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ display: 'block' }}>
+                                <path d="M11.5 1.5l3 3L5 14H2v-3L11.5 1.5z" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M9.5 3.5l3 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                              </svg>
+                            </button>
+                          )}
+                        </span>
+                      </div>
+                      <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
+                        {modNum && <span>Módulo {modNum}</span>}
+                        {modNum && corto && <span> · </span>}
+                        {corto && <span>{corto}</span>}
+                      </p>
+                      <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+                    </summary>
+                    <div style={{ padding: '0 0 16px 0' }}>
+                      <RespuestasCuaderno paso={paso} datos={datos} />
+                    </div>
+                  </CuadernoDetails>
+                );
+              }
+
+              return (
+                <div key={paso.id} style={{ borderTop: `1px solid ${LINE}`, padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 4, opacity: 0.55 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontFamily: FONT_SLAB, fontSize: 15, fontWeight: 700, color: NAVY, flex: 1, minWidth: 0 }}>{paso.titulo || paso.tipo}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+                      <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Pendiente</span>
+                      {onIrA && <button type="button" onClick={() => onIrA(paso.id)} style={{
+                        fontFamily: FONT_BODY, fontSize: 12, fontWeight: 600, color: GOLD_REF_DK,
+                        background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
+                        padding: '4px 12px', cursor: 'pointer', opacity: 1,
+                      }}>Ir al ejercicio</button>}
+                    </span>
+                  </div>
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>
+                    {modNum && <span>Módulo {modNum}</span>}
+                  </p>
+                  <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, lineHeight: 1.4, margin: 0 }}>{resumenEjercicio(paso)}</p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {tab === 'notas' && (
+          <div>
+            {totalNotas === 0 ? (
+              <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, lineHeight: 1.6 }}>
+                Aún no has escrito ninguna nota. Puedes añadir notas mientras ves los vídeos o realizas los ejercicios.
+              </p>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                {notasAgrupadas.map(grupo => (
+                  <div key={grupo.modulo}>
+                    <div style={{ fontFamily: FONT_SLAB, fontSize: 13, fontWeight: 700, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.08em', padding: '14px 0 8px', borderTop: `1px solid ${LINE}` }}>
+                      {grupo.modulo > 0 ? `Módulo ${grupo.modulo}` : 'General'}
+                    </div>
+                    {grupo.notas.map(nota => {
+                      const paso = pasosMap[nota._pasoId];
+                      const tipoLabel = paso ? (ETIQUETA_TIPO_CUADERNO[paso.tipo] ?? 'Ejercicio') : 'Nota';
+                      return (
+                        <div key={nota.id} style={{ padding: '10px 0', borderTop: `1px solid ${LINE}20`, display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <span style={{ fontFamily: FONT_BODY, fontSize: 11, fontWeight: 700, color: GOLD_REF_DK, textTransform: 'uppercase', letterSpacing: '0.06em', background: `${GOLD_REF}18`, padding: '2px 8px' }}>
+                              {tipoLabel}
+                            </span>
+                            <span style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: NAVY, flex: 1, minWidth: 0 }}>
+                              {paso?.titulo || paso?.nombre || ''}
+                            </span>
+                            {onIrA && paso && (
+                              <button type="button" onClick={() => onIrA(nota._pasoId)} style={{
+                                fontFamily: FONT_BODY, fontSize: 11, fontWeight: 600, color: GOLD_REF_DK,
+                                background: 'none', border: `1px solid ${GOLD_REF}`, borderRadius: 0,
+                                padding: '3px 10px', cursor: 'pointer', flexShrink: 0,
+                              }}>Ir →</button>
+                            )}
+                          </div>
+                          <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: nota.texto }} />
+                          <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>
+                            {nota.fecha ? formatFechaNota(nota.fecha) : ''}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
       {onVolver && (
         <div style={{ marginTop: 18 }}>
@@ -1211,24 +1586,9 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
   const [verPlan, setVerPlan] = useState(false);
   const [verCuaderno, setVerCuaderno] = useState(false);
   const progAll = progresoModulo(pasos, completados);
-  const modHeaders = pasos.filter((p) => p.tipo === 'video' && !p.continua_modulo);
-  const allVids = pasos.filter((p) => p.tipo === 'video');
-  const TIPOS_CONTABLES = new Set(['video', 'define', 'desliza', 'identifica', 'test_profundo', 'retos_temperamento', 'temperamento_magnanimidad', 'reflexion_piramide', 'cierre', 'plan_crecimiento']);
-  const vidsHechos = modHeaders.filter((p, mi) => {
-    if (!completados[p.id]) return false;
-    const pIdx = allVids.indexOf(p);
-    for (let j = pIdx + 1; j < allVids.length && allVids[j].continua_modulo; j++) {
-      if (!completados[allVids[j].id]) return false;
-    }
-    const startIdx = pasos.indexOf(p);
-    const nextHeader = modHeaders[mi + 1];
-    const endIdx = nextHeader ? pasos.indexOf(nextHeader) : pasos.length;
-    for (let k = startIdx + 1; k < endIdx; k++) {
-      if (TIPOS_CONTABLES.has(pasos[k].tipo) && !completados[pasos[k].id]) return false;
-    }
-    return true;
-  }).length;
-  const vidsPct = modHeaders.length ? Math.round((vidsHechos / modHeaders.length) * 100) : 0;
+  const progMods = modulosCompletados(pasos, completados);
+  const vidsHechos = progMods.hechos;
+  const vidsPct = progMods.porcentaje;
   const cont = continuarModulo(pasos, completados);
 
   const planStep = pasos.find(p => p.tipo === 'plan_crecimiento');
@@ -1250,7 +1610,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         .vl-listado { display: grid; grid-template-columns: 1fr; gap: 0; max-width: 860px; }
         @media (min-width: 768px) {
           .vl-listado { grid-template-columns: 2fr 3fr; gap: 36px; max-width: none; }
-          .vl-listado-izq { position: sticky; top: 20px; align-self: start; }
+          .vl-listado-izq, .vl-listado-der { position: sticky; top: 60px; align-self: start; min-width: 0; }
         }
       `}</style>
 
@@ -1271,7 +1631,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             <text x="50%" y="50%" textAnchor="middle" dominantBaseline="central" fontFamily={FONT_SLAB} fontSize="18" fontWeight="700" fill={NAVY}>{vidsPct}%</text>
           </svg>
           <div>
-            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {modHeaders.length} módulos</div>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 20, fontWeight: 700, color: NAVY }}>{vidsHechos} de {progMods.total} módulos</div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED, marginTop: 2 }}>
               {progAll.completo ? 'Curso completado' : 'En progreso'}
             </div>
@@ -1279,7 +1639,7 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         </div>
 
         {temperamento && (
-          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} onVerCuaderno={() => setVerCuaderno(true)} />
+          <ResumenPersonal temperamento={temperamento} pasos={pasos} completados={completados} onVerCuaderno={() => setVerCuaderno(true)} ideasClave={modulo?.ideas_clave} />
         )}
 
         {userId && (
@@ -1322,8 +1682,32 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
         )}
       </div>
 
-      <div>
-        {cont && (
+      <div className="vl-listado-der">
+        {(progAll.completo || !cont) && (
+          <section style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: 18, marginBottom: 18, boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
+            <div style={{ ...eyebrow, color: GOLD_REF_LT, marginBottom: 8 }}>
+              Has finalizado este curso
+            </div>
+            <Link to={cursoNum < 7 ? `/app/formacion/curso-${cursoNum + 1}` : '/app/formacion'} style={{
+              boxSizing: 'border-box', width: '100%', cursor: 'pointer', textDecoration: 'none', color: PAPER,
+              display: 'flex', gap: 14, alignItems: 'center',
+            }}>
+              <span style={{
+                flex: '0 0 48px', height: 48, borderRadius: '50%', display: 'grid', placeItems: 'center',
+                background: 'rgba(255,255,255,0.15)',
+              }}>
+                <IconoCheck width={22} height={22} />
+              </span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 600, lineHeight: 1.2 }}>
+                  {cursoNum < 7 ? `Continúa con el Curso ${cursoNum + 1}` : 'Volver a la formación'}
+                </div>
+                <div style={{ fontFamily: FONT_BODY, fontSize: 12, opacity: 0.72, marginTop: 4 }}>Curso {cursoNum} completado</div>
+              </div>
+            </Link>
+          </section>
+        )}
+        {cont && !progAll.completo && (
           <section style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: 18, marginBottom: 18, boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
             <div style={{ ...eyebrow, color: GOLD_REF_LT, marginBottom: 8 }}>
               {vidsHechos > 0 ? 'Continúa donde lo dejaste' : 'Empieza aquí'}
@@ -1530,29 +1914,37 @@ function ModuloContenido({ moduloData, user, cursoId }) {
   if (pasoActual) {
     if (pasoActual.tipo === 'video') {
       const videosPasos = pasos.filter((p) => p.tipo === 'video');
-      return <PasoVideo paso={pasoActual} pasos={pasos} progreso={progreso} avanzar={avanzar} retroceder={pasoAnterior(pasos, pasoActual.id) ? retroceder : null} volver={volver} cursoNum={cursoNum} notasProps={{ videos: videosPasos, completados: progreso.completados, notas: notasHook.notas, onAgregar: notasHook.agregar, onEliminar: notasHook.eliminar }} />;
+      return <PasoVideo paso={pasoActual} pasos={pasos} progreso={progreso} temperamento={temperamento} avanzar={avanzar} retroceder={pasoAnterior(pasos, pasoActual.id) ? retroceder : null} volver={volver} cursoNum={cursoNum} notasProps={{ videos: videosPasos, completados: progreso.completados, notas: notasHook.notas, onAgregar: notasHook.agregar, onEliminar: notasHook.eliminar, onEditar: notasHook.editar, pasos }} />;
     }
     const esProyectoFinal = pasoActual.proyecto_final;
     const videoCtx = esProyectoFinal ? null : videoAnterior(pasos, pasoActual.id);
     const videoCtxMod = videoCtx ? moduloDelPaso(pasos, videoCtx.id) : null;
+    const videosPasos = pasos.filter((p) => p.tipo === 'video');
+
     return (
-      <div style={{ maxWidth: 800, margin: '0 auto' }}>
-        <button type="button" onClick={esProyectoFinal ? volver : rewind} style={{
-          background: 'none', border: 'none', padding: 0, cursor: 'pointer',
-          color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: 14,
+      <div className="vl-ejercicio-split" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <style>{`@media (min-width: 1100px) { .vl-ejercicio-split { display: grid !important; grid-template-columns: minmax(0, 2.2fr) minmax(300px, 1fr); gap: 24px !important; align-items: start; } .vl-ejercicio-split > .vl-split-back { grid-column: 1 / -1; } .vl-ejercicio-split > .vl-split-notas-col { position: sticky; top: 60px; } }`}</style>
+        <button type="button" className="vl-split-back" onClick={esProyectoFinal ? volver : rewind} style={{
+          justifySelf: 'start', alignSelf: 'flex-start', background: 'none', border: 'none', padding: 0, cursor: 'pointer',
+          color: NAVY, fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, marginBottom: -10,
         }}>
           ← {esProyectoFinal ? 'Salir al curso' : (videoCtx ? 'Atrás' : 'Salir al curso')}
         </button>
-        {videoCtx && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', background: BEIGE, borderLeft: `3px solid ${GOLD_REF}`, marginBottom: 16, fontFamily: FONT_BODY, fontSize: 14, color: NAVY, flexWrap: 'wrap' }}>
-            <span style={{ fontWeight: 600, color: MUTED, fontSize: 12, textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Módulo {videoCtxMod?.numero ?? 1}</span>
-            <span style={{ color: LINE }}>|</span>
-            <span>{videoCtx.titulo}</span>
-            <span style={{ color: MUTED, fontSize: 13 }}>/</span>
-            <span style={{ fontWeight: 600, color: GOLD_REF_DK, fontSize: 13 }}>{etiquetaPaso(pasoActual)}</span>
-          </div>
-        )}
-        <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={esProyectoFinal ? volver : rewind} user={user} irA={irA} cursoNum={cursoNum} />
+        <div className="vl-split-contenido" style={{ minWidth: 0 }}>
+          <PasoActividad paso={pasoActual} pasos={pasos} temperamento={temperamento} progreso={progreso} avanzar={avanzar} volver={esProyectoFinal ? volver : rewind} user={user} irA={irA} cursoNum={cursoNum} />
+        </div>
+        <ColumnaNotas>
+          {videoCtx && (
+            <section style={tarjeta}>
+              <div style={eyebrow}>{videoCtxMod?.introduccion ? 'Introducción' : `Módulo ${videoCtxMod?.numero ?? 1}`}</div>
+              <h2 style={{ ...titulo(26), margin: '8px 0 6px' }}>{videoCtx.titulo}</h2>
+              <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: GOLD_REF_DK, fontWeight: 600, marginTop: 6 }}>
+                {etiquetaPaso(pasoActual)}
+              </div>
+            </section>
+          )}
+          <BlocDeNotas videos={videosPasos} completados={progreso.completados} pasoActualId={pasoActual.id} notas={notasHook.notas} onAgregar={notasHook.agregar} onEliminar={notasHook.eliminar} onEditar={notasHook.editar} pasos={pasos} />
+        </ColumnaNotas>
       </div>
     );
   }

@@ -59,7 +59,17 @@ export function continuarModulo(pasos, completados) {
   return pasos.find((p) => !completados[p.id]) ?? null;
 }
 
+// Si el primer vídeo es la introducción (`es_introduccion`), no cuenta como módulo:
+// la introducción tiene numero 0 y el siguiente bloque es el Módulo 1.
 export function moduloDelPaso(pasos, pasoId) {
+  const r = moduloDelPasoBase(pasos, pasoId);
+  if (!r) return r;
+  const conIntro = pasos.find((x) => x.tipo === 'video' && !x.continua_modulo)?.es_introduccion;
+  if (!conIntro) return r;
+  return { numero: r.numero - 1, total: r.total - 1, introduccion: r.numero === 1 };
+}
+
+function moduloDelPasoBase(pasos, pasoId) {
   const p = pasos.find((x) => x.id === pasoId);
   if (!p || p.tipo !== 'video') return null;
   const modHeaders = pasos.filter((x) => x.tipo === 'video' && !x.continua_modulo);
@@ -76,4 +86,25 @@ export function moduloDelPaso(pasos, pasoId) {
   }
   const idx = modHeaders.indexOf(p);
   return { numero: idx + 1, total: modHeaders.length };
+}
+
+// Módulos completados: un módulo está hecho cuando están hechos su vídeo, los vídeos que lo continúan
+// y todos los ejercicios que aparecen en la lista del curso (cuestionarios incluidos). No cuentan las
+// lecturas, los resúmenes, la síntesis ni los proyectos finales. Mismo criterio en la lista de cursos,
+// en la cabecera del curso y en los círculos de cada módulo.
+export const TIPOS_NO_CONTABLES = new Set(['noop', 'cierre', 'conclusion_modulo', 'reflexion_guiada', 'plan_crecimiento', 'test_caracter', 'test_corazon', 'lectura']);
+export function modulosCompletados(pasos, completados) {
+  const lista = (pasos ?? []).filter((p) => !p.proyecto_final);
+  const modHeaders = lista.filter((p) => p.tipo === 'video' && !p.continua_modulo);
+  const hechos = modHeaders.filter((p, mi) => {
+    const startIdx = lista.indexOf(p);
+    const nextHeader = modHeaders[mi + 1];
+    const endIdx = nextHeader ? lista.indexOf(nextHeader) : lista.length;
+    for (let k = startIdx; k < endIdx; k++) {
+      if (!TIPOS_NO_CONTABLES.has(lista[k].tipo) && !completados[lista[k].id]) return false;
+    }
+    return true;
+  }).length;
+  const total = modHeaders.length;
+  return { hechos, total, porcentaje: total ? Math.round((hechos / total) * 100) : 0, completo: total > 0 && hechos === total };
 }

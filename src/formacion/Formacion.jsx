@@ -4,7 +4,7 @@ import { LocalLink as Link } from '../i18n';
 import {
   UMBRAL_VISTA, buscarLeccion, continuar, duracionCurso, formatoDuracion, progresoCurso, resumenGlobal, urlVimeo,
 } from './cursos.js';
-import { pasosDelUsuario } from './flujoModulo';
+import { pasosDelUsuario, modulosCompletados } from './flujoModulo';
 import { useModuloProgreso } from './useModulo';
 import curso1Data from '../data/curso1.json';
 import curso2Data from '../data/curso2.json';
@@ -50,23 +50,7 @@ const PORTADA_NOBRILLO_B = new Set([6]);
 function portada(numero) { return PORTADAS[numero] ?? img01; }
 
 function progresoModuloCards(pasos, completados) {
-  const modulos = [];
-  let actual = null;
-  for (const p of pasos) {
-    if (p.tipo === 'video') {
-      if (p.continua_modulo && actual) {
-        actual.push(p);
-      } else {
-        actual = [p];
-        modulos.push(actual);
-      }
-    } else if (actual && p.tipo !== 'noop') {
-      actual.push(p);
-    }
-  }
-  const total = modulos.length;
-  const hechos = modulos.filter(m => m.every(p => completados[p.id])).length;
-  return { hechos, total, porcentaje: total ? Math.round((hechos / total) * 100) : 0, completo: hechos === total };
+  return modulosCompletados(pasos, completados);
 }
 
 function Anillo({ valor, tam = 84 }) {
@@ -290,25 +274,56 @@ function CursoCard({ curso, vistas, portadas, brillo, posiciones, escalas, noBri
   );
 }
 
-function CtaFormacion({ prog }) {
-  const completo = prog.completo;
+const CURSO_TITULOS = {
+  1: 'Del temperamento al carácter', 2: 'Practicando la Magnanimidad', 3: 'Practicar la humildad',
+  4: 'Practicar las 4 virtudes fundamentales', 5: 'Corazón, intelecto y voluntad',
+  6: 'Descubre tu misión', 7: 'La educación del corazón',
+};
+
+function CtaFormacion({ prog, cursoNum = 1, todosCompletos = false, ultimoCompletoNum = 0, siguienteCursoNum = 0 }) {
+  if (todosCompletos) {
+    return (
+      <div style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
+        <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>Formación completada</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>Has completado los 7 cursos. Repasa cualquiera cuando quieras.</div>
+        </section>
+      </div>
+    );
+  }
+
+  if (ultimoCompletoNum > 0 && !prog.completo && prog.hechos === 0) {
+    return (
+      <Link to={`/app/formacion/curso-${siguienteCursoNum || cursoNum}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
+        <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+          <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
+          <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_REF_LT }}>Curso {ultimoCompletoNum}</div>
+          <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>Curso {ultimoCompletoNum} completado</div>
+          <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>Has completado el Curso {ultimoCompletoNum}. Continúa con el siguiente curso de la formación.</div>
+          <span style={{ alignSelf: 'flex-start', marginTop: 4, fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: PAPER, background: GOLD_REF, padding: '16px 28px', borderRadius: 0, display: 'inline-flex', alignItems: 'center', gap: 9 }}>
+            Siguiente curso →
+          </span>
+        </section>
+      </Link>
+    );
+  }
+
   const empezado = prog.hechos > 0;
-  const ctaTitulo = completo ? 'Curso 1 completado' : empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
-  const ctaTexto = completo
-    ? 'Has completado el Curso 1. Continúa con el siguiente curso de la formación.'
-    : empezado
-      ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. Sigue avanzando.`
-      : 'Descubre tu temperamento, trabaja tus virtudes y construye tu carácter.';
-  const ctaBoton = completo ? 'Siguiente curso' : empezado ? 'Continuar' : 'Empezar ahora';
+  const ctaTitulo = empezado ? 'Continúa donde lo dejaste' : 'Comienza tu formación';
+  const ctaTexto = empezado
+    ? `Llevas ${prog.hechos} de ${prog.total} módulos completados. Sigue avanzando.`
+    : 'Descubre tu temperamento, trabaja tus virtudes y construye tu carácter.';
+  const ctaBoton = empezado ? 'Continuar' : 'Empezar ahora';
 
   return (
-    <Link to="/app/formacion/curso-1" style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
+    <Link to={`/app/formacion/curso-${cursoNum}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
       <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
         <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
-        <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_REF_LT }}>Curso 1</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_REF_LT }}>Curso {cursoNum}</div>
         <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>{ctaTitulo}</div>
         <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>{ctaTexto}</div>
-        {!completo && empezado && (
+        {empezado && (
           <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: 0, height: 6, marginTop: 2 }}>
             <div style={{ width: `${prog.porcentaje}%`, height: '100%', background: GOLD_REF, borderRadius: 0, transition: 'width 500ms ease' }} />
           </div>
@@ -331,16 +346,21 @@ function ModuloCursoCard({ cursoNum, titulo, completados, jsonData, portadas, br
   const esc = escalas?.[cursoNum];
 
   return (
-    <section style={{ ...tarjeta, padding: 0, overflow: 'hidden', flex: 1, minWidth: 0 }}>
+    <section className="vl-curso-card" style={{ ...tarjeta, padding: 0, overflow: 'hidden', flex: 1, minWidth: 0 }}>
       <Link to={`/app/formacion/curso-${cursoNum}`} style={{ textDecoration: 'none', display: 'block', cursor: 'pointer' }}>
         <Portada src={img} pos={pos} brillo={brillo} escala={esc} />
         <div style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <span style={{
               flex: '0 0 36px', height: 36, borderRadius: '50%', display: 'grid', placeItems: 'center',
-              background: prog.completo ? GOLD_REF : 'rgba(27,42,74,0.08)', color: NAVY, fontFamily: FONT_SLAB, fontSize: 17, fontWeight: 700,
+              background: prog.completo ? GOLD_REF : 'rgba(27,42,74,0.08)', color: prog.completo ? '#fff' : NAVY, fontFamily: FONT_SLAB, fontSize: 17, fontWeight: 700,
             }}>
-              {prog.completo ? <IconoCheck width={18} height={18} /> : cursoNum}
+              {prog.completo ? (
+                <>
+                  <span className="vl-curso-num">{cursoNum}</span>
+                  <IconoCheck className="vl-curso-check" width={18} height={18} />
+                </>
+              ) : cursoNum}
             </span>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: FONT_SLAB, fontSize: 19, fontWeight: 700, color: NAVY, lineHeight: 1.2 }}>{titulo}</div>
@@ -381,6 +401,19 @@ function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
   const c6Prog = progresoModuloCards(c6Pasos, c6Hook.completados);
   const c7Prog = progresoModuloCards(c7Pasos, c7Hook.completados);
 
+  const allProgs = [
+    { num: 1, prog: c1Prog, hook: c1Hook, data: curso1Data },
+    { num: 2, prog: c2Prog, hook: c2Hook, data: curso2Data },
+    { num: 3, prog: c3Prog, hook: c3Hook, data: curso3Data },
+    { num: 4, prog: c4Prog, hook: c4Hook, data: curso4Data },
+    { num: 5, prog: c5Prog, hook: c5Hook, data: curso5Data },
+    { num: 6, prog: c6Prog, hook: c6Hook, data: curso6Data },
+    { num: 7, prog: c7Prog, hook: c7Hook, data: curso7Data },
+  ];
+  const activoCurso = allProgs.find(c => !c.prog.completo) ?? allProgs[0];
+  const ultimoCompleto = [...allProgs].reverse().find(c => c.prog.completo);
+  const todosCompletos = allProgs.every(c => c.prog.completo);
+
   const resumenCursos = resumenGlobal(cursos, progreso.vistas);
   const totalLecciones = resumenCursos.total + c1Prog.total + c2Prog.total + c3Prog.total + c4Prog.total + c5Prog.total + c6Prog.total + c7Prog.total;
   const hechasLecciones = resumenCursos.hechas + c1Prog.hechos + c2Prog.hechos + c3Prog.hechos + c4Prog.hechos + c5Prog.hechos + c6Prog.hechos + c7Prog.hechos;
@@ -388,6 +421,14 @@ function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
 
   return (
     <div className="vl-cols vl-cols-3">
+      <style>{`
+        .vl-curso-card { box-shadow: 0 4px 16px rgba(15,29,56,0.10); transition: transform 220ms ease, box-shadow 220ms ease; }
+        .vl-curso-card:hover { transform: translateY(-5px); box-shadow: 0 12px 28px rgba(15,29,56,0.18); }
+        .vl-curso-card .vl-curso-check { display: none; }
+        .vl-curso-card:hover .vl-curso-check { display: block; }
+        .vl-curso-card:hover .vl-curso-num { display: none; }
+        @media (prefers-reduced-motion: reduce) { .vl-curso-card, .vl-curso-card:hover { transition: none; transform: none; } }
+      `}</style>
       <div className="vl-ancho">
         <div style={eyebrow}>Formación</div>
         <h1 style={{ ...titulo(32), margin: '8px 0 4px' }}>Liderazgo virtuoso</h1>
@@ -415,23 +456,15 @@ function Listado({ cursos: todosLosCursos, progreso, userId, abrirPlan }) {
         </div>
       </section>
 
-      <div className="vl-ancho" style={{ display: 'flex', gap: 16, alignItems: 'stretch' }}>
-        <CtaFormacion prog={c1Prog} />
-        <ModuloCursoCard cursoNum={1} titulo="Del temperamento al carácter" completados={c1Hook.completados} jsonData={curso1Data}
+      <div className="vl-ancho" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 24 }}>
+        <CtaFormacion prog={activoCurso.prog} cursoNum={activoCurso.num} todosCompletos={todosCompletos} ultimoCompletoNum={ultimoCompleto ? ultimoCompleto.num : 0} siguienteCursoNum={activoCurso.num} />
+        <ModuloCursoCard cursoNum={1} titulo={CURSO_TITULOS[1]} completados={c1Hook.completados} jsonData={curso1Data}
           portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
       </div>
-      <ModuloCursoCard cursoNum={2} titulo="Practicando la Magnanimidad" completados={c2Hook.completados} jsonData={curso2Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
-      <ModuloCursoCard cursoNum={3} titulo="Practicar la humildad" completados={c3Hook.completados} jsonData={curso3Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
-      <ModuloCursoCard cursoNum={4} titulo="Practicar las 4 virtudes fundamentales" completados={c4Hook.completados} jsonData={curso4Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
-      <ModuloCursoCard cursoNum={5} titulo="Corazón, intelecto y voluntad" completados={c5Hook.completados} jsonData={curso5Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
-      <ModuloCursoCard cursoNum={6} titulo="Descubre tu misión" completados={c6Hook.completados} jsonData={curso6Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
-      <ModuloCursoCard cursoNum={7} titulo="La educación del corazón" completados={c7Hook.completados} jsonData={curso7Data}
-        portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+      {allProgs.filter(c => c.num !== 1).map(c => (
+        <ModuloCursoCard key={c.num} cursoNum={c.num} titulo={CURSO_TITULOS[c.num]} completados={c.hook.completados} jsonData={c.data}
+          portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} />
+      ))}
       {cursos.map((c) => (
         <CursoCard key={`b-${c.id}`} curso={c} vistas={progreso.vistas}
                    portadas={PORTADAS_B} brillo posiciones={PORTADA_POS_B} escalas={PORTADA_ESCALA_B} noBrillo={PORTADA_NOBRILLO_B} brilloMap={PORTADA_BRILLO_B} />

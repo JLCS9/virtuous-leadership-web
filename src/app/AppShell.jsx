@@ -65,9 +65,9 @@ export default function AppShell({ user }) {
           from { opacity: 0; transform: translateX(-40px) scale(0.98); filter: blur(3px); }
           to   { opacity: 1; transform: none; filter: blur(0); }
         }
-        .vl-entra     { animation: vl-entra     380ms cubic-bezier(.22,.61,.36,1) both; }
-        .vl-entra-der { animation: vl-entra-der 380ms cubic-bezier(.22,.61,.36,1) both; }
-        .vl-entra-izq { animation: vl-entra-izq 380ms cubic-bezier(.22,.61,.36,1) both; }
+        .vl-entra     { animation: vl-entra     380ms cubic-bezier(.22,.61,.36,1) backwards; }
+        .vl-entra-der { animation: vl-entra-der 380ms cubic-bezier(.22,.61,.36,1) backwards; }
+        .vl-entra-izq { animation: vl-entra-izq 380ms cubic-bezier(.22,.61,.36,1) backwards; }
 
         /* Grid responsive */
         .vl-cols { display: flex; flex-direction: column; gap: 18px; }
@@ -89,9 +89,29 @@ export default function AppShell({ user }) {
 
         @media (prefers-reduced-motion: reduce) {
           .vl-entra, .vl-entra-der, .vl-entra-izq { animation: none; }
+          .vl-slider-pista, .vl-slider-ventana { transition: none !important; }
         }
 
         .vl-mi-cuenta:hover { background: rgba(165,139,38,0.12) !important; }
+
+        /* Tarjeta paginada: altura fija mínima y botones siempre en el mismo sitio */
+        .vl-pag { display: flex; flex-direction: column; min-height: clamp(320px, calc(100vh - 420px), 440px); }
+        /* La columna derecha arranca a la misma altura que la tarjeta de la izquierda aunque el bloc sea lo primero. */
+        .vl-split-notas-col > :first-child, .vl-video-lado > :first-child { margin-top: 0 !important; }
+        .vl-pag > .vl-pag-cuerpo { flex: 1 0 auto; justify-content: center; }
+        @media (max-width: 700px) { .vl-pag { min-height: 400px; } }
+
+        /* Tarjeta de pregunta: altura fija mínima, contenido arriba y botones anclados abajo */
+        .vl-pag-pregunta { display: flex; flex-direction: column; }
+        .vl-pag-pregunta > .vl-pag-nav { margin-top: auto !important; padding-top: 16px; }
+        @media (min-width: 1100px) { .vl-pag-pregunta--fija { min-height: 530px; } .vl-pag-pregunta--quiz { min-height: 590px; } }
+
+        /* Ejercicio en dos columnas: el contenido nunca queda más bajo que el bloc de notas */
+        @media (min-width: 1100px) {
+          .vl-split-contenido { min-height: var(--vl-lado-base, 0px); display: flex; flex-direction: column; position: sticky; top: 60px; }
+          .vl-split-contenido > * { flex: 1 0 auto; display: flex; flex-direction: column; }
+          .vl-split-contenido > * > :last-child { flex: 1 0 auto; }
+        }
       `}</style>
       <div className="vl-app">
         <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '32px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -157,7 +177,7 @@ function NavBurbuja({ pathname, lp }) {
   return (
     <nav aria-label="Navegación principal" style={{
       position: 'fixed', left: 0, right: 0, bottom: 'max(16px, env(safe-area-inset-bottom))',
-      display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none', zIndex: 50, gap: 10,
+      display: 'flex', flexDirection: 'column', alignItems: 'center', pointerEvents: 'none', zIndex: 950, gap: 10,
     }}>
       {toast && (
         <div role="status" style={{
