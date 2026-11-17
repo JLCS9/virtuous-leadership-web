@@ -1,6 +1,13 @@
 {
   "id": "curso2",
   "titulo": "Practicando la magnanimidad",
+  "ideas_clave": [
+    { "texto": "La persona magnánima quiere hacer grandes cosas, pero sobre todo quiere ser grande.", "paso": "m2-01" },
+    { "texto": "La magnanimidad es la primera virtud específica de los líderes.", "paso": "m2-01" },
+    { "texto": "La magnanimidad y la humildad son ideales de vida.", "paso": "m2-02" },
+    { "texto": "El liderazgo consiste en crecer haciendo crecer a otras personas.", "paso": "m2-01" },
+    { "texto": "Tienes que descubrir en ti tu grandeza. No puedes servir con tu miseria.", "paso": "m2-01" }
+  ],
   "curso": 2,
   "pasos": [
     {
@@ -12,18 +19,23 @@
       "leccion": 1,
       "vimeoId": "924576183",
       "intro": [
-        "La magnanimidad es la virtud de las grandes personas.",
         [
+          "La magnanimidad es la virtud de las grandes personas.",
           "La persona magnánima quiere hacer grandes cosas, pero sobre todo quiere ser grande.",
-          "**Tiene confianza en sí mismo, en sus talentos y en sus capacidades.**"
+          { "caja": "Tiene confianza en sí mismo, en sus talentos y en sus capacidades." }
         ],
-        "Se siente libre y fuerte llevando su imaginación hasta el final. Está lleno de esperanza humana.",
         [
-          "Sueña y transforma su sueño en misión.",
-          "Ve en los grandes problemas de la humanidad grandes oportunidades y los obstáculos como cumbres que hay que conquistar."
+          { "checks": [
+            "Se siente libre y fuerte llevando su imaginación hasta el final.",
+            "Está lleno de esperanza humana.",
+            "Sueña y transforma su sueño en misión.",
+            "Ve en los grandes problemas de la humanidad grandes oportunidades y los obstáculos como cumbres que hay que conquistar."
+          ] },
+          "**__Está convencido de que el mal es el bien que no se hace.__**"
         ],
-        "**Está convencido de que el mal es el bien que no se hace.**",
-        "La magnanimidad es la primera virtud específica de los líderes."
+        [
+          { "destacado": "La magnanimidad es la primera virtud\nespecífica de los líderes." }
+        ]
       ],
       "modulo": 0
     },
@@ -40,6 +52,8 @@
     },
     {
       "id": "m2-03",
+      "ficha": [],
+      "caratula_desc": "Observa la Pirámide de Liderazgo Virtuoso y reflexiona sobre el lugar que ocupa la magnanimidad en el sistema de virtudes.\n\nDespués responderás a unas preguntas para profundizar en ello.",
       "num": 3,
       "tipo": "reflexion_piramide",
       "titulo": "La magnanimidad en el sistema de Liderazgo Virtuoso",
@@ -50,18 +64,16 @@
       "enunciado": "Observa la Pirámide de Liderazgo Virtuoso",
       "descripcion": "Contempla el diagrama y reflexiona sobre el lugar que ocupa la magnanimidad en el sistema de virtudes. Después responde a las preguntas.",
       "preguntas": [
-        "¿Cómo ayudan la humildad ontológica y la humildad psicológica a la práctica de la magnanimidad?",
         "¿Es posible la magnanimidad sin la prudencia? ¿Por qué?",
         "¿Es posible la magnanimidad sin la fortaleza? ¿Por qué?",
         "¿Es posible la magnanimidad sin el dominio de sí? ¿Por qué?",
-        "¿Es posible la magnanimidad sin la justicia? ¿Por qué?",
-        "¿Es posible la magnanimidad sin la humildad metafísica? ¿Por qué?",
-        "¿Es posible la magnanimidad sin la humildad espiritual? ¿Por qué?"
+        "¿Es posible la magnanimidad sin la justicia? ¿Por qué?"
       ],
       "modulo": 0
     },
     {
       "id": "m2-04",
+      "caratula_desc": "Responde a cuatro preguntas sobre la magnanimidad y la humildad para poner a prueba lo que has aprendido en este módulo.",
       "num": 4,
       "tipo": "quiz",
       "titulo": "Cuestionario — Magnanimidad y humildad",
@@ -147,6 +159,7 @@
     },
     {
       "id": "m2-06",
+      "caratula_desc": "Responde a cuatro preguntas sobre la magnanimidad como contemplación y acción para poner a prueba lo que has aprendido en este módulo.",
       "num": 6,
       "tipo": "quiz",
       "titulo": "Cuestionario — Contemplación y acción",
@@ -227,15 +240,17 @@
     },
     {
       "id": "m2-08",
+      "ficha": [{"respuesta": 0, "titulo": "¿Buscas de verdad la magnanimidad o te mueves por la vanidad?"}],
+      "caratula_desc": "Reflexiona sobre la diferencia entre la magnanimidad y la soberbia, y sobre qué te mueve de verdad cuando aspiras a grandes cosas.",
       "num": 8,
       "tipo": "reflexion_piramide",
-      "titulo": "No confundo la magnanimidad con la soberbia",
+      "titulo": "No confundo la magnanimidad con soberbia",
       "visible": false,
       "resumen_ficha": "¿Busco magnanimidad o me muevo por vanidad?",
-      "prioridad_ficha": 3,
+      "prioridad_ficha": 1,
       "imagen": "soberbia-magnanimidad",
-      "enunciado": "No confundo la magnanimidad con la soberbia",
-      "descripcion": "Sin la prudencia, la magnanimidad se convierte en soberbia. La soberbia es una falsa magnanimidad: se presenta como magnanimidad, pero no lo es. Solo la humildad metafísica puede evitar que caigamos en la soberbia.",
+      "enunciado": "No confundo la magnanimidad con soberbia",
+      "descripcion": "Sin la prudencia, la magnanimidad se convierte en soberbia.\n\nLa soberbia es una falsa magnanimidad. Se presenta como magnanimidad, pero no lo es.\n\n**__Solo la humildad metafísica puede evitar que caigamos en la soberbia.__**",
       "preguntas": [
         "Examina tus intenciones. ¿Buscas de verdad la magnanimidad, o te mueves, en mayor o menor medida, por la vanidad?"
       ],
@@ -246,6 +261,7 @@
     },
     {
       "id": "m2-09",
+      "caratula_desc": "Responde a cuatro preguntas sobre la magnanimidad y la prudencia para poner a prueba lo que has aprendido en este módulo.",
       "num": 9,
       "tipo": "quiz",
       "titulo": "Cuestionario — Magnanimidad y prudencia",
@@ -330,6 +346,8 @@
     },
     {
       "id": "m2-11",
+      "ficha": [{"campo": "textoFuerte", "titulo": "Puntos fuertes de mi temperamento"}, {"campo": "textoDebil", "titulo": "Puntos débiles de mi temperamento"}],
+      "caratula_desc": "Estudia el diagrama de la magnanimidad y descubre cómo tu temperamento puede ayudarte a practicarla.\n\nVerás tus fortalezas y debilidades, tanto en la contemplación como en la acción.",
       "num": 11,
       "tipo": "temperamento_magnanimidad",
       "titulo": "¿Cómo puede mi temperamento ayudarme a practicar la magnanimidad?",
@@ -379,6 +397,7 @@
     },
     {
       "id": "m2-12",
+      "caratula_desc": "Responde a cuatro preguntas sobre la magnanimidad y los cuatro temperamentos para poner a prueba lo que has aprendido en este módulo.",
       "num": 12,
       "tipo": "quiz",
       "titulo": "Cuestionario — Temperamentos",
@@ -462,6 +481,7 @@
     },
     {
       "id": "m2-15",
+      "caratula_desc": "Responde a cuatro preguntas sobre la práctica contemplativa de la magnanimidad para poner a prueba lo que has aprendido en este módulo.",
       "num": 15,
       "tipo": "quiz",
       "titulo": "Cuestionario — Magnanimidad contemplativa",
@@ -540,64 +560,15 @@
       "modulo": 5
     },
     {
-      "id": "m2-18",
-      "num": 18,
-      "tipo": "quiz",
-      "titulo": "Cuestionario — Magnanimidad activa",
-      "visible": false,
-      "preguntas": [
-        {
-          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad activa?",
-          "opciones": [
-            "Una mejora en los ingresos",
-            "Una optimización de los procesos",
-            "La transformación del sueño en misión",
-            "Un aumento en el rendimiento"
-          ],
-          "correcta": 2
-        },
-        {
-          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad activa?",
-          "opciones": [
-            "Un aumento en la precaución",
-            "No temer al fracaso",
-            "La capacidad de hacer siempre las cosas bien",
-            "Una intuición excepcional"
-          ],
-          "correcta": 1
-        },
-        {
-          "texto": "Según Peter Drucker (fundador del management moderno), ¿qué pensar de las personas que nunca han cometido grandes errores?",
-          "opciones": [
-            "Son personas con suerte",
-            "Son personas exitosas",
-            "Son personas sabias",
-            "Son personas mediocres"
-          ],
-          "correcta": 3,
-          "contexto": "Peter Drucker (1909–2005), profesor y consultor austriaco-estadounidense, considerado el padre del management moderno. Su idea enlaza con lo que explica Havard en este vídeo: para practicar la magnanimidad activa hay que no temer al fracaso."
-        },
-        {
-          "texto": "¿Cómo enseña la magnanimidad activa a ver los obstáculos?",
-          "opciones": [
-            "Esquivándolos y evitándolos",
-            "Luchando contra ellos hasta la victoria total",
-            "Transformándolos en oportunidades",
-            "Todo lo anterior"
-          ],
-          "correcta": 2
-        }
-      ],
-      "modulo": 5
-    },
-    {
       "id": "m2-14",
+      "ficha": [{"respuesta": 1}, {"respuesta": 0}, {"respuesta": 8}],
+      "caratula_desc": "Busca un momento tranquilo: son 17 preguntas que requieren concentración.\n\nReflexiona con sinceridad. No hay respuestas correctas ni incorrectas: este autoexamen es una herramienta para tu crecimiento personal.",
       "num": 14,
       "tipo": "test_profundo",
       "titulo": "Test de magnanimidad",
       "visible": false,
       "resumen_ficha": "¿Soy consciente de mi dignidad y libertad?",
-      "prioridad_ficha": 2,
+      "prioridad_ficha": 3,
       "descripcion": "Busca un momento tranquilo para realizar este ejercicio, es un test de 17 preguntas que requiere estar concentrado y evitar posibles distracciones.\n\nReflexiona con sinceridad sobre cada pregunta.\n\nNo hay respuestas correctas ni incorrectas: este autoexamen es una herramienta para tu crecimiento personal.",
       "preguntas": [
         {
@@ -678,6 +649,58 @@
       "modulo": 5
     },
     {
+      "id": "m2-18",
+      "caratula_desc": "Responde a cuatro preguntas sobre la práctica activa de la magnanimidad para poner a prueba lo que has aprendido en este módulo.",
+      "num": 18,
+      "tipo": "quiz",
+      "titulo": "Cuestionario — Magnanimidad activa",
+      "visible": false,
+      "preguntas": [
+        {
+          "texto": "¿Qué ayuda en primer lugar a desarrollar la magnanimidad activa?",
+          "opciones": [
+            "Una mejora en los ingresos",
+            "Una optimización de los procesos",
+            "La transformación del sueño en misión",
+            "Un aumento en el rendimiento"
+          ],
+          "correcta": 2
+        },
+        {
+          "texto": "¿Qué ayuda en segundo lugar a desarrollar la magnanimidad activa?",
+          "opciones": [
+            "Un aumento en la precaución",
+            "No temer al fracaso",
+            "La capacidad de hacer siempre las cosas bien",
+            "Una intuición excepcional"
+          ],
+          "correcta": 1
+        },
+        {
+          "texto": "Según Peter Drucker (fundador del management moderno), ¿qué pensar de las personas que nunca han cometido grandes errores?",
+          "opciones": [
+            "Son personas con suerte",
+            "Son personas exitosas",
+            "Son personas sabias",
+            "Son personas mediocres"
+          ],
+          "correcta": 3,
+          "contexto": "Peter Drucker (1909–2005), profesor y consultor austriaco-estadounidense, considerado el padre del management moderno. Su idea enlaza con lo que explica Havard en este vídeo: para practicar la magnanimidad activa hay que no temer al fracaso."
+        },
+        {
+          "texto": "¿Cómo enseña la magnanimidad activa a ver los obstáculos?",
+          "opciones": [
+            "Esquivándolos y evitándolos",
+            "Luchando contra ellos hasta la victoria total",
+            "Transformándolos en oportunidades",
+            "Todo lo anterior"
+          ],
+          "correcta": 2
+        }
+      ],
+      "modulo": 5
+    },
+    {
       "id": "m2-concl-6",
       "tipo": "conclusion_modulo",
       "visible": false,
@@ -709,7 +732,7 @@
       "titulo": "Mi Plan de Crecimiento en Magnanimidad",
       "visible": true,
       "resumen_ficha": "Mi plan de crecimiento en magnanimidad",
-      "prioridad_ficha": 1,
+      "prioridad_ficha": 4,
       "descripcion": "Vamos a desarrollar tu plan de crecimiento en magnanimidad para que puedas ir avanzando sobre él durante este año.",
       "nota_anual": "Este plan debe realizarse todos los años. Vuelve al inicio y al final de cada año para ver en qué momento estás y el progreso que has conseguido.",
       "pantallas": [

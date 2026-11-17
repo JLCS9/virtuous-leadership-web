@@ -1,6 +1,15 @@
 {
   "id": "curso4",
   "titulo": "Practicar las 4 virtudes fundamentales",
+  "ideas_clave": [
+    { "texto": "Quien practica las cuatro virtudes fundamentales —prudencia, fortaleza, dominio de sí y justicia— es una persona íntegra.", "paso": "m4-01" },
+    { "texto": "Una persona íntegra todavía no es un líder: para serlo hay que desarrollar la grandeza y el servicio.", "paso": "m4-02" },
+    { "texto": "La prudencia es la madre de todas las virtudes.", "paso": "m4-06" },
+    { "texto": "La fortaleza tiene dos caras: la resistencia, que es perseverar, y la audacia, que es asumir riesgos.", "paso": "m4-12" },
+    { "texto": "La virtud es una fuerza buena: está orientada al bien y utiliza medios buenos.", "paso": "m4-12" },
+    { "texto": "Las emociones no son malas en sí mismas: son buenas o malas según lo que nos empujan a hacer.", "paso": "m4-17" },
+    { "texto": "La justicia nos permite dar a cada uno lo que le corresponde.", "paso": "m4-22" }
+  ],
   "curso": 4,
   "meta_notas": "El cierre (m4-27) tiene diseño pendiente: cierre_pendiente=true. Actualmente usa el patrón por defecto (como curso 1), sin reflexion_cierre.",
   "pasos": [
@@ -13,10 +22,9 @@
       "visible": true,
       "leccion": 1,
       "intro": [
-        "Quien practica las cuatro virtudes fundamentales (prudencia, fortaleza, dominio de sí y justicia) es una persona íntegra.",
         [
-          "Además de las virtudes del corazón (magnanimidad y humildad), estamos llamados a practicar las virtudes del intelecto y de la voluntad (prudencia, fortaleza, dominio de sí y justicia).",
-          "**La prudencia nos da la capacidad de tomar las decisiones correctas; la fortaleza nos permite asumir riesgos y mantener el rumbo; el dominio de sí nos ayuda a gestionar nuestras emociones; la justicia nos permite dar a cada uno lo que le corresponde.**"
+          "Quien practica las cuatro virtudes fundamentales (prudencia, fortaleza, dominio de sí y justicia) es una persona íntegra.",
+          { "tarjetas_virtudes": true }
         ]
       ],
       "modulo": 0

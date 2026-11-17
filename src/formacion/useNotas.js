@@ -49,6 +49,12 @@ function useNotasLS(userId, moduloId) {
       else nuevas[pasoId] = lista;
       persistir(nuevas);
     },
+    editar(pasoId, notaId, nuevoTexto) {
+      const lista = (notas[pasoId] ?? []).map((n) =>
+        n.id === notaId ? { ...n, texto: nuevoTexto } : n
+      );
+      persistir({ ...notas, [pasoId]: lista });
+    },
   };
 }
 
@@ -126,7 +132,20 @@ function useNotasBD(userId) {
     });
   }, []);
 
-  return { notas, cargando, agregar, eliminar };
+  const editar = useCallback((pasoId, notaId, nuevoTexto) => {
+    setNotas((prev) => {
+      const lista = (prev[pasoId] ?? []).map((n) =>
+        n.id === notaId ? { ...n, texto: nuevoTexto } : n
+      );
+      return { ...prev, [pasoId]: lista };
+    });
+
+    supabase.from('notas_formacion').update({ texto: nuevoTexto }).eq('id', notaId).then(({ error }) => {
+      if (error) console.warn('[formacion] Error editando nota:', error.message);
+    });
+  }, []);
+
+  return { notas, cargando, agregar, eliminar, editar };
 }
 
 // --- Hook público: elige BD o localStorage ---
