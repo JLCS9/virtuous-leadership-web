@@ -91,11 +91,13 @@ function masAntiguo(candidatos, idsEnOrden) {
  *  · Dentro del temperamento: en el orden de la biblioteca, sin repetir hasta agotarlos; después,
  *    el que lleva más tiempo sin salir.
  *  · Si el temperamento que toca no tiene retos válidos, se usa el otro. Sin ninguno: null.
+ * `excluir` son los ids ya propuestos hoy y rechazados («Proponme otro»): se salta esos y, si no queda
+ * ninguno, vuelve a empezar. Con exclusiones la fila de hoy deja de fijar el reto: se está buscando otro.
  * Es determinista: la misma entrada da siempre el mismo reto.
  */
-export function retoDelDia({ retos, clave, historial = [], fecha }) {
+export function retoDelDia({ retos, clave, historial = [], fecha, excluir = [] }) {
   const hoy = historial.find((h) => h.fecha === fecha && h.reto_id);
-  const fijado = hoy && retos.find((r) => r.id === hoy.reto_id);
+  const fijado = hoy && !excluir.length && retos.find((r) => r.id === hoy.reto_id);
   if (fijado) return fijado;
 
   const partes = partesTemperamento(clave);
@@ -107,10 +109,11 @@ export function retoDelDia({ retos, clave, historial = [], fecha }) {
 
   for (const t of new Set([toca, partes.primario, partes.secundario])) {
     if (!t) continue;
-    const pool = retos.filter((r) => r.temperamento === t);
+    const pool = retos.filter((r) => r.temperamento === t && !excluir.includes(r.id));
     if (pool.length) return masAntiguo(pool, idsEnOrden);
   }
-  return null;
+  // Se han propuesto todos y ninguno se aceptó: se vuelve a empezar.
+  return excluir.length ? retoDelDia({ retos, clave, historial, fecha }) : null;
 }
 
 // ───────────── Cita del día ─────────────
