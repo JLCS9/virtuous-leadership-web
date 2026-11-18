@@ -29,6 +29,49 @@ Sitio de **Virtuous Leadership** (virtuousleadership.com), SPA multi-idioma
 
 Empresa: Virtuous Leadership
 
+3. **Portal privado `/{lang}/app`** (solo ES, solo con suscripción activa):
+   Hoy · Formación (7 cursos con ejercicios) · Personas («Tu entorno») ·
+   Carácter · Perfil. Es la parte que más cambia: ver la sección
+   **«Portal /app»** más abajo antes de tocarla.
+
+---
+
+## Trabajo en equipo — reglas para CUALQUIER sesión
+
+Varias personas y sesiones de Claude trabajan en este repo a la vez. Estas
+reglas no son opcionales:
+
+- **Nunca push directo a `main`.** Rama corta (`fix/…`, `feature/…`,
+  `docs/…`) → PR → CI verde (`test-and-build`) → merge. Nada de commits ni
+  pushes sin que el usuario lo pida explícitamente.
+- **Antes de empezar**: `git checkout main && git pull`. Antes de abrir la
+  PR, vuelve a traer `main` (otros han podido mergear) y resuelve conflictos.
+- **Deploy**: lo hace SIEMPRE el usuario en el VPS. Una sesión de Claude
+  nunca ejecuta nada en Hostinger ni se inventa comandos; usa los de la
+  sección «Deploy» de este fichero y, si no basta, pregunta.
+- **Base de datos (Supabase compartido)**: ninguna sesión aplica
+  migraciones ni escribe datos en producción por su cuenta. Se prepara el
+  SQL, se guarda en `supabase-migraciones/AAAAMMDD_descripcion.sql` con un
+  comentario de qué hace y por qué, y lo aplica la sesión de **Infra/BD**
+  (o el usuario). Leer (SELECT) para diagnosticar sí está permitido.
+- **Textos de los cursos** (`src/data/curso*.json`): el contenido es de
+  Formación y debe salir de las fuentes de Havard (transcripciones,
+  cuadernos). No reescribir textos «para que quepan»; si algo no encaja,
+  preguntar. Nada de atribuciones tipo «Havard dice».
+- **Estilos del portal**: no inventar estilos. Copiar los del Curso 1 y las
+  guías de `src/formacion/` (ver «Formación»). Un ajuste de layout es una
+  plantilla: se aplica a los 7 cursos y se comprueba en varios.
+- **Público mayor**: enunciados 20px, campos 18px, nunca texto de lectura
+  por debajo de 16px.
+- **No borrar assets ni código «sin usar»** sin preguntar: parte se
+  reservará para el panel de administración futuro, y hay módulos aparcados
+  a propósito (ver «Código aparcado»).
+- **Secretos**: nunca en el repo ni en el front. Viven en
+  `/opt/virtuousleadership/.env` del VPS (chmod 600). No pegues emails ni
+  datos personales en peticiones a servicios externos.
+- **Verifica antes de entregar**: `npm test` + `npm run build` + mirarlo en
+  el navegador (dev server en `localhost:5173`).
+
 ---
 
 ## Stack
@@ -40,7 +83,7 @@ Empresa: Virtuous Leadership
 - **Estilos**: inline styles + tokens en `src/theme.js`. No Tailwind, no CSS
   modules.
 - **Tests**: `node --test` (built-in Node 20), sólo módulos puros
-  (25 tests: 11 character + 14 heart).
+  (103 tests; ver «Tests»).
 - **Deploy**: Docker Compose en VPS Hostinger `/opt/virtuousleadership/`.
 - **Analytics**: GTM (GTM-W9P5BPF9) + GA4 (G-HM6K1685L2) desde el contenedor
   GTM. Consentimiento: banner propio (`src/components/CookieConsent.jsx`) +
@@ -97,6 +140,39 @@ src/
     character-test-fixtures.json              Fixtures reales del Excel para tests.
     heart-test.json                           32 preguntas × 8 trastornos + umbrales.
     heart-support-text.json                   Labels + 8 HTMLs de diagnóstico+remedio.
+    curso1.json … curso7.json                 Contenido de los 7 cursos del portal
+                                              (pasos: vídeos, quizzes, reflexiones…).
+                                              Ver «Portal /app → Formación».
+
+  account/                   Cliente de Supabase y acceso a datos (sin UI salvo RetosCard/ui).
+    supabase.js              Cliente (null si faltan VITE_SUPABASE_*).
+    useSession.js            Sesión: undefined = cargando, null = sin sesión.
+    useAcceso.js             ¿Suscripción activa? (suscripciones_retos).
+    account.js               Alta, login, consentimientos, test_results (guardar/leer).
+    perfil.js                Datos de Perfil (profiles, tests, personas, perfil_camino, consents).
+    personas.js              CRUD de personas, estimaciones y observaciones.
+    camino.js  retos.js      Camino (aparcado) y llamadas a Edge Functions retos-* / catálogo.
+
+  app/                       Portal /app (marco + pestañas). Ver «Portal /app».
+    PortalGuard.jsx          Guardia de sesión + suscripción; pinta AppShell.
+    AppShell.jsx             Cabecera, burbuja inferior (Hoy · Camino🔒 · Formación), <Outlet/>.
+    Hoy.jsx  Perfil.jsx  Personas.jsx  ResultadoCaracter.jsx  MapaCaracter.jsx  Radar.jsx
+    personas/                CrearFicha (test de 8 preguntas sobre otra persona), comun (Avatar,
+                             MapaPersonas, FichaContenido…), Observacion, MisPersonas…
+    camino/                  Piezas del Camino (aparcado). Juegos.jsx y ui.jsx SÍ se usan
+                             desde personas/CrearFicha: no borrar.
+    estilos.js  Iconos.jsx   Estilos compartidos (tarjeta, eyebrow, parrafo…) e iconos.
+
+  formacion/                 Cursos del portal. Ver «Portal /app → Formación».
+    Formacion.jsx            Listado de los 7 cursos con progreso.
+    Modulo.jsx               Un curso: listado de pasos, reproductor, cuaderno, plan.
+    Actividad.jsx            TODOS los tipos de ejercicio (~5500 líneas) + CARATULA_TEXTOS
+                             + REFLEXION_IMAGENES.
+    flujoModulo.js           Orden de pasos y filtrado por temperamento.
+    useModulo.js useNotas.js Persistencia (Supabase; localStorage si no hay cliente).
+    BlocDeNotas.jsx NotaTexto.jsx CuadernoPersonal.jsx PlanPersonal.jsx
+    GUIA-ESTILOS-FORMACION.md  CHECKLIST-NUEVO-CURSO.md  AUDITORIA-ESTILOS.md
+                             LEER antes de tocar estilos o añadir un curso.
 
   i18n/
     index.jsx                Contexto React + hook useT() + LocalLink + useLocalPath.
@@ -125,6 +201,10 @@ api/
   auth.mjs                   Alta de cuentas en el Supabase de Virtus (Admin API).
   db.mjs                     pg Pool + queries de schools/parents/children/submissions.
   migrations/                001_init_children.sql (schema del test infantil).
+
+supabase-migraciones/        Registro de los cambios SQL del Supabase compartido (los aplica
+                             Infra/BD, no se ejecutan solos). Nombre: AAAAMMDD_descripcion.sql.
+docs/                        FICHA_INTEGRACION_BD_FORMACION.md: tablas de Formación en detalle.
   Dockerfile
 
 scripts/
@@ -177,7 +257,10 @@ cambies el orden visual.
 npm test              # node --test src/lib/*.test.js
 ```
 
-Sólo módulos puros. Total actual: **25 tests** (11 character + 14 heart).
+Sólo módulos puros (`src/lib/*.test.js` + `src/formacion/**/*.test.js`).
+Total actual: **103 tests** (carácter, corazón, personas, camino, panel,
+track, modulo1). CI los corre en cada PR junto al build; si los rompes, la
+PR no debe mergearse.
 Si tocas un scoring engine y los tests fallan, NO regeneres las fixtures
 como reacción — el script Python que las genera implementa el mismo
 algoritmo; si divergen, revisa qué de los dos está mal.
@@ -403,14 +486,17 @@ DATABASE_URL=postgres://...@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
 
 ## Cuentas de usuario y «Mi panel» (Supabase de Virtus)
 
-Al terminar el test de temperamento adulto se crea una cuenta y el usuario
-entra a `/{lang}/mi-panel` (es `mi-panel`, en `my-dashboard`, fr
-`mon-espace`, ru `kabinet`), que muestra su último resultado + la tarjeta
-«Tu virtud-desafío» (definiciones de las guías PDF por perfil, mapa en
+Al terminar el test de temperamento adulto se crea una cuenta. La antigua
+`/{lang}/mi-panel` (es `mi-panel`, en `my-dashboard`, fr `mon-espace`, ru
+`kabinet`) **ya no pinta nada**: redirige a `/{lang}/app` (portal), y
+`/mi-panel/camino|formacion|retos` redirigen a sus equivalentes en `/app`.
+Sin suscripción, el portal manda a `/tests/temperamento/gracias`, que
+muestra el resultado + la tarjeta «Tu virtud-desafío» (mapa en
 `src/account/challengeVirtues.js`).
 
-- **Proyecto**: el Supabase de Virtus (`~/virtus`), para que la misma cuenta
-  sirva en la app. Esquema en `~/virtus/supabase/migrations` (`profiles`,
+- **Proyecto**: el Supabase de Virtus (`~/virtus`), ref
+  `qyuxmqvqmgqcsduzljkd`, para que la misma cuenta sirva en la app. Es el
+  MISMO proyecto donde viven las tablas del portal (personas, respuestas…). Esquema en `~/virtus/supabase/migrations` (`profiles`,
   `test_results`; la migración `20261031000000_web_accounts.sql` añade los
   campos del formulario y el trigger que los copia desde user_metadata).
 - **Alta**: `POST /api/account` crea el usuario con la service role key y
@@ -463,31 +549,163 @@ Lo mismo corre en la app móvil de Virtus; **toda la lógica vive en las Edge Fu
   solo se activa a mano (SQL en Supabase). El servidor lo exige en todas las funciones `retos-*` para
   web y app (403 `sin_suscripcion`); la web solo lee su fila para mostrar u ocultar la interfaz.
   No se usa `subscriptions` (la de la app, que escribe RevenueCat).
-- **Piezas**: `src/account/retos.js` (cliente), `src/account/RetosCard.jsx` (tarjeta de entrada, se
-  autooculta sin acceso o fuera de ES; está en `MiPanel` y en la landing de resultados
-  `TestTemperamentoGracias`), `src/pages/Retos.jsx` (`/es/mi-panel/retos`, sin Layout, noindex).
-- **Recorrido**: test → cuenta → `/tests/temperamento/gracias` → tarjeta «Retos diarios» → onboarding
-  (una vez; reutiliza el temperamento del test) → reto de la mañana → examen de la noche.
+- **Piezas**: `src/account/retos.js` (cliente de las funciones y `tieneAccesoRetos()`),
+  `src/account/RetosCard.jsx` (tarjeta en la landing de resultados `TestTemperamentoGracias`).
+- La interfaz de Retos (`pages/Retos.jsx`, `Conversacion`) está **aparcada**: hoy la suscripción a
+  Retos se usa como **llave de acceso al portal** `/app` (ver abajo).
 - Una cuenta nueva **no** tiene acceso hasta activarle la suscripción.
 
-### Panel con pestañas (Hoy · Camino · Formación)
+---
 
-Con la suscripción activa (y en ES), `/es/mi-panel` pasa a ser una app con una burbuja de navegación
-fija abajo. Sin suscripción sigue el panel mínimo de siempre (`MiPanel.jsx`, de Alvaro). Código en
-`src/app/` (marco `AppShell`, `Hoy`, `Camino`, `Formacion`, `Conversacion`, `Radar`) y rutas
-`mi-panel`, `mi-panel/camino`, `mi-panel/formacion` (`pages/PanelApp.jsx`, con guardia de acceso).
+## Portal /app (suscriptores, solo ES)
 
-- **Hoy**: reto del día (`retos-manana`) + resultado del test de temperamento (`test_results`).
-- **Camino**: asistente (onboarding y examen de la noche), «siguiente lección» y la gráfica de las seis
-  virtudes del **test de carácter**. Ese test guarda su resultado en `test_results` (`kind='character'`)
-  solo si hay sesión (`saveCharacterResultIfLoggedIn`, en `TestCharacter.jsx`); sin él la gráfica
-  muestra una invitación a hacerlo.
-- **Formación**: 7 cursos / 56 lecciones en Vimeo. El catálogo lo sirve la función `formacion-catalogo`
-  (gated; los vídeos no viajan en el bundle público). **El progreso se guarda solo en el navegador**
-  (localStorage `vl-formacion:<id>`): web y app móvil no lo comparten todavía (haría falta una tabla).
-- Lógica pura y testeada: `src/lib/formacion.js` y `src/lib/virtudes.js` (`npm test`).
-- En desarrollo, `?demo` en la dirección pinta la gráfica y el catálogo con datos de ejemplo (el
-  catálogo, desde un `public/__dev_cursos.json` temporal sin versionar). No existe en producción.
+Producto: suscripción de pago (beta). Es una SPA dentro de la SPA, sin el Layout del sitio.
+
+### Rutas y acceso
+
+Definidas en `src/App.jsx` (bloque «Portal /app»), slug en `routes.js` (`app: { es: 'app' }`):
+
+| Ruta | Componente | Qué es |
+|---|---|---|
+| `/es/app` | `app/Hoy.jsx` | Resultado de temperamento, mapa de carácter y bloque «Tu entorno» |
+| `/es/app/formacion` | `formacion/Formacion.jsx` | Los 7 cursos con su progreso |
+| `/es/app/formacion/curso-N` | `formacion/Modulo.jsx` | Un curso (slug `curso-1` … `curso-7`) |
+| `/es/app/personas` | `app/Personas.jsx` | Lista «Tu entorno» (mapa + fichas) |
+| `/es/app/personas/nueva` | `app/Personas.jsx` → `NuevaPersona` | Crear ficha (usa `personas/CrearFicha`, los 4 grupos) |
+| `/es/app/personas/:id` | `app/Personas.jsx` → `PersonaDetalle` | Ficha de una persona |
+| `/es/app/caracter` | `app/ResultadoCaracter.jsx` | Resultado del test de carácter (radar) |
+| `/es/app/perfil` | `app/Perfil.jsx` | Pestañas: datos/«Mis resultados», «Mis notas», configuración |
+| `/es/app/camino` | — | **Bloqueado**: `Navigate` a Hoy. En la burbuja sale con candado |
+
+- `PortalGuard.jsx`: sin sesión → `/login`; idioma ≠ es → `/login`; sin suscripción activa
+  (`useAcceso` → `suscripciones_retos`) → `/tests/temperamento/gracias`. Si pasa, pinta
+  `AppShell` (cabecera + burbuja inferior Hoy · Camino🔒 · Formación + `<Outlet/>`). Perfil se abre
+  desde la cabecera.
+- Enlaces internos: siempre `LocalLink` / `useLocalPath()` (`lp('/app/personas')`), nunca rutas con
+  idioma a mano. **No uses rutas `/mi-panel/...`** para navegar dentro del portal: redirigen y, en el
+  caso de `camino`, acaban en Hoy (este fue el bug de «Añadir persona», nov-2026).
+
+### Tablas de Supabase que usa el portal
+
+Todas con RLS por `user_id = auth.uid()`; el front escribe con la sesión del usuario.
+
+| Tabla | Para qué | Notas |
+|---|---|---|
+| `profiles` | Nombre, apellidos, año de nacimiento… | `account/perfil.js` |
+| `test_results` | Resultados de tests (`kind`: `temperament`, `character`, `heart`) | Ver formatos abajo |
+| `suscripciones_retos` | Llave de acceso al portal | Se activa a mano (SQL) |
+| `personas` | Fichas de «Tu entorno» | CHECKs abajo |
+| `persona_estimaciones` | Cada test de 8 preguntas hecho sobre una persona | `respuestas` (array de 8), `puntos`, `primario`, `secundario`, `confianza` |
+| `persona_observaciones` | Notas/observaciones sobre una persona | CHECKs abajo |
+| `contenidos` | Copia en BD de cada paso de los cursos | **FK** de `respuestas.contenido_id` |
+| `respuestas` | Respuesta del usuario a cada paso | UNIQUE (`user_id`, `contenido_id`) → upsert |
+| `progreso_curso` | Paso actual y nº de completados por curso | UNIQUE (`user_id`, `curso`) |
+| `notas_formacion` | Bloc de notas por paso | `texto` es HTML (ver «Notas») |
+| `perfil_camino`, `actividad_diaria`, `preguntas_respuestas_ejercicios` | Camino (aparcado) | Perfil lee `perfil_camino.estado_vida` |
+| `consents` | Consentimientos | Solo lectura en el front |
+
+Restricciones que ya han roto cosas (comprobar antes de insertar):
+
+- `personas.grupo` ∈ `familia, amigos, trabajo, comunidad, pendiente` · `estado` ∈ `sin_estimar,
+  estimado, confirmado, invitado, registrado` · `nombre` 1–40 caracteres · `relacion` ≤ 30 ·
+  `avatar` ≤ 8 · `primario`/`secundario` ∈ `COL, MEL, SAN, FLE` o null.
+- `persona_observaciones.situacion` ∈ `critica, cambio_planes, problema, buena_noticia, desacuerdo,
+  otro, nota_formacion` · `linea` ≤ 280 · `palabra` y `temperamento` pueden ser null.
+- `respuestas.contenido_id` **debe existir en `contenidos`**. Si añades o renombras un paso en un
+  `cursoN.json`, hay que dar de alta su fila en `contenidos` (SQL en `supabase-migraciones/`, lo
+  aplica Infra). Si no, el progreso de ese paso falla en silencio por FK.
+- `respuestas.modulo` es integer: pasos como el proyecto final van con `null` (`moduloBD()` en
+  `useModulo.js`).
+
+Detalle de columnas y ejemplos: `docs/FICHA_INTEGRACION_BD_FORMACION.md`.
+
+### Formatos de `test_results.result` (leer SIEMPRE ambos)
+
+- **Temperamento** actual: `{ primario, secundario, profileKey: 'SAN-COL', answers: {stage1, stage2,
+  tie}, … }`. Antiguo: `{ profile | type, scores, … }`. Usa `claveTemperamento(result)` de
+  `lib/virtudes.js` (acepta `profileKey`/`type`/`profile`) y, si devuelve null, cae a
+  `primario-secundario`. Las barras por temperamento solo existen en el formato antiguo (`scores`):
+  no las derives de `stage1`, contradice al temperamento principal en ~1/3 de los tests reales.
+- **Carácter** actual: `{ self: { prudencia: 0..100, … }, facets: { v: {active, passive} } }`.
+  Antiguo: `{ virtues: { v: { global: 0..1 } } }` → multiplicar por 100. Ver `pctVirtud` en
+  `Perfil.jsx` y `resultadoCaracter()` en `lib/virtudes.js`.
+
+### Personas («Tu entorno»)
+
+- Lógica pura en `src/lib/personas.js` (testeada): `GRUPOS`, `gruposPara(estadoVida)` (comunidad solo
+  si `estado_vida === 'religioso'`; en `/app/personas/nueva` se muestran los 4 con
+  `todosLosGrupos`), `PREGUNTAS` (8), `DESEMPATE`, `puntuar()`, `SITUACIONES`, `PALABRAS_3P`,
+  `FICHA` por temperamento.
+- Acceso a datos en `src/account/personas.js` (`crearPersona`, `guardarEstimacion`,
+  `anotarObservacion`…). Hook `app/usePersonas.js` (`{ cargando, lista, menor }`).
+- El bloque de Hoy y la lista se llaman **«Tu entorno»** (antes «Tu entorno magnánimo»; no volver al
+  nombre viejo).
+- Desde Formación también se crean personas: `SelectorCirculoOro` (curso 2, test de magnanimidad)
+  pide nombre + grupo y crea la ficha en BD **antes** de marcarla; `CirculoPersonas` guarda notas
+  como observación `situacion: 'otro'`.
+
+### Formación (cursos del portal)
+
+- **Contenido**: `src/data/curso1.json` … `curso7.json` → `{ id: 'cursoN', titulo, curso, pasos[] }`.
+  Cada paso: `{ id: 'mN-XX', tipo, titulo, visible, modulo, … datos del tipo }`. Los IDs no se
+  renombran nunca (son la clave de `respuestas`, `notas_formacion` y `contenidos`).
+- **Tipos** (`tipo`): `video`, `lectura`, `quiz`, `define`, `desliza`, `identifica`,
+  `test_profundo`, `reflexion_piramide`, `reflexion_guiada`, `conclusion_modulo`, `cierre`,
+  `circulo_personas`, `temperamento_perfil`, `temperamento_magnanimidad`, `retos_temperamento`,
+  `test_caracter`, `plan_crecimiento`, `armonia_temperamento`, `objetivos_corazon`,
+  `proyecto_mision`. El `switch` que elige componente está en `PasoActividad` (`Modulo.jsx`); los
+  componentes, en `Actividad.jsx`. Tipo nuevo = componente + `case` + texto en `CARATULA_TEXTOS`.
+- **Visibles vs. de flujo**: `visible: true` = aparece en el listado del curso (vídeos que abren
+  módulo). El resto se encadena detrás. `test_profundo` con `temperamento` solo se muestra a quien
+  tiene ese temperamento como primario o secundario (`flujoModulo.js`).
+- **Evaluables**: `quiz`, `define`, `desliza` → `aprobado = aciertos/total ≥ 0.70`; el resto,
+  `aprobado = null`.
+- **Persistencia** (`useModulo.js`): si hay cliente de Supabase, lee `respuestas` +
+  `progreso_curso` y hace upsert; si no, localStorage `vl-modulo:<user>:<cursoId>`. Cada fila se
+  expone como `completados[pasoId] = { fecha, ...respuesta, aprobado }`.
+- **Plan de crecimiento** (`m2-17`, `plan_crecimiento`): se guarda como `respuesta: { plan: {…} }`,
+  pero hay filas antiguas con las claves sueltas. Quien lo lea debe aceptar los dos (desanidar
+  `plan` y mezclar con las sueltas), como `PlanCrecimiento` (`Actividad.jsx`) y `VistaResumenPlan`
+  (`Modulo.jsx`). Si ya está hecho, el ejercicio abre en el resumen.
+- **Notas** (`useNotas.js`, `notas_formacion`): el editor es `contentEditable` y guarda HTML
+  sencillo (`<b>`, `<i>`, `<u>`, `<div>`, `<br>`, `&nbsp;`). Algunas notas (cargadas a mano) usan
+  `**negrita**`. Para pintarlas usa **siempre** `notaAHtml()` / `<NotaTexto>`
+  (`formacion/NotaTexto.jsx`), que sanea (solo esas etiquetas, sin atributos) y entiende ambos
+  formatos. Para el PDF, `notaATexto()`. Nunca `dangerouslySetInnerHTML` con el texto en bruto.
+  No se muestra el número de notas en ningún sitio (decisión de producto).
+- **Perfil → «Mis notas»** recorre los 7 cursos (`MODULOS` en `Perfil.jsx`); los títulos de pasos
+  de vídeo ocultos se muestran como «Módulo › paso».
+- **Catálogo de vídeos**: `useCatalogo()` llama a la función `formacion-catalogo` (gated). En dev, si
+  existe `public/__dev_cursos.json` (sin versionar), se usa ese.
+- **Estilos**: `GUIA-ESTILOS-FORMACION.md` + `CHECKLIST-NUEVO-CURSO.md` en `src/formacion/`.
+  Resumen de normas de producto: el usuario nunca ve etiquetas internas (VIDEO/QUIZ/CUADERNO);
+  carátulas breves con el texto genérico de `CARATULA_TEXTOS`; ejemplos siempre plegables («Ver
+  ejemplo» + lupa); las reflexiones/ideas clave de Perfil aparecen al completar su paso, nunca
+  todas de golpe; `borderRadius: 0` en todo.
+- **Analítica**: `lib/track.js` (`trackCompletado`, `trackPaso`) empuja eventos al dataLayer.
+
+### Código aparcado (no borrar sin preguntar)
+
+No está enrutado hoy pero se reutilizará: `pages/PanelApp.jsx`, `pages/MiPanel.jsx`,
+`pages/Retos.jsx`, `app/Camino.jsx`, `app/useCamino.js`, `app/camino/*` (ojo: `Juegos.jsx` y
+`ui.jsx` sí se usan en Personas), `account/camino.js`. Roadmap: Camino, algoritmo IA, panel de
+administración interno.
+
+### Usuario de demo
+
+`luis.demo@virtuousleadership.com` (para enseñar el producto): nacido en 1996, temperamento
+**SAN-COL**, carácter con magnanimidad y justicia altas; 12 personas en los 4 grupos con
+estimaciones y observaciones; cursos 1 y 2 completos con respuestas coherentes (incluido el plan de
+crecimiento); notas en el bloc. Si cambias formatos de `respuestas`, comprueba que su cuenta se sigue
+viendo bien. Sus datos se regeneran con SQL que aplica Infra, no a mano desde el portal.
+
+### Probar el portal en local
+
+1. `npm install && npm run dev` → `http://localhost:5173/es/app` (el `.env.local`, sin versionar,
+   lleva las `VITE_SUPABASE_*`; pídeselo al usuario si no lo tienes).
+2. Entra con una cuenta con suscripción activa (p. ej. la de demo). **Ojo**: en local escribes en
+   la base de datos de PRODUCCIÓN con esa cuenta: no hagas pruebas destructivas con la de demo.
+3. Antes de la PR: `npm test` y `npm run build`.
 
 ---
 
@@ -630,6 +848,20 @@ la estructura pero adapta el partial score calc.
 
 **"¿Cómo pruebo en local?"** → `npm install && npm run dev` (localhost:5173).
 Backend `api/` no arranca en dev; el front usa VITE_SUBMIT_* vacías = stub.
+El portal sí funciona en local contra el Supabase real (ver «Portal /app →
+Probar el portal en local»). En la app de escritorio de Claude, el servidor
+está en `.claude/launch.json` como `vl-dev`.
+
+**"¿Dónde se guarda el progreso de los cursos?"** → En Supabase
+(`respuestas`, `progreso_curso`, `notas_formacion`). localStorage solo si no
+hay cliente de Supabase. Ver «Portal /app → Formación».
+
+**"He añadido un paso a un curso y no guarda"** → Falta su fila en
+`contenidos` (FK). Prepara el INSERT en `supabase-migraciones/` y pásalo a
+Infra.
+
+**"¿Por qué hay código que no se usa (Camino, Retos, MiPanel)?"** → Está
+aparcado a propósito. Ver «Código aparcado». No borrarlo.
 
 **"¿Cómo hago un test?"** → `npm test`. Sólo `src/lib/*.test.js`. React no.
 
