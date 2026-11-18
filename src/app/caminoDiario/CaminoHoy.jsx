@@ -10,6 +10,7 @@ import {
 import { parrafo, tarjeta } from '../estilos';
 import { usePersonas } from '../usePersonas';
 import { useCaminoDiario } from '../useCaminoDiario';
+import { EsqueletoTarjeta } from '../Esqueleto';
 import HabitosHoy from './HabitosHoy';
 import Manana from './Manana';
 import Noche from './Noche';
@@ -31,7 +32,7 @@ export default function CaminoHoy({ tempClave }) {
   if (camino.error) {
     return <section style={{ ...tarjeta, gridColumn: '1 / -1' }}><p role="alert" style={parrafo}>{t('camino.error_cargar')}</p></section>;
   }
-  if (camino.cargando || personas.cargando) return null;
+  if (camino.cargando || personas.cargando) return <EsqueletoTarjeta alto={320} style={{ gridColumn: '1 / -1' }} />;
 
   const habitos = (
     <HabitosHoy

@@ -5,6 +5,7 @@ import { useLocalPath } from '../../i18n';
 import { LINE, NAVY, FONT_BODY } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
 import { usePersonas } from '../usePersonas';
+import { EsqueletoTarjeta } from '../Esqueleto';
 import { Avatar, EtiquetaEstado, MapaPersonas } from './comun';
 
 export default function TuEntorno({ miPrimario }) {
@@ -16,7 +17,7 @@ export default function TuEntorno({ miPrimario }) {
   const irAPersonas = () => navigate(lp('/app/personas'));
   const irANueva = () => navigate(lp('/app/personas/nueva'));
 
-  if (cargando) return null;
+  if (cargando) return <EsqueletoTarjeta alto={420} />;
 
   const MAX_VISIBLES = 5;
   const visibles = lista.slice(0, MAX_VISIBLES);

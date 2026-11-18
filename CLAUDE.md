@@ -83,7 +83,7 @@ reglas no son opcionales:
 - **Estilos**: inline styles + tokens en `src/theme.js`. No Tailwind, no CSS
   modules.
 - **Tests**: `node --test` (built-in Node 20), sólo módulos puros
-  (166 tests; ver «Tests»).
+  (202 tests; ver «Tests»).
 - **Deploy**: Docker Compose en VPS Hostinger `/opt/virtuousleadership/`.
 - **Analytics**: GTM (GTM-W9P5BPF9) + GA4 (G-HM6K1685L2) desde el contenedor
   GTM. Consentimiento: banner propio (`src/components/CookieConsent.jsx`) +
@@ -258,7 +258,7 @@ npm test              # node --test src/lib/*.test.js
 ```
 
 Sólo módulos puros (`src/lib/*.test.js` + `src/formacion/**/*.test.js`).
-Total actual: **166 tests** (carácter, corazón, personas, camino, panel,
+Total actual: **202 tests** (carácter, corazón, personas, camino, panel,
 track, modulo1, preferencias, biblioteca/retos/hábitos del Camino diario). CI los corre en cada PR junto al build; si los rompes, la
 PR no debe mergearse.
 Si tocas un scoring engine y los tests fallan, NO regeneres las fixtures
@@ -735,8 +735,43 @@ la app móvil (push). Quien envíe debe leer de aquí, no guardar copias.
   Resumen de normas de producto: el usuario nunca ve etiquetas internas (VIDEO/QUIZ/CUADERNO);
   carátulas breves con el texto genérico de `CARATULA_TEXTOS`; ejemplos siempre plegables («Ver
   ejemplo» + lupa); las reflexiones/ideas clave de Perfil aparecen al completar su paso, nunca
-  todas de golpe; `borderRadius: 0` en todo.
+  todas de golpe. Esquinas: el código declara `borderRadius: 0` pero el portal las redondea desde un solo
+  sitio (ver «Estilo del portal»); no hace falta tocarlo pantalla a pantalla.
 - **Analítica**: `lib/track.js` (`trackCompletado`, `trackPaso`) empuja eventos al dataLayer.
+
+### Estilo del portal (suave, redondeado y minimalista)
+
+Todo `/es/app/*` comparte un estilo: tarjetas blancas redondeadas con sombra suave, botones en píldora, títulos en
+**Plus Jakarta Sans** y texto en **Inter**, fondo cálido con un velo de luz, fundidos suaves y scroll suave. Se
+reparte así, para no tener que tocar cada pantalla:
+
+- **Bloques compartidos** (`app/estilos.js`): `tarjeta` (radio 24, borde fino, sombra), `botonPrimario` (dorado),
+  `botonSobreClaro` (azul, la acción principal), `botonContorno` (secundario), `titulo`, `eyebrow`, `barraFondo`.
+  Para pantallas nuevas, usar estos.
+- **Capa de estilo** (CSS en `app/AppShell.jsx`, bloque «Estilo del portal»): tokens `--vl-r-*`, `--vl-fuente*`,
+  `--vl-sombra*`; cambia la serifa de los títulos y Roboto por las fuentes nuevas; y **redondea todo lo que el
+  código declara con `borderRadius: 0`** (botones → píldora, bloques de texto y opciones de respuesta → radio
+  18, campos → 14, tarjetas → 24). Para cambiar radios, fuentes o sombras de todo el portal, **aquí**.
+  Lo que tiene su propio `borderRadius ≠ 0` no se toca. Solo afecta a `.vl-app` (el portal), no a la web pública.
+- **Fuentes**: se cargan con un `<link>` que pone una vez `AppShell` (no con `@import` dentro del `<style>`, que
+  bloqueaba el pintado).
+- **Movimiento**: la página entra con un fundido (`.vl-pagina`), las tarjetas que aparecen dentro suben un poco
+  (`.vl-entra`); nada de desenfoque ni zoom. Respeta `prefers-reduced-motion`. Los botones se elevan al pasar.
+- **Scroll**: suave dentro de la página (no con movimiento reducido) y vuelta arriba al instante al cambiar de pantalla.
+
+### Datos con caché al cambiar de pantalla
+
+Antes, cada pantalla volvía a pedir sus datos al montarse y dejaba huecos que se rellenaban por partes («se
+recarga raro»). Ahora `account/useDatos.js` (sobre `lib/almacenDatos.js`, con pruebas) guarda lo último que se sabe
+y lo enseña al instante mientras se actualiza en segundo plano: así cambiar de pestaña no salta. Lo usan
+`usePersonas`, `useCaminoDiario`, `useTemperamentoClave` y `MapaCaracter`.
+
+- Tras guardar algo, llamar a `recargar()` del hook: lanza una petición nueva y descarta la anterior si llega tarde.
+- La primera vez (sin datos) se enseñan **esqueletos** (`app/Esqueleto.jsx`), nunca un hueco vacío ni `return null`.
+- Al cerrar sesión `olvidarDatos()` vacía la caché (en `AppShell.salir`). Las claves llevan el id de usuario.
+- `AppShell` precarga el código de las demás pestañas cuando el navegador está libre, y las rutas hijas están en un
+  `Suspense` con esqueleto (el shell y la barra inferior no desaparecen al cambiar de pestaña).
+- Un hook nuevo que pida datos al montarse debe usar `useDatos`, no `useState` + `useEffect`.
 
 ### Camino diario (reto, noche y hábitos)
 

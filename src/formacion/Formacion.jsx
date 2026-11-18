@@ -285,7 +285,6 @@ function CtaFormacion({ prog, cursoNum = 1, todosCompletos = false, ultimoComple
     return (
       <div style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
         <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
           <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>Formación completada</div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>Has completado los 7 cursos. Repasa cualquiera cuando quieras.</div>
         </section>
@@ -297,7 +296,6 @@ function CtaFormacion({ prog, cursoNum = 1, todosCompletos = false, ultimoComple
     return (
       <Link to={`/app/formacion/curso-${siguienteCursoNum || cursoNum}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
         <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-          <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
           <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_REF_LT }}>Curso {ultimoCompletoNum}</div>
           <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>Curso {ultimoCompletoNum} completado</div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>Has completado el Curso {ultimoCompletoNum}. Continúa con el siguiente curso de la formación.</div>
@@ -319,7 +317,6 @@ function CtaFormacion({ prog, cursoNum = 1, todosCompletos = false, ultimoComple
   return (
     <Link to={`/app/formacion/curso-${cursoNum}`} style={{ textDecoration: 'none', display: 'flex', flexDirection: 'column', justifyContent: 'center', flex: 1, minWidth: 0 }}>
       <section style={{ background: heroFondo, borderRadius: 0, padding: '28px 24px 26px', display: 'flex', flexDirection: 'column', gap: 12, height: '100%', boxSizing: 'border-box', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-        <span aria-hidden style={{ position: 'absolute', top: 0, left: 24, width: 56, height: 3, background: GOLD_REF }} />
         <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, letterSpacing: '0.16em', textTransform: 'uppercase', color: GOLD_REF_LT }}>Curso {cursoNum}</div>
         <div style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 600, color: PAPER, lineHeight: 1.22 }}>{ctaTitulo}</div>
         <div style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: 'rgba(255,255,255,0.80)', lineHeight: 1.5 }}>{ctaTexto}</div>

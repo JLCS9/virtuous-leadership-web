@@ -1,12 +1,15 @@
-import { NAVY, NAVY_DEEP, PAPER, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, BRUMA } from '../theme';
+import { NAVY, NAVY_DEEP, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_DK, BRUMA } from '../theme';
 
-export const sombra = '0 2px 8px rgba(15,30,51,0.10)';
+// Estilo del portal: suave, redondeado y minimalista. Los radios y la fuente de los títulos se afinan en
+// un solo sitio, el CSS del portal (AppShell); aquí van los bloques que reutilizan las pantallas.
+export const sombra = '0 1px 2px rgba(20,32,60,0.04), 0 10px 32px rgba(20,32,60,0.07)';
 
 export const tarjeta = {
-  background: PAPER,
-  borderTop: `2px solid ${GOLD_REF}`,
-  borderRadius: 0,
-  padding: '24px 22px',
+  background: '#fff',
+  border: '1px solid rgba(27,42,74,0.06)',
+  borderRadius: 24,
+  boxShadow: sombra,
+  padding: '28px 26px',
 };
 
 // Plantilla de las tarjetas con icono redondo y texto centrado (carátulas, completado, resultados).
@@ -24,27 +27,28 @@ export const eyebrow = {
 };
 
 export const titulo = (tam = 28) => ({
-  fontFamily: FONT_SLAB, fontWeight: 700, color: NAVY, margin: 0, lineHeight: 1.08, fontSize: tam,
+  fontFamily: FONT_SLAB, fontWeight: 700, color: NAVY, margin: 0, lineHeight: 1.12, fontSize: tam, letterSpacing: '-0.015em',
 });
 
 export const parrafo = { fontFamily: FONT_BODY, fontSize: 18, lineHeight: 1.65, color: MUTED, margin: 0 };
 
 export const heroFondo = `linear-gradient(135deg, ${NAVY} 0%, ${NAVY_DEEP} 100%)`;
 
+// Botones en píldora. El dorado es el acento y el azul la acción principal; el de contorno, el secundario.
 export const botonPrimario = {
-  fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, letterSpacing: '0.02em', color: '#fff',
-  background: GOLD_REF, border: 'none', borderRadius: 0, padding: '16px 28px', cursor: 'pointer',
-  display: 'inline-flex', alignItems: 'center', gap: 9, textDecoration: 'none',
-  transition: 'background 200ms cubic-bezier(.22,.61,.36,1)',
+  fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, letterSpacing: '0.01em', color: '#fff',
+  background: GOLD_REF, border: 'none', borderRadius: 999, padding: '15px 28px', cursor: 'pointer',
+  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 9, textDecoration: 'none',
+  boxShadow: '0 6px 18px rgba(165,139,38,0.28)',
 };
 
-export const botonSobreClaro = { ...botonPrimario, color: PAPER, background: NAVY };
+export const botonSobreClaro = { ...botonPrimario, color: '#fff', background: NAVY, boxShadow: '0 6px 18px rgba(27,42,74,0.22)' };
 
 export const botonContorno = {
-  ...botonPrimario, background: 'transparent', color: NAVY, border: `2px solid ${NAVY}`,
+  ...botonPrimario, background: 'transparent', color: NAVY, border: '1.5px solid rgba(27,42,74,0.28)', boxShadow: 'none',
 };
 
-export const barraFondo = { height: 6, borderRadius: 0, background: 'rgba(27,42,74,0.10)', overflow: 'hidden' };
+export const barraFondo = { height: 8, borderRadius: 999, background: 'rgba(27,42,74,0.08)', overflow: 'hidden' };
 
 export function fechaLarga(d = new Date()) {
   return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
