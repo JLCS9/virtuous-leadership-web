@@ -575,7 +575,7 @@ Definidas en `src/App.jsx` (bloque «Portal /app»), slug en `routes.js` (`app: 
 | `/es/app/personas/:id` | `app/Personas.jsx` → `PersonaDetalle` | Ficha de una persona |
 | `/es/app/caracter` | `app/ResultadoCaracter.jsx` | Resultado del test de carácter (radar) |
 | `/es/app/perfil` | `app/Perfil.jsx` | Pestañas: datos/«Mis resultados», «Mis notas», configuración |
-| `/es/app/camino` | `app/CaminoDiario.jsx` | Hábitos, historial de días y «lo que Virtus sabe de ti» (ver «Camino diario») |
+| `/es/app/camino` | `app/CaminoDiario.jsx` | Tu entorno + último test de carácter, camino de virtudes, hábitos, historial y «lo que Virtus sabe de ti» (ver «Camino diario») |
 
 - `PortalGuard.jsx`: sin sesión → `/login`; idioma ≠ es → `/login`; sin suscripción activa
   (`useAcceso` → `suscripciones_retos`) → `/tests/temperamento/gracias`. Si pasa, pinta
@@ -764,16 +764,27 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   definitivo: no se puede cambiar el compromiso del día. Los días sin terminar no se recuperan, pero
   lo hecho se guarda.
 - **Variables**: `{persona_trabajo}`… se rellenan con `camino_variables`; vacías, con el texto por
-  defecto de la hoja Variables. Una variable de persona guarda el `persona_id` de «Tu entorno» (si
-  la ficha se renombra, el reto lo refleja; si se borra, queda el texto). La respuesta a la pregunta
+  defecto de la hoja Variables. Las variables de persona se eligen **solo entre las fichas de «Tu
+  entorno»** (`CampoVariable`; nada de texto libre): con grupo en la hoja Variables (familia,
+  trabajo, amigos) salen las de ese grupo, sin grupo todas; si no hay ninguna, aviso y enlace a
+  `/app/personas/nueva`. Guardan el `persona_id` (si la ficha se renombra, el reto lo refleja; si
+  se borra, queda el texto). Los valores escritos a mano antes de este cambio se conservan. La respuesta a la pregunta
   de nutrir de la noche actualiza la variable (`origen: 'noche'`).
 - **Hábitos**: máximo, días de prueba, ventana y umbrales salen de `biblioteca.habitos`, nunca de
   constantes. Estados: en_prueba → activo → consolidado | en_revision; retirado. Cambian solos al
   cargar (`useCaminoDiario`); «en revisión» pregunta ajustar / mantener / dejar. Se ofrecen tras
   cumplir la opción B (sí o a medias) y se pueden escribir propios. Virtudes: las seis de
   `VIRTUDES_HABITO`; audacia y resistencia de los retos cuentan como fortaleza.
+- **Camino de virtudes** (pestaña Camino): un bloque por virtud dibujado con curvas
+  (`caminoDiario/RutaVirtudes.jsx`, lógica en `lib/rutaVirtudes.js`). Empieza por la virtud-desafío
+  del perfil (`CHALLENGE_VIRTUE`: audacia y resistencia cuentan como fortaleza); las demás están
+  bloqueadas hasta pasar un mes con ella. El mes cuenta desde el primer día con un reto aceptado y
+  su duración es `RUTA.dias_por_virtud` (30): se ajusta ahí. Pasado el mes los bloques pasan a
+  «disponible», pero **la biblioteca solo tiene retos de la virtud-desafío de cada temperamento**:
+  hasta que haya contenido de las demás virtudes, los retos siguen saliendo de esa.
 - **Piezas**: `account/caminoDiario.js` (datos), `app/useCaminoDiario.js` (hook), `app/caminoDiario/*`
-  (pantallas; solo pintan), `app/CaminoDiario.jsx` (pestaña). Textos en `i18n/es.js` → `camino`
+  (pantallas; solo pintan), `app/CaminoDiario.jsx` (pestaña). «Tu entorno» (`personas/TuEntorno.jsx`)
+  y `useTemperamentoClave.js` se comparten entre Hoy y Camino. Textos en `i18n/es.js` → `camino`
   (el portal es solo español: `t()` cae a `es` si falta la clave en otro idioma).
 - **Fechas**: «hoy» es la fecha del dispositivo (`fechaLocal()`), no `zona_horaria`. Quien viaje puede
   ver un día duplicado o saltado.
