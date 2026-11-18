@@ -5,6 +5,7 @@ import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { botonContorno, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck } from './Iconos';
+import { EsqueletoTarjeta } from './Esqueleto';
 import MapaCaracter from './MapaCaracter';
 import CaminoHoy from './caminoDiario/CaminoHoy';
 import TuEntorno from './personas/TuEntorno';
@@ -12,7 +13,7 @@ import { useTemperamentoClave } from './useTemperamentoClave';
 
 function MiResultado({ fila, clave }) {
   const { t } = useT();
-  if (fila === undefined) return null;
+  if (fila === undefined) return <EsqueletoTarjeta alto={300} />;
   if (!clave) {
     return (
       <section style={tarjeta}>

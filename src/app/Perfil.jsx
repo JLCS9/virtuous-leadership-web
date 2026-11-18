@@ -123,7 +123,7 @@ function Modal({ titulo, children, onClose }) {
       background: 'rgba(15,29,56,0.22)',
     }} onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
       <div style={{
-        background: PAPER, borderRadius: 0, borderTop: `2px solid ${GOLD_REF}`,
+        background: '#fff', borderRadius: 24,
         padding: '28px 24px', width: 'min(440px, 92vw)',
         maxHeight: '85vh', overflow: 'auto', boxShadow: '0 8px 32px rgba(15,29,56,0.22)',
       }}>

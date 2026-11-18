@@ -9,6 +9,7 @@ import { rachaDeCompromisos, tiraDeDias } from '../lib/rachaDias.js';
 import { RUTA, bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from '../lib/rutaVirtudes.js';
 import { parrafo, tarjeta } from './estilos';
 import MapaCaracter from './MapaCaracter';
+import { EsqueletoPagina } from './Esqueleto';
 import { usePersonas } from './usePersonas';
 import { useCaminoDiario } from './useCaminoDiario';
 import { useTemperamentoClave } from './useTemperamentoClave';
@@ -25,7 +26,7 @@ export default function CaminoDiario() {
   const [params] = useSearchParams();
 
   if (camino.error) return <section style={tarjeta}><p role="alert" style={parrafo}>{t('camino.error_cargar')}</p></section>;
-  if (camino.cargando || personas.cargando || fila === undefined) return null;
+  if (camino.cargando || personas.cargando || fila === undefined) return <EsqueletoPagina />;
 
   // Solo en desarrollo: `?avance=0.5` enseña el camino con la mitad recorrida (0 a 1; 1 o más, completado).
   const avance = import.meta.env.DEV ? Number(params.get('avance')) : NaN;

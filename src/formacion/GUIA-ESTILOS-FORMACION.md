@@ -3,15 +3,20 @@
 Fuente de verdad: **Curso 1 (Del temperamento al carácter)**, validado por el usuario.
 Todos los cursos nuevos DEBEN copiar estos patrones exactos.
 
+> **Esquinas (nov-2026):** el portal pasó a un estilo suave y redondeado. Las ocurrencias de `borderRadius 0` que
+> siguen en esta guía y en el código se redondean desde un solo sitio, la capa «Estilo del portal» de `AppShell.jsx`
+> (botones en píldora, tarjetas 24, bloques 18, campos 14). No hace falta cambiarlas pantalla a pantalla; para
+> pantallas nuevas, usa los bloques de `estilos.js`. Ver «Estilo del portal» en `CLAUDE.md`.
+
 ---
 
 ## 1. Tokens compartidos (estilos.js)
 
 ```
-tarjeta:      background PAPER, borderTop 2px GOLD_REF, borderRadius 0, padding '24px 22px'
+tarjeta:      background #fff, border 1px rgba(27,42,74,0.06), borderRadius 24, boxShadow suave (sombra), padding '28px 26px'
 eyebrow:      FONT_BODY, fontSize 14, fontWeight 600, letterSpacing '0.16em', uppercase, GOLD_REF_DK
-barraFondo:   height 6, borderRadius 0, background rgba(27,42,74,0.10), overflow hidden
-botonPrimario: FONT_BODY fontSize 16 fontWeight 600 padding '16px 28px' GOLD_REF #fff
+barraFondo:   height 8, borderRadius 999, background rgba(27,42,74,0.08), overflow hidden
+botonPrimario: FONT_BODY fontSize 16 fontWeight 600 padding '15px 28px' GOLD_REF #fff, borderRadius 999 (píldora)
 ```
 
 ---

@@ -621,7 +621,6 @@ function ListaLecciones({ pasos, completados, irA, temperamento }) {
           <button type="button" onClick={() => (bloqueado ? setAvisoCorazon(true) : irA(pf.id))} style={{
             all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
             ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
-            borderTop: `2px solid ${GOLD_REF}`,
           }}>
             <span style={{
               flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
@@ -1740,7 +1739,6 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             <button type="button" onClick={() => irA(planStep.id)} style={{
               all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
               ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
-              borderTop: `2px solid ${GOLD_REF}`,
             }}>
               <span style={{
                 flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',
@@ -1766,7 +1764,6 @@ function VistaListado({ modulo, pasos, visibles, completados, irA, cursoNum = 1,
             <button type="button" onClick={() => irA(cierreStep.id)} style={{
               all: 'unset', boxSizing: 'border-box', width: '100%', cursor: 'pointer',
               ...tarjeta, display: 'flex', alignItems: 'center', gap: 14,
-              borderTop: `2px solid ${GOLD_REF}`,
             }}>
               <span style={{
                 flex: '0 0 32px', height: 32, borderRadius: '50%', display: 'grid', placeItems: 'center',

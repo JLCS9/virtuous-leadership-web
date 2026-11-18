@@ -104,7 +104,7 @@ function Senda({ bloques, t, nombre }) {
   });
 
   return (
-    <div ref={contenedor} style={{ overflowX: 'auto', border: `1px solid ${LINE}` }}>
+    <div ref={contenedor} style={{ overflowX: 'auto', border: `1px solid ${LINE}`, borderRadius: 20 }}>
       <svg
         viewBox={`0 0 ${ANCHO} ${ALTO}`} role="img"
         style={{ display: 'block', width: '100%', minWidth: ANCHO_MINIMO, maxWidth: 1100, margin: '0 auto', height: 'auto' }}

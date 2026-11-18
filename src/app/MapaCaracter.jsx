@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { LocalLink as Link, useLocalPath } from '../i18n';
 import { fetchLatestCharacter } from '../account/account';
+import { useDatos } from '../account/useDatos';
+import { useSession } from '../account/useSession';
 import { extremos, resultadoCaracter } from '../lib/virtudes.js';
 import { INK, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF } from '../theme';
 import { botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { IconoFlecha } from './Iconos';
+import { EsqueletoTarjeta } from './Esqueleto';
 import { VirtudesRadar } from './Radar';
 
 const DEMO = { self: { magnanimidad: 72, humildad: 55, prudencia: 63, fortaleza: 48, dominio: 60, justicia: 70 } };
@@ -110,18 +112,16 @@ export function notaTemperamento(tempClave, virtudClave, tipo) {
 // `grande`: una sola columna con el radar grande y los textos a 16-18 px (en la pestaña Camino).
 export default function MapaCaracter({ tempClave, grande = false }) {
   const [params] = useSearchParams();
-  const [fila, setFila] = useState(undefined);
+  const session = useSession();
+  const userId = session?.user?.id;
+  const { datos, listo, error } = useDatos(userId ? `caracter:${userId}` : null, async () => (await fetchLatestCharacter()) ?? null);
+  const fila = listo ? datos : error ? null : undefined; // undefined = cargando por primera vez
   const navigate = useNavigate();
   const lp = useLocalPath();
-  useEffect(() => {
-    let vivo = true;
-    fetchLatestCharacter().then((r) => { if (vivo) setFila(r ?? null); }).catch(() => { if (vivo) setFila(null); });
-    return () => { vivo = false; };
-  }, []);
 
   const demo = import.meta.env.DEV && params.has('demo');
   const resultado = resultadoCaracter(demo ? DEMO : fila?.result);
-  if (fila === undefined && !demo) return null;
+  if (fila === undefined && !demo) return <EsqueletoTarjeta alto={420} />;
 
   if (!resultado) {
     return (
