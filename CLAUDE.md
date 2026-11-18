@@ -603,6 +603,7 @@ Todas con RLS por `user_id = auth.uid()`; el front escribe con la sesión del us
 | `notas_formacion` | Bloc de notas por paso | `texto` es HTML (ver «Notas») |
 | `perfil_camino`, `actividad_diaria`, `preguntas_respuestas_ejercicios` | Camino (aparcado) | Perfil lee `perfil_camino.estado_vida` |
 | `consents` | Consentimientos | Solo lectura en el front |
+| `persona_invitaciones` | Enlace para que la persona de una ficha verifique su temperamento | Una por ficha; aceptarla es cosa del servidor |
 
 Restricciones que ya han roto cosas (comprobar antes de insertar):
 
@@ -643,6 +644,27 @@ Detalle de columnas y ejemplos: `docs/FICHA_INTEGRACION_BD_FORMACION.md`.
 - Desde Formación también se crean personas: `SelectorCirculoOro` (curso 2, test de magnanimidad)
   pide nombre + grupo y crea la ficha en BD **antes** de marcarla; `CirculoPersonas` guarda notas
   como observación `situacion: 'otro'`.
+
+### Invitación al test de temperamento (verificar una ficha de «Tu entorno»)
+
+Lado del invitado y servidor (nov-2026). La pantalla del portal que crea y comparte el enlace
+llega en una PR posterior; esta parte es lo que necesita producción para que el enlace funcione.
+
+- **Enlace**: `/es/tests/temperamento?inv=<token>&utm_source=invitacion&utm_medium=<canal>`. El
+  token vive en `persona_invitaciones` (una por ficha; la crea el front de quien invita, con RLS).
+- **Invitado**: `components/Invitacion.jsx` (montado en `App.jsx`) guarda el token, pregunta UNA vez
+  si quiere compartir su temperamento (decisión expresa; textos en `invitacion.*` de los 4 idiomas)
+  y, con sesión y resultado guardado, llama a `POST /api/invitacion/aceptar`.
+  `GET /api/invitacion?token=` devuelve solo el nombre de pila de quien invita.
+- **Test**: quien llega por invitación no ve «¿cómo has llegado?»; el origen se anota como
+  `referido` (`esReferido()` en `account/invitacion.js`, usado en `answerQualify` de `TestTBP.jsx`).
+- **Verificación** (`api/invitaciones.mjs`, service role): lee el último `test_results` de
+  temperamento del invitado y pone la ficha en `estado: 'confirmado'`, con su primario/secundario,
+  `confianza: 'alta'` y `verificado_en`. La invitación se consume una sola vez.
+- **Si repite el test**: el trigger `test_results_sincroniza_fichas` actualiza las fichas que
+  verificó (también con tests hechos desde la app móvil).
+- **SQL**: `supabase-migraciones/20261118_persona_invitaciones.sql`.
+- Si añades un fichero `.mjs` a `api/`, añádelo también al `COPY` de `api/Dockerfile`.
 
 ### Formación (cursos del portal)
 

@@ -697,6 +697,16 @@ export default {
       email_for_reset: 'Saisissez votre email puis cliquez à nouveau sur « Mot de passe oublié ? ».',
     },
   },
+  invitacion: {
+    titulo: '{nombre} aimerait connaître ton tempérament',
+    titulo_sin_nombre: 'Tu as été invité à découvrir ton tempérament',
+    texto: 'Fais le test : il prend environ cinq minutes. À la fin, si tu es d’accord, nous partagerons avec {nombre} uniquement ton tempérament, pour qu’il apparaisse dans son profil.',
+    texto_sin_nombre: 'Fais le test : il prend environ cinq minutes. À la fin, si tu es d’accord, nous partagerons uniquement ton tempérament avec la personne qui t’a invité.',
+    compartir: 'Faire le test et partager mon tempérament',
+    no_compartir: 'Faire le test sans partager',
+    nota: 'Nous ne partageons jamais tes réponses ni tes coordonnées. Si tu refais le test, {nombre} verra le résultat mis à jour.',
+    nota_sin_nombre: 'Nous ne partageons jamais tes réponses ni tes coordonnées. Si tu refais le test, le résultat partagé sera mis à jour.',
+  },
   reset: {
     title: 'Nouveau mot de passe',
     intro: 'Choisissez un nouveau mot de passe pour votre compte.',
