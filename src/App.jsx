@@ -21,6 +21,7 @@ import Contacto from './pages/Contacto';
 import Login from './pages/Login';
 const PortalGuard = lazy(() => import('./app/PortalGuard'));
 const Hoy = lazy(() => import('./app/Hoy'));
+const CaminoDiario = lazy(() => import('./app/CaminoDiario'));
 const Formacion = lazy(() => import('./formacion/Formacion'));
 const Modulo = lazy(() => import('./formacion/Modulo'));
 const Perfil = lazy(() => import('./app/Perfil'));
@@ -109,7 +110,7 @@ export default function App() {
           <Route key={`portal-${lang}`} path={`/${lang}/${appSlug}`} element={<PortalGuard />}>
             <Route path="bienvenida" element={<Bienvenida />} />
             <Route index element={<Hoy />} />
-            <Route path="camino" element={<Navigate to=".." replace />} />
+            <Route path="camino" element={<CaminoDiario />} />
             <Route path="formacion" element={<Formacion />} />
             <Route path="formacion/:cursoId" element={<Modulo />} />
             <Route path="caracter" element={<ResultadoCaracter />} />

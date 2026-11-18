@@ -10,6 +10,7 @@ import { IconoCheck } from './Iconos';
 import MapaCaracter from './MapaCaracter';
 import { usePersonas } from './usePersonas';
 import { Avatar, EtiquetaEstado, MapaPersonas } from './personas/comun';
+import CaminoHoy from './caminoDiario/CaminoHoy';
 
 function useTemperamentoClave() {
   const [fila, setFila] = useState(undefined);
@@ -176,6 +177,7 @@ export default function Hoy() {
         }
       `}</style>
       {showBanner && <BannerTestOk onClose={closeBanner} />}
+      <CaminoHoy tempClave={tempClave} />
       <div className="vl-hoy-izq">
         <MiResultado fila={tempFila} clave={tempClave} />
         <MapaCaracter tempClave={tempClave} />

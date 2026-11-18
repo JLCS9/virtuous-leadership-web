@@ -83,7 +83,7 @@ reglas no son opcionales:
 - **Estilos**: inline styles + tokens en `src/theme.js`. No Tailwind, no CSS
   modules.
 - **Tests**: `node --test` (built-in Node 20), sólo módulos puros
-  (103 tests; ver «Tests»).
+  (166 tests; ver «Tests»).
 - **Deploy**: Docker Compose en VPS Hostinger `/opt/virtuousleadership/`.
 - **Analytics**: GTM (GTM-W9P5BPF9) + GA4 (G-HM6K1685L2) desde el contenedor
   GTM. Consentimiento: banner propio (`src/components/CookieConsent.jsx`) +
@@ -155,7 +155,7 @@ src/
 
   app/                       Portal /app (marco + pestañas). Ver «Portal /app».
     PortalGuard.jsx          Guardia de sesión + suscripción; pinta AppShell.
-    AppShell.jsx             Cabecera, burbuja inferior (Hoy · Camino🔒 · Formación), <Outlet/>.
+    AppShell.jsx             Cabecera, burbuja inferior (Hoy · Camino · Formación), <Outlet/>.
     Hoy.jsx  Perfil.jsx  Personas.jsx  ResultadoCaracter.jsx  MapaCaracter.jsx  Radar.jsx
     personas/                CrearFicha (test de 8 preguntas sobre otra persona), comun (Avatar,
                              MapaPersonas, FichaContenido…), Observacion, MisPersonas…
@@ -258,8 +258,8 @@ npm test              # node --test src/lib/*.test.js
 ```
 
 Sólo módulos puros (`src/lib/*.test.js` + `src/formacion/**/*.test.js`).
-Total actual: **103 tests** (carácter, corazón, personas, camino, panel,
-track, modulo1). CI los corre en cada PR junto al build; si los rompes, la
+Total actual: **166 tests** (carácter, corazón, personas, camino, panel,
+track, modulo1, preferencias, biblioteca/retos/hábitos del Camino diario). CI los corre en cada PR junto al build; si los rompes, la
 PR no debe mergearse.
 Si tocas un scoring engine y los tests fallan, NO regeneres las fixtures
 como reacción — el script Python que las genera implementa el mismo
@@ -575,11 +575,11 @@ Definidas en `src/App.jsx` (bloque «Portal /app»), slug en `routes.js` (`app: 
 | `/es/app/personas/:id` | `app/Personas.jsx` → `PersonaDetalle` | Ficha de una persona |
 | `/es/app/caracter` | `app/ResultadoCaracter.jsx` | Resultado del test de carácter (radar) |
 | `/es/app/perfil` | `app/Perfil.jsx` | Pestañas: datos/«Mis resultados», «Mis notas», configuración |
-| `/es/app/camino` | — | **Bloqueado**: `Navigate` a Hoy. En la burbuja sale con candado |
+| `/es/app/camino` | `app/CaminoDiario.jsx` | Hábitos, historial de días y «lo que Virtus sabe de ti» (ver «Camino diario») |
 
 - `PortalGuard.jsx`: sin sesión → `/login`; idioma ≠ es → `/login`; sin suscripción activa
   (`useAcceso` → `suscripciones_retos`) → `/tests/temperamento/gracias`. Si pasa, pinta
-  `AppShell` (cabecera + burbuja inferior Hoy · Camino🔒 · Formación + `<Outlet/>`). Perfil se abre
+  `AppShell` (cabecera + burbuja inferior Hoy · Camino · Formación + `<Outlet/>`). Perfil se abre
   desde la cabecera.
 - Enlaces internos: siempre `LocalLink` / `useLocalPath()` (`lp('/app/personas')`), nunca rutas con
   idioma a mano. **No uses rutas `/mi-panel/...`** para navegar dentro del portal: redirigen y, en el
@@ -601,7 +601,8 @@ Todas con RLS por `user_id = auth.uid()`; el front escribe con la sesión del us
 | `respuestas` | Respuesta del usuario a cada paso | UNIQUE (`user_id`, `contenido_id`) → upsert |
 | `progreso_curso` | Paso actual y nº de completados por curso | UNIQUE (`user_id`, `curso`) |
 | `notas_formacion` | Bloc de notas por paso | `texto` es HTML (ver «Notas») |
-| `perfil_camino`, `actividad_diaria`, `preguntas_respuestas_ejercicios` | Camino (aparcado) | Perfil lee `perfil_camino.estado_vida` |
+| `perfil_camino`, `actividad_diaria`, `preguntas_respuestas_ejercicios` | Camino de 14 días (aparcado) | Perfil lee `perfil_camino.estado_vida`. **No las toca el Camino diario**: las lee la app móvil |
+| `camino_variables`, `camino_dia`, `habitos`, `habito_marcas` | Camino diario | Ver «Camino diario». SQL: `supabase-migraciones/20261118_camino_diario.sql` |
 | `consents` | Consentimientos | Solo lectura en el front |
 | `preferencias_notificaciones` | Horas del reto, la reflexión y la formación + zona horaria | Compartida con la app móvil; una fila por usuario |
 | `persona_invitaciones` | Enlace para que la persona de una ficha verifique su temperamento | Una por ficha; aceptarla es cosa del servidor |
@@ -737,12 +738,55 @@ la app móvil (push). Quien envíe debe leer de aquí, no guardar copias.
   todas de golpe; `borderRadius: 0` en todo.
 - **Analítica**: `lib/track.js` (`trackCompletado`, `trackPaso`) empuja eventos al dataLayer.
 
+### Camino diario (reto, noche y hábitos)
+
+Cada mañana, una cita y un reto del temperamento del usuario con tres opciones (con una persona, como
+hábito, en una situación); cada noche, un examen. Es lo principal de **Hoy**; la pestaña **Camino**
+guarda los hábitos, el historial y las variables. Todo en español y sin IA: **no usa las funciones
+`retos-*`** del servidor (esas son una conversación con un modelo, otra biblioteca y otro esquema).
+
+- **Contenido**: `docs/camino/Virtus_biblioteca_retos_vX.xlsx` (retos, citas, variables, preguntas
+  iniciales y reglas de hábitos) → `python3 scripts/extract-retos-xlsx.py <xlsx>` →
+  `src/data/camino-biblioteca.json`. El guion es determinista y **no escribe nada si algo no cuadra**
+  (variable sin definir, cita o reto inexistente…). Para cambiar un texto, una cita o un número de
+  los hábitos se edita el Excel y se regenera: no se toca código. Si cambias la redacción de una
+  regla de la hoja Hábitos, el guion falla a propósito (localiza los números por su texto).
+- **Validación**: solo cuenta lo que tiene «Aprobado» en la columna Validación. `CaminoHoy.jsx` usa
+  `incluirPendientes: import.meta.env.DEV`: en local se ve todo; **en producción, mientras estén
+  en «Pendiente», Hoy no enseña ni retos ni citas**. Hay que aprobar contenido antes de lanzar.
+- **Lógica pura** (con pruebas): `lib/retos.js` (filtro, variables, reto del día, cita, noche) y
+  `lib/habitos.js` (estados, transiciones, límites). Reglas confirmadas: un reto distinto cada día;
+  mixtos, dos de cada tres días con reto del primario; sin repetir hasta agotar y luego el que lleva
+  más sin salir; el reto y la cita de hoy se fijan al abrir y no cambian. Los días sin terminar no
+  se recuperan, pero lo hecho se guarda.
+- **Variables**: `{persona_trabajo}`… se rellenan con `camino_variables`; vacías, con el texto por
+  defecto de la hoja Variables. Una variable de persona guarda el `persona_id` de «Tu entorno» (si
+  la ficha se renombra, el reto lo refleja; si se borra, queda el texto). La respuesta a la pregunta
+  de nutrir de la noche actualiza la variable (`origen: 'noche'`).
+- **Hábitos**: máximo, días de prueba, ventana y umbrales salen de `biblioteca.habitos`, nunca de
+  constantes. Estados: en_prueba → activo → consolidado | en_revision; retirado. Cambian solos al
+  cargar (`useCaminoDiario`); «en revisión» pregunta ajustar / mantener / dejar. Se ofrecen tras
+  cumplir la opción B (sí o a medias) y se pueden escribir propios. Virtudes: las seis de
+  `VIRTUDES_HABITO`; audacia y resistencia de los retos cuentan como fortaleza.
+- **Piezas**: `account/caminoDiario.js` (datos), `app/useCaminoDiario.js` (hook), `app/caminoDiario/*`
+  (pantallas; solo pintan), `app/CaminoDiario.jsx` (pestaña). Textos en `i18n/es.js` → `camino`
+  (el portal es solo español: `t()` cae a `es` si falta la clave en otro idioma).
+- **Fechas**: «hoy» es la fecha del dispositivo (`fechaLocal()`), no `zona_horaria`. Quien viaje puede
+  ver un día duplicado o saltado.
+- **Pendiente**: cita de la noche (7 citas de momento «Noche», necesita una columna nueva en
+  `camino_dia`), avisos del móvil («Descubre tu reto de hoy» + cita; requiere elegir el reto del día
+  en el servidor), «Ahora no» al ofrecer un hábito solo dura lo que la pantalla, y proponer un hábito
+  nuevo al consolidar uno.
+- **Probar en local**: cuenta con suscripción activa (nunca la de demo). Escribe en producción:
+  para repetir un día, borra su fila de `camino_dia` desde Supabase.
+
 ### Código aparcado (no borrar sin preguntar)
 
 No está enrutado hoy pero se reutilizará: `pages/PanelApp.jsx`, `pages/MiPanel.jsx`,
 `pages/Retos.jsx`, `app/Camino.jsx`, `app/useCamino.js`, `app/camino/*` (ojo: `Juegos.jsx` y
-`ui.jsx` sí se usan en Personas), `account/camino.js`. Roadmap: Camino, algoritmo IA, panel de
-administración interno.
+`ui.jsx` sí se usan en Personas y en el Camino diario), `account/camino.js`. Son el **Camino de 14
+días** (vídeos, juegos, cierres; especificación del 1-nov-2026), distinto del Camino diario de abajo.
+Roadmap: algoritmo IA, panel de administración interno.
 
 ### Usuario de demo
 
