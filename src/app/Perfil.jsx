@@ -289,6 +289,17 @@ function TabConfig({ user, profile, consents, onRefresh }) {
           }}>Vaciar caché y recargar</button>
         </Seccion>
 
+        <Seccion titulo="Bienvenida">
+          <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 16 }}>
+            Vuelve a ver las pantallas de bienvenida del portal.
+          </p>
+          <Link to="/app/bienvenida" style={{
+            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, textAlign: 'center', textDecoration: 'none',
+            background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0,
+            padding: '10px 20px', cursor: 'pointer', display: 'block',
+          }}>Comenzar onboarding</Link>
+        </Seccion>
+
         {/* Fila 3: ancho completo — Sesión y cuenta */}
         <Seccion titulo="Sesión y cuenta">
           <button type="button" onClick={salir} style={{

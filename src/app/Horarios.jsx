@@ -25,6 +25,9 @@ const PASOS = [
   { campo: 'hora_formacion', pregunta: '¿Cuándo quieres hacer tu formación de la semana?', apoyo: 'Entre 10 y 20 minutos, una vez por semana.', conDia: true },
 ];
 
+// Las tres preguntas también las usa el onboarding (Bienvenida.jsx), con su propio diseño.
+export { PASOS as PASOS_HORARIOS };
+
 function ElegirHora({ id, valor, sugeridas, onChange }) {
   return (
     <>
