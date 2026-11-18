@@ -4,6 +4,7 @@ import { useOutletContext } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { leerPerfil, cambiarPassword, actualizarPerfil, borrarCuenta } from '../account/perfil';
 import { claveTemperamento } from '../lib/virtudes.js';
+import NotaTexto from '../formacion/NotaTexto';
 import { supabase } from '../account/supabase';
 import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
@@ -12,6 +13,10 @@ import { tarjeta, eyebrow, parrafo } from './estilos';
 import curso1 from '../data/curso1.json';
 import curso2 from '../data/curso2.json';
 import curso3 from '../data/curso3.json';
+import curso4 from '../data/curso4.json';
+import curso5 from '../data/curso5.json';
+import curso6 from '../data/curso6.json';
+import curso7 from '../data/curso7.json';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 const SEXO = { hombre: 'Hombre', mujer: 'Mujer' };
@@ -431,9 +436,18 @@ function TabDatos({ tests, personas, camino, user }) {
   const [charIdx, setCharIdx] = useState(0);
   const tempTest = tempTests[tempIdx];
   const charTest = charTests[charIdx];
-  const tempPerfil = tempTest?.result?.profile;
-  const tempPartes = tempPerfil?.split('-') ?? [];
-  const virtudes = charTest?.result?.virtues;
+  // Formato actual de los tests: temperamento { profileKey | primario/secundario } y carácter
+  // { self: { virtud: 0..100 } }. Se mantiene la lectura del formato antiguo ({ profile }, { virtues: { v: { global: 0..1 } } }).
+  const r = tempTest?.result;
+  const tempPerfil = claveTemperamento(r) ?? [r?.primario, r?.secundario].filter(Boolean).join('-');
+  const tempPartes = tempPerfil ? tempPerfil.split('-') : [];
+  const pctVirtud = (key) => {
+    const res = charTest?.result;
+    if (typeof res?.self?.[key] === 'number') return Math.round(res.self[key]);
+    if (typeof res?.virtues?.[key]?.global === 'number') return Math.round(res.virtues[key].global * 100);
+    return null;
+  };
+  const virtudes = charTest && ['prudencia', 'fortaleza', 'dominio', 'justicia', 'magnanimidad', 'humildad'].some((k) => pctVirtud(k) !== null);
   const nombresV = { prudencia: 'Prudencia', fortaleza: 'Fortaleza', dominio: 'Dominio de sí', justicia: 'Justicia', magnanimidad: 'Magnanimidad', humildad: 'Humildad' };
 
   const sinDatos = !tempTest && !charTest && personas.length === 0 && !camino;
@@ -459,6 +473,8 @@ function TabDatos({ tests, personas, camino, user }) {
               {tempPartes.map(t => TEMP_NOMBRE[t.toUpperCase()] ?? t).join(' – ')}
             </div>
             {tempTest.result?.scores && (() => {
+              // Solo el formato antiguo trae puntos por temperamento; el actual solo guarda el perfil
+              // (los empates de la fase 1 los resuelven las fases siguientes, así que no se recalculan).
               const entries = Object.entries(tempTest.result.scores).sort((a, b) => b[1] - a[1]);
               const total = entries.reduce((s, [, v]) => s + v, 0) || 1;
               return entries.map(([t, pts]) => (
@@ -484,9 +500,9 @@ function TabDatos({ tests, personas, camino, user }) {
           <>
             <SelectorHistorico items={charTests} idx={charIdx} setIdx={setCharIdx} />
             {Object.entries(nombresV).map(([key, nom]) => {
-              const v = virtudes[key];
-              if (!v) return null;
-              return <BarraVirtud key={key} nombre={nom} pct={Math.round((v.global ?? 0) * 100)} />;
+              const pct = pctVirtud(key);
+              if (pct === null) return null;
+              return <BarraVirtud key={key} nombre={nom} pct={pct} />;
             })}
             <Fila label="Fecha" valor={new Date(charTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
             <Fila label="Veces realizado" valor={charTests.length} />
@@ -547,11 +563,9 @@ function TabDatos({ tests, personas, camino, user }) {
 
 /* ─── Tab 3: Mis notas ─── */
 
-const MODULOS = [
-  { id: 'curso1', titulo: 'Curso 1 — Del temperamento al carácter', data: curso1 },
-  { id: 'curso2', titulo: 'Curso 2 — Practicando la magnanimidad', data: curso2 },
-  { id: 'curso3', titulo: 'Curso 3 — Practicar la humildad', data: curso3 },
-];
+// Los 7 cursos; el título sale del propio JSON del curso.
+const MODULOS = [curso1, curso2, curso3, curso4, curso5, curso6, curso7]
+  .map((data, i) => ({ id: data.id, titulo: `Curso ${i + 1} — ${data.titulo}`, data }));
 
 const TIPO_LABEL = {
   test_profundo: 'Autoexamen',
@@ -573,7 +587,10 @@ function titulosPasos(data) {
       currentMod = `Mód. ${modIdx} · ${p.titulo}`;
       map[p.id] = currentMod;
       modIdx++;
-    } else if (p.tipo !== 'video' && currentMod) {
+    } else if (p.tipo === 'video') {
+      // Vídeo oculto en el temario (segundo vídeo de un módulo): su nota va con su propio título.
+      map[p.id] = currentMod ? `${currentMod} › ${p.titulo}` : p.titulo;
+    } else if (currentMod) {
       const label = TIPO_LABEL[p.tipo] ?? p.tipo;
       map[p.id] = `${currentMod} › ${label}`;
     }
@@ -622,7 +639,8 @@ function TabNotas({ userId }) {
     for (const [pasoId, arr] of Object.entries(notasBD)) {
       if (!Array.isArray(arr) || arr.length === 0) continue;
       const info = titulosGlobal[pasoId];
-      const modId = info?.modId ?? 'desconocido';
+      // Si el paso ya no está en el temario, la nota no se pierde: va a su curso por el prefijo (m6-… → curso6).
+      const modId = info?.modId ?? `curso${/^m(\d+)-/.exec(pasoId)?.[1] ?? '?'}`;
       if (!porCurso[modId]) porCurso[modId] = [];
       porCurso[modId].push({ pasoId, titulo: info?.titulo ?? pasoId, notas: arr.slice().reverse() });
     }
@@ -663,13 +681,8 @@ function TabNotas({ userId }) {
     );
   }
 
-  const totalNotas = todas.reduce((s, g) => s + g.entradas.reduce((s2, e) => s2 + e.notas.length, 0), 0);
-
   return (
     <div>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 20px' }}>
-        {totalNotas} nota{totalNotas !== 1 ? 's' : ''} en total
-      </p>
       {todas.map(({ mod, entradas }) => (
         <div key={mod.id} style={{ marginBottom: 28 }}>
           <div style={{ ...eyebrow, marginBottom: 12 }}>{mod.titulo}</div>
@@ -684,9 +697,7 @@ function TabNotas({ userId }) {
                     <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
                       {new Date(n.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </div>
-                    <p style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, margin: 0, lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-                      {n.texto}
-                    </p>
+                    <NotaTexto texto={n.texto} style={{ fontFamily: FONT_BODY, fontSize: 15, color: NAVY, margin: 0, lineHeight: 1.6 }} />
                   </div>
                 ))}
               </div>

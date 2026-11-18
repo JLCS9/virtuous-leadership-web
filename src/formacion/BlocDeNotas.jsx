@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { NAVY, MUTED, LINE, GOLD_REF, GOLD_REF_DK, FONT_BODY, PAPER, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow } from '../app/estilos';
+import { notaAHtml } from './NotaTexto';
 
 function formatFecha(iso) {
   const d = new Date(iso);
@@ -203,7 +204,7 @@ export function NotasLateral({ pasoActualId, notas, onAgregar, onEliminar, onEdi
               color: GOLD_REF_DK, display: 'flex', alignItems: 'center', gap: 4,
             }}>
               <IconoLupa />
-              {verNotas ? 'Ocultar' : `Ver notas (${notasDelPaso.length})`}
+              {verNotas ? 'Ocultar' : 'Ver notas'}
             </button>
 
             {verNotas && (
@@ -218,7 +219,7 @@ export function NotasLateral({ pasoActualId, notas, onAgregar, onEliminar, onEdi
                     <div style={{ fontFamily: FONT_BODY, fontSize: 10, color: MUTED, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 4 }}>
                       {formatFecha(nota.fecha)}
                     </div>
-                    <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, paddingRight: 24 }} dangerouslySetInnerHTML={{ __html: nota.texto }} />
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5, paddingRight: 24 }} dangerouslySetInnerHTML={{ __html: notaAHtml(nota.texto) }} />
                     <button type="button" onClick={() => onEliminar(pasoActualId, nota.id)} style={{
                       position: 'absolute', top: 6, right: 6,
                       background: 'none', border: 'none', color: MUTED, cursor: 'pointer',
@@ -517,7 +518,7 @@ export function BlocDeNotas({ videos, completados, pasoActualId, notas, onAgrega
                         fontFamily: FONT_BODY, fontSize: 16, color: NAVY, margin: 0,
                         lineHeight: 1.65, paddingRight: 50,
                       }}
-                      dangerouslySetInnerHTML={{ __html: nota.texto }}
+                      dangerouslySetInnerHTML={{ __html: notaAHtml(nota.texto) }}
                     />
                   )}
 

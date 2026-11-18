@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MUTED, GOLD_REF, GOLD_REF_DK, LINE, FONT_BODY } from '../theme';
+import { notaATexto } from './NotaTexto';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
@@ -328,7 +329,7 @@ async function generarPDF(userId, pasos, temperamento, moduloId = 'curso1') {
         x: ML, y: PH - y, size: 8, font: fontBold, color: MUTED_C,
       });
       y += 12;
-      const nLines = splitText(n.texto, font, 9, TW - 10);
+      const nLines = splitText(notaATexto(n.texto), font, 9, TW - 10);
       for (const line of nLines) {
         if (y > PH - 40) break;
         pg.drawText(line, { x: ML + 5, y: PH - y, size: 9, font, color: rgb(50 / 255, 55 / 255, 65 / 255) });

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { crearPersona, guardarEstimacion } from '../../account/personas';
 import {
-  AVATARES, DESEMPATE, FICHA, INTRO, NO_SE, PREGUNTAS, RELACIONES, TEXTO_CONFIANZA, gruposPara, necesitaDesempate,
+  AVATARES, DESEMPATE, FICHA, GRUPOS, INTRO, NO_SE, PREGUNTAS, RELACIONES, TEXTO_CONFIANZA, gruposPara, necesitaDesempate,
   ordenAleatorio, puntuar, textoResultado, textoSinResultado,
 } from '../../lib/personas.js';
 import { INK, LINE, MUTED, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
@@ -16,7 +16,7 @@ const titular = { fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: I
 const etiquetaCampo = { display: 'block', fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, margin: '18px 0 8px' };
 const ROJO = '#9C3A3A';
 
-function Datos({ estadoVida, menor, inicial, onListo, onSalir }) {
+function Datos({ estadoVida, todosLosGrupos, menor, inicial, onListo, onSalir }) {
   const [d, setD] = useState(inicial ?? { nombre: '', grupo: null, relacion: null, avatar: null, estrella: false, me_cuesta: false });
   const valido = d.nombre.trim().length > 0 && d.grupo;
   const chipActivo = (activo) => ({
@@ -33,7 +33,7 @@ function Datos({ estadoVida, menor, inicial, onListo, onSalir }) {
 
       <span style={etiquetaCampo}>Grupo</span>
       <Opciones columnas={2}>
-        {gruposPara(estadoVida).map(([g, texto]) => <Opcion key={g} compacta activa={d.grupo === g} onClick={() => setD({ ...d, grupo: g })}>{texto}</Opcion>)}
+        {(todosLosGrupos ? GRUPOS : gruposPara(estadoVida)).map(([g, texto]) => <Opcion key={g} compacta activa={d.grupo === g} onClick={() => setD({ ...d, grupo: g })}>{texto}</Opcion>)}
       </Opciones>
 
       <span style={etiquetaCampo}>Relación <span style={{ fontWeight: 400, color: MUTED }}>(opcional)</span></span>
@@ -59,7 +59,7 @@ function Datos({ estadoVida, menor, inicial, onListo, onSalir }) {
  * persona: si existe, se rehace su test (sin pedir los datos). Si no, se crea la ficha al guardar.
  * onHecho(persona) al guardar.
  */
-export default function CrearFicha({ user, estadoVida, menor, persona = null, onHecho, onSalir }) {
+export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, menor, persona = null, onHecho, onSalir }) {
   const temp = useTemperamento();
   const nombres = useNombresTemp();
   const orden = useMemo(() => ordenAleatorio(), []);
@@ -72,7 +72,7 @@ export default function CrearFicha({ user, estadoVida, menor, persona = null, on
   const nombre = datos?.nombre ?? '';
   const etiqueta = `Descubre el temperamento de ${nombre}`;
 
-  if (paso === 'datos') return <Datos estadoVida={estadoVida} menor={menor} onSalir={onSalir} onListo={(d) => { setDatos(d); setPaso('intro'); }} />;
+  if (paso === 'datos') return <Datos estadoVida={estadoVida} todosLosGrupos={todosLosGrupos} menor={menor} onSalir={onSalir} onListo={(d) => { setDatos(d); setPaso('intro'); }} />;
 
   if (paso === 'intro') {
     return (

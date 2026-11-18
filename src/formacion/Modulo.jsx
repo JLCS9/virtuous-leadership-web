@@ -11,6 +11,7 @@ import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
 import { fetchLatestTemperament } from '../account/account';
 import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE, SUCCESS_DK } from '../theme';
+import { notaAHtml } from './NotaTexto';
 import { barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoFlecha, IconoPlay, IconoChevron, IconoVideo, IconoEjercicio, IconoCuestionario } from '../app/Iconos';
 import { UMBRAL_VISTA } from './cursos';
@@ -1013,7 +1014,9 @@ function VistaResumenPlan({ paso, userId, onVolver, completados, cursoNum }) {
   const [plan, setPlan] = useState(() => {
     const bd = completados?.[paso.id];
     if (bd && typeof bd === 'object') {
-      const { fecha, aprobado, ...rest } = bd;
+      // Se guarda como { plan: {...} }; versiones antiguas, con las claves sueltas.
+      const { fecha, aprobado, plan: anidado, ...sueltas } = bd;
+      const rest = anidado && typeof anidado === 'object' ? { ...sueltas, ...anidado } : sueltas;
       if (Object.keys(rest).length > 0) return rest;
     }
     let data = leerPlan(userId);
@@ -1037,7 +1040,7 @@ function VistaResumenPlan({ paso, userId, onVolver, completados, cursoNum }) {
         contenido_id: paso.id,
         curso: cursoNum,
         modulo: paso.modulo ?? 0,
-        respuesta: next,
+        respuesta: { plan: next }, // mismo formato que al completarlo (Mi perfil lee datos.plan)
         aprobado: true,
         completado: true,
         updated_at: new Date().toISOString(),
@@ -1216,7 +1219,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
         <div style={{ display: 'flex', gap: 0, borderBottom: `1px solid ${LINE}`, marginBottom: 16, marginTop: 8 }}>
           <button type="button" onClick={() => setTab('ejercicios')} style={tabStyle(tab === 'ejercicios')}>Ejercicios</button>
           <button type="button" onClick={() => setTab('notas')} style={tabStyle(tab === 'notas')}>
-            Bloc de notas{totalNotas > 0 ? ` (${totalNotas})` : ''}
+            Bloc de notas
           </button>
         </div>
 
@@ -1322,7 +1325,7 @@ function VistaCuaderno({ pasos, completados, onVolver, onIrA, onEditar, userId, 
                               }}>Ir →</button>
                             )}
                           </div>
-                          <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: nota.texto }} />
+                          <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: NAVY, lineHeight: 1.5 }} dangerouslySetInnerHTML={{ __html: notaAHtml(nota.texto) }} />
                           <span style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>
                             {nota.fecha ? formatFechaNota(nota.fecha) : ''}
                           </span>
