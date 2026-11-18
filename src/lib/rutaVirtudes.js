@@ -30,11 +30,12 @@ export function inicioDeLaRuta(dias) {
 }
 
 /**
- * Los bloques del camino, en orden. Cada uno: { virtud, estado, dia, total, faltan }.
- *  · 'actual'      la virtud-desafío, mientras no haya pasado el mes (`dia` de `total`).
- *  · 'completada'  la virtud-desafío, pasado el mes.
- *  · 'bloqueada'   las demás, mientras no haya pasado el mes con la virtud-desafío (`faltan` días).
+ * Los bloques del camino, en orden. Cada uno: { virtud, estado, avance }.
+ *  · 'actual'      la virtud-desafío, mientras no haya pasado el mes. `avance` va de 0 a 1.
+ *  · 'completada'  la virtud-desafío, pasado el mes (`avance` 1).
+ *  · 'bloqueada'   las demás, mientras no haya pasado el mes con la virtud-desafío.
  *  · 'disponible'  las demás, pasado el mes.
+ * `avance` es solo para dibujar cuánto camino se ha recorrido: la pantalla no enseña días ni plazos.
  * Sin virtud-desafío (no ha hecho el test) no hay camino: devuelve [].
  */
 export function bloquesDeLaRuta({ desafio, inicio, hoy, config = RUTA }) {
@@ -42,11 +43,15 @@ export function bloquesDeLaRuta({ desafio, inicio, hoy, config = RUTA }) {
   const total = config.dias_por_virtud;
   const transcurridos = inicio ? Math.max(0, diferenciaDias(inicio, hoy)) : 0;
   const pasado = Boolean(inicio) && transcurridos >= total;
-  const faltan = pasado ? 0 : total - transcurridos;
-  const dia = inicio ? Math.min(total, transcurridos + 1) : 0;
+  const avance = pasado ? 1 : transcurridos / total;
 
   return [desafio, ...ORDEN_VIRTUDES.filter((v) => v !== desafio)].map((virtud, i) => {
-    if (i === 0) return { virtud, estado: pasado ? 'completada' : 'actual', dia, total, faltan: 0 };
-    return { virtud, estado: pasado ? 'disponible' : 'bloqueada', dia: 0, total, faltan };
+    if (i === 0) return { virtud, estado: pasado ? 'completada' : 'actual', avance };
+    return { virtud, estado: pasado ? 'disponible' : 'bloqueada', avance: 0 };
   });
+}
+
+/** Hasta dónde ha llegado el viajero: en el tramo entre la virtud-desafío y la siguiente, a `fraccion` (0–1). */
+export function progresoDeLaRuta(bloques) {
+  return { tramo: 0, fraccion: bloques[0]?.avance ?? 0 };
 }
