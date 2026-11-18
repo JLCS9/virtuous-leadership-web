@@ -40,7 +40,7 @@ export default function TuEntorno({ miPrimario }) {
       <div style={eyebrow}>Tu entorno</div>
 
       <div className="vl-mapa-personas-wrap" style={{ margin: '8px 0 0' }}>
-        <MapaPersonas personas={lista} miPrimario={miPrimario} />
+        <MapaPersonas personas={lista} miPrimario={miPrimario} onElegirPersona={irAPersona} />
       </div>
 
       <div style={{ marginTop: 14, display: 'grid', gap: 2 }}>

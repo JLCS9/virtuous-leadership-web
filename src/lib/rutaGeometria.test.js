@@ -4,8 +4,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { dParcial, dTramo, longitudTramo, puntoEnTramo } from './rutaGeometria.js';
 
-const A = { x: 76, y: 60 };
-const B = { x: 244, y: 210 };
+const A = { x: 90, y: 110 };
+const B = { x: 240, y: 190 };
 const cerca = (p, q, tol = 0.01) => assert.ok(Math.hypot(p.x - q.x, p.y - q.y) <= tol, `${JSON.stringify(p)} ≠ ${JSON.stringify(q)}`);
 
 test('el tramo empieza en un bloque, termina en el otro y es más largo que la línea recta', () => {
@@ -19,12 +19,12 @@ test('fuera de rango la distancia se queda en los extremos', () => {
   cerca(puntoEnTramo(A, B, 99999), B);
 });
 
-test('avanzar por el tramo baja siempre y nunca retrocede', () => {
+test('avanzar por el tramo va siempre hacia la derecha y nunca retrocede', () => {
   const largo = longitudTramo(A, B);
   let anterior = puntoEnTramo(A, B, 0);
   for (let d = 5; d <= largo; d += 5) {
     const p = puntoEnTramo(A, B, d);
-    assert.ok(p.y >= anterior.y - 1e-9, `retrocede en ${d}`);
+    assert.ok(p.x >= anterior.x - 1e-9, `retrocede en ${d}`);
     anterior = p;
   }
 });
@@ -37,17 +37,17 @@ test('la distancia se mide por longitud: la mitad del camino está a la mitad de
 });
 
 test('trazos: el completo es una curva y el parcial empieza en el inicio y acaba en el punto pedido', () => {
-  assert.match(dTramo(A, B), /^M 76 60 C /);
+  assert.match(dTramo(A, B), /^M 90 110 C /);
   const d = dParcial(A, B, 80);
-  assert.match(d, /^M 76 60 L /);
+  assert.match(d, /^M 90 110 L /);
   const ultimo = d.trim().split(' L ').pop().split(' ').map(Number);
   cerca({ x: ultimo[0], y: ultimo[1] }, puntoEnTramo(A, B, 80), 0.01);
   // Distancia 0: solo el punto inicial.
-  assert.match(dParcial(A, B, 0), /^M 76 60 L 76\.00 60\.00$/);
+  assert.match(dParcial(A, B, 0), /^M 90 110 L 90\.00 110\.00$/);
 });
 
-test('un tramo recto vertical mide lo que separa a los bloques', () => {
-  const p = { x: 100, y: 0 };
-  const q = { x: 100, y: 120 };
-  assert.ok(Math.abs(longitudTramo(p, q) - 120) < 0.01);
+test('un tramo recto horizontal mide lo que separa a los bloques', () => {
+  const p = { x: 0, y: 100 };
+  const q = { x: 150, y: 100 };
+  assert.ok(Math.abs(longitudTramo(p, q) - 150) < 0.01);
 });

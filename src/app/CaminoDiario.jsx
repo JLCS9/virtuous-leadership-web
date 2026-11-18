@@ -1,10 +1,11 @@
-// Pestaña «Camino»: tu entorno y tu último test de carácter arriba, el camino de las seis virtudes
-// debajo, y después tus hábitos, el historial de tus días y lo que Virtus sabe de ti. Lo de cada día
+// Pestaña «Camino»: tu entorno y tu último test de carácter arriba, el camino de las virtudes con tu
+// racha y la tira de días debajo, y después tus hábitos y el historial de tus días. Lo de cada día
 // (la cita, el reto y el examen) vive en Hoy. Sin lógica propia: solo monta las secciones.
 import { useSearchParams } from 'react-router-dom';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { useT } from '../i18n';
 import { sumarDias } from '../lib/camino.js';
+import { rachaDeCompromisos, tiraDeDias } from '../lib/rachaDias.js';
 import { RUTA, bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from '../lib/rutaVirtudes.js';
 import { parrafo, tarjeta } from './estilos';
 import MapaCaracter from './MapaCaracter';
@@ -13,7 +14,6 @@ import { useCaminoDiario } from './useCaminoDiario';
 import { useTemperamentoClave } from './useTemperamentoClave';
 import Historial from './caminoDiario/Historial';
 import ListaHabitos from './caminoDiario/ListaHabitos';
-import MisVariables from './caminoDiario/MisVariables';
 import RutaVirtudes from './caminoDiario/RutaVirtudes';
 import TuEntorno from './personas/TuEntorno';
 
@@ -35,22 +35,21 @@ export default function CaminoDiario() {
   const bloques = bloquesDeLaRuta({ desafio: virtudDeDesafio(CHALLENGE_VIRTUE[clave]), inicio, hoy: camino.hoy });
 
   return (
-    <div style={{ display: 'grid', gap: 18 }} aria-label={t('camino.pagina.titulo')}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 18 }} aria-label={t('camino.pagina.titulo')}>
       <style>{`
-        .vl-camino-arriba { display: grid; gap: 18px; }
-        @media (min-width: 860px) { .vl-camino-arriba { grid-template-columns: 1fr 1fr; align-items: start; gap: 24px; } }
+        .vl-camino-arriba { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
+        @media (min-width: 860px) { .vl-camino-arriba { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; gap: 24px; } }
       `}</style>
       <div className="vl-camino-arriba">
         <TuEntorno miPrimario={clave} />
-        <MapaCaracter tempClave={clave} />
+        <MapaCaracter tempClave={clave} grande />
       </div>
-      <RutaVirtudes bloques={bloques} />
+      <RutaVirtudes bloques={bloques} tira={tiraDeDias(camino.dias, camino.hoy)} racha={rachaDeCompromisos(camino.dias, camino.hoy)} hoy={camino.hoy} />
       <ListaHabitos
         habitos={camino.habitos} marcas={camino.marcas} hoy={camino.hoy} userId={camino.userId}
         config={camino.configHabitos} onCambio={camino.recargar}
       />
       <Historial dias={camino.dias} />
-      <MisVariables variables={camino.variables} personas={personas} userId={camino.userId} onCambio={camino.recargar} />
     </div>
   );
 }

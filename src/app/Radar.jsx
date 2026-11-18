@@ -4,13 +4,14 @@ import { VIRTUDES, etapa, geometriaRadar } from '../lib/virtudes.js';
 
 const TAMANO = 400;
 
-export function VirtudesRadar({ valores }) {
-  const g = geometriaRadar(valores, { tamano: TAMANO, margen: 94 });
+// `grande`: etiquetas más grandes y el radar ocupa más del cuadro (para cuando el resultado es lo principal).
+export function VirtudesRadar({ valores, grande = false }) {
+  const g = geometriaRadar(valores, { tamano: TAMANO, margen: grande ? 100 : 94 });
   const puntos = g.poligono.map((p) => p.join(',')).join(' ');
   const resumen = VIRTUDES.map((v) => `${v.nombre} ${Math.round(valores[v.clave])} %`).join(', ');
   return (
     <svg viewBox={`0 0 ${TAMANO} ${TAMANO}`} role="img" aria-label={`Gráfica de tus virtudes: ${resumen}`}
-         style={{ width: '100%', maxWidth: 400, display: 'block', margin: '0 auto' }}>
+         style={{ width: '100%', maxWidth: grande ? 560 : 400, display: 'block', margin: '0 auto' }}>
       {g.anillos.map((anillo, i) => (
         <polygon key={i} points={anillo.map((p) => p.join(',')).join(' ')} fill="none" stroke={LINE} strokeWidth={i === 3 ? 1.4 : 1} />
       ))}
@@ -23,8 +24,8 @@ export function VirtudesRadar({ valores }) {
         const v = VIRTUDES[i];
         return (
           <text key={e.clave} x={x} y={y} textAnchor={ancla} fontFamily={FONT_BODY} fill={INK}>
-            <tspan x={x} dy="-0.2em" fontSize="13" fontWeight="600">{v.corta}</tspan>
-            <tspan x={x} dy="1.35em" fontSize="12" fill={MUTED}>{Math.round(valores[v.clave])} %</tspan>
+            <tspan x={x} dy="-0.2em" fontSize={grande ? 17 : 13} fontWeight="600">{v.corta}</tspan>
+            <tspan x={x} dy="1.35em" fontSize={grande ? 16 : 12} fill={MUTED}>{Math.round(valores[v.clave])} %</tspan>
           </text>
         );
       })}

@@ -1,22 +1,22 @@
-// Geometría del camino dibujado: el tramo en «S» entre dos bloques y un punto a una distancia dada
-// sobre él. Pura, sin React. Los puntos son {x, y} en unidades del dibujo.
+// Geometría del camino dibujado, en horizontal: el tramo en «S» entre dos bloques y un punto a una
+// distancia dada sobre él. Pura, sin React. Los puntos son {x, y} en unidades del dibujo.
 
 const MUESTRAS = 64;
 
-// Una curva de Bézier cúbica en «S» de `a` a `b`: sale vertical de `a` y llega vertical a `b`.
+// Una curva de Bézier cúbica en «S» de `a` a `b`: sale horizontal de `a` y llega horizontal a `b`.
 const bezier = (a, b, t) => {
-  const medio = (a.y + b.y) / 2;
+  const medio = (a.x + b.x) / 2;
   const u = 1 - t;
   return {
-    x: u * u * u * a.x + 3 * u * u * t * a.x + 3 * u * t * t * b.x + t * t * t * b.x,
-    y: u * u * u * a.y + 3 * u * u * t * medio + 3 * u * t * t * medio + t * t * t * b.y,
+    x: u * u * u * a.x + 3 * u * u * t * medio + 3 * u * t * t * medio + t * t * t * b.x,
+    y: u * u * u * a.y + 3 * u * u * t * a.y + 3 * u * t * t * b.y + t * t * t * b.y,
   };
 };
 
 /** Trazo SVG del tramo completo. */
 export const dTramo = (a, b) => {
-  const medio = (a.y + b.y) / 2;
-  return `M ${a.x} ${a.y} C ${a.x} ${medio}, ${b.x} ${medio}, ${b.x} ${b.y}`;
+  const medio = (a.x + b.x) / 2;
+  return `M ${a.x} ${a.y} C ${medio} ${a.y}, ${medio} ${b.y}, ${b.x} ${b.y}`;
 };
 
 // Puntos del tramo con la distancia acumulada hasta cada uno, para medir por longitud y no por `t`.
