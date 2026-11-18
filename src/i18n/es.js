@@ -1670,13 +1670,15 @@ export default {
     manana: {
       eyebrow: 'Tu reto de hoy',
       cita_citado: '{autor}, citado por Alex',
-      elige: 'Elige cómo lo vas a hacer hoy',
+      propuesta: 'Te proponemos esto para hoy',
+      aceptar: 'Aceptar el reto',
+      otro: 'Proponme otro',
       opciones: {
         persona: 'Con una persona',
         habito: 'Como un hábito',
         situacion: 'En una situación',
       },
-      elegida: 'Tu compromiso de hoy. Puedes cambiarlo eligiendo otra opción.',
+      elegida: 'Este es tu compromiso de hoy.',
       noche: 'Esta noche te preguntaremos cómo ha ido.',
     },
     noche: {

@@ -289,3 +289,32 @@ test('biblioteca real, en producción: cada temperamento con retos aprobados tie
     assert.ok(preguntasIniciales(biblioteca.preguntas_iniciales, t).length > 0, `${t}: sin preguntas iniciales aprobadas`);
   }
 });
+
+// ───────────── «Proponme otro» ─────────────
+
+test('reto del día con exclusiones: salta los ya propuestos hoy, uno detrás de otro', () => {
+  const previos = [dia('2026-12-01', 'C01')]; // hoy es el 2; sin fila de hoy
+  const propuestos = [];
+  for (let i = 0; i < 2; i += 1) {
+    const r = retoDelDia({ retos: RETOS, clave: 'COL', historial: previos, fecha: '2026-12-02', excluir: propuestos });
+    propuestos.push(r.id);
+  }
+  assert.deepEqual(propuestos, ['C02', 'C03']); // C01 salió ayer: el que toca primero es C02
+});
+
+test('reto del día con exclusiones: agotado el temperamento pasa al otro y, agotados todos, vuelve a empezar', () => {
+  const solo = (clave, excluir) => retoDelDia({ retos: RETOS, clave, fecha: '2026-12-01', excluir }).id;
+  // Mixto con el secundario en juego: SAN-COL el primer día toca SAN (S01, S02) y después sigue con COL.
+  assert.equal(solo('SAN-COL', []), 'S01');
+  assert.equal(solo('SAN-COL', ['S01']), 'S02');
+  assert.equal(solo('SAN-COL', ['S01', 'S02']), 'C01');
+  // Un temperamento puro agota los suyos y vuelve al primero.
+  assert.equal(solo('COL', ['C01', 'C02', 'C03']), 'C01');
+  assert.equal(solo('SAN-COL', ['S01', 'S02', 'C01', 'C02', 'C03']), 'S01');
+});
+
+test('reto del día: sin exclusiones la fila de hoy sigue fijando el reto; con ellas, no', () => {
+  const historial = [dia('2026-12-02', 'C02')];
+  assert.equal(retoDelDia({ retos: RETOS, clave: 'COL', historial, fecha: '2026-12-02' }).id, 'C02');
+  assert.equal(retoDelDia({ retos: RETOS, clave: 'COL', historial, fecha: '2026-12-02', excluir: ['C02'] }).id, 'C01');
+});

@@ -740,8 +740,9 @@ la app móvil (push). Quien envíe debe leer de aquí, no guardar copias.
 
 ### Camino diario (reto, noche y hábitos)
 
-Cada mañana, una cita y un reto del temperamento del usuario con tres opciones (con una persona, como
-hábito, en una situación); cada noche, un examen. Es lo principal de **Hoy**; la pestaña **Camino**
+Cada mañana, una cita y un reto del temperamento del usuario, que se propone **de una forma cada
+vez** (con una persona, como hábito, en una situación): el usuario acepta o pide «otro» hasta que
+acepte, y aceptar es su compromiso del día. Cada noche, un examen. Es lo principal de **Hoy**; la pestaña **Camino**
 guarda los hábitos, el historial y las variables. Todo en español y sin IA: **no usa las funciones
 `retos-*`** del servidor (esas son una conversación con un modelo, otra biblioteca y otro esquema).
 
@@ -757,8 +758,11 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
 - **Lógica pura** (con pruebas): `lib/retos.js` (filtro, variables, reto del día, cita, noche) y
   `lib/habitos.js` (estados, transiciones, límites). Reglas confirmadas: un reto distinto cada día;
   mixtos, dos de cada tres días con reto del primario; sin repetir hasta agotar y luego el que lleva
-  más sin salir; el reto y la cita de hoy se fijan al abrir y no cambian. Los días sin terminar no
-  se recuperan, pero lo hecho se guarda.
+  más sin salir. «Proponme otro» recorre las tres formas del mismo reto y después pasa a otro reto
+  (`retoDelDia({ excluir })`, sin repetir los ya propuestos hoy; la propuesta en curso se guarda en
+  `camino_dia.reto_id`). La cita se fija al abrir y no cambia aunque cambie el reto. Aceptar es
+  definitivo: no se puede cambiar el compromiso del día. Los días sin terminar no se recuperan, pero
+  lo hecho se guarda.
 - **Variables**: `{persona_trabajo}`… se rellenan con `camino_variables`; vacías, con el texto por
   defecto de la hoja Variables. Una variable de persona guarda el `persona_id` de «Tu entorno» (si
   la ficha se renombra, el reto lo refleja; si se borra, queda el texto). La respuesta a la pregunta

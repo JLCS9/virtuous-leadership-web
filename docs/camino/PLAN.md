@@ -324,6 +324,7 @@ siempre, porque yo no escribo en producción.
 | # | Duda | Decisión |
 |---|---|---|
 | 2 | ¿Reto diario o de seis días? | Un reto distinto cada día, con **tres opciones cada día** (las A, B y C del reto) |
+| 2b | ¿Se enseñan las tres opciones a la vez? | **No** (19-nov): se propone una cada vez, como el alta de un hábito; el usuario acepta o pide otra, hasta que acepte. «Otra» recorre las tres formas del reto y después pasa a otro reto |
 | 4 | ¿Dónde viven mañana y noche? | En Camino, pero **lo principal de Hoy** es la cita y el reto. En el plan: el componente vive en Hoy y Camino guarda historial, hábitos y variables |
 | 8 | Día sin terminar | No se puede completar al día siguiente, pero **lo hecho se guarda**, y de ello se saca información para los retos siguientes, con variables anonimizadas. Lo primero ya está en el modelo; lo segundo, en la duda 20 |
 | 12 | Lista de virtudes de un hábito | Humildad, magnanimidad, prudencia, dominio de sí, fortaleza, justicia |
