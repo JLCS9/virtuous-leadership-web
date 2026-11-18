@@ -46,7 +46,7 @@ const adminHeaders = () => ({
 });
 
 // PostgREST con la service role key (salta RLS: solo para escrituras del servidor).
-async function rest(method, path, body) {
+export async function rest(method, path, body) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
     method,
     headers: { ...adminHeaders(), Prefer: 'return=representation' },
@@ -258,7 +258,7 @@ const WINDOW_MS = 60 * 60 * 1000;
 const MAX_PER_WINDOW = 10;
 const hits = new Map();
 
-export function rateLimited(ip) {
+export function rateLimited(ip, max = MAX_PER_WINDOW) {
   const now = Date.now();
   const recent = (hits.get(ip) || []).filter(ts => now - ts < WINDOW_MS);
   recent.push(now);
@@ -266,5 +266,5 @@ export function rateLimited(ip) {
   if (hits.size > 5000) {
     for (const [k, v] of hits) if (!v.some(ts => now - ts < WINDOW_MS)) hits.delete(k);
   }
-  return recent.length > MAX_PER_WINDOW;
+  return recent.length > max;
 }

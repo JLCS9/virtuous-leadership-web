@@ -699,6 +699,16 @@ export default {
       email_for_reset: 'Enter your email and click “Forgot your password?” again.',
     },
   },
+  invitacion: {
+    titulo: '{nombre} would like to know your temperament',
+    titulo_sin_nombre: 'You have been invited to discover your temperament',
+    texto: 'Take the test: it takes about five minutes. At the end, if you agree, we will share only your temperament with {nombre}, so they can see it in their profile.',
+    texto_sin_nombre: 'Take the test: it takes about five minutes. At the end, if you agree, we will share only your temperament with the person who invited you.',
+    compartir: 'Take the test and share my temperament',
+    no_compartir: 'Take the test without sharing',
+    nota: 'We never share your answers or your contact details. If you retake the test, {nombre} will see the updated result.',
+    nota_sin_nombre: 'We never share your answers or your contact details. If you retake the test, the shared result will be updated.',
+  },
   reset: {
     title: 'New password',
     intro: 'Choose a new password for your account.',

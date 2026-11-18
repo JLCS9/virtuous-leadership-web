@@ -31,6 +31,7 @@ import ConsentimientoTutor from './pages/ConsentimientoTutor';
 import NotFound from './pages/NotFound';
 import PageTracker from './components/PageTracker';
 import CookieConsent from './components/CookieConsent';
+import Invitacion from './components/Invitacion';
 import { SUPPORTED_LANGS, detectInitialLang, ROUTES, NO_LAYOUT_PAGES } from './i18n';
 
 const PAGE_ELEMENTS = {
@@ -79,6 +80,7 @@ export default function App() {
     <>
       <PageTracker />
       <CookieConsent />
+      <Invitacion />
       <Suspense fallback={null}>
       <Routes>
       {/* Páginas sin Layout (tests, legales, login, etc.) */}

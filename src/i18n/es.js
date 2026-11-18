@@ -1096,6 +1096,16 @@ export default {
       email_for_reset: 'Escribe tu email y vuelve a pulsar «¿Has olvidado tu contraseña?».',
     },
   },
+  invitacion: {
+    titulo: '{nombre} quiere conocer tu temperamento',
+    titulo_sin_nombre: 'Te han invitado a descubrir tu temperamento',
+    texto: 'Haz el test: son unos cinco minutos. Al terminar, si tú quieres, compartiremos con {nombre} solo tu temperamento, para que lo vea en su perfil.',
+    texto_sin_nombre: 'Haz el test: son unos cinco minutos. Al terminar, si tú quieres, compartiremos solo tu temperamento con quien te ha invitado.',
+    compartir: 'Hacer el test y compartir mi temperamento',
+    no_compartir: 'Hacer el test sin compartir',
+    nota: 'Nunca compartimos tus respuestas ni tus datos de contacto. Si repites el test, {nombre} verá el resultado actualizado.',
+    nota_sin_nombre: 'Nunca compartimos tus respuestas ni tus datos de contacto. Si repites el test, se actualizará el resultado compartido.',
+  },
   reset: {
     title: 'Nueva contraseña',
     intro: 'Elige una nueva contraseña para tu cuenta.',

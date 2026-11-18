@@ -6,6 +6,7 @@ import { accountsEnabled } from './account/supabase';
 import { useSession } from './account/useSession';
 import { AccountError, createAccountAndSignIn, recordFormConsents, saveTemperamentResult, sendPasswordReset } from './account/account';
 import { CHALLENGE_VIRTUE } from './account/challengeVirtues';
+import { esReferido, ORIGEN_REFERIDO } from './account/invitacion';
 // Imagen "tt" (sello del test) localizada por idioma. Cada variante lleva
 // el texto traducido en la propia imagen.
 import ttEs from './assets/tt.webp';
@@ -1361,19 +1362,24 @@ export default function TestTBP() {
 
   function answerQualify(value) {
     setConoceAlex(value === 'SI');
+    // Quien llega por invitación de otra persona («Tu entorno») no ve «¿cómo has llegado?»:
+    // el origen ya se sabe y se anota como referido (equivale a «Otros: referido»).
+    if (esReferido()) { answerQualify2(ORIGEN_REFERIDO, value === 'SI'); return; }
     setPhase(PHASE.QUALIFY2);
   }
 
-  function answerQualify2(value) {
+  // conoce: solo cuando se llama en el mismo gesto que la pregunta anterior (referidos), porque el
+  // estado conoceAlex aún no se ha actualizado.
+  function answerQualify2(value, conoce = conoceAlex) {
     setQualifySource(value);
     if (session?.user) {
-      autoSubmitLoggedIn(value);
+      autoSubmitLoggedIn(value, conoce);
     } else {
       setPhase(PHASE.GATE);
     }
   }
 
-  async function autoSubmitLoggedIn(qSource) {
+  async function autoSubmitLoggedIn(qSource, conoce = conoceAlex) {
     const user = session.user;
     const meta = user.user_metadata || {};
     const profile = t(`result.profiles.${result.key}`);
@@ -1387,7 +1393,7 @@ export default function TestTBP() {
         consent: true,
         consentTimestamp: new Date().toISOString(),
         language: lang,
-        conoceAlex: conoceAlex === true,
+        conoceAlex: conoce === true,
         qualifySource: qSource || '',
       },
       result: {

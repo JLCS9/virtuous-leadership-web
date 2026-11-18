@@ -38,6 +38,7 @@ import {
   accountsEnabled, createAccount, rateLimited, isUnder14, recordConsents, userFromToken,
   guardianEmailEnabled, requestGuardianConsent, confirmGuardianConsent, saveResultAsServer, deleteAccount,
 } from './auth.mjs';
+import { infoInvitacion, aceptarInvitacion } from './invitaciones.mjs';
 
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
 // Listas por idioma. parseInt('') o '0' → 0, lo tratamos como "no configurado".
@@ -670,6 +671,44 @@ async function handleConsents(req, res) {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
+// HANDLERS — Invitaciones de «Tu entorno» (ver invitaciones.mjs).
+//   GET  /api/invitacion?token=…   público: quién invita (nombre de pila) y si el enlace vale.
+//   POST /api/invitacion/aceptar   con sesión: la persona invitada comparte su temperamento.
+// El límite por IP usa su propio cubo ('inv:') para no gastar el del alta de cuentas.
+// ════════════════════════════════════════════════════════════════════════════
+async function handleInvitacionInfo(req, res, url) {
+  if (!accountsEnabled) return sendJson(res, 503, { error: 'Accounts disabled' });
+  if (rateLimited(`inv:${clientIp(req) || 'unknown'}`, 60)) return sendJson(res, 429, { error: 'Too many requests' });
+  try {
+    return sendJson(res, 200, await infoInvitacion(url.searchParams.get('token')));
+  } catch (err) {
+    console.error('[invitacion] info error:', err.message);
+    return sendJson(res, 502, { error: 'Invitation service error' });
+  }
+}
+
+async function handleInvitacionAceptar(req, res) {
+  if (!accountsEnabled) return sendJson(res, 503, { error: 'Accounts disabled' });
+  const bearer = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  const user = await userFromToken(bearer);
+  if (!user?.id) return sendJson(res, 401, { error: 'Unauthorized' });
+
+  let data;
+  try { data = JSON.parse(await readBody(req)); }
+  catch { return sendJson(res, 400, { error: 'Invalid JSON' }); }
+  if (!data || typeof data !== 'object') return sendJson(res, 400, { error: 'Invalid JSON' });
+
+  try {
+    const status = await aceptarInvitacion(data.token, user.id);
+    console.log(`[invitacion] aceptar → ${status}`);
+    return sendJson(res, 200, { status });
+  } catch (err) {
+    console.error('[invitacion] aceptar error:', err.message);
+    return sendJson(res, 502, { error: 'Invitation service error' });
+  }
+}
+
+// ════════════════════════════════════════════════════════════════════════════
 // HANDLER — El tutor autoriza la cuenta de un menor de 14 (enlace del email).
 // ════════════════════════════════════════════════════════════════════════════
 async function handleGuardianConfirm(req, res) {
@@ -1252,6 +1291,12 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && req.url === '/api/consents') {
     return handleConsents(req, res);
+  }
+
+  if (req.url.startsWith('/api/invitacion')) {
+    const url = new URL(req.url, 'http://localhost');
+    if (req.method === 'GET' && url.pathname === '/api/invitacion') return handleInvitacionInfo(req, res, url);
+    if (req.method === 'POST' && url.pathname === '/api/invitacion/aceptar') return handleInvitacionAceptar(req, res);
   }
 
   if (req.method === 'POST' && req.url === '/api/guardian/confirm') {
