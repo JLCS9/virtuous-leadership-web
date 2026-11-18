@@ -8,11 +8,11 @@ import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
 import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
 import { eyebrow, fechaLarga } from './estilos';
-import { IconoHoy, IconoCamino, IconoFormacion, IconoCandado } from './Iconos';
+import { IconoHoy, IconoCamino, IconoFormacion } from './Iconos';
 
 const PESTANAS = [
   { ruta: '/app', etiqueta: 'Hoy', Icono: IconoHoy },
-  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCandado, bloqueada: true },
+  { ruta: '/app/camino', etiqueta: 'Camino', Icono: IconoCamino },
   { ruta: '/app/formacion', etiqueta: 'Formación', Icono: IconoFormacion },
 ];
 
