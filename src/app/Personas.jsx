@@ -7,6 +7,8 @@ import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { usePersonas } from './usePersonas';
 import { useTemperamento } from './camino/Juegos';
+import { useSession } from '../account/useSession';
+import CrearFicha from './personas/CrearFicha';
 import { Avatar, EtiquetaEstado, FichaContenido, MapaPersonas } from './personas/comun';
 
 const Lapiz = () => (
@@ -168,7 +170,7 @@ function PersonaDetalle({ personaId }) {
                   {new Date(o.creado_en).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
                 </span>
                 <span style={{ flex: 1, fontFamily: FONT_BODY, fontSize: 14.5, color: INK }}>
-                  {TEXTO_SITUACION[o.situacion]}: <strong>{o.palabra.toLowerCase()}</strong>
+                  {o.palabra ? <>{TEXTO_SITUACION[o.situacion]}: <strong>{o.palabra.toLowerCase()}</strong></> : null}
                   {o.linea && <span style={{ display: 'block', fontFamily: FONT_SLAB, fontStyle: 'italic', fontSize: 16, color: MUTED }}>«{o.linea}»</span>}
                 </span>
               </div>
@@ -197,7 +199,7 @@ function ListaPersonas() {
   const [editando, setEditando] = useState(null);
   const [hoverId, setHoverId] = useState(null);
 
-  const irANueva = () => navigate(lp('/mi-panel/camino') + '?nueva=1');
+  const irANueva = () => navigate(lp('/app/personas/nueva'));
 
   if (cargando) return <section style={tarjeta}><p style={parrafo}>Cargando…</p></section>;
 
@@ -206,7 +208,7 @@ function ListaPersonas() {
       <Link to="/app" style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, textDecoration: 'none' }}>← Hoy</Link>
 
       <section style={{ ...tarjeta, marginTop: 14 }}>
-        <div style={eyebrow}>Tu entorno magnánimo</div>
+        <div style={eyebrow}>Tu entorno</div>
         <h1 style={{ ...titulo(30), margin: '10px 0 6px' }}>{lista.length} {lista.length === 1 ? 'persona' : 'personas'}</h1>
         <p style={{ ...parrafo, marginBottom: 16 }}>Las personas con las que practicas las virtudes. Solo tú ves estas fichas.</p>
 
@@ -287,8 +289,25 @@ function ListaPersonas() {
   );
 }
 
+// Crear una ficha desde el portal (el Camino, donde vivía antes, está bloqueado).
+function NuevaPersona() {
+  const navigate = useNavigate();
+  const lp = useLocalPath();
+  const session = useSession();
+  const { cargando, menor } = usePersonas();
+  if (!session?.user || cargando) return <section style={tarjeta}><p style={parrafo}>Cargando…</p></section>;
+  return (
+    <div style={{ maxWidth: 640, margin: '0 auto' }}>
+      <CrearFicha user={session.user} todosLosGrupos menor={menor}
+                  onSalir={() => navigate(lp('/app/personas'))}
+                  onHecho={(p) => navigate(lp(`/app/personas/${p.id}`), { replace: true })} />
+    </div>
+  );
+}
+
 export default function Personas() {
   const { personaId } = useParams();
+  if (personaId === 'nueva') return <NuevaPersona />;
   if (personaId) return <PersonaDetalle personaId={personaId} />;
   return <ListaPersonas />;
 }

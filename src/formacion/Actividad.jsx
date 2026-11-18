@@ -30,7 +30,7 @@ import piramideViciosImg from './piramide-virtudes-vicios.png';
 import piramideLVImg from './piramide-liderazgo-virtuoso.png';
 import diagramaMotivacionImg from '../assets/formacion/c3-diagrama-motivacion.webp';
 import diagramaHumildadTempImg from './diagrama-humildad-temperamentos.webp';
-import { PREGUNTAS, TEMPS, NO_SE } from '../lib/personas';
+import { PREGUNTAS, TEMPS, NO_SE, GRUPOS as GRUPOS_PERSONA } from '../lib/personas';
 import CHARACTER_TEST from '../data/character-test.json';
 import CHARACTER_SUPPORT from '../data/character-support-text.json';
 import { scoreCharacter } from '../lib/characterScoring';
@@ -1160,6 +1160,7 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, pregunt
   const [cargando, setCargando] = useState(true);
   const [anadiendo, setAnadiendo] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState('');
+  const [nuevoGrupo, setNuevoGrupo] = useState(null);
   const [editando, setEditando] = useState(null);
   useEffect(() => {
     if (!user?.id) { setCargando(false); return; }
@@ -1168,22 +1169,24 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, pregunt
 
   if (cargando) return <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>Cargando tu círculo...</p>;
 
-  function agregarNuevo() {
+  async function agregarNuevo() {
     const n = nuevoNombre.trim();
-    if (!n) return;
-    const tempId = `nuevo_${Date.now()}`;
-    const nueva = { id: tempId, nombre: n, primario: null, estado: 'pendiente' };
-    setPersonas(prev => [...prev, nueva]);
-    onToggle(tempId, n);
+    if (!n || !nuevoGrupo) return;
     setNuevoNombre('');
+    setNuevoGrupo(null);
     setAnadiendo(false);
+    // La ficha se crea primero para seleccionar ya con su id real (si no, el círculo guardaría un id
+    // provisional que no corresponde a ninguna persona).
+    let persona = null;
     if (user?.id) {
-      import('../account/personas').then(m =>
-        m.crearPersona(user.id, { nombre: n, grupo: 'pendiente' }, null)
-      ).then(p => {
-        if (p?.id) setPersonas(prev => prev.map(x => x.id === tempId ? { ...x, id: p.id } : x));
-      }).catch(() => {});
+      try {
+        const m = await import('../account/personas');
+        persona = await m.crearPersona(user.id, { nombre: n, grupo: nuevoGrupo }, null);
+      } catch { /* sin conexión: se queda solo en este ejercicio */ }
     }
+    const id = persona?.id ?? `nuevo_${Date.now()}`;
+    setPersonas(prev => [...prev, persona ?? { id, nombre: n, primario: null, estado: 'sin_estimar' }]);
+    onToggle(id, n);
   }
 
   function aceptarRazon(id, valor) {
@@ -1217,13 +1220,14 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, pregunt
           );
         })}
         {anadiendo ? (
-          <span style={{ display: 'inline-flex', gap: 6, alignItems: 'center' }}>
+          <span style={{ display: 'inline-flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
             <input
               autoFocus
               type="text"
               value={nuevoNombre}
+              maxLength={40}
               onChange={(e) => setNuevoNombre(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') agregarNuevo(); if (e.key === 'Escape') { setAnadiendo(false); setNuevoNombre(''); } }}
+              onKeyDown={(e) => { if (e.key === 'Enter') agregarNuevo(); if (e.key === 'Escape') { setAnadiendo(false); setNuevoNombre(''); setNuevoGrupo(null); } }}
               placeholder="Nombre..."
               style={{
                 fontFamily: FONT_BODY, fontSize: 16, color: NAVY, background: PAPER,
@@ -1231,10 +1235,19 @@ function SelectorCirculoOro({ user, seleccionados, onToggle, onExplicar, pregunt
                 width: 140, outline: 'none',
               }}
             />
-            <button type="button" onClick={agregarNuevo} disabled={!nuevoNombre.trim()} style={{
+            {GRUPOS_PERSONA.map(([g, texto]) => (
+              <button key={g} type="button" onClick={() => setNuevoGrupo(g)} style={{
+                fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
+                color: nuevoGrupo === g ? PAPER : NAVY, background: nuevoGrupo === g ? NAVY : 'transparent',
+                border: `1.5px solid ${nuevoGrupo === g ? NAVY : LINE}`, borderRadius: 0, padding: '8px 12px', cursor: 'pointer',
+              }}>
+                {texto}
+              </button>
+            ))}
+            <button type="button" onClick={agregarNuevo} disabled={!nuevoNombre.trim() || !nuevoGrupo} style={{
               fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600,
-              color: PAPER, background: nuevoNombre.trim() ? GOLD_REF : LINE,
-              border: 'none', borderRadius: 0, padding: '9px 14px', cursor: nuevoNombre.trim() ? 'pointer' : 'default',
+              color: PAPER, background: nuevoNombre.trim() && nuevoGrupo ? GOLD_REF : LINE,
+              border: 'none', borderRadius: 0, padding: '9px 14px', cursor: nuevoNombre.trim() && nuevoGrupo ? 'pointer' : 'default',
             }}>
               Añadir
             </button>
@@ -2950,8 +2963,9 @@ export function CirculoPersonas({ paso, user, onComplete }) {
       const estimacion = { primario: temp, secundario, confianza, puntos, respuestas };
       const persona = await crearPersona(user.id, { nombre: n, grupo }, estimacion);
       if (notas.trim() && persona?.id) {
+        // 'otro': la tabla solo admite las situaciones de la ficha (no hay una propia de la formación).
         await anotarObservacion(user.id, persona.id, {
-          situacion: 'nota_formacion', palabra: null, temperamento: null, linea: notas.trim(),
+          situacion: 'otro', palabra: null, temperamento: null, linea: notas.trim().slice(0, 280),
         });
       }
       setPersonas(prev => [...prev, { nombre: n, grupo, primario: temp, secundario }]);
@@ -4888,12 +4902,17 @@ export function guardarPlan(userId, data) {
 export function PlanCrecimiento({ paso, temperamento, onComplete, userId: userIdProp, guardado, user, cursoNum = 2 }) {
   const userId = userIdProp ?? 'anon';
   const pantallas = paso.pantallas ?? [];
-  const [idx, setIdx] = useState(0);
-  const [fase, setFase] = useState('caratula');
+  // Plan ya completado: se abre directamente en el resumen con sus respuestas (no en la carátula).
+  const iResumen = pantallas.findIndex((s) => s.tipo === 'resumen');
+  const yaHecho = iResumen >= 0 && Boolean(guardado?.plan && Object.keys(guardado.plan).length > 0);
+  const [idx, setIdx] = useState(yaHecho ? iResumen : 0);
+  const [fase, setFase] = useState(yaHecho ? 'ejercicio' : 'caratula');
   const [visible, setVisible] = useState(true);
   const [plan, setPlan] = useState(() => {
     if (guardado && typeof guardado === 'object') {
-      const { fecha, aprobado, ...rest } = guardado;
+      // onComplete guarda { plan }; las pantallas leen las claves sueltas (personas, libros…).
+      const { fecha, aprobado, plan: anidado, ...sueltas } = guardado;
+      const rest = anidado && typeof anidado === 'object' ? { ...sueltas, ...anidado } : sueltas;
       if (Object.keys(rest).length > 0) {
         guardarPlan(userId, rest);
         return rest;

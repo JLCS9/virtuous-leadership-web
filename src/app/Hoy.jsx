@@ -98,7 +98,7 @@ function EntornoMagnanimo({ miPrimario }) {
 
   const irAPersona = (p) => navigate(lp(`/app/personas/${p.id}`));
   const irAPersonas = () => navigate(lp('/app/personas'));
-  const irANueva = () => navigate(lp('/mi-panel/camino') + '?nueva=1');
+  const irANueva = () => navigate(lp('/app/personas/nueva'));
 
   if (cargando) return null;
 
@@ -107,12 +107,12 @@ function EntornoMagnanimo({ miPrimario }) {
 
   if (!lista.length) {
     return (
-      <section style={tarjeta} aria-label="Tu entorno magnánimo">
-        <div style={eyebrow}>Tu entorno magnánimo</div>
-        <h2 style={{ ...titulo(24), margin: '10px 0 8px' }}>Personas magnánimas a tu alrededor</h2>
+      <section style={tarjeta} aria-label="Tu entorno">
+        <div style={eyebrow}>Tu entorno</div>
+        <h2 style={{ ...titulo(24), margin: '10px 0 8px' }}>Las personas a tu alrededor</h2>
         <p style={{ ...parrafo, marginBottom: 16 }}>
-          Havard nos invita a rodearnos de personas magnánimas. Aquí puedes crear fichas de las personas
-          que te inspiran y conocer cómo relacionarte mejor con cada temperamento.
+          Crea fichas de las personas de tu familia, tus amigos, tu trabajo y tu comunidad, y descubre
+          cómo relacionarte mejor con cada temperamento.
         </p>
         <button type="button" onClick={irANueva} style={botonSobreClaro}>Añadir persona</button>
       </section>
@@ -120,8 +120,8 @@ function EntornoMagnanimo({ miPrimario }) {
   }
 
   return (
-    <section style={tarjeta} aria-label="Tu entorno magnánimo">
-      <div style={eyebrow}>Tu entorno magnánimo</div>
+    <section style={tarjeta} aria-label="Tu entorno">
+      <div style={eyebrow}>Tu entorno</div>
 
       <div className="vl-mapa-personas-wrap" style={{ margin: '8px 0 0' }}>
         <MapaPersonas personas={lista} miPrimario={miPrimario} />

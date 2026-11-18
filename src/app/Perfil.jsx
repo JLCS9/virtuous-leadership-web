@@ -431,9 +431,18 @@ function TabDatos({ tests, personas, camino, user }) {
   const [charIdx, setCharIdx] = useState(0);
   const tempTest = tempTests[tempIdx];
   const charTest = charTests[charIdx];
-  const tempPerfil = tempTest?.result?.profile;
-  const tempPartes = tempPerfil?.split('-') ?? [];
-  const virtudes = charTest?.result?.virtues;
+  // Formato actual de los tests: temperamento { profileKey | primario/secundario } y carácter
+  // { self: { virtud: 0..100 } }. Se mantiene la lectura del formato antiguo ({ profile }, { virtues: { v: { global: 0..1 } } }).
+  const r = tempTest?.result;
+  const tempPerfil = claveTemperamento(r) ?? [r?.primario, r?.secundario].filter(Boolean).join('-');
+  const tempPartes = tempPerfil ? tempPerfil.split('-') : [];
+  const pctVirtud = (key) => {
+    const res = charTest?.result;
+    if (typeof res?.self?.[key] === 'number') return Math.round(res.self[key]);
+    if (typeof res?.virtues?.[key]?.global === 'number') return Math.round(res.virtues[key].global * 100);
+    return null;
+  };
+  const virtudes = charTest && ['prudencia', 'fortaleza', 'dominio', 'justicia', 'magnanimidad', 'humildad'].some((k) => pctVirtud(k) !== null);
   const nombresV = { prudencia: 'Prudencia', fortaleza: 'Fortaleza', dominio: 'Dominio de sí', justicia: 'Justicia', magnanimidad: 'Magnanimidad', humildad: 'Humildad' };
 
   const sinDatos = !tempTest && !charTest && personas.length === 0 && !camino;
@@ -459,6 +468,8 @@ function TabDatos({ tests, personas, camino, user }) {
               {tempPartes.map(t => TEMP_NOMBRE[t.toUpperCase()] ?? t).join(' – ')}
             </div>
             {tempTest.result?.scores && (() => {
+              // Solo el formato antiguo trae puntos por temperamento; el actual solo guarda el perfil
+              // (los empates de la fase 1 los resuelven las fases siguientes, así que no se recalculan).
               const entries = Object.entries(tempTest.result.scores).sort((a, b) => b[1] - a[1]);
               const total = entries.reduce((s, [, v]) => s + v, 0) || 1;
               return entries.map(([t, pts]) => (
@@ -484,9 +495,9 @@ function TabDatos({ tests, personas, camino, user }) {
           <>
             <SelectorHistorico items={charTests} idx={charIdx} setIdx={setCharIdx} />
             {Object.entries(nombresV).map(([key, nom]) => {
-              const v = virtudes[key];
-              if (!v) return null;
-              return <BarraVirtud key={key} nombre={nom} pct={Math.round((v.global ?? 0) * 100)} />;
+              const pct = pctVirtud(key);
+              if (pct === null) return null;
+              return <BarraVirtud key={key} nombre={nom} pct={pct} />;
             })}
             <Fila label="Fecha" valor={new Date(charTest.taken_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })} />
             <Fila label="Veces realizado" valor={charTests.length} />
@@ -663,13 +674,8 @@ function TabNotas({ userId }) {
     );
   }
 
-  const totalNotas = todas.reduce((s, g) => s + g.entradas.reduce((s2, e) => s2 + e.notas.length, 0), 0);
-
   return (
     <div>
-      <p style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED, margin: '0 0 20px' }}>
-        {totalNotas} nota{totalNotas !== 1 ? 's' : ''} en total
-      </p>
       {todas.map(({ mod, entradas }) => (
         <div key={mod.id} style={{ marginBottom: 28 }}>
           <div style={{ ...eyebrow, marginBottom: 12 }}>{mod.titulo}</div>

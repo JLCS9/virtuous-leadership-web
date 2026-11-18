@@ -203,7 +203,7 @@ export function NotasLateral({ pasoActualId, notas, onAgregar, onEliminar, onEdi
               color: GOLD_REF_DK, display: 'flex', alignItems: 'center', gap: 4,
             }}>
               <IconoLupa />
-              {verNotas ? 'Ocultar' : `Ver notas (${notasDelPaso.length})`}
+              {verNotas ? 'Ocultar' : 'Ver notas'}
             </button>
 
             {verNotas && (
