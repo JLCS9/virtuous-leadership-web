@@ -1,9 +1,11 @@
 // Pestaña «Camino»: tu entorno y tu último test de carácter arriba, el camino de las seis virtudes
 // debajo, y después tus hábitos, el historial de tus días y lo que Virtus sabe de ti. Lo de cada día
 // (la cita, el reto y el examen) vive en Hoy. Sin lógica propia: solo monta las secciones.
+import { useSearchParams } from 'react-router-dom';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { useT } from '../i18n';
-import { bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from '../lib/rutaVirtudes.js';
+import { sumarDias } from '../lib/camino.js';
+import { RUTA, bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from '../lib/rutaVirtudes.js';
 import { parrafo, tarjeta } from './estilos';
 import MapaCaracter from './MapaCaracter';
 import { usePersonas } from './usePersonas';
@@ -20,13 +22,17 @@ export default function CaminoDiario() {
   const camino = useCaminoDiario();
   const personas = usePersonas();
   const { fila, clave } = useTemperamentoClave();
+  const [params] = useSearchParams();
 
   if (camino.error) return <section style={tarjeta}><p role="alert" style={parrafo}>{t('camino.error_cargar')}</p></section>;
   if (camino.cargando || personas.cargando || fila === undefined) return null;
 
-  const bloques = bloquesDeLaRuta({
-    desafio: virtudDeDesafio(CHALLENGE_VIRTUE[clave]), inicio: inicioDeLaRuta(camino.dias), hoy: camino.hoy,
-  });
+  // Solo en desarrollo: `?avance=0.5` enseña el camino con la mitad recorrida (0 a 1; 1 o más, completado).
+  const avance = import.meta.env.DEV ? Number(params.get('avance')) : NaN;
+  const inicio = Number.isFinite(avance) && params.has('avance')
+    ? sumarDias(camino.hoy, -Math.round(avance * RUTA.dias_por_virtud))
+    : inicioDeLaRuta(camino.dias);
+  const bloques = bloquesDeLaRuta({ desafio: virtudDeDesafio(CHALLENGE_VIRTUE[clave]), inicio, hoy: camino.hoy });
 
   return (
     <div style={{ display: 'grid', gap: 18 }} aria-label={t('camino.pagina.titulo')}>

@@ -775,13 +775,18 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   cargar (`useCaminoDiario`); «en revisión» pregunta ajustar / mantener / dejar. Se ofrecen tras
   cumplir la opción B (sí o a medias) y se pueden escribir propios. Virtudes: las seis de
   `VIRTUDES_HABITO`; audacia y resistencia de los retos cuentan como fortaleza.
-- **Camino de virtudes** (pestaña Camino): un bloque por virtud dibujado con curvas
-  (`caminoDiario/RutaVirtudes.jsx`, lógica en `lib/rutaVirtudes.js`). Empieza por la virtud-desafío
-  del perfil (`CHALLENGE_VIRTUE`: audacia y resistencia cuentan como fortaleza); las demás están
-  bloqueadas hasta pasar un mes con ella. El mes cuenta desde el primer día con un reto aceptado y
-  su duración es `RUTA.dias_por_virtud` (30): se ajusta ahí. Pasado el mes los bloques pasan a
-  «disponible», pero **la biblioteca solo tiene retos de la virtud-desafío de cada temperamento**:
-  hasta que haya contenido de las demás virtudes, los retos siguen saliendo de esa.
+- **Camino de virtudes** (pestaña Camino): una senda con curvas dibujada en SVG
+  (`caminoDiario/RutaVirtudes.jsx`; lógica en `lib/rutaVirtudes.js`, geometría en
+  `lib/rutaGeometria.js`). Empieza por la virtud-desafío del perfil (`CHALLENGE_VIRTUE`: audacia y
+  resistencia cuentan como fortaleza); las demás están bloqueadas hasta pasar un mes con ella. El
+  tramo recorrido se pinta de dorado y un viajero marca dónde estás; lo que no toca queda tras la
+  niebla, con candado y **sin nombre**: solo se ve el nombre de la virtud donde estás. **La pantalla
+  no enseña plazos** (ni «día X de 30» ni «se abre en N días»). El mes cuenta desde el primer día
+  con un reto aceptado y su duración es `RUTA.dias_por_virtud` (30): se ajusta ahí. Pasado el mes
+  los bloques pasan a «disponible», pero **la biblioteca solo tiene retos de la virtud-desafío de
+  cada temperamento**: hasta que haya contenido de las demás virtudes, los retos siguen saliendo de
+  esa. En desarrollo, `/es/app/camino?avance=0.5` enseña el camino con esa fracción recorrida
+  (`1` = completado).
 - **Piezas**: `account/caminoDiario.js` (datos), `app/useCaminoDiario.js` (hook), `app/caminoDiario/*`
   (pantallas; solo pintan), `app/CaminoDiario.jsx` (pestaña). «Tu entorno» (`personas/TuEntorno.jsx`)
   y `useTemperamentoClave.js` se comparten entre Hoy y Camino. Textos en `i18n/es.js` → `camino`
@@ -794,6 +799,11 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   nuevo al consolidar uno.
 - **Probar en local**: cuenta con suscripción activa (nunca la de demo). Escribe en producción:
   para repetir un día, borra su fila de `camino_dia` desde Supabase.
+- **Datos de ejemplo** para ver «Tu entorno» y el test de carácter sin rellenarlos a mano:
+  `DEMO_EMAIL=… DEMO_PASSWORD=… node scripts/seed-entorno-demo.mjs` (con `--dry` solo enseña lo que
+  crearía). Entra con la cuenta de prueba, escribe solo en ella, y es idempotente (8 personas con
+  estimación y observaciones, y un resultado de carácter si no hay ninguno). Los datos están en
+  `scripts/datos-demo-entorno.mjs`.
 
 ### Código aparcado (no borrar sin preguntar)
 
