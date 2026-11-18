@@ -87,7 +87,8 @@ export function FichaContenido({ persona, miPrimario }) {
 const ETIQUETA_MAPA = { familia: 'FAMILIA', amigos: 'AMIGOS', trabajo: 'TRABAJO', comunidad: 'COMUNIDAD' };
 const NOMBRE_TEMP = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };
 
-export function MapaPersonas({ personas, nombreTu = 'Tú', miPrimario, hoverId: extHoverId, onHoverPersona }) {
+// `onElegirPersona(persona)`: si se pasa, cada avatar es un enlace (con ratón, toque o teclado) a su ficha.
+export function MapaPersonas({ personas, nombreTu = 'Tú', miPrimario, hoverId: extHoverId, onHoverPersona, onElegirPersona }) {
   const [hoverTemp, setHoverTemp] = useState(null);
   const [localHoverId, setLocalHoverId] = useState(null);
   const hoverId = extHoverId !== undefined ? extHoverId : localHoverId;
@@ -184,7 +185,14 @@ export function MapaPersonas({ personas, nombreTu = 'Tú', miPrimario, hoverId: 
           <g key={p.id}
             onMouseEnter={() => { setHoverId(p.id); setHoverTemp(null); }}
             onMouseLeave={() => setHoverId(null)}
-            style={{ cursor: 'pointer', opacity: destacado ? 1 : 0.15, transition: trans }}
+            {...(onElegirPersona ? {
+              role: 'link', tabIndex: 0, 'aria-label': `Abrir la ficha de ${p.nombre}`,
+              onClick: () => onElegirPersona(p),
+              onKeyDown: (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onElegirPersona(p); } },
+              onFocus: () => setHoverId(p.id), onBlur: () => setHoverId(null),
+              className: 'vl-nodo-persona',
+            } : {})}
+            style={{ cursor: 'pointer', opacity: destacado ? 1 : 0.15, transition: trans, outline: 'none' }}
             filter={destacado && hayHover ? 'url(#nodo-glow)' : undefined}>
             <circle cx={x} cy={y} r={RNodo} fill={TEMP_COLORS[p.primario] ?? '#B9B3A5'} stroke={PAPER} strokeWidth="2.5" />
             <text x={x} y={y + (esEmoji ? 1 : 0)} textAnchor="middle" dominantBaseline="central"

@@ -1743,6 +1743,17 @@ export default {
       resumen_completada: 'Tu camino de virtudes. Has completado {nombre}.',
       otras_cerradas: 'Las demás virtudes están por descubrir.',
     },
+    tira: {
+      racha_cero: 'Empieza hoy tu racha',
+      racha_uno: '1 día de racha',
+      racha: '{n} días de racha',
+      hoy_es: 'Hoy es {fecha}',
+      aria: 'Tus días: dos anteriores, hoy y los cinco siguientes',
+      aria_hecho: '{fecha}: reto aceptado',
+      aria_sin: '{fecha}: sin reto aceptado',
+      aria_hoy: 'Hoy, {fecha}',
+      dias: { 1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V', 6: 'S', 7: 'D' },
+    },
     pagina: {
       titulo: 'Tu camino',
       habitos: {

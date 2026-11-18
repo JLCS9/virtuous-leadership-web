@@ -575,7 +575,7 @@ Definidas en `src/App.jsx` (bloque «Portal /app»), slug en `routes.js` (`app: 
 | `/es/app/personas/:id` | `app/Personas.jsx` → `PersonaDetalle` | Ficha de una persona |
 | `/es/app/caracter` | `app/ResultadoCaracter.jsx` | Resultado del test de carácter (radar) |
 | `/es/app/perfil` | `app/Perfil.jsx` | Pestañas: datos/«Mis resultados», «Mis notas», configuración |
-| `/es/app/camino` | `app/CaminoDiario.jsx` | Tu entorno + último test de carácter, camino de virtudes, hábitos, historial y «lo que Virtus sabe de ti» (ver «Camino diario») |
+| `/es/app/camino` | `app/CaminoDiario.jsx` | Tu entorno + último test de carácter (grande), camino de virtudes con racha y tira de días, hábitos e historial (ver «Camino diario») |
 
 - `PortalGuard.jsx`: sin sesión → `/login`; idioma ≠ es → `/login`; sin suscripción activa
   (`useAcceso` → `suscripciones_retos`) → `/tests/temperamento/gracias`. Si pasa, pinta
@@ -775,7 +775,7 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   cargar (`useCaminoDiario`); «en revisión» pregunta ajustar / mantener / dejar. Se ofrecen tras
   cumplir la opción B (sí o a medias) y se pueden escribir propios. Virtudes: las seis de
   `VIRTUDES_HABITO`; audacia y resistencia de los retos cuentan como fortaleza.
-- **Camino de virtudes** (pestaña Camino): una senda con curvas dibujada en SVG
+- **Camino de virtudes** (pestaña Camino): una senda con curvas **en horizontal** dibujada en SVG
   (`caminoDiario/RutaVirtudes.jsx`; lógica en `lib/rutaVirtudes.js`, geometría en
   `lib/rutaGeometria.js`). Empieza por la virtud-desafío del perfil (`CHALLENGE_VIRTUE`: audacia y
   resistencia cuentan como fortaleza); las demás están bloqueadas hasta pasar un mes con ella. El
@@ -785,8 +785,19 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   con un reto aceptado y su duración es `RUTA.dias_por_virtud` (30): se ajusta ahí. Pasado el mes
   los bloques pasan a «disponible», pero **la biblioteca solo tiene retos de la virtud-desafío de
   cada temperamento**: hasta que haya contenido de las demás virtudes, los retos siguen saliendo de
-  esa. En desarrollo, `/es/app/camino?avance=0.5` enseña el camino con esa fracción recorrida
-  (`1` = completado).
+  esa. En pantallas estrechas el dibujo se desplaza a un lado en vez de encogerse (para que el texto
+  siga a ≥16 px). En desarrollo, `/es/app/camino?avance=0.5` enseña el camino con esa fracción
+  recorrida (`1` = completado).
+- **Racha y tira de días** (encima del camino): `lib/rachaDias.js` y `caminoDiario/TiraDeDias.jsx`.
+  Racha = días seguidos con un reto aceptado (si hoy aún no lo ha aceptado, cuenta desde ayer). La
+  tira enseña siempre los 2 días anteriores, hoy y los 5 siguientes, con el día aceptado marcado.
+- **Pestaña Camino, arriba**: «Tu entorno» y el último test de carácter, que va más grande
+  (`<MapaCaracter grande />`, radar con etiquetas a 16-17 px). Los avatares del mapa de «Tu
+  entorno» son enlaces a la ficha de la persona (`onElegirPersona` en `MapaPersonas`).
+- **«Lo que Virtus sabe de ti» ya no se muestra en ningún sitio**: `caminoDiario/MisVariables.jsx`
+  queda **aparcado y sin montar** (lista las variables con la redacción en tercera persona del
+  Excel). Las variables se siguen rellenando con las preguntas iniciales y las de la noche. Si hace
+  falta editarlas a mano, habría que reescribir sus textos y decidir dónde viven (¿Perfil?).
 - **Piezas**: `account/caminoDiario.js` (datos), `app/useCaminoDiario.js` (hook), `app/caminoDiario/*`
   (pantallas; solo pintan), `app/CaminoDiario.jsx` (pestaña). «Tu entorno» (`personas/TuEntorno.jsx`)
   y `useTemperamentoClave.js` se comparten entre Hoy y Camino. Textos en `i18n/es.js` → `camino`

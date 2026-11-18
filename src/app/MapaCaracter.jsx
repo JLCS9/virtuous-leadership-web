@@ -107,7 +107,8 @@ export function notaTemperamento(tempClave, virtudClave, tipo) {
   return mapa?.[virtudClave] ?? mapa?._generico ?? null;
 }
 
-export default function MapaCaracter({ tempClave }) {
+// `grande`: una sola columna con el radar grande y los textos a 16-18 px (en la pestaña Camino).
+export default function MapaCaracter({ tempClave, grande = false }) {
   const [params] = useSearchParams();
   const [fila, setFila] = useState(undefined);
   const navigate = useNavigate();
@@ -146,37 +147,38 @@ export default function MapaCaracter({ tempClave }) {
     <section style={tarjeta} aria-label="Tus virtudes">
       <div style={eyebrow}>Tu mapa de carácter{fecha ? ` · ${fecha}` : ''}</div>
 
-      <div className="vl-caracter-grid">
+      <div className={grande ? 'vl-caracter-grande' : 'vl-caracter-grid'}>
         <style>{`
-          .vl-caracter-grid { margin-top: 8px; }
+          .vl-caracter-grid, .vl-caracter-grande { margin-top: 8px; }
+          .vl-caracter-grande { display: grid; gap: 18px; }
           @media (min-width: 860px) {
             .vl-caracter-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: center; }
           }
         `}</style>
 
         <div>
-          <VirtudesRadar valores={valores} />
+          <VirtudesRadar valores={valores} grande={grande} />
         </div>
 
         <div>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 18 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Tu virtud más fuerte es <strong style={{ color: NAVY }}>{mayor.nombre}</strong> ({Math.round(mayor.valor)}%).
           </p>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 14px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 13.5, color: MUTED, margin: '0 0 14px', lineHeight: 1.5 }}>
             {notaMayor || textoMayor?.bien}
           </p>
 
-          <p style={{ fontFamily: FONT_BODY, fontSize: 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 18 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Lo que más puedes cultivar ahora es <strong style={{ color: NAVY }}>{menor.nombre}</strong> ({Math.round(menor.valor)}%).
           </p>
-          <p style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED, margin: '0 0 4px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 13.5, color: MUTED, margin: '0 0 4px', lineHeight: 1.5 }}>
             {notaMenor || textoMenor?.cultivar}
           </p>
 
           <button type="button" onClick={() => navigate(lp('/app/caracter'))} style={{
             display: 'flex', alignItems: 'center', gap: 6, marginTop: 16,
             background: 'none', border: 'none', cursor: 'pointer', padding: 0,
-            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
+            fontFamily: FONT_BODY, fontSize: grande ? 16 : 14, fontWeight: 600, color: NAVY,
           }}>
             Ver más →
           </button>
