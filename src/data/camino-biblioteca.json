@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": "0.2",
-    "fuente": "Virtus_biblioteca_retos_v0.2.xlsx"
+    "version": "0.3",
+    "fuente": "Virtus_biblioteca_retos_v0.3.xlsx"
   },
   "retos": [
     {
@@ -27,7 +27,7 @@
         "Q37",
         "Q38"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C02",
@@ -55,7 +55,7 @@
         "Q68",
         "Q69"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C03",
@@ -81,7 +81,7 @@
         "Q62",
         "Q78"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C04",
@@ -103,7 +103,7 @@
         "Q25",
         "Q77"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C05",
@@ -128,7 +128,7 @@
         "Q68",
         "Q69"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C06",
@@ -159,7 +159,7 @@
         "Q77",
         "Q85"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C07",
@@ -182,7 +182,7 @@
         "Q24",
         "Q29"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C08",
@@ -208,7 +208,7 @@
         "Q57",
         "Q85"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C09",
@@ -235,7 +235,7 @@
         "Q67",
         "Q77"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "C10",
@@ -259,7 +259,7 @@
         "Q32",
         "Q34"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M01",
@@ -286,7 +286,7 @@
         "Q17",
         "Q19"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M02",
@@ -316,7 +316,7 @@
         "Q79",
         "Q83"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M03",
@@ -340,7 +340,7 @@
         "Q78",
         "Q80"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M04",
@@ -362,7 +362,7 @@
         "Q41",
         "Q61"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M05",
@@ -387,7 +387,7 @@
         "Q33",
         "Q59"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M06",
@@ -409,7 +409,7 @@
         "Q45",
         "Q84"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M07",
@@ -434,7 +434,7 @@
         "Q59",
         "Q84"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M08",
@@ -461,7 +461,7 @@
         "Q45",
         "Q83"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M09",
@@ -485,7 +485,7 @@
         "Q46",
         "Q53"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "M10",
@@ -508,7 +508,7 @@
         "Q63",
         "Q67"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S01",
@@ -531,7 +531,7 @@
         "Q03",
         "Q16"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S02",
@@ -556,7 +556,7 @@
         "Q58",
         "Q85"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S03",
@@ -580,7 +580,7 @@
         "Q48",
         "Q69"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S04",
@@ -604,7 +604,7 @@
         "Q35",
         "Q60"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S05",
@@ -627,7 +627,7 @@
         "Q22",
         "Q58"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S06",
@@ -649,7 +649,7 @@
         "Q49",
         "Q82"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S07",
@@ -671,7 +671,7 @@
         "Q75",
         "Q85"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S08",
@@ -697,7 +697,7 @@
         "Q51",
         "Q65"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S09",
@@ -727,7 +727,7 @@
         "Q83",
         "Q84"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "S10",
@@ -753,7 +753,7 @@
         "Q48",
         "Q52"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F01",
@@ -777,7 +777,7 @@
         "Q81",
         "Q82"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F02",
@@ -802,7 +802,7 @@
         "Q80",
         "Q81"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F03",
@@ -825,7 +825,7 @@
         "Q06",
         "Q82"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F04",
@@ -848,7 +848,7 @@
         "Q18",
         "Q20"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F05",
@@ -876,7 +876,7 @@
         "Q20",
         "Q21"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F06",
@@ -902,7 +902,7 @@
         "Q36",
         "Q83"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F07",
@@ -925,7 +925,7 @@
         "Q05",
         "Q79"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F08",
@@ -953,7 +953,7 @@
         "Q62",
         "Q78"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F09",
@@ -977,7 +977,7 @@
         "Q53",
         "Q61"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "F10",
@@ -1000,7 +1000,7 @@
         "Q13",
         "Q36"
       ],
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     }
   ],
   "citas": [
@@ -1020,7 +1020,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q02",
@@ -1039,7 +1039,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q03",
@@ -1057,7 +1057,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q04",
@@ -1075,7 +1075,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q05",
@@ -1092,7 +1092,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q06",
@@ -1110,7 +1110,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q07",
@@ -1127,7 +1127,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q08",
@@ -1145,7 +1145,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q09",
@@ -1163,7 +1163,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q10",
@@ -1181,7 +1181,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q11",
@@ -1199,7 +1199,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q12",
@@ -1217,7 +1217,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q13",
@@ -1234,7 +1234,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Cita larga; valorar acortarla",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q14",
@@ -1252,7 +1252,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q15",
@@ -1270,7 +1270,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q16",
@@ -1288,7 +1288,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q17",
@@ -1305,7 +1305,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q18",
@@ -1322,7 +1322,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q19",
@@ -1339,7 +1339,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q20",
@@ -1356,7 +1356,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q21",
@@ -1373,7 +1373,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q22",
@@ -1390,7 +1390,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "Es una pregunta de examen, no una afirmación",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q23",
@@ -1407,7 +1407,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q24",
@@ -1425,7 +1425,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q25",
@@ -1444,7 +1444,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q26",
@@ -1462,7 +1462,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q27",
@@ -1480,7 +1480,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q28",
@@ -1498,7 +1498,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q29",
@@ -1515,7 +1515,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q30",
@@ -1533,7 +1533,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q31",
@@ -1549,7 +1549,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q32",
@@ -1565,7 +1565,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q33",
@@ -1582,7 +1582,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q34",
@@ -1599,7 +1599,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q35",
@@ -1616,7 +1616,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q36",
@@ -1634,7 +1634,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q37",
@@ -1651,7 +1651,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q38",
@@ -1668,7 +1668,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q39",
@@ -1686,7 +1686,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q40",
@@ -1703,7 +1703,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q41",
@@ -1721,7 +1721,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número; cita larga",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q42",
@@ -1739,7 +1739,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q43",
@@ -1756,7 +1756,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q44",
@@ -1774,7 +1774,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q45",
@@ -1792,7 +1792,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q46",
@@ -1809,7 +1809,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q47",
@@ -1827,7 +1827,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q48",
@@ -1845,7 +1845,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Nota probable: Pieper, Prudence, p. 25. Confirmar",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q49",
@@ -1861,7 +1861,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q50",
@@ -1878,7 +1878,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Cita larga; valorar acortarla",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q51",
@@ -1895,7 +1895,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q52",
@@ -1912,7 +1912,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q53",
@@ -1931,7 +1931,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q54",
@@ -1948,7 +1948,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q55",
@@ -1966,7 +1966,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q56",
@@ -1980,7 +1980,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "Útil para el ritmo mañana y noche",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q57",
@@ -1998,7 +1998,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q58",
@@ -2017,7 +2017,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Es una imagen del dominio de sí; ver la frase completa en el libro",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q59",
@@ -2034,7 +2034,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q60",
@@ -2053,7 +2053,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q61",
@@ -2071,7 +2071,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q62",
@@ -2089,7 +2089,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q63",
@@ -2106,7 +2106,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q64",
@@ -2120,7 +2120,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q65",
@@ -2137,7 +2137,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q66",
@@ -2151,7 +2151,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q67",
@@ -2169,7 +2169,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q68",
@@ -2186,7 +2186,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Falta la obra y el número",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q69",
@@ -2204,7 +2204,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q70",
@@ -2218,7 +2218,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q71",
@@ -2232,7 +2232,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q72",
@@ -2246,7 +2246,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q73",
@@ -2260,7 +2260,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q74",
@@ -2274,7 +2274,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q75",
@@ -2290,7 +2290,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q76",
@@ -2304,7 +2304,7 @@
       "momento": "noche",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q77",
@@ -2322,7 +2322,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q78",
@@ -2340,7 +2340,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q79",
@@ -2357,7 +2357,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q80",
@@ -2375,7 +2375,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Fragmento de una frase más larga",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q81",
@@ -2392,7 +2392,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Habla de los seres queridos y amigos admirables",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q82",
@@ -2410,7 +2410,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q83",
@@ -2429,7 +2429,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "Fragmento de una frase más larga: «gracias a ella [la fortaleza] los líderes…»",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q84",
@@ -2447,7 +2447,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "id": "Q85",
@@ -2466,7 +2466,7 @@
       "momento": "manana",
       "literal": true,
       "nota": "",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     }
   ],
   "variables": [
@@ -2647,140 +2647,140 @@
       "orden": 1,
       "pregunta": "¿Con quién trabajas más de cerca cada día?",
       "variable": "persona_trabajo",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "COL",
       "orden": 2,
       "pregunta": "¿Quién de tu familia sufre más tu carácter?",
       "variable": "persona_cercana",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "COL",
       "orden": 3,
       "pregunta": "¿En qué reunión o conversación habitual hablas más que los demás?",
       "variable": "reunion",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "COL",
       "orden": 4,
       "pregunta": "¿Qué proyecto estás empujando con más fuerza ahora?",
       "variable": "proyecto",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "COL",
       "orden": 5,
       "pregunta": "¿Qué decisión tienes entre manos esta semana?",
       "variable": "decision_pendiente",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "MEL",
       "orden": 1,
       "pregunta": "¿Qué te gustaría haber logrado dentro de cinco años?",
       "variable": "sueno",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "MEL",
       "orden": 2,
       "pregunta": "¿Qué decisión llevas tiempo aplazando?",
       "variable": "decision_pendiente",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "MEL",
       "orden": 3,
       "pregunta": "¿Qué preocupación te ronda más estos días?",
       "variable": "preocupacion",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "MEL",
       "orden": 4,
       "pregunta": "¿Quién consigue levantarte el ánimo?",
       "variable": "persona_cercana",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "MEL",
       "orden": 5,
       "pregunta": "¿Con quién trabajas más de cerca cada día?",
       "variable": "persona_trabajo",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "SAN",
       "orden": 1,
       "pregunta": "¿Qué empezaste con ganas y has ido dejando?",
       "variable": "proyecto",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "SAN",
       "orden": 2,
       "pregunta": "¿Qué tarea tienes a medio hacer?",
       "variable": "tarea_pendiente",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "SAN",
       "orden": 3,
       "pregunta": "¿Qué es lo que más te distrae cuando trabajas?",
       "variable": "distraccion",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "SAN",
       "orden": 4,
       "pregunta": "¿Con quién trabajas más de cerca cada día?",
       "variable": "persona_trabajo",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "SAN",
       "orden": 5,
       "pregunta": "¿Quién de tu familia te conoce mejor?",
       "variable": "persona_cercana",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "FLE",
       "orden": 1,
       "pregunta": "¿A quién admiras de tu entorno?",
       "variable": "persona_admiro",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "FLE",
       "orden": 2,
       "pregunta": "¿Qué sabes hacer mejor que la mayoría?",
       "variable": "talento",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "FLE",
       "orden": 3,
       "pregunta": "¿Qué te gustaría haber logrado dentro de cinco años?",
       "variable": "sueno",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "FLE",
       "orden": 4,
       "pregunta": "¿En qué reunión sueles quedarte callado?",
       "variable": "reunion",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     },
     {
       "temperamento": "FLE",
       "orden": 5,
       "pregunta": "¿Con quién trabajas más de cerca cada día?",
       "variable": "persona_trabajo",
-      "validacion": "pendiente"
+      "validacion": "aprobado"
     }
   ],
   "habitos": {

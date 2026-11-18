@@ -277,3 +277,15 @@ test('biblioteca real: la pregunta de nutrir de cada reto alimenta una variable 
   const ids = new Set(biblioteca.variables.map((v) => v.id));
   for (const r of biblioteca.retos) assert.ok(ids.has(camposDeNutrir(r, 'x').nutrir_variable), r.id);
 });
+
+test('biblioteca real, en producción: cada temperamento con retos aprobados tiene reto del día, preguntas iniciales y citas', () => {
+  const retos = filtrarValidos(biblioteca.retos);
+  const citas = filtrarValidos(biblioteca.citas);
+  for (const t of ['COL', 'MEL', 'SAN', 'FLE']) {
+    if (!retos.some((r) => r.temperamento === t)) continue; // aún sin aprobar: nada que comprobar
+    const r = retoDelDia({ retos, clave: t, fecha: '2027-01-01' });
+    assert.equal(r.temperamento, t);
+    assert.ok(citaDelDia({ citas, reto: r, fecha: '2027-01-01' }), `${t}: sin cita de mañana`);
+    assert.ok(preguntasIniciales(biblioteca.preguntas_iniciales, t).length > 0, `${t}: sin preguntas iniciales aprobadas`);
+  }
+});
