@@ -114,8 +114,22 @@ export async function fetchLatestTemperament() {
 }
 
 export async function fetchFirstName(user) {
-  const { data } = await supabase.from('profiles').select('first_name').eq('id', user.id).maybeSingle();
-  return data?.first_name || user.user_metadata?.first_name || '';
+  return (await fetchNombreYSexo(user)).nombre;
+}
+
+/** { nombre, sexo } del perfil. sexo: 'hombre' | 'mujer' | null (para concordar el género). */
+export async function fetchNombreYSexo(user) {
+  const { data } = await supabase.from('profiles').select('first_name, sex').eq('id', user.id).maybeSingle();
+  return {
+    nombre: data?.first_name || user.user_metadata?.first_name || '',
+    sexo: data?.sex === 'hombre' || data?.sex === 'mujer' ? data.sex : null,
+  };
+}
+
+/** «Bienvenido, Álvaro» / «Bienvenida, Marta»; sin sexo conocido, «Te damos la bienvenida, …». */
+export function saludoBienvenida(nombre, sexo) {
+  const base = sexo === 'mujer' ? 'Bienvenida' : sexo === 'hombre' ? 'Bienvenido' : 'Te damos la bienvenida';
+  return nombre ? `${base}, ${nombre}` : base;
 }
 
 // Último resultado del test de carácter (el que guarda la web o la app móvil), o null.

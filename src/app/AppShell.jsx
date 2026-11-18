@@ -24,6 +24,8 @@ export default function AppShell({ user }) {
   const lp = useLocalPath();
   const { pathname } = useLocation();
   const [nombre, setNombre] = useState('');
+  // El onboarding va limpio: sin cabecera ni burbuja de navegación.
+  const enBienvenida = pathname === lp('/app/bienvenida');
   const prevIdx = useRef(indicePestana(pathname, lp));
   const idx = indicePestana(pathname, lp);
   const dir = idx >= 0 && prevIdx.current >= 0 ? (idx > prevIdx.current ? 'der' : idx < prevIdx.current ? 'izq' : '') : '';
@@ -43,7 +45,7 @@ export default function AppShell({ user }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: BEIGE, fontFamily: FONT_BODY, WebkitFontSmoothing: 'antialiased', paddingBottom: 132 }}>
+    <div style={{ minHeight: '100vh', background: BEIGE, fontFamily: FONT_BODY, WebkitFontSmoothing: 'antialiased', paddingBottom: enBienvenida ? 0 : 132 }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Roboto:ital,wght@0,400;0,600;1,400&display=swap');
         .vl-app { --vl-pad: clamp(18px, 4vw, 56px); --vl-max: 1600px; }
@@ -114,7 +116,7 @@ export default function AppShell({ user }) {
         }
       `}</style>
       <div className="vl-app">
-        <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '32px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 14 }}>
+        {!enBienvenida && <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '32px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 14 }}>
           <Link to="/app" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
             <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block' }} />
           </Link>
@@ -140,14 +142,14 @@ export default function AppShell({ user }) {
             </span>
             <span style={{ whiteSpace: 'nowrap' }}>Mi cuenta</span>
           </Link>
-        </header>
+        </header>}
 
         <main className={`vl-main ${dir ? `vl-entra-${dir}` : 'vl-entra'}`} key={pathname}
               style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '20px var(--vl-pad) 0' }}>
           <Outlet context={{ user }} />
         </main>
 
-        <NavBurbuja pathname={pathname} lp={lp} />
+        {!enBienvenida && <NavBurbuja pathname={pathname} lp={lp} />}
       </div>
     </div>
   );
