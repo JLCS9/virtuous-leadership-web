@@ -10,6 +10,8 @@ import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
+import { usePreferencias } from './Horarios';
+import { textoFormacion, textoReflexion, textoReto, textoZona } from '../lib/preferencias.js';
 import curso1 from '../data/curso1.json';
 import curso2 from '../data/curso2.json';
 import curso3 from '../data/curso3.json';
@@ -150,6 +152,38 @@ function BtnGuardar({ onClick, guardando }) {
 
 /* ─── Tab 1: Configuración ─── */
 
+// Horarios del reto, la reflexión y la formación (preferencias_notificaciones). Se editan en
+// /app/horarios; aquí solo el resumen.
+function SeccionHorarios({ userId }) {
+  const estado = usePreferencias(userId);
+  const p = estado.preferencias;
+  return (
+    <section style={{ ...tarjeta, position: 'relative', gridColumn: '1 / -1' }}>
+      <div style={eyebrow}>Tu día a día</div>
+      <div style={{ marginTop: 10 }}>
+        {estado.cargando && <p style={{ ...parrafo, margin: 0, fontSize: 16 }}>Cargando…</p>}
+        {estado.error && <p style={{ ...parrafo, margin: 0, fontSize: 16 }}>No he podido cargar tus horarios.</p>}
+        {p && estado.configurado && (
+          <>
+            <Fila label="Reto diario" valor={textoReto(p)} />
+            <Fila label="Reflexión del día" valor={textoReflexion(p)} />
+            <Fila label="Formación semanal" valor={textoFormacion(p)} />
+            <Fila label="Zona horaria" valor={textoZona(p.zona_horaria)} />
+          </>
+        )}
+        {p && !estado.configurado && (
+          <p style={{ ...parrafo, margin: 0, fontSize: 16 }}>Aún no has elegido a qué hora quieres tu reto, tu reflexión y tu formación.</p>
+        )}
+        {p && (
+          <Link to="/app/horarios" style={{ display: 'inline-block', marginTop: 14, fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: NAVY }}>
+            {estado.configurado ? 'Cambiar mis horarios' : 'Elegir mis horarios'} →
+          </Link>
+        )}
+      </div>
+    </section>
+  );
+}
+
 function TabConfig({ user, profile, consents, onRefresh }) {
   const [editando, setEditando] = useState(null);
   const [guardando, setGuardando] = useState(false);
@@ -226,6 +260,8 @@ function TabConfig({ user, profile, consents, onRefresh }) {
           <Fila label="País" valor={profile.country} />
           <Fila label="Vida espiritual" valor={profile.spiritual ? 'Sí' : 'No'} />
         </Seccion>
+
+        <SeccionHorarios userId={user.id} />
 
         {/* Fila 2: las dos pequeñas — Consentimientos + Caché */}
         <Seccion titulo="Consentimientos">

@@ -9,7 +9,8 @@ import { usePersonas } from './usePersonas';
 import { useTemperamento } from './camino/Juegos';
 import { useSession } from '../account/useSession';
 import CrearFicha from './personas/CrearFicha';
-import { Avatar, EtiquetaEstado, FichaContenido, MapaPersonas } from './personas/comun';
+import { Avatar, EtiquetaEstado, FichaContenido, MapaPersonas, Verificado, estaVerificada } from './personas/comun';
+import CompartirTest from './personas/CompartirTest';
 
 const Lapiz = () => (
   <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke={MUTED} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ display: 'block' }}>
@@ -113,6 +114,7 @@ function PersonaDetalle({ personaId }) {
   const navigate = useNavigate();
   const lp = useLocalPath();
   const temp = useTemperamento();
+  const session = useSession();
   const [estado, setEstado] = useState({ cargando: true });
   const [editando, setEditando] = useState(false);
 
@@ -154,6 +156,15 @@ function PersonaDetalle({ personaId }) {
             <Lapiz />
           </button>
         </div>
+
+        {estaVerificada(p) ? (
+          <p style={{ ...parrafo, color: INK, fontSize: 16, borderTop: `1px solid ${LINE}`, padding: '14px 0', margin: 0 }}>
+            <Verificado tam={18} /> <strong>Temperamento verificado por {p.nombre}</strong>
+            {p.verificado_en ? ` · ${new Date(p.verificado_en).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}` : ''}
+          </p>
+        ) : (
+          session?.user && <CompartirTest user={session.user} persona={p} />
+        )}
 
         {p.primario ? (
           <FichaContenido persona={p} miPrimario={temp?.primario} />
@@ -298,7 +309,7 @@ function NuevaPersona() {
   if (!session?.user || cargando) return <section style={tarjeta}><p style={parrafo}>Cargando…</p></section>;
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>
-      <CrearFicha user={session.user} todosLosGrupos menor={menor}
+      <CrearFicha user={session.user} todosLosGrupos menor={menor} corto compartir
                   onSalir={() => navigate(lp('/app/personas'))}
                   onHecho={(p) => navigate(lp(`/app/personas/${p.id}`), { replace: true })} />
     </div>

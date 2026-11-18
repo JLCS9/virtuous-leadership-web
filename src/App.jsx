@@ -25,6 +25,7 @@ const Formacion = lazy(() => import('./formacion/Formacion'));
 const Modulo = lazy(() => import('./formacion/Modulo'));
 const Perfil = lazy(() => import('./app/Perfil'));
 const Personas = lazy(() => import('./app/Personas'));
+const Horarios = lazy(() => import('./app/Horarios'));
 const ResultadoCaracter = lazy(() => import('./app/ResultadoCaracter'));
 import Restablecer from './pages/Restablecer';
 import ConsentimientoTutor from './pages/ConsentimientoTutor';
@@ -113,6 +114,7 @@ export default function App() {
             <Route path="personas" element={<Personas />} />
             <Route path="personas/:personaId" element={<Personas />} />
             <Route path="perfil" element={<Perfil />} />
+            <Route path="horarios" element={<Horarios />} />
           </Route>
         );
       })}
