@@ -83,9 +83,9 @@ export function fechaLocal(d = new Date()) {
   const p = (n) => String(n).padStart(2, '0');
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
-const diferenciaDias = (a, b) => Math.round((aFecha(b) - aFecha(a)) / DIA_MS);
+export const diferenciaDias = (a, b) => Math.round((aFecha(b) - aFecha(a)) / DIA_MS);
 // Por calendario, no sumando milisegundos: los días del cambio de hora duran 23 o 25 horas.
-const sumarDias = (fecha, n) => { const d = aFecha(fecha); return fechaLocal(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)); };
+export const sumarDias = (fecha, n) => { const d = aFecha(fecha); return fechaLocal(new Date(d.getFullYear(), d.getMonth(), d.getDate() + n)); };
 
 /** Día ISO de la semana (1 lunes … 7 domingo) de una fecha local. */
 export const diaIso = (fecha) => ((aFecha(fecha).getDay() + 6) % 7) + 1;
