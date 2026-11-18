@@ -603,6 +603,7 @@ Todas con RLS por `user_id = auth.uid()`; el front escribe con la sesión del us
 | `notas_formacion` | Bloc de notas por paso | `texto` es HTML (ver «Notas») |
 | `perfil_camino`, `actividad_diaria`, `preguntas_respuestas_ejercicios` | Camino (aparcado) | Perfil lee `perfil_camino.estado_vida` |
 | `consents` | Consentimientos | Solo lectura en el front |
+| `preferencias_notificaciones` | Horas del reto, la reflexión y la formación + zona horaria | Compartida con la app móvil; una fila por usuario |
 | `persona_invitaciones` | Enlace para que la persona de una ficha verifique su temperamento | Una por ficha; aceptarla es cosa del servidor |
 
 Restricciones que ya han roto cosas (comprobar antes de insertar):
@@ -665,6 +666,19 @@ llega en una PR posterior; esta parte es lo que necesita producción para que el
   verificó (también con tests hechos desde la app móvil).
 - **SQL**: `supabase-migraciones/20261118_persona_invitaciones.sql`.
 - Si añades un fichero `.mjs` a `api/`, añádelo también al `COPY` de `api/Dockerfile`.
+
+### Horarios y avisos: `preferencias_notificaciones`
+
+**Configuración primaria de notificaciones** (nov-2026): una sola tabla que leerán la web (correo
+del reto) y la app móvil (push). Quien envíe debe leer de aquí, no guardar copias. Las pantallas
+del portal que la rellenan llegan en una PR posterior.
+
+- Una fila por usuario: `hora_reto`, `hora_reflexion`, `dia_formacion` (ISO 1 lunes … 7 domingo),
+  `hora_formacion`, `zona_horaria` (IANA), `avisos_email`, `avisos_push`. Las horas son hora local
+  del usuario en su zona; un trigger rechaza zonas que Postgres no conozca.
+- RLS: cada usuario solo ve y edita su fila. Sin fila, aún no ha configurado nada.
+- SQL: `supabase-migraciones/20261118_preferencias_notificaciones.sql`.
+- `perfil_camino.hora_manana` / `hora_examen` son del Camino aparcado: no usarlos para avisos.
 
 ### Formación (cursos del portal)
 
