@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import {
   NO_SE, PREGUNTAS, combinacion, esMenorDe18, idDeClave, claveFicha, necesitaDesempate, ordenAleatorio,
   propuestaPorObservaciones, puntuar, sugerenciaDelDia,
+  PREGUNTAS_CORTO, enlaceInvitacion, mensajeInvitacion, necesitaDesempateCorto, puntuarCorto,
 } from './personas.js';
 
 const N = NO_SE;
@@ -93,4 +94,57 @@ test('sugerencia del día: primero quien no ha salido esta semana y, entre ellos
   assert.ok(sugerenciaDelDia([ana], {}, 4).consejo);
   // Ya salieron las dos con estrella: toca Ana, aunque no tenga estrella.
   assert.equal(sugerenciaDelDia([ana, marta, luis], { 2: { con_quien: 'p:m' }, 3: { examen: { con_quien: 'p:l' } } }, 4).persona.nombre, 'Ana');
+});
+
+test('test corto: 4 preguntas sacadas de las 8, sin textos nuevos', () => {
+  assert.equal(PREGUNTAS_CORTO.length, 4);
+  for (const q of PREGUNTAS_CORTO) assert.ok(PREGUNTAS.includes(q));
+});
+
+test('test corto: primario, secundario y confianza', () => {
+  // 3 de 4 al mismo y sin «No lo sé»: confianza media, secundario el único que queda.
+  assert.deepEqual(
+    (({ primario, secundario, confianza }) => ({ primario, secundario, confianza }))(puntuarCorto(['SAN', 'SAN', 'SAN', 'COL'])),
+    { primario: 'SAN', secundario: 'COL', confianza: 'media' },
+  );
+  // 4 de 4: sin secundario.
+  assert.equal(puntuarCorto(['MEL', 'MEL', 'MEL', 'MEL']).secundario, null);
+  // 2 + 1 + 1: primario claro, pero el secundario empata → null y confianza baja.
+  const r = puntuarCorto(['COL', 'COL', 'SAN', 'FLE']);
+  assert.equal(r.primario, 'COL');
+  assert.equal(r.secundario, null);
+  assert.equal(r.confianza, 'baja');
+  // Un «No lo sé» nunca da confianza media.
+  assert.equal(puntuarCorto(['FLE', 'FLE', 'FLE', N]).confianza, 'baja');
+  // Nunca alta: eso solo lo da la verificación.
+  assert.notEqual(puntuarCorto(['FLE', 'FLE', 'FLE', 'FLE']).confianza, 'alta');
+});
+
+test('test corto: dos «No lo sé» dejan la ficha sin temperamento', () => {
+  const r = puntuarCorto(['COL', N, N, 'COL']);
+  assert.equal(r.primario, null);
+  assert.equal(r.confianza, null);
+  assert.equal(necesitaDesempateCorto(['COL', N, N, 'COL']), false);
+});
+
+test('test corto: el empate lo decide la reacción y, si no, la primera respuesta', () => {
+  const empate = ['COL', 'SAN', 'COL', 'SAN'];
+  assert.equal(necesitaDesempateCorto(empate), true);
+  assert.equal(necesitaDesempateCorto(['COL', 'COL', 'COL', 'SAN']), false);
+  assert.equal(puntuarCorto(empate, { rapidez: 'rapido', duracion: 'pronto' }).primario, 'SAN');
+  assert.equal(puntuarCorto(empate, { rapidez: 'rapido', duracion: 'mucho' }).primario, 'COL');
+  // La reacción apunta a uno que no está empatado: manda la primera respuesta.
+  assert.equal(puntuarCorto(empate, { rapidez: 'lento', duracion: 'mucho' }).primario, 'COL');
+  assert.equal(puntuarCorto(empate, null).primario, 'COL');
+  // Con el primario decidido, el otro empatado queda de secundario.
+  assert.equal(puntuarCorto(empate, { rapidez: 'rapido', duracion: 'pronto' }).secundario, 'COL');
+});
+
+test('enlace de invitación: test en español, token y UTM del canal', () => {
+  const url = new URL(enlaceInvitacion('https://virtuousleadership.com/', 'abc123', 'whatsapp'));
+  assert.equal(url.pathname, '/es/tests/temperamento');
+  assert.equal(url.searchParams.get('inv'), 'abc123');
+  assert.equal(url.searchParams.get('utm_source'), 'invitacion');
+  assert.equal(url.searchParams.get('utm_medium'), 'whatsapp');
+  assert.ok(mensajeInvitacion('Luis', url.href).includes(url.href));
 });

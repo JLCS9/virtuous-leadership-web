@@ -22,8 +22,7 @@
 --      falla, lo ignora.
 --
 -- Es idempotente: se puede ejecutar más de una vez. No borra ni modifica datos existentes.
--- PENDIENTE DE APLICAR en producción (Supabase qyuxmqvqmgqcsduzljkd). Hasta entonces, el bloque
--- «Comparte el test» muestra «No he podido preparar el enlace» y el resto del portal funciona igual.
+-- Aplicado en producción (Supabase qyuxmqvqmgqcsduzljkd) el 2026-11-18.
 
 alter table public.personas add column if not exists verificado_en timestamptz;
 

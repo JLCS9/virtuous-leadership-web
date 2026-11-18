@@ -1,16 +1,17 @@
 // «Descubre el temperamento de X»: crear la ficha (o rehacer el test de una que ya existe), las 8
 // preguntas, el desempate si hace falta y el resultado. Al guardar, la ficha aparece en Mis personas.
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { crearPersona, guardarEstimacion } from '../../account/personas';
 import {
-  AVATARES, DESEMPATE, FICHA, GRUPOS, INTRO, NO_SE, PREGUNTAS, RELACIONES, TEXTO_CONFIANZA, gruposPara, necesitaDesempate,
-  ordenAleatorio, puntuar, textoResultado, textoSinResultado,
+  AVATARES, DESEMPATE, FICHA, GRUPOS, INTRO, NO_SE, PREGUNTAS, PREGUNTAS_CORTO, RELACIONES, TEXTO_CONFIANZA, gruposPara,
+  necesitaDesempate, necesitaDesempateCorto, ordenAleatorio, puntuar, puntuarCorto, textoResultado, textoSinResultado,
 } from '../../lib/personas.js';
 import { INK, LINE, MUTED, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
 import { parrafo } from '../estilos';
 import { Continuar, useTemperamento } from '../camino/Juegos';
 import { Opcion, Opciones, Pantalla, Puntos } from '../camino/ui';
 import { FichaContenido, useNombresTemp } from './comun';
+import CompartirTest from './CompartirTest';
 
 const titular = { fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 18px' };
 const etiquetaCampo = { display: 'block', fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, margin: '18px 0 8px' };
@@ -57,9 +58,15 @@ function Datos({ estadoVida, todosLosGrupos, menor, inicial, onListo, onSalir })
 
 /**
  * persona: si existe, se rehace su test (sin pedir los datos). Si no, se crea la ficha al guardar.
- * onHecho(persona) al guardar.
+ * corto: test de 4 preguntas en vez de 8.
+ * compartir: al llegar al resultado la ficha se guarda sola y debajo se ofrece compartir el test con
+ *   esa persona para que verifique su temperamento; «Continuar» llama a onHecho.
+ * onHecho(persona) al guardar (o al continuar, si compartir).
  */
-export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, menor, persona = null, onHecho, onSalir }) {
+export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, menor, persona = null, corto = false, compartir = false, onHecho, onSalir }) {
+  const preguntas = corto ? PREGUNTAS_CORTO : PREGUNTAS;
+  const puntua = corto ? puntuarCorto : puntuar;
+  const hayEmpate = corto ? necesitaDesempateCorto : necesitaDesempate;
   const temp = useTemperamento();
   const nombres = useNombresTemp();
   const orden = useMemo(() => ordenAleatorio(), []);
@@ -68,6 +75,17 @@ export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, m
   const [respuestas, setRespuestas] = useState([]);
   const [desempate, setDesempate] = useState({});
   const [estado, setEstado] = useState(null); // null · 'guardando' · 'error'
+  const [guardada, setGuardada] = useState(null); // la ficha ya guardada (solo con `compartir`)
+  const guardadoIniciado = useRef(false);
+
+  // Con `compartir`, la ficha se guarda al llegar al resultado (una sola vez: el ref evita el doble
+  // disparo del modo estricto de React, que crearía dos fichas).
+  useEffect(() => {
+    if (!compartir || paso !== 'resultado' || guardadoIniciado.current) return;
+    guardadoIniciado.current = true;
+    guardar();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [compartir, paso]);
 
   const nombre = datos?.nombre ?? '';
   const etiqueta = `Descubre el temperamento de ${nombre}`;
@@ -76,26 +94,26 @@ export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, m
 
   if (paso === 'intro') {
     return (
-      <Pantalla etiqueta={etiqueta} onVolver={onSalir} pie={<Continuar onClick={() => setPaso(0)}>Empezar · 8 preguntas</Continuar>}>
+      <Pantalla etiqueta={etiqueta} onVolver={onSalir} pie={<Continuar onClick={() => setPaso(0)}>Empezar · {preguntas.length} preguntas</Continuar>}>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 0' }}>{INTRO(nombre)}</p>
       </Pantalla>
     );
   }
 
   if (typeof paso === 'number') {
-    const [pregunta, opciones] = PREGUNTAS[paso];
+    const [pregunta, opciones] = preguntas[paso];
     const responder = (r) => {
       const nuevas = [...respuestas.slice(0, paso), r];
       setRespuestas(nuevas);
       setTimeout(() => {
-        if (paso + 1 < PREGUNTAS.length) setPaso(paso + 1);
-        else setPaso(necesitaDesempate(nuevas) ? 'rapidez' : 'resultado');
+        if (paso + 1 < preguntas.length) setPaso(paso + 1);
+        else setPaso(hayEmpate(nuevas) ? 'rapidez' : 'resultado');
       }, 160);
     };
     const atras = paso > 0 ? <button type="button" onClick={() => setPaso(paso - 1)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14, color: INK, padding: 0 }}>← Atrás</button> : null;
     return (
       <Pantalla etiqueta={etiqueta} onVolver={onSalir} pie={atras}>
-        <Puntos total={PREGUNTAS.length} actual={paso} />
+        <Puntos total={preguntas.length} actual={paso} />
         <p style={{ ...parrafo, fontSize: 13, margin: '14px 0 0' }}>{nombre}…</p>
         <h2 style={{ ...titular, marginTop: 4 }}>{pregunta}</h2>
         <Opciones>
@@ -123,26 +141,34 @@ export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, m
   }
 
   // Resultado.
-  const r = puntuar(respuestas, desempate);
+  const r = puntua(respuestas, desempate);
   async function guardar() {
     setEstado('guardando');
     const estimacion = { respuestas, desempate: Object.keys(desempate).length ? desempate : null, ...r };
     try {
-      let guardada;
+      let ficha;
       if (persona) {
         await guardarEstimacion(user.id, persona.id, estimacion);
-        guardada = { ...persona, primario: r.primario, secundario: r.secundario, confianza: r.confianza, puntos: r.puntos };
+        ficha = { ...persona, primario: r.primario, secundario: r.secundario, confianza: r.confianza, puntos: r.puntos };
       } else {
-        guardada = await crearPersona(user.id, datos, estimacion);
+        ficha = await crearPersona(user.id, datos, estimacion);
       }
-      onHecho(guardada);
+      if (compartir) { setGuardada(ficha); setEstado(null); } else onHecho(ficha);
     } catch {
       setEstado('error');
     }
   }
-  const pie = (
+  const aviso = estado === 'error' && <p role="alert" style={{ ...parrafo, color: ROJO, marginBottom: 12 }}>No he podido guardar la ficha. Inténtalo de nuevo.</p>;
+  const pie = compartir ? (
     <>
-      {estado === 'error' && <p role="alert" style={{ ...parrafo, color: ROJO, marginBottom: 12 }}>No he podido guardar la ficha. Inténtalo de nuevo.</p>}
+      {aviso}
+      {guardada
+        ? <Continuar onClick={() => onHecho(guardada)}>Continuar</Continuar>
+        : <Continuar disabled={estado === 'guardando'} onClick={guardar}>{estado === 'error' ? 'Reintentar' : 'Guardando…'}</Continuar>}
+    </>
+  ) : (
+    <>
+      {aviso}
       <Continuar disabled={estado === 'guardando'} onClick={guardar}>{estado === 'guardando' ? 'Guardando…' : 'Guardar la ficha'}</Continuar>
     </>
   );
@@ -152,6 +178,7 @@ export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, m
       <Pantalla etiqueta={etiqueta} pie={pie}>
         <p style={{ fontFamily: FONT_SLAB, fontSize: 24, lineHeight: 1.32, color: INK, margin: '14px 0 10px' }}>{textoSinResultado(nombre)}</p>
         <p style={parrafo}>Guardamos la ficha sin temperamento. Cuando le observes, podrás anotar sus reacciones o volver a hacer el test.</p>
+        {compartir && guardada && <CompartirTest user={user} persona={guardada} />}
       </Pantalla>
     );
   }
@@ -165,8 +192,9 @@ export default function CrearFicha({ user, estadoVida, todosLosGrupos = false, m
       </div>
       <div style={{ fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: MUTED, marginBottom: 12 }}>{TEXTO_CONFIANZA[r.confianza]}</div>
       <p style={{ ...parrafo, color: INK, fontSize: 16, marginBottom: 14 }}>{textoResultado(nombre, nombres[r.primario].toLowerCase(), f.lema)}</p>
+      {compartir && guardada && <CompartirTest user={user} persona={guardada} />}
       <FichaContenido persona={{ nombre, primario: r.primario }} miPrimario={temp?.primario} />
-      <p style={{ ...parrafo, fontSize: 13.5, marginTop: 12 }}>Solo {nombre} puede confirmarlo. Pronto podrás invitarle a hacer el test.</p>
+      {!compartir && <p style={{ ...parrafo, fontSize: 13.5, marginTop: 12 }}>Solo {nombre} puede confirmarlo. Pronto podrás invitarle a hacer el test.</p>}
     </Pantalla>
   );
 }

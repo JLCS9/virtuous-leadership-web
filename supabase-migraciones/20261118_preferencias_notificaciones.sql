@@ -19,7 +19,7 @@
 --   p. ej.  (now() at time zone zona_horaria)::time  entre hora_reto y hora_reto + el intervalo del cron.
 --
 -- Es idempotente: se puede ejecutar más de una vez. No borra ni modifica datos existentes.
--- PENDIENTE DE APLICAR en producción (Supabase qyuxmqvqmgqcsduzljkd).
+-- Aplicado en producción (Supabase qyuxmqvqmgqcsduzljkd) el 2026-11-18.
 
 create table if not exists public.preferencias_notificaciones (
   user_id uuid primary key references auth.users(id) on delete cascade,

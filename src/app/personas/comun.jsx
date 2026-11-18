@@ -23,17 +23,31 @@ export function Avatar({ persona, tam = 44 }) {
   );
 }
 
+/** Insignia de ficha verificada: la persona hizo el test con el enlace que se le compartió. */
+export function Verificado({ tam = 15 }) {
+  return (
+    <svg width={tam} height={tam} viewBox="0 0 24 24" role="img" aria-label="Verificado" style={{ flex: `0 0 ${tam}px`, verticalAlign: '-2px' }}>
+      <path fill="#1D9BF0" d="M12 1.5l2.6 1.9 3.2-.2 1 3 2.7 1.8-1 3 1 3-2.7 1.8-1 3-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3-2.7-1.8 1-3-1-3 2.7-1.8 1-3 3.2.2z" />
+      <path fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" d="M7.8 12.2l2.8 2.8 5.6-5.8" />
+    </svg>
+  );
+}
+
+export const estaVerificada = (persona) => persona?.estado === 'confirmado';
+
 export function EtiquetaEstado({ persona }) {
   const nombres = useNombresTemp();
   if (!persona.primario) return <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>Sin estimar</span>;
-  const verificado = persona.estado === 'confirmado';
   return (
     <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, color: MUTED }}>
       <strong style={{ color: TEMP_COLORS[persona.primario] }}>{nombres[persona.primario]}</strong>
+      {persona.secundario && nombres[persona.secundario] && (
+        <> y <strong style={{ color: TEMP_COLORS[persona.secundario] }}>{nombres[persona.secundario].toLowerCase()}</strong></>
+      )}
       {' · '}
-      {verificado
-        ? <span style={{ color: '#2B8A3E', fontWeight: 600 }}>Verificado ✓</span>
-        : 'Pendiente verificación'}
+      {estaVerificada(persona)
+        ? <span style={{ color: INK, fontWeight: 600 }}><Verificado /> Verificado por {persona.nombre}</span>
+        : 'Pendiente de verificación'}
     </span>
   );
 }

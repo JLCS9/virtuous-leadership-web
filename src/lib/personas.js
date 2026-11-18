@@ -89,7 +89,54 @@ export function puntuar(respuestas, desempate = null) {
   return { puntos, noSe, primario, secundario, confianza };
 }
 
-export const TEXTO_CONFIANZA = { alta: 'Confianza alta', media: 'Confianza media', baja: 'Confianza baja' };
+// ───────────── Test corto (4 preguntas) ─────────────
+// Para añadir personas deprisa (onboarding, «Tu entorno»): cuatro de las ocho preguntas, sin textos
+// nuevos. Índices sobre PREGUNTAS: algo le sale mal · una decisión · con gente · un proyecto.
+export const PREGUNTAS_CORTO_IDX = [0, 1, 3, 4];
+export const PREGUNTAS_CORTO = PREGUNTAS_CORTO_IDX.map((i) => PREGUNTAS[i]);
+
+/** Con 2 o más «No lo sé» (de 4) no hay resultado; el desempate, igual que en el test largo. */
+export const necesitaDesempateCorto = (respuestas) =>
+  respuestas.filter((r) => r === NO_SE).length < 2 && empatados(contarPuntos(respuestas)).length > 1;
+
+/**
+ * Puntuación del test corto. Misma regla que `puntuar`, ajustada a 4 respuestas:
+ *  - primario: el de más puntos; empate → desempate (rapidez × duración) → respuesta a la pregunta 1;
+ *  - secundario: el segundo, solo si tiene algún punto y no empata con otro;
+ *  - confianza: nunca alta (son 4 preguntas). Media con 3 o más respuestas al primario y ningún
+ *    «No lo sé»; baja el resto. Con 2 o más «No lo sé» no hay resultado.
+ * La confianza alta solo llega cuando la persona hace el test ella misma (ficha verificada).
+ */
+export function puntuarCorto(respuestas, desempate = null) {
+  const puntos = contarPuntos(respuestas);
+  const noSe = respuestas.filter((r) => r === NO_SE).length;
+  if (noSe >= 2) return { puntos, noSe, primario: null, secundario: null, confianza: null };
+
+  const cabeza = empatados(puntos);
+  let primario = cabeza[0];
+  if (cabeza.length > 1) {
+    const porReaccion = POR_REACCION[desempate?.rapidez]?.[desempate?.duracion];
+    if (cabeza.includes(porReaccion)) primario = porReaccion;
+    else if (cabeza.includes(respuestas[0])) primario = respuestas[0];
+  }
+  const resto = TEMPS.filter((k) => k !== primario).sort((a, b) => puntos[b] - puntos[a]);
+  const secundario = puntos[resto[0]] >= 1 && puntos[resto[0]] > puntos[resto[1]] ? resto[0] : null;
+  const confianza = puntos[primario] >= 3 && noSe === 0 ? 'media' : 'baja';
+  return { puntos, noSe, primario, secundario, confianza };
+}
+
+// ───────────── Invitación: «comparte el test con X y valida su temperamento» ─────────────
+
+/** Enlace al test de temperamento con el token de la invitación (y UTM para medir el canal). */
+export function enlaceInvitacion(origen, token, canal = 'enlace') {
+  const q = new URLSearchParams({ inv: token, utm_source: 'invitacion', utm_medium: canal, utm_campaign: 'tu-entorno' });
+  return `${String(origen).replace(/\/+$/, '')}/es/tests/temperamento?${q}`;
+}
+
+export const mensajeInvitacion = (nombre, url) =>
+  `Hola, ${nombre}: he hecho el test de temperamento de Virtuous Leadership y me gustaría conocer el tuyo. Son unos minutos y es gratis: ${url}`;
+
+export const TEXTO_CONFIANZA ={ alta: 'Confianza alta', media: 'Confianza media', baja: 'Confianza baja' };
 
 // «parece de temperamento colérico» y no «parece colérico»: la ficha no guarda el sexo y así concuerda
 // con cualquier nombre. Es el único cambio sobre el texto de la especificación.

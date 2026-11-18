@@ -646,38 +646,55 @@ Detalle de columnas y ejemplos: `docs/FICHA_INTEGRACION_BD_FORMACION.md`.
   pide nombre + grupo y crea la ficha en BD **antes** de marcarla; `CirculoPersonas` guarda notas
   como observación `situacion: 'otro'`.
 
-### Invitación al test de temperamento (verificar una ficha de «Tu entorno»)
+### Añadir persona: test corto + «comparte el test» (verificación)
 
-Lado del invitado y servidor (nov-2026). La pantalla del portal que crea y comparte el enlace
-llega en una PR posterior; esta parte es lo que necesita producción para que el enlace funcione.
+Es el bucle de crecimiento del onboarding (nov-2026). Solo en `/app/personas/nueva` (botón «Añadir
+persona» de Hoy y de la lista); Formación y el Camino aparcado siguen con sus flujos.
 
+- **Test corto**: 4 de las 8 preguntas (`PREGUNTAS_CORTO_IDX` en `lib/personas.js`, sin textos
+  nuevos) + desempate si hay empate. `puntuarCorto()`: nunca da confianza alta; con 2 «No lo sé» no
+  hay resultado. `CrearFicha` lo activa con la prop `corto`; con `compartir` la ficha se guarda sola
+  al llegar al resultado (un `ref` evita la doble alta del modo estricto) y debajo sale
+  `personas/CompartirTest.jsx`.
 - **Enlace**: `/es/tests/temperamento?inv=<token>&utm_source=invitacion&utm_medium=<canal>`. El
-  token vive en `persona_invitaciones` (una por ficha; la crea el front de quien invita, con RLS).
-- **Invitado**: `components/Invitacion.jsx` (montado en `App.jsx`) guarda el token, pregunta UNA vez
-  si quiere compartir su temperamento (decisión expresa; textos en `invitacion.*` de los 4 idiomas)
-  y, con sesión y resultado guardado, llama a `POST /api/invitacion/aceptar`.
-  `GET /api/invitacion?token=` devuelve solo el nombre de pila de quien invita.
-- **Test**: quien llega por invitación no ve «¿cómo has llegado?»; el origen se anota como
-  `referido` (`esReferido()` en `account/invitacion.js`, usado en `answerQualify` de `TestTBP.jsx`).
+  token vive en `persona_invitaciones` (una por ficha; la crea el front con RLS, `invitacionDe()`
+  en `account/personas.js`). Nunca se envía nada desde el servidor: comparte el usuario (WhatsApp,
+  correo, menú del móvil o copiar).
+- **Invitado**: `components/Invitacion.jsx` (montado en `App.jsx`) guarda el
+  token, pregunta UNA vez si quiere compartir su temperamento (decisión expresa; textos en
+  `invitacion.*` de los 4 idiomas) y, con sesión y resultado guardado, llama a
+  `POST /api/invitacion/aceptar`. `GET /api/invitacion?token=` devuelve solo el nombre de pila de
+  quien invita.
 - **Verificación** (`api/invitaciones.mjs`, service role): lee el último `test_results` de
   temperamento del invitado y pone la ficha en `estado: 'confirmado'`, con su primario/secundario,
-  `confianza: 'alta'` y `verificado_en`. La invitación se consume una sola vez.
+  `confianza: 'alta'` y `verificado_en`. La invitación se consume una sola vez. En el portal se ve
+  la insignia «Verificado por X» (`Verificado` / `estaVerificada` en `personas/comun.jsx`).
+- **Test**: quien llega por invitación no ve «¿cómo has llegado?»; el origen se anota como
+  `referido` (`esReferido()` en `account/invitacion.js`, usado en `answerQualify` de `TestTBP.jsx`).
 - **Si repite el test**: el trigger `test_results_sincroniza_fichas` actualiza las fichas que
   verificó (también con tests hechos desde la app móvil).
-- **SQL**: `supabase-migraciones/20261118_persona_invitaciones.sql`.
+- **Enlace siempre al dominio real** (`VITE_SITE_URL`, por defecto virtuousleadership.com), también
+  en local; en desarrollo `CompartirTest` añade un enlace al servidor local para probar.
+- **SQL**: `supabase-migraciones/20261118_persona_invitaciones.sql` (aplicado en producción).
 - Si añades un fichero `.mjs` a `api/`, añádelo también al `COPY` de `api/Dockerfile`.
 
-### Horarios y avisos: `preferencias_notificaciones`
+### Horarios y avisos («Tu día a día»)
 
-**Configuración primaria de notificaciones** (nov-2026): una sola tabla que leerán la web (correo
-del reto) y la app móvil (push). Quien envíe debe leer de aquí, no guardar copias. Las pantallas
-del portal que la rellenan llegan en una PR posterior.
+Cuándo quiere el usuario su reto diario, su reflexión y su formación semanal (nov-2026). Es la
+**configuración primaria de notificaciones**: una sola tabla que leerán la web (correo del reto) y
+la app móvil (push). Quien envíe debe leer de aquí, no guardar copias.
 
-- Una fila por usuario: `hora_reto`, `hora_reflexion`, `dia_formacion` (ISO 1 lunes … 7 domingo),
-  `hora_formacion`, `zona_horaria` (IANA), `avisos_email`, `avisos_push`. Las horas son hora local
-  del usuario en su zona; un trigger rechaza zonas que Postgres no conozca.
-- RLS: cada usuario solo ve y edita su fila. Sin fila, aún no ha configurado nada.
-- SQL: `supabase-migraciones/20261118_preferencias_notificaciones.sql`.
+- **Tabla**: `preferencias_notificaciones` (una fila por usuario): `hora_reto`, `hora_reflexion`,
+  `dia_formacion` (ISO 1 lunes … 7 domingo), `hora_formacion`, `zona_horaria` (IANA),
+  `avisos_email`, `avisos_push`. Las horas son hora local del usuario en su zona; un trigger
+  rechaza zonas que Postgres no conozca. SQL en
+  `supabase-migraciones/20261118_preferencias_notificaciones.sql`.
+- **Front**: `lib/preferencias.js` (puro, testeado: valores por defecto, `normalizar`, textos),
+  `account/preferencias.js` (leer / upsert), `app/Horarios.jsx` (`ConfigurarHorarios`: tres
+  pantallas, reutilizable en el onboarding; la página es `/es/app/horarios`). El resumen sale en
+  Perfil → Configuración (`SeccionHorarios`).
+- Sin fila, el usuario aún no ha configurado nada (`configurado: false`): sirve para saber si le
+  falta ese paso del onboarding. La zona se toma del dispositivo la primera vez.
 - `perfil_camino.hora_manana` / `hora_examen` son del Camino aparcado: no usarlos para avisos.
 
 ### Formación (cursos del portal)
