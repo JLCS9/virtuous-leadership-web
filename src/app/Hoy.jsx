@@ -7,7 +7,7 @@ import { botonContorno, eyebrow, parrafo, tarjeta, titulo } from './estilos';
 import { IconoCheck } from './Iconos';
 import { EsqueletoTarjeta } from './Esqueleto';
 import MapaCaracter from './MapaCaracter';
-import CaminoHoy from './caminoDiario/CaminoHoy';
+import HoyGuiado from './caminoDiario/HoyGuiado';
 import TuEntorno from './personas/TuEntorno';
 import { useTemperamentoClave } from './useTemperamentoClave';
 
@@ -93,27 +93,31 @@ export default function Hoy() {
   }
 
   return (
-    <div className="vl-hoy">
-      <style>{`
-        .vl-hoy { display: flex; flex-direction: column; gap: 14px; }
-        @media (min-width: 860px) {
-          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch; }
-          .vl-hoy-izq { display: flex; flex-direction: column; gap: 14px; }
-          .vl-hoy-der { display: flex; flex-direction: column; overflow: hidden; }
-          .vl-hoy-der > section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
-          .vl-hoy-der .vl-mapa-personas-wrap { flex: 1; position: relative; min-height: 0; }
-          .vl-hoy-der .vl-mapa-personas-wrap svg { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; }
-        }
-      `}</style>
-      {showBanner && <BannerTestOk onClose={closeBanner} />}
-      <CaminoHoy tempClave={tempClave} />
-      <div className="vl-hoy-izq">
-        <MiResultado fila={tempFila} clave={tempClave} />
-        <MapaCaracter tempClave={tempClave} />
-      </div>
-      <div className="vl-hoy-der">
-        <TuEntorno miPrimario={tempClave} />
-      </div>
-    </div>
+    <HoyGuiado tempClave={tempClave} cargandoTemperamento={tempFila === undefined}>
+      {({ superior }) => (
+        <div className="vl-hoy">
+          <style>{`
+            .vl-hoy { display: flex; flex-direction: column; gap: 14px; }
+            @media (min-width: 860px) {
+              .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch; }
+              .vl-hoy-izq { display: flex; flex-direction: column; gap: 14px; }
+              .vl-hoy-der { display: flex; flex-direction: column; overflow: hidden; }
+              .vl-hoy-der > section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+              .vl-hoy-der .vl-mapa-personas-wrap { flex: 1; position: relative; min-height: 0; }
+              .vl-hoy-der .vl-mapa-personas-wrap svg { position: absolute; inset: 0; width: 100% !important; height: 100% !important; max-width: none !important; }
+            }
+          `}</style>
+          {showBanner && <BannerTestOk onClose={closeBanner} />}
+          {superior}
+          <div className="vl-hoy-izq">
+            <MiResultado fila={tempFila} clave={tempClave} />
+            <MapaCaracter tempClave={tempClave} />
+          </div>
+          <div className="vl-hoy-der">
+            <TuEntorno miPrimario={tempClave} />
+          </div>
+        </div>
+      )}
+    </HoyGuiado>
   );
 }

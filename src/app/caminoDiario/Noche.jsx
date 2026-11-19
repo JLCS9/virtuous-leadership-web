@@ -12,10 +12,10 @@ import CampoVariable from './CampoVariable';
 
 const seccion = { ...tarjeta, gridColumn: '1 / -1' };
 
-export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVariable, valorActual, personas, habito, onGuardado }) {
+export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVariable, valorActual, personas, habito, onGuardado, directo = false, alTerminar }) {
   const { t } = useT();
   const paso = pasoDeNoche(diaDeHoy);
-  const [abierta, setAbierta] = useState(false);
+  const [abierta, setAbierta] = useState(directo);
   const [adelante, setAdelante] = useState(false); // ya pasó de «reflexión» en esta sesión
   const [reflexion, setReflexion] = useState(diaDeHoy?.reflexion ?? '');
   const [nutrir, setNutrir] = useState({ valor: valorActual ?? '', personaId: filaVariable?.persona_id ?? null });
@@ -57,6 +57,7 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
             {estado === 'error' && <p role="alert" style={{ ...parrafo, fontSize: 16, color: '#9b1c1c', marginTop: 12 }}>{t('camino.error_guardar')}</p>}
           </div>
         )}
+        {alTerminar && <div style={{ marginTop: 18 }}><button type="button" onClick={alTerminar} style={botonSobreClaro}>{t('camino.guiado.listo')}</button></div>}
       </section>
     );
   }

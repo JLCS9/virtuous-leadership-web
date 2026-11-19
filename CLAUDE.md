@@ -83,7 +83,7 @@ reglas no son opcionales:
 - **Estilos**: inline styles + tokens en `src/theme.js`. No Tailwind, no CSS
   modules.
 - **Tests**: `node --test` (built-in Node 20), sólo módulos puros
-  (202 tests; ver «Tests»).
+  (205 tests; ver «Tests»).
 - **Deploy**: Docker Compose en VPS Hostinger `/opt/virtuousleadership/`.
 - **Analytics**: GTM (GTM-W9P5BPF9) + GA4 (G-HM6K1685L2) desde el contenedor
   GTM. Consentimiento: banner propio (`src/components/CookieConsent.jsx`) +
@@ -258,7 +258,7 @@ npm test              # node --test src/lib/*.test.js
 ```
 
 Sólo módulos puros (`src/lib/*.test.js` + `src/formacion/**/*.test.js`).
-Total actual: **202 tests** (carácter, corazón, personas, camino, panel,
+Total actual: **205 tests** (carácter, corazón, personas, camino, panel,
 track, modulo1, preferencias, biblioteca/retos/hábitos del Camino diario). CI los corre en cada PR junto al build; si los rompes, la
 PR no debe mergearse.
 Si tocas un scoring engine y los tests fallan, NO regeneres las fixtures
@@ -801,6 +801,18 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   `camino_dia.reto_id`). La cita se fija al abrir y no cambia aunque cambie el reto. Aceptar es
   definitivo: no se puede cambiar el compromiso del día. Los días sin terminar no se recuperan, pero
   lo hecho se guarda.
+- **Hoy guiado** (`caminoDiario/HoyGuiado.jsx`, lógica en `lib/hoyGuiado.js`, datos en `caminoDiario/useHoy.js`):
+  al entrar en Hoy, mientras te falte algo se enseña **solo eso, de uno en uno, con un «Siguiente»** («Paso 1 de 2»):
+  las preguntas iniciales (la primera vez), **la frase del día** (solo la frase, «Siguiente»), **aceptar el reto**
+  (con «Proponme otro») y, **cuando toca, el examen de la noche** (directo a «¿Lo has hecho?», sin pantalla previa; al
+  acabar se queda en su cierre con un «Listo»). Cuando estás al día sale la **pantalla principal** con un check
+  «**Estás al día**» arriba (con «Esta noche te toca el examen» si aún no toca). Reglas:
+  - El examen cuenta como pendiente **a partir de la hora de reflexión de sus horarios** (`hora_reflexion`, 21:30 por
+    defecto; se comprueba cada minuto). Antes de esa hora, con el reto aceptado, ya está al día, y el examen se puede
+    adelantar desde la pantalla principal (así que la noche no está bloqueada por hora, solo no se exige antes).
+  - La frase se enseña hasta que se acepta el reto (no se guarda «vista»); los hábitos **no** forman parte del flujo
+    (siguen en la pantalla principal).
+  - Con `?hora=22:00` (solo en desarrollo) se simula la hora para ver la noche.
 - **Variables**: `{persona_trabajo}`… se rellenan con `camino_variables`; vacías, con el texto por
   defecto de la hoja Variables. Las variables de persona se eligen **solo entre las fichas de «Tu
   entorno»** (`CampoVariable`; nada de texto libre): con grupo en la hoja Variables (familia,
