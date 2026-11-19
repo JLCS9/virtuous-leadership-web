@@ -161,14 +161,14 @@ export default function MapaCaracter({ tempClave, grande = false }) {
         </div>
 
         <div>
-          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 18 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Tu virtud más fuerte es <strong style={{ color: NAVY }}>{mayor.nombre}</strong> ({Math.round(mayor.valor)}%).
           </p>
           <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 13.5, color: MUTED, margin: '0 0 14px', lineHeight: 1.5 }}>
             {notaMayor || textoMayor?.bien}
           </p>
 
-          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 18 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 14.5, color: INK, margin: '0 0 4px', lineHeight: 1.5 }}>
             Lo que más puedes cultivar ahora es <strong style={{ color: NAVY }}>{menor.nombre}</strong> ({Math.round(menor.valor)}%).
           </p>
           <p style={{ fontFamily: FONT_BODY, fontSize: grande ? 16 : 13.5, color: MUTED, margin: '0 0 4px', lineHeight: 1.5 }}>

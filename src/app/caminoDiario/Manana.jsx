@@ -5,10 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { guardarDia } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
 import { opcionesDelReto } from '../../lib/retos.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY, FONT_SLAB, GOLD_REF } from '../../theme';
+import { INK, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, fechaLarga, parrafo, tarjeta, titulo } from '../estilos';
-
-const primeraMayuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
  * `proponerOtro()` devuelve el siguiente reto distinto de los ya propuestos hoy, o null. Lo calcula quien
@@ -64,38 +62,36 @@ export default function Manana({ reto, cita, valores, defectos, diaDeHoy, hoy, u
 
   return (
     <section style={{ ...tarjeta, gridColumn: '1 / -1' }} aria-label={t('camino.manana.eyebrow')}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, flexWrap: 'wrap' }}>
-        <div style={eyebrow}>{t('camino.manana.eyebrow')}</div>
-        <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>{primeraMayuscula(fechaLarga())}</div>
-      </div>
+      <div style={eyebrow}>{t('camino.manana.eyebrow')}</div>
 
       {cita && (
-        <figure style={{ margin: '18px 0 0', padding: '0 0 0 18px', borderLeft: `3px solid ${GOLD_REF}` }}>
-          <blockquote style={{ margin: 0, fontFamily: FONT_SLAB, fontSize: 22, lineHeight: 1.4, color: NAVY }}>«{cita.texto}»</blockquote>
+        <figure style={{ margin: '16px 0 0', padding: '0 0 0 14px', borderLeft: `2px solid ${GOLD_REF}` }}>
+          <blockquote style={{ margin: 0, fontFamily: FONT_SLAB, fontSize: 18, lineHeight: 1.45, fontWeight: 500, color: NAVY }}>«{cita.texto}»</blockquote>
           <figcaption style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, marginTop: 8 }}>
             {cita.origen === 'citado' ? t('camino.manana.cita_citado', { autor: cita.autor }) : cita.autor}
           </figcaption>
         </figure>
       )}
 
-      <h2 style={{ ...titulo(30), margin: '24px 0 6px' }}>{reto.consigna}</h2>
-      <p style={{ ...parrafo, fontSize: 18, marginBottom: 16 }}>{aceptada ? t('camino.manana.elegida') : t('camino.manana.propuesta')}</p>
+      <h2 style={{ ...titulo(30), margin: '20px 0 4px' }}>{reto.consigna}</h2>
+      <p style={{ ...parrafo, marginBottom: 14 }}>{aceptada ? t('camino.manana.elegida') : t('camino.manana.propuesta')}</p>
 
       <div
         aria-live="polite"
         style={{
-          padding: '16px 18px', display: 'grid', gap: 4, fontFamily: FONT_BODY, borderRadius: 0,
-          border: `1px solid ${aceptada ? NAVY : LINE}`, background: aceptada ? NAVY : PAPER, color: aceptada ? PAPER : INK,
+          padding: '14px 16px', display: 'grid', gap: 3, fontFamily: FONT_BODY, borderRadius: 16, color: INK,
+          border: aceptada ? '1px solid rgba(165,139,38,0.35)' : '1px solid transparent',
+          background: aceptada ? 'rgba(165,139,38,0.10)' : 'rgba(27,42,74,0.04)',
         }}
       >
-        <span style={{ fontSize: 16, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', opacity: 0.8 }}>{etiqueta(mostrada.clave)}</span>
-        <span style={{ fontSize: 20, lineHeight: 1.5 }}>{mostrada.texto}</span>
+        <span style={{ fontSize: 12, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: aceptada ? GOLD_REF_DK : MUTED }}>{etiqueta(mostrada.clave)}</span>
+        <span style={{ fontSize: 17, lineHeight: 1.5 }}>{mostrada.texto}</span>
       </div>
 
       {aceptada ? (
-        <p style={{ ...parrafo, fontSize: 16, marginTop: 16 }}>{t('camino.manana.noche')}</p>
+        <p style={{ ...parrafo, fontSize: 15, marginTop: 14 }}>{t('camino.manana.noche')}</p>
       ) : (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 18 }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 16 }}>
           <button type="button" onClick={aceptar} style={botonSobreClaro}>{t('camino.manana.aceptar')}</button>
           <button type="button" onClick={otra} style={botonContorno}>{t('camino.manana.otro')}</button>
         </div>

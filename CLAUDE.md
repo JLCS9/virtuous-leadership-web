@@ -745,13 +745,16 @@ Todo `/es/app/*` comparte un estilo: tarjetas blancas redondeadas con sombra sua
 **Plus Jakarta Sans** y texto en **Inter**, fondo cálido con un velo de luz, fundidos suaves y scroll suave. Se
 reparte así, para no tener que tocar cada pantalla:
 
-- **Bloques compartidos** (`app/estilos.js`): `tarjeta` (radio 24, borde fino, sombra), `botonPrimario` (dorado),
+- **Escala sobria**: texto de lectura a 16 px (`parrafo`), títulos escalados al 80 % en un solo sitio
+  (`ESCALA_TITULOS` en `estilos.js`: `titulo(30)` → 24 px), etiquetas (`eyebrow`) a 12 px, tarjetas con poco relleno
+  (22 px) y botones compactos. Para que todo el portal sea más grande o más pequeño, **ahí**, no pantalla a pantalla.
+- **Bloques compartidos** (`app/estilos.js`): `tarjeta` (radio 20, borde fino, sombra suave), `botonPrimario` (dorado),
   `botonSobreClaro` (azul, la acción principal), `botonContorno` (secundario), `titulo`, `eyebrow`, `barraFondo`.
   Para pantallas nuevas, usar estos.
 - **Capa de estilo** (CSS en `app/AppShell.jsx`, bloque «Estilo del portal»): tokens `--vl-r-*`, `--vl-fuente*`,
   `--vl-sombra*`; cambia la serifa de los títulos y Roboto por las fuentes nuevas; y **redondea todo lo que el
   código declara con `borderRadius: 0`** (botones → píldora, bloques de texto y opciones de respuesta → radio
-  18, campos → 14, tarjetas → 24). Para cambiar radios, fuentes o sombras de todo el portal, **aquí**.
+  14, campos → 12, tarjetas → 20). Para cambiar radios, fuentes o sombras de todo el portal, **aquí**.
   Lo que tiene su propio `borderRadius ≠ 0` no se toca. Solo afecta a `.vl-app` (el portal), no a la web pública.
 - **Fuentes**: se cargan con un `<link>` que pone una vez `AppShell` (no con `@import` dentro del `<style>`, que
   bloqueaba el pintado).
@@ -826,8 +829,8 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
 - **Racha y tira de días** (encima del camino): `lib/rachaDias.js` y `caminoDiario/TiraDeDias.jsx`.
   Racha = días seguidos con un reto aceptado (si hoy aún no lo ha aceptado, cuenta desde ayer). La
   tira enseña siempre los 2 días anteriores, hoy y los 5 siguientes, con el día aceptado marcado.
-- **Pestaña Camino, arriba**: «Tu entorno» y el último test de carácter, que va más grande
-  (`<MapaCaracter grande />`, radar con etiquetas a 16-17 px). Los avatares del mapa de «Tu
+- **Pestaña Camino, arriba**: «Tu entorno» (columna ancha, es lo principal) y el último test de carácter, en
+  compacto (`<MapaCaracter grande />`: una columna con el radar a 340 px máximo). Los avatares del mapa de «Tu
   entorno» son enlaces a la ficha de la persona (`onElegirPersona` en `MapaPersonas`).
 - **«Lo que Virtus sabe de ti» ya no se muestra en ningún sitio**: `caminoDiario/MisVariables.jsx`
   queda **aparcado y sin montar** (lista las variables con la redacción en tercera persona del

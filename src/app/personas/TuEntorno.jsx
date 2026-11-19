@@ -2,7 +2,7 @@
 // Se usa en Hoy y en la pestaña Camino.
 import { useNavigate } from 'react-router-dom';
 import { useLocalPath } from '../../i18n';
-import { LINE, NAVY, FONT_BODY } from '../../theme';
+import { NAVY, FONT_BODY } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
 import { usePersonas } from '../usePersonas';
 import { EsqueletoTarjeta } from '../Esqueleto';
@@ -44,11 +44,11 @@ export default function TuEntorno({ miPrimario }) {
         <MapaPersonas personas={lista} miPrimario={miPrimario} onElegirPersona={irAPersona} />
       </div>
 
-      <div style={{ marginTop: 14, display: 'grid', gap: 2 }}>
+      <div style={{ marginTop: 10, display: 'grid', gap: 2 }}>
         {visibles.map((p) => (
-          <button key={p.id} type="button" onClick={() => irAPersona(p)} style={{
-            display: 'flex', alignItems: 'center', gap: 12, padding: '9px 4px',
-            background: 'none', border: 'none', borderTop: `1px solid ${LINE}`,
+          <button key={p.id} type="button" className="vl-fila-persona" onClick={() => irAPersona(p)} style={{
+            display: 'flex', alignItems: 'center', gap: 12, padding: '8px 10px',
+            background: 'none', border: 'none', borderRadius: 12,
             cursor: 'pointer', textAlign: 'left', width: '100%',
           }}>
             <Avatar persona={p} tam={36} />

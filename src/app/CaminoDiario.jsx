@@ -36,10 +36,10 @@ export default function CaminoDiario() {
   const bloques = bloquesDeLaRuta({ desafio: virtudDeDesafio(CHALLENGE_VIRTUE[clave]), inicio, hoy: camino.hoy });
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 18 }} aria-label={t('camino.pagina.titulo')}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr)', gap: 14 }} aria-label={t('camino.pagina.titulo')}>
       <style>{`
-        .vl-camino-arriba { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-        @media (min-width: 860px) { .vl-camino-arriba { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); align-items: start; gap: 24px; } }
+        .vl-camino-arriba { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+        @media (min-width: 860px) { .vl-camino-arriba { grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); align-items: start; gap: 18px; } }
       `}</style>
       <div className="vl-camino-arriba">
         <TuEntorno miPrimario={clave} />
