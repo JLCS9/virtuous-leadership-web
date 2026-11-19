@@ -1,5 +1,6 @@
-// El camino de virtudes: un bloque por virtud, empezando por la virtud-desafío del usuario. Las demás
-// están bloqueadas hasta que haya pasado un mes con ella. Lógica pura, sin React ni red.
+// El ciclo de virtud: se empieza por la virtud-desafío del usuario y las demás están bloqueadas hasta que haya
+// pasado un mes con ella. Hoy la pantalla solo enseña la virtud en curso («Ciclo de humildad»), pero el orden
+// y el desbloqueo se calculan aquí para cuando haya contenido de las demás. Lógica pura, sin React ni red.
 //
 // Fechas: 'YYYY-MM-DD' locales. Un día cuenta como «trabajado» desde el primero en que el usuario aceptó
 // un reto (`opcion` rellena en camino_dia).
@@ -35,7 +36,7 @@ export function inicioDeLaRuta(dias) {
  *  · 'completada'  la virtud-desafío, pasado el mes (`avance` 1).
  *  · 'bloqueada'   las demás, mientras no haya pasado el mes con la virtud-desafío.
  *  · 'disponible'  las demás, pasado el mes.
- * `avance` es solo para dibujar cuánto camino se ha recorrido: la pantalla no enseña días ni plazos.
+ * `avance` (0 a 1) es cuánto del ciclo ha pasado; la pantalla no enseña días ni plazos.
  * Sin virtud-desafío (no ha hecho el test) no hay camino: devuelve [].
  */
 export function bloquesDeLaRuta({ desafio, inicio, hoy, config = RUTA }) {
@@ -49,9 +50,4 @@ export function bloquesDeLaRuta({ desafio, inicio, hoy, config = RUTA }) {
     if (i === 0) return { virtud, estado: pasado ? 'completada' : 'actual', avance };
     return { virtud, estado: pasado ? 'disponible' : 'bloqueada', avance: 0 };
   });
-}
-
-/** Hasta dónde ha llegado el viajero: en el tramo entre la virtud-desafío y la siguiente, a `fraccion` (0–1). */
-export function progresoDeLaRuta(bloques) {
-  return { tramo: 0, fraccion: bloques[0]?.avance ?? 0 };
 }

@@ -813,28 +813,28 @@ guarda los hábitos, el historial y las variables. Todo en español y sin IA: **
   cargar (`useCaminoDiario`); «en revisión» pregunta ajustar / mantener / dejar. Se ofrecen tras
   cumplir la opción B (sí o a medias) y se pueden escribir propios. Virtudes: las seis de
   `VIRTUDES_HABITO`; audacia y resistencia de los retos cuentan como fortaleza.
-- **Camino de virtudes** (pestaña Camino, **lo primero que se ve**): una escena en SVG con CSS
-  (`caminoDiario/RutaVirtudes.jsx`; lógica en `lib/rutaVirtudes.js`, geometría en `lib/rutaGeometria.js`). El
-  cielo va del **amanecer** (a la izquierda, donde estás) a la **noche estrellada** (a la derecha, lo que aún no
-  toca), con colinas en tres capas, pinos, nubes y sol. Empieza por la virtud-desafío del perfil
-  (`CHALLENGE_VIRTUE`: audacia y resistencia cuentan como fortaleza); las demás están bloqueadas hasta pasar un
-  mes con ella, en penumbra, con candado y **sin nombre**: solo se ve el nombre de la virtud donde estás. **La
-  pantalla no enseña plazos** (ni «día X de 30» ni «se abre en N días»). El mes cuenta desde el primer día con un
-  reto aceptado y su duración es `RUTA.dias_por_virtud` (30): se ajusta ahí. Pasado el mes los bloques pasan a
-  «disponible», pero **la biblioteca solo tiene retos de la virtud-desafío de cada temperamento**: hasta que
-  haya contenido de las demás virtudes, los retos siguen saliendo de esa.
-  - **Movimiento**: al entrar, un viajero con farol camina hasta tu punto y el tramo recorrido brilla en dorado
-    (`useProgresoAnimado`); el camino «fluye» hacia delante, el sol respira, las nubes se mecen, las estrellas
-    titilan y las capas se desplazan un poco con el ratón (paralaje, variable CSS `--vl-px`). Con «reducir
-    movimiento» del sistema todo queda quieto.
-  - En pantallas estrechas el dibujo se desplaza a un lado en vez de encogerse (para que el texto siga a ≥16 px).
-  - En desarrollo, `/es/app/camino?avance=0.5` enseña el camino con esa fracción recorrida (`1` = completado).
+- **Ciclo de virtud** (pestaña Camino, **lo primero que se ve**; `caminoDiario/CicloDeVirtud.jsx`): el título
+  dice en qué ciclo estás («**Ciclo de humildad**»; el de tu virtud-desafío del perfil, `CHALLENGE_VIRTUE`: audacia
+  y resistencia cuentan como fortaleza), con tu racha, el calendario y **tu gráfica de carácter con la virtud que
+  estás trabajando resaltada y en movimiento** (`<VirtudesRadar destacada>`: sector iluminado, destello que late
+  en su vértice, etiqueta en dorado y el resto en segundo plano; la gráfica entra creciendo desde el centro). Al
+  lado, «Estás trabajando», el nombre, su % del test de carácter y la descripción de esa virtud. Sin test de
+  carácter, la gráfica sale sin datos (solo ejes y la virtud resaltada) con un enlace a hacerlo. Con «reducir
+  movimiento» del sistema todo queda quieto. **La pantalla no enseña plazos.**
+  - Lógica en `lib/rutaVirtudes.js`: el orden de virtudes y el desbloqueo (las demás, bloqueadas hasta pasar un mes
+    con la virtud-desafío, `RUTA.dias_por_virtud` = 30) siguen calculándose ahí, pero **hoy la pantalla solo enseña
+    la virtud en curso** (y «Ciclo de … completado» pasado el mes): no hay mapa. La biblioteca solo tiene retos de la
+    virtud-desafío de cada temperamento, así que los retos siguen saliendo de esa hasta que haya contenido de las
+    demás. El mes cuenta desde el primer día con un reto aceptado.
+  - Hubo un **mapa del camino** (senda con curvas, luego una escena de amanecer a noche) en las PR #54-#64; se
+    quitó por decisión de producto. Está en el historial de git si se quiere recuperar.
+  - En desarrollo, `/es/app/camino?avance=1` enseña el ciclo como completado (`0.5` = en curso).
 - **Racha y tira de días** (encima del camino): `lib/rachaDias.js` y `caminoDiario/TiraDeDias.jsx`.
   Racha = días seguidos con un reto aceptado (si hoy aún no lo ha aceptado, cuenta desde ayer). La
   tira enseña siempre los 2 días anteriores, hoy y los 5 siguientes, con el día aceptado marcado.
-- **Pestaña Camino, debajo del camino**: «Tu entorno» (columna ancha, es lo principal) y el último test de carácter, en
-  compacto (`<MapaCaracter grande />`: una columna con el radar a 340 px máximo). Los avatares del mapa de «Tu
-  entorno» son enlaces a la ficha de la persona (`onElegirPersona` en `MapaPersonas`).
+- **Pestaña Camino, debajo del ciclo**: «Tu entorno» (columna ancha, es lo principal) a un lado y tus hábitos y el
+  historial al otro. Los avatares del mapa de «Tu entorno» son enlaces a la ficha de la persona (`onElegirPersona`
+  en `MapaPersonas`). El mapa de carácter completo (`MapaCaracter`) sigue en Hoy.
 - **«Lo que Virtus sabe de ti» ya no se muestra en ningún sitio**: `caminoDiario/MisVariables.jsx`
   queda **aparcado y sin montar** (lista las variables con la redacción en tercera persona del
   Excel). Las variables se siguen rellenando con las preguntas iniciales y las de la noche. Si hace
