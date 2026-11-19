@@ -12,7 +12,7 @@ import { botonContorno, botonSobreClaro, eyebrow, fechaLarga, parrafo, tarjeta, 
  * `proponerOtro()` devuelve el siguiente reto distinto de los ya propuestos hoy, o null. Lo calcula quien
  * monta el componente porque conoce los retos válidos, el temperamento y el historial.
  */
-export default function Manana({ reto, cita, valores, defectos, diaDeHoy, hoy, userId, proponerOtro, onGuardado }) {
+export default function Manana({ reto, cita, valores, defectos, diaDeHoy, hoy, userId, proponerOtro, onGuardado, sinCita = false }) {
   const { t } = useT();
   const [error, setError] = useState(false);
   const [indice, setIndice] = useState(0);
@@ -64,7 +64,7 @@ export default function Manana({ reto, cita, valores, defectos, diaDeHoy, hoy, u
     <section style={{ ...tarjeta, gridColumn: '1 / -1' }} aria-label={t('camino.manana.eyebrow')}>
       <div style={eyebrow}>{t('camino.manana.eyebrow')}</div>
 
-      {cita && (
+      {cita && !sinCita && (
         <figure style={{ margin: '16px 0 0', padding: '0 0 0 14px', borderLeft: `2px solid ${GOLD_REF}` }}>
           <blockquote style={{ margin: 0, fontFamily: FONT_SLAB, fontSize: 18, lineHeight: 1.45, fontWeight: 500, color: NAVY }}>«{cita.texto}»</blockquote>
           <figcaption style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, marginTop: 8 }}>

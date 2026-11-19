@@ -1731,6 +1731,15 @@ export default {
         no: 'Ahora no',
       },
     },
+    guiado: {
+      paso: 'Paso {n} de {total}',
+      siguiente: 'Siguiente',
+      listo: 'Listo',
+      frase: 'La frase de hoy',
+      al_dia: 'Estás al día',
+      al_dia_todo: 'Has hecho todo lo de hoy.',
+      al_dia_noche: 'Esta noche te toca el examen.',
+    },
     ciclo: {
       eyebrow: 'Tu camino',
       titulo: 'Ciclo de {virtud}',
