@@ -6,8 +6,7 @@ import { useSearchParams, useOutletContext } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { continuar, formatoDuracion } from '../formacion/cursos.js';
 import { DIAS, TOTAL_DIAS, conPunto, fechaCorta, fechaLocal, infoDia, semanaDe, siguientePaso, tieneExamen } from '../lib/camino.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_SLAB, FONT_BODY, GOLD_REF, GOLD_REF_LT } from '../theme';
-import { barraFondo, botonContorno, botonPrimario, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_LT, INK, LINE, MUTED, NAVY, PAPER, barraFondo, botonContorno, botonPrimario, eyebrow, heroFondo, parrafo, tarjeta, titulo } from './tokens';
 import { IconoCheck, IconoFlecha, IconoPlay } from './Iconos';
 import { useCatalogo, useProgreso } from '../formacion/useFormacion';
 import { useCamino } from './useCamino';
@@ -54,7 +53,7 @@ function Tira({ camino }) {
                 <button key={d.dia} type="button" disabled={!abierto} onClick={() => setParams({ dia: String(d.dia) })}
                         title={`Día ${d.dia} · ${d.titulo}`} aria-label={`Día ${d.dia}: ${d.titulo}${hecho ? ' (hecho)' : ''}`}
                         style={{
-                          aspectRatio: '1', borderRadius: 0, cursor: abierto ? 'pointer' : 'default', padding: 0,
+                          aspectRatio: '1', borderRadius: 10, cursor: abierto ? 'pointer' : 'default', padding: 0,
                           display: 'grid', placeItems: 'center', fontFamily: FONT_BODY, fontSize: 14, fontWeight: 700,
                           background: hecho ? NAVY : esHoy ? 'rgba(197,165,90,0.16)' : 'transparent',
                           color: hecho ? PAPER : abierto ? NAVY : 'rgba(27,42,74,0.35)',
@@ -75,7 +74,7 @@ function SiguientePaso({ camino }) {
   const [, setParams] = useSearchParams();
   const paso = siguientePaso(camino);
   const etiqueta = { ...eyebrow, color: GOLD_REF_LT };
-  const hero = { background: heroFondo, color: PAPER, borderRadius: 0, padding: '26px 22px 24px', boxShadow: '0 8px 24px rgba(15,29,56,0.22)' };
+  const hero = { background: heroFondo, color: PAPER, borderRadius: 14, padding: '26px 22px 24px', boxShadow: '0 8px 24px rgba(15,29,56,0.22)' };
   if (!paso) return null;
 
   if (paso.tipo === 'hecho') {
@@ -160,10 +159,10 @@ function SiguienteLeccion({ user }) {
   }
   const { curso, leccion, retomada } = siguiente;
   return (
-    <section style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: 18, boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
+    <section style={{ background: heroFondo, color: PAPER, borderRadius: 14, padding: 18, boxShadow: '0 8px 24px rgba(15,29,56,0.22)' }}>
       <div style={{ ...eyebrowClaro, padding: '4px 6px 12px' }}>{retomada ? 'Continúa donde lo dejaste' : 'Siguiente lección'}</div>
       <Link to={`/app/formacion?leccion=${leccion.id}`} style={{ display: 'flex', gap: 14, alignItems: 'center', textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ position: 'relative', flex: '0 0 132px', aspectRatio: '16 / 9', borderRadius: 0, overflow: 'hidden', background: 'rgba(255,255,255,0.08)' }}>
+        <div style={{ position: 'relative', flex: '0 0 132px', aspectRatio: '16 / 9', borderRadius: 10, overflow: 'hidden', background: 'rgba(255,255,255,0.08)' }}>
           {leccion.miniatura && <img src={leccion.miniatura} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />}
           <span style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', color: PAPER, background: 'rgba(15,29,56,0.30)' }}><IconoPlay width={30} height={30} /></span>
         </div>

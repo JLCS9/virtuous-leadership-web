@@ -2,8 +2,7 @@
 // Se usa en Hoy y en la pestaña Camino.
 import { useNavigate } from 'react-router-dom';
 import { useLocalPath } from '../../i18n';
-import { NAVY, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, NAVY, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { usePersonas } from '../usePersonas';
 import { EsqueletoTarjeta } from '../Esqueleto';
 import { Avatar, EtiquetaEstado, MapaPersonas } from './comun';

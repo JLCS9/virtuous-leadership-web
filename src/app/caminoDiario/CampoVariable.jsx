@@ -3,8 +3,7 @@
 // valor y la ficha elegida los lleva quien lo usa.
 import { LocalLink as Link, useT } from '../../i18n';
 import { TEXTO_GRUPO } from '../../lib/personas.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY } from '../../theme';
-import { botonContorno } from '../estilos';
+import { FONT_BODY, INK, LINE, MUTED, NAVY, PAPER, botonContorno } from '../tokens';
 import { Avatar } from '../personas/comun';
 
 export default function CampoVariable({ variable, personas = [], valor, personaId, etiqueta, onCambiar }) {
@@ -24,7 +23,7 @@ export default function CampoVariable({ variable, personas = [], valor, personaI
                   key={p.id} type="button" aria-pressed={activa}
                   onClick={() => onCambiar(activa ? { valor: '', personaId: null } : { valor: p.nombre, personaId: p.id })}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 16px 6px 6px', borderRadius: 0, cursor: 'pointer',
+                    display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 16px 6px 6px', borderRadius: 999, cursor: 'pointer',
                     border: `1px solid ${activa ? NAVY : LINE}`, background: activa ? NAVY : PAPER, color: activa ? PAPER : INK,
                     fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, minHeight: 42,
                   }}
@@ -54,7 +53,7 @@ export default function CampoVariable({ variable, personas = [], valor, personaI
         id={`campo-${variable.id}`} type="text" maxLength={120} value={valor} aria-label={etiqueta}
         onChange={(e) => onCambiar({ valor: e.target.value, personaId: null })}
         style={{
-          fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0,
+          fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12,
           padding: '11px 14px', minHeight: 44, width: '100%', boxSizing: 'border-box',
         }}
       />

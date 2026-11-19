@@ -5,8 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { guardarDia } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
 import { opcionesDelReto } from '../../lib/retos.js';
-import { INK, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, fechaLarga, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK, INK, MUTED, NAVY, botonContorno, botonSobreClaro, eyebrow, fechaLarga, parrafo, tarjeta, titulo } from '../tokens';
 
 /**
  * `proponerOtro()` devuelve el siguiente reto distinto de los ya propuestos hoy, o null. Lo calcula quien

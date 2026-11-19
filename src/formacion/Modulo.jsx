@@ -10,9 +10,8 @@ import { BlocDeNotas, NotasLateral } from './BlocDeNotas';
 import { useNotas } from './useNotas';
 import { CuadernoPersonal } from './CuadernoPersonal';
 import { fetchLatestTemperament } from '../account/account';
-import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE, SUCCESS_DK } from '../theme';
+import { NAVY, MUTED, PAPER, LINE, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, FONT_SLAB, FONT_BODY, TEMP_COLORS, BEIGE, SUCCESS_DK, barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/tokens';
 import { notaAHtml } from './NotaTexto';
-import { barraFondo, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo, tarjeta, titulo } from '../app/estilos';
 import { IconoCheck, IconoFlecha, IconoPlay, IconoChevron, IconoVideo, IconoEjercicio, IconoCuestionario } from '../app/Iconos';
 import { UMBRAL_VISTA } from './cursos';
 

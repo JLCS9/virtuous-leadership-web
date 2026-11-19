@@ -7,7 +7,7 @@ import { useT } from '../i18n';
 import { sumarDias } from '../lib/camino.js';
 import { rachaDeCompromisos, tiraDeDias } from '../lib/rachaDias.js';
 import { RUTA, bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from '../lib/rutaVirtudes.js';
-import { parrafo, tarjeta } from './estilos';
+import { parrafo, tarjeta } from './tokens';
 import { EsqueletoPagina } from './Esqueleto';
 import { usePersonas } from './usePersonas';
 import { useCaminoDiario } from './useCaminoDiario';

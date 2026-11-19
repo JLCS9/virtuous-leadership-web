@@ -8,8 +8,7 @@ import NotaTexto from '../formacion/NotaTexto';
 import { supabase } from '../account/supabase';
 import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
-import { tarjeta, eyebrow, parrafo } from './estilos';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK, tarjeta, eyebrow, parrafo, RADIO_PILL, RADIO_BLOQUE, RADIO_CAMPO } from './tokens';
 import { usePreferencias } from './Horarios';
 import { textoFormacion, textoReflexion, textoReto, textoZona } from '../lib/preferencias.js';
 import curso1 from '../data/curso1.json';
@@ -48,7 +47,7 @@ function Lapiz({ onClick }) {
   return (
     <button type="button" onClick={onClick} aria-label="Editar" style={{
       position: 'absolute', top: 18, right: 18, background: 'none', border: 'none',
-      cursor: 'pointer', color: LINE, padding: 2, borderRadius: 0,
+      cursor: 'pointer', color: LINE, padding: 2, borderRadius: 4,
       transition: 'color 150ms ease', opacity: 0.7,
     }}
       onMouseEnter={e => { e.currentTarget.style.color = GOLD_REF; e.currentTarget.style.opacity = '1'; }}
@@ -73,7 +72,7 @@ function Seccion({ titulo, children, onEdit }) {
 }
 
 function Campo({ label, tipo = 'text', value, onChange, opciones, placeholder }) {
-  const base = { fontFamily: FONT_BODY, fontSize: 14, padding: '10px 12px', border: `1px solid ${LINE}`, borderRadius: 0, outline: 'none', width: '100%', background: '#fff' };
+  const base = { fontFamily: FONT_BODY, fontSize: 14, padding: '10px 12px', border: `1px solid ${LINE}`, borderRadius: RADIO_CAMPO, outline: 'none', width: '100%', background: '#fff' };
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, fontWeight: 600 }}>{label}</span>
@@ -89,7 +88,7 @@ function Campo({ label, tipo = 'text', value, onChange, opciones, placeholder })
 }
 
 function CampoPwd({ label, value, onChange, visible, onToggle, placeholder }) {
-  const base = { fontFamily: FONT_BODY, fontSize: 14, padding: '10px 40px 10px 12px', border: `1px solid ${LINE}`, borderRadius: 0, outline: 'none', width: '100%', background: '#fff' };
+  const base = { fontFamily: FONT_BODY, fontSize: 14, padding: '10px 40px 10px 12px', border: `1px solid ${LINE}`, borderRadius: RADIO_CAMPO, outline: 'none', width: '100%', background: '#fff' };
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
       <span style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED, fontWeight: 600 }}>{label}</span>
@@ -142,7 +141,7 @@ function BtnGuardar({ onClick, guardando }) {
   return (
     <button type="button" onClick={onClick} disabled={guardando} style={{
       fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: '#fff',
-      background: GOLD_REF, border: 'none', borderRadius: 0, padding: '12px 24px',
+      background: GOLD_REF, border: 'none', borderRadius: RADIO_PILL, padding: '12px 24px',
       cursor: 'pointer', opacity: guardando ? 0.6 : 1, transition: 'opacity 150ms',
     }}>
       {guardando ? 'Guardando…' : 'Guardar'}
@@ -158,7 +157,7 @@ function SeccionHorarios({ userId }) {
   const estado = usePreferencias(userId);
   const p = estado.preferencias;
   return (
-    <section style={{ ...tarjeta, position: 'relative', gridColumn: '1 / -1' }}>
+    <section style={{ ...tarjeta, position: 'relative', display: 'flex', flexDirection: 'column' }}>
       <div style={eyebrow}>Tu día a día</div>
       <div style={{ marginTop: 10 }}>
         {estado.cargando && <p style={{ ...parrafo, margin: 0, fontSize: 16 }}>Cargando…</p>}
@@ -233,108 +232,123 @@ function TabConfig({ user, profile, consents, onRefresh }) {
     } catch { /* redirect will happen anyway from auth state change */ }
   }
 
+  const grupoTitulo = { fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: MUTED, textTransform: 'uppercase', letterSpacing: '0.05em', margin: '0 0 10px' };
+
   return (
     <>
-      <div className="vl-cols">
-        {/* Fila 1: las dos grandes — Config general + Datos personales */}
-        <Seccion titulo="Configuración general" onEdit={() => abrir('general', { locale: profile.locale })}>
-          <Fila label="Email" valor={user.email} />
-          <Fila label="Idioma" valor={IDIOMAS[profile.locale]} />
-          <Fila label="Contraseña" valor="••••••••" />
-          <div style={{ marginTop: 12 }}>
-            <button type="button" onClick={() => { setPwdState({ old: '', pwd: '', estado: 'idle', showOld: false, showNew: false }); setEditando('password'); }} style={{
-              fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, background: 'none', border: 'none',
-              cursor: 'pointer', padding: 0, textDecoration: 'underline',
-            }}>Cambiar contraseña</button>
-          </div>
-        </Seccion>
+      {/* ── Grupo: Datos personales ── */}
+      <div style={{ marginBottom: 24 }}>
+        <h3 style={grupoTitulo}>Datos personales</h3>
+        <div className="vl-cols">
+          <Seccion titulo="Datos personales" onEdit={() => abrir('personal', {
+            first_name: profile.first_name ?? '', last_name: profile.last_name ?? '',
+            sex: profile.sex ?? '', birth_year: profile.birth_year ?? '', country: profile.country ?? '',
+            spiritual: profile.spiritual ?? false,
+          })}>
+            <Fila label="Nombre" valor={[profile.first_name, profile.last_name].filter(Boolean).join(' ')} />
+            <Fila label="Sexo" valor={SEXO[profile.sex]} />
+            <Fila label="Año de nacimiento" valor={profile.birth_year} />
+            <Fila label="País" valor={profile.country} />
+            <Fila label="Vida espiritual" valor={profile.spiritual ? 'Sí' : 'No'} />
+          </Seccion>
 
-        <Seccion titulo="Datos personales" onEdit={() => abrir('personal', {
-          first_name: profile.first_name ?? '', last_name: profile.last_name ?? '',
-          sex: profile.sex ?? '', birth_year: profile.birth_year ?? '', country: profile.country ?? '',
-          spiritual: profile.spiritual ?? false,
-        })}>
-          <Fila label="Nombre" valor={[profile.first_name, profile.last_name].filter(Boolean).join(' ')} />
-          <Fila label="Sexo" valor={SEXO[profile.sex]} />
-          <Fila label="Año de nacimiento" valor={profile.birth_year} />
-          <Fila label="País" valor={profile.country} />
-          <Fila label="Vida espiritual" valor={profile.spiritual ? 'Sí' : 'No'} />
-        </Seccion>
+          <Seccion titulo="Consentimientos">
+            {consents.length > 0 ? consents.map((c, i) => (
+              <Fila key={i}
+                label={{ cuenta: 'Cuenta y resultados', newsletter: 'Boletín', tutor: 'Tutor' }[c.purpose] ?? c.purpose}
+                valor={c.granted ? 'Aceptado' : 'Denegado'}
+              />
+            )) : <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Sin consentimientos registrados</p>}
+          </Seccion>
+        </div>
+      </div>
 
-        <SeccionHorarios userId={user.id} />
-
-        {/* Fila 2: las dos pequeñas — Consentimientos + Caché */}
-        <Seccion titulo="Consentimientos">
-          {consents.length > 0 ? consents.map((c, i) => (
-            <Fila key={i}
-              label={{ cuenta: 'Cuenta y resultados', newsletter: 'Boletín', tutor: 'Tutor' }[c.purpose] ?? c.purpose}
-              valor={c.granted ? 'Aceptado' : 'Denegado'}
-            />
-          )) : <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Sin consentimientos registrados</p>}
-        </Seccion>
-
-        <Seccion titulo="Caché y datos locales">
-          <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 13 }}>
-            Vacía los datos locales del navegador (progreso de módulos, catálogo, preferencias).
-          </p>
-          <button type="button" onClick={() => {
-            try { localStorage.clear(); sessionStorage.clear(); } catch {}
-            olvidarAcceso();
-            olvidarCatalogo();
-            window.location.reload();
-          }} style={{
-            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
-            background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0,
-            padding: '10px 20px', cursor: 'pointer', width: '100%',
-          }}>Vaciar caché y recargar</button>
-        </Seccion>
-
-        <Seccion titulo="Bienvenida">
-          <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 16 }}>
-            Vuelve a ver las pantallas de bienvenida del portal.
-          </p>
-          <Link to="/app/bienvenida" style={{
-            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, textAlign: 'center', textDecoration: 'none',
-            background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0,
-            padding: '10px 20px', cursor: 'pointer', display: 'block',
-          }}>Comenzar onboarding</Link>
-        </Seccion>
-
-        {/* Fila 3: ancho completo — Sesión y cuenta */}
-        <Seccion titulo="Sesión y cuenta">
-          <button type="button" onClick={salir} style={{
-            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
-            background: 'none', border: `1.5px solid ${LINE}`, borderRadius: 0,
-            padding: '10px 20px', cursor: 'pointer', width: '100%', marginBottom: 12,
-          }}>Cerrar sesión</button>
-          {!confirmBorrar ? (
-            <button type="button" onClick={() => setConfirmBorrar(true)} style={{
-              fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: ERROR,
-              background: 'none', border: `1.5px solid ${ERROR}`, borderRadius: 0,
-              padding: '9px 18px', cursor: 'pointer', width: '100%',
-              transition: 'background 150ms ease',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.background = ERROR_BG; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
-            >Cancelar mi cuenta</button>
-          ) : (
-            <div style={{ background: ERROR_BG, border: `1px solid ${ERROR}`, borderRadius: 0, padding: 16 }}>
-              <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, margin: '0 0 12px', lineHeight: 1.5 }}>
-                <strong>¿Estás seguro?</strong> Se borrará tu cuenta y perderás todo tu progreso. Esta acción no se puede deshacer.
-              </p>
-              <div style={{ display: 'flex', gap: 8 }}>
-                <button type="button" onClick={eliminar} style={{
-                  fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: '#fff',
-                  background: ERROR, border: 'none', borderRadius: 0, padding: '9px 18px', cursor: 'pointer',
-                }}>Sí, borrar mi cuenta</button>
-                <button type="button" onClick={() => setConfirmBorrar(false)} style={{
-                  fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, background: 'none',
-                  border: `1px solid ${ERROR}`, borderRadius: 0, padding: '9px 14px', cursor: 'pointer',
-                }}>Cancelar</button>
-              </div>
+      {/* ── Grupo: Configuración general ── */}
+      <div style={{ marginBottom: 24 }}>
+        <h3 style={grupoTitulo}>Configuración general</h3>
+        <div className="vl-cols">
+          <Seccion titulo="Configuración general" onEdit={() => abrir('general', { locale: profile.locale })}>
+            <Fila label="Email" valor={user.email} />
+            <Fila label="Idioma" valor={IDIOMAS[profile.locale]} />
+            <Fila label="Contraseña" valor="••••••••" />
+            <div style={{ marginTop: 12 }}>
+              <button type="button" onClick={() => { setPwdState({ old: '', pwd: '', estado: 'idle', showOld: false, showNew: false }); setEditando('password'); }} style={{
+                fontFamily: FONT_BODY, fontSize: 13, color: GOLD_REF_DK, background: 'none', border: 'none',
+                cursor: 'pointer', padding: 0, textDecoration: 'underline',
+              }}>Cambiar contraseña</button>
             </div>
-          )}
-        </Seccion>
+          </Seccion>
+
+          <SeccionHorarios userId={user.id} />
+        </div>
+      </div>
+
+      {/* ── Grupo: Otras configuraciones ── */}
+      <div style={{ marginBottom: 24 }}>
+        <h3 style={grupoTitulo}>Otras configuraciones</h3>
+        <div className="vl-cols vl-cols-3">
+          <Seccion titulo="Caché y datos locales">
+            <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 13 }}>
+              Vacía los datos locales del navegador (progreso de módulos, catálogo, preferencias).
+            </p>
+            <button type="button" onClick={() => {
+              try { localStorage.clear(); sessionStorage.clear(); } catch {}
+              olvidarAcceso();
+              olvidarCatalogo();
+              window.location.reload();
+            }} style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
+              background: 'none', border: `1.5px solid ${LINE}`, borderRadius: RADIO_PILL,
+              padding: '10px 20px', cursor: 'pointer', width: '100%',
+            }}>Vaciar caché y recargar</button>
+          </Seccion>
+
+          <Seccion titulo="Bienvenida">
+            <p style={{ ...parrafo, margin: '0 0 12px', fontSize: 16 }}>
+              Vuelve a ver las pantallas de bienvenida del portal.
+            </p>
+            <Link to="/app/bienvenida" style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY, textAlign: 'center', textDecoration: 'none',
+              background: 'none', border: `1.5px solid ${LINE}`, borderRadius: RADIO_PILL,
+              padding: '10px 20px', cursor: 'pointer', display: 'block',
+            }}>Comenzar onboarding</Link>
+          </Seccion>
+
+          <Seccion titulo="Sesión y cuenta">
+            <button type="button" onClick={salir} style={{
+              fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY,
+              background: 'none', border: `1.5px solid ${LINE}`, borderRadius: RADIO_PILL,
+              padding: '10px 20px', cursor: 'pointer', width: '100%', marginBottom: 12,
+            }}>Cerrar sesión</button>
+            {!confirmBorrar ? (
+              <button type="button" onClick={() => setConfirmBorrar(true)} style={{
+                fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: ERROR,
+                background: 'none', border: `1.5px solid ${ERROR}`, borderRadius: RADIO_PILL,
+                padding: '9px 18px', cursor: 'pointer', width: '100%',
+                transition: 'background 150ms ease',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.background = ERROR_BG; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'none'; }}
+              >Cancelar mi cuenta</button>
+            ) : (
+              <div style={{ background: ERROR_BG, border: `1px solid ${ERROR}`, borderRadius: RADIO_BLOQUE, padding: 16 }}>
+                <p style={{ fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, margin: '0 0 12px', lineHeight: 1.5 }}>
+                  <strong>¿Estás seguro?</strong> Se borrará tu cuenta y perderás todo tu progreso. Esta acción no se puede deshacer.
+                </p>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <button type="button" onClick={eliminar} style={{
+                    fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: '#fff',
+                    background: ERROR, border: 'none', borderRadius: RADIO_PILL, padding: '9px 18px', cursor: 'pointer',
+                  }}>Sí, borrar mi cuenta</button>
+                  <button type="button" onClick={() => setConfirmBorrar(false)} style={{
+                    fontFamily: FONT_BODY, fontSize: 13, color: ERROR_DK, background: 'none',
+                    border: `1px solid ${ERROR}`, borderRadius: RADIO_PILL, padding: '9px 14px', cursor: 'pointer',
+                  }}>Cancelar</button>
+                </div>
+              </div>
+            )}
+          </Seccion>
+        </div>
       </div>
 
       {/* ── Modales de edición ── */}
@@ -405,7 +419,7 @@ function SelectorHistorico({ items, idx, setIdx }) {
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
       <select value={idx} onChange={e => setIdx(Number(e.target.value))} style={{
         fontFamily: FONT_BODY, fontSize: 12, color: NAVY, background: BEIGE,
-        border: `1px solid ${LINE}`, borderRadius: 0, padding: '4px 8px', cursor: 'pointer',
+        border: `1px solid ${LINE}`, borderRadius: RADIO_CAMPO, padding: '4px 8px', cursor: 'pointer',
       }}>
         {items.map((t, i) => (
           <option key={i} value={i}>{fmt(t.taken_at)}{i === 0 ? ' (último)' : ''}</option>
@@ -423,7 +437,7 @@ function RetomarLink({ to, children }) {
     <Link to={to} style={{
       display: 'block', textAlign: 'center', marginTop: 14, fontFamily: FONT_BODY,
       fontSize: 13, fontWeight: 600, color: GOLD_REF_DK, textDecoration: 'none',
-      padding: '8px 0', border: `1.5px solid ${LINE}`, borderRadius: 0,
+      padding: '8px 0', border: `1.5px solid ${LINE}`, borderRadius: RADIO_PILL,
       transition: 'background 150ms ease',
     }}
       onMouseEnter={e => { e.currentTarget.style.background = 'rgba(165,139,38,0.06)'; }}
@@ -510,8 +524,8 @@ function TabDatos({ tests, personas, camino, user }) {
   }
 
   return (
-    <div className="vl-cols">
-      {/* Fila 1: Temperamento + Virtudes */}
+    <div className="vl-cols vl-cols-3">
+      {/* Fila 1: Temperamento + Virtudes + Camino */}
       <Seccion titulo="Tu temperamento">
         {tempTest ? (
           <>
@@ -579,30 +593,37 @@ function TabDatos({ tests, personas, camino, user }) {
         )}
       </Seccion>
 
-      <Seccion titulo={`Tus personas (${personas.length})`}>
-        {personas.length > 0 ? personas.map((p, i) => (
-          <div key={i} style={{ padding: '9px 0', borderBottom: i < personas.length - 1 ? `1px solid ${LINE}` : 'none', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY }}>
-                {p.nombre} {p.estrella && '★'} {p.me_cuesta && '⚡'}
-              </div>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>
-                {GRUPO[p.grupo]} {p.relacion && `· ${p.relacion}`}
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              {p.primario && (
-                <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY }}>
-                  {TEMP_NOMBRE[p.primario]}{p.secundario ? ` – ${TEMP_NOMBRE[p.secundario]}` : ''}
+      <section style={{ ...tarjeta, position: 'relative', display: 'flex', flexDirection: 'column', gridColumn: '1 / -1' }}>
+        <div style={eyebrow}>{`Tus personas (${personas.length})`}</div>
+        <div style={{ marginTop: 10, flex: 1 }}>
+          {personas.length > 0 ? (
+            <div className="vl-personas-cols">
+              {personas.map((p, i) => (
+                <div key={i} style={{ padding: '9px 0', borderBottom: `1px solid ${LINE}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', breakInside: 'avoid' }}>
+                  <div>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: NAVY }}>
+                      {p.nombre} {p.estrella && '★'} {p.me_cuesta && '⚡'}
+                    </div>
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: MUTED }}>
+                      {GRUPO[p.grupo]} {p.relacion && `· ${p.relacion}`}
+                    </div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    {p.primario && (
+                      <div style={{ fontFamily: FONT_BODY, fontSize: 13, color: NAVY }}>
+                        {TEMP_NOMBRE[p.primario]}{p.secundario ? ` – ${TEMP_NOMBRE[p.secundario]}` : ''}
+                      </div>
+                    )}
+                    <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>{ESTADO_PERSONA[p.estado]}</div>
+                  </div>
                 </div>
-              )}
-              <div style={{ fontFamily: FONT_BODY, fontSize: 11, color: MUTED }}>{ESTADO_PERSONA[p.estado]}</div>
+              ))}
             </div>
-          </div>
-        )) : (
-          <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has añadido personas.</p>
-        )}
-      </Seccion>
+          ) : (
+            <p style={{ ...parrafo, margin: 0, fontSize: 13 }}>Aún no has añadido personas.</p>
+          )}
+        </div>
+      </section>
 
     </div>
   );
@@ -782,7 +803,7 @@ export default function Perfil() {
   const { profile, tests, personas, camino, consents } = data;
 
   return (
-    <div style={{ maxWidth: 900 }}>
+    <div style={{ maxWidth: 1200 }}>
       {/* Tab bar */}
       <div style={{ display: 'flex', gap: 0, borderBottom: `2px solid ${LINE}`, marginBottom: 20 }}>
         {TABS.map(t => (
@@ -790,7 +811,7 @@ export default function Perfil() {
             fontFamily: FONT_BODY, fontSize: 14, fontWeight: tab === t.key ? 700 : 500,
             color: tab === t.key ? NAVY : MUTED, background: 'none', border: 'none',
             padding: '10px 20px', cursor: 'pointer', position: 'relative',
-            borderBottom: tab === t.key ? `2px solid ${GOLD_REF}` : '2px solid transparent',
+            borderBottom: '2px solid transparent',
             marginBottom: -2, transition: 'color 200ms ease',
           }}>
             {t.label}

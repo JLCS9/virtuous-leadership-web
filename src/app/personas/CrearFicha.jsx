@@ -6,8 +6,7 @@ import {
   AVATARES, DESEMPATE, FICHA, GRUPOS, INTRO, NO_SE, PREGUNTAS, PREGUNTAS_CORTO, RELACIONES, TEXTO_CONFIANZA, gruposPara,
   necesitaDesempate, necesitaDesempateCorto, ordenAleatorio, puntuar, puntuarCorto, textoResultado, textoSinResultado,
 } from '../../lib/personas.js';
-import { INK, LINE, MUTED, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
-import { parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, MUTED, TEMP_COLORS, parrafo } from '../tokens';
 import { Continuar, useTemperamento } from '../camino/Juegos';
 import { Opcion, Opciones, Pantalla, Puntos } from '../camino/ui';
 import { FichaContenido, useNombresTemp } from './comun';
@@ -21,7 +20,7 @@ function Datos({ estadoVida, todosLosGrupos, menor, inicial, onListo, onSalir })
   const [d, setD] = useState(inicial ?? { nombre: '', grupo: null, relacion: null, avatar: null, estrella: false, me_cuesta: false });
   const valido = d.nombre.trim().length > 0 && d.grupo;
   const chipActivo = (activo) => ({
-    fontFamily: FONT_BODY, fontSize: 14, borderRadius: 0, padding: '8px 13px', cursor: 'pointer',
+    fontFamily: FONT_BODY, fontSize: 14, borderRadius: 999, padding: '8px 13px', cursor: 'pointer',
     border: `1px solid ${activo ? '#1B2A4A' : LINE}`, background: activo ? '#1B2A4A' : '#FBF8F1', color: activo ? '#FBF8F1' : INK,
   });
   return (
@@ -29,7 +28,7 @@ function Datos({ estadoVida, todosLosGrupos, menor, inicial, onListo, onSalir })
       <h2 style={titular}>¿De quién quieres descubrir el temperamento?</h2>
       <label htmlFor="ficha-nombre" style={{ ...etiquetaCampo, marginTop: 0 }}>Nombre o apodo</label>
       <input id="ficha-nombre" value={d.nombre} maxLength={40} autoComplete="off" onChange={(e) => setD({ ...d, nombre: e.target.value })}
-             style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 17, padding: '12px 14px', borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
+             style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 17, padding: '12px 14px', borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
       <p style={{ ...parrafo, fontSize: 12.5, marginTop: 6 }}>Sin apellidos. Solo tú verás esta ficha.</p>
 
       <span style={etiquetaCampo}>Grupo</span>

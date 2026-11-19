@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { borrarObservacion, borrarPersona, borrarTodasLasPersonas, actualizarPersona, leerPersona } from '../../account/personas';
 import { GRUPOS, TEXTO_GRUPO, TEXTO_SITUACION, textoSinResultado } from '../../lib/personas.js';
-import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, MUTED, NAVY, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { IconoFlecha } from '../Iconos';
 import { useTemperamento } from '../camino/Juegos';
 import { Opcion } from '../camino/ui';

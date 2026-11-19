@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MUTED, GOLD_REF, GOLD_REF_DK, LINE, FONT_BODY } from '../theme';
+import { MUTED, GOLD_REF, GOLD_REF_DK, LINE, FONT_BODY } from '../app/tokens';
 import { notaATexto } from './NotaTexto';
 
 const TEMP_NOMBRE = { COL: 'Colérico', MEL: 'Melancólico', SAN: 'Sanguíneo', FLE: 'Flemático' };

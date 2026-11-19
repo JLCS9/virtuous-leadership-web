@@ -4,8 +4,7 @@
 import { useState } from 'react';
 import { actualizarPersona, anotarObservacion, observacionesDe } from '../../account/personas';
 import { PALABRAS_3P, SITUACIONES, propuestaPorObservaciones, textoPropuesta } from '../../lib/personas.js';
-import { INK, LINE, FONT_BODY, FONT_SLAB } from '../../theme';
-import { botonContorno, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, botonContorno, parrafo } from '../tokens';
 import { Continuar } from '../camino/Juegos';
 import { Opcion, Opciones, Pantalla, Puntos } from '../camino/ui';
 import { useNombresTemp } from './comun';
@@ -92,7 +91,7 @@ export default function Observacion({ user, persona, onHecho, onSalir }) {
       <h2 style={titular}>¿Quieres añadir una línea?</h2>
       <p style={{ ...parrafo, fontSize: 14, marginBottom: 12 }}>Es opcional. Solo la ves tú.</p>
       <textarea value={o.linea} maxLength={280} rows={3} onChange={(e) => setO((x) => ({ ...x, linea: e.target.value }))}
-                style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
+                style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
     </Pantalla>
   );
 }

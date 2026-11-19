@@ -2,8 +2,7 @@
 // (dos anteriores, hoy y cinco siguientes), y tu gráfica de carácter con la virtud que estás trabajando
 // resaltada y en movimiento. Sin plazos en pantalla. Solo pinta: los datos y la virtud ya vienen calculados.
 import { LocalLink as Link, useT } from '../../i18n';
-import { INK, MUTED, NAVY, FONT_BODY, GOLD_REF, GOLD_REF_DK } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, GOLD_REF, GOLD_REF_DK, INK, MUTED, NAVY, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { TEXTO_VIRTUD } from '../MapaCaracter';
 import { VirtudesRadar } from '../Radar';
 import TiraDeDias from './TiraDeDias';

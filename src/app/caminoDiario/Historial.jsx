@@ -3,8 +3,7 @@
 import biblioteca from '../../data/camino-biblioteca.json';
 import { useT } from '../../i18n';
 import { fechaCorta } from '../../lib/camino.js';
-import { INK, LINE, MUTED, FONT_BODY } from '../../theme';
-import { eyebrow, parrafo, tarjeta } from '../estilos';
+import { FONT_BODY, INK, LINE, MUTED, eyebrow, parrafo, tarjeta } from '../tokens';
 
 const RETOS = Object.fromEntries(biblioteca.retos.map((r) => [r.id, r]));
 const primeraMayuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);

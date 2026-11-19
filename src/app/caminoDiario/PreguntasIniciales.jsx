@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { guardarVariable } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
-import { MUTED, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, parrafo } from '../estilos';
+import { FONT_BODY, MUTED, botonContorno, botonSobreClaro, parrafo } from '../tokens';
 import { Pantalla, Puntos } from '../camino/ui';
 import CampoVariable from './CampoVariable';
 

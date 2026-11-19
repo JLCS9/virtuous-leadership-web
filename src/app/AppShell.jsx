@@ -7,8 +7,8 @@ import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarDatos } from '../account/useDatos';
 import { olvidarCatalogo } from '../formacion/useFormacion';
 import logoUrl from '../assets/logo-1.png';
-import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
-import { eyebrow, fechaLarga } from './estilos';
+import { NAVY, BEIGE, MUTED, FONT_SLAB, FONT_BODY, GOLD_REF } from './tokens';
+import { eyebrow, fechaLarga } from './tokens';
 import { EsqueletoPagina } from './Esqueleto';
 import { IconoHoy, IconoCamino, IconoFormacion } from './Iconos';
 
@@ -39,7 +39,7 @@ export default function AppShell({ user }) {
     const hoja = document.createElement('link');
     hoja.id = 'vl-fuentes-portal';
     hoja.rel = 'stylesheet';
-    hoja.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap';
+    hoja.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Roboto+Slab:wght@400;700&display=swap';
     document.head.appendChild(hoja);
   }, []);
 
@@ -79,16 +79,9 @@ export default function AppShell({ user }) {
            (Lo que lleva su propio borderRadius ≠ 0 en el código no se toca.) */
         .vl-app {
           --vl-r-boton: 999px; --vl-r-tarjeta: 20px; --vl-r-bloque: 14px; --vl-r-campo: 12px;
-          --vl-fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-          --vl-fuente-titulo: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
           --vl-sombra: 0 1px 2px rgba(20,32,60,0.03), 0 6px 24px rgba(20,32,60,0.05);
           --vl-sombra-alta: 0 2px 4px rgba(20,32,60,0.04), 0 10px 30px rgba(20,32,60,0.08);
-          font-family: var(--vl-fuente);
         }
-        /* Fuentes: la serifa de los títulos pasa a una sans moderna, y el cuerpo a Inter. */
-        .vl-app [style*="Roboto Slab"], .vl-app [font-family*="Roboto Slab"] { font-family: var(--vl-fuente-titulo) !important; }
-        .vl-app [style*="Roboto,"], .vl-app [font-family*="Roboto,"] { font-family: var(--vl-fuente) !important; }
-        .vl-app [style*="Roboto Slab"] { letter-spacing: -0.015em; }
 
         /* Esquinas: cualquier cosa con borderRadius 0 se redondea; los botones en píldora y los que son
            bloques de texto (opciones de respuesta, filas) con un radio menor para que no se deformen. */
@@ -144,11 +137,16 @@ export default function AppShell({ user }) {
         /* Grid responsive */
         .vl-cols { display: flex; flex-direction: column; gap: 14px; }
         @media (min-width: 768px) {
-          .vl-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+          .vl-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: stretch; }
           .vl-cols > .vl-ancho { grid-column: 1 / -1; }
         }
-        @media (min-width: 1500px) { .vl-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+        @media (min-width: 1024px) { .vl-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         @media (min-width: 2000px) { .vl-cols-3 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+        /* Personas en columnas (CSS columns para orden vertical) */
+        .vl-personas-cols { columns: 1; column-gap: 24px; }
+        @media (min-width: 768px)  { .vl-personas-cols { columns: 2; } }
+        @media (min-width: 1024px) { .vl-personas-cols { columns: 3; } }
 
         /* Desktop: cabecera más espaciosa */
         @media (min-width: 960px) {

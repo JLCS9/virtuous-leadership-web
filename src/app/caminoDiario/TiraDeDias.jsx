@@ -2,7 +2,7 @@
 // Un día con reto aceptado va marcado. Solo pinta: la racha y los días vienen de lib/rachaDias.js.
 import { useT } from '../../i18n';
 import { fechaCorta } from '../../lib/camino.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK } from '../../theme';
+import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK } from '../tokens';
 import { IconoCheck } from '../Iconos';
 
 const primeraMayuscula = (s) => s.charAt(0).toUpperCase() + s.slice(1);

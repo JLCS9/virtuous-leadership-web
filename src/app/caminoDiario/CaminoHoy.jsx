@@ -1,7 +1,7 @@
 // La pantalla principal de Hoy cuando estás al día: el reto aceptado, el examen y tus hábitos de hoy. Lo que te
 // falta por hacer no sale aquí sino en el flujo guiado (HoyGuiado). Solo monta; los datos vienen de useHoy.
 import { useT } from '../../i18n';
-import { parrafo, tarjeta } from '../estilos';
+import { parrafo, tarjeta } from '../tokens';
 import HabitosHoy from './HabitosHoy';
 import Manana from './Manana';
 import Noche from './Noche';

@@ -1,6 +1,6 @@
 // Marcadores de posición suaves mientras llegan los datos, para que la pantalla no salte cuando aparece el
 // contenido (el brillo está en el CSS del portal, en AppShell). Con la caché solo se ven la primera vez.
-import { tarjeta } from './estilos';
+import { tarjeta } from './tokens';
 
 export function Esqueleto({ alto = 120, ancho = '100%', style }) {
   return <div aria-hidden className="vl-esqueleto" style={{ height: alto, width: ancho, ...style }} />;

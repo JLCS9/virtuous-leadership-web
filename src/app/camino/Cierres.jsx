@@ -6,8 +6,7 @@ import {
   CIERRE_14, CIERRE_7, PALABRA_TEMPERAMENTO, PUNTO_PARTIDA, SEMANA_DEL_TEMPERAMENTO,
   fechaCorta, fechaDelDia, resumenSemana1,
 } from '../../lib/camino.js';
-import { GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
-import { eyebrow, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, eyebrow, parrafo } from '../tokens';
 import { useCatalogo } from '../../formacion/useFormacion';
 import { Continuar, useNombres, useTemperamento } from './Juegos';
 import { Opcion, Opciones, Pantalla } from './ui';
@@ -25,7 +24,7 @@ function Bloque({ titulo, children }) {
 }
 
 const chip = (color, texto) => (
-  <span key={texto} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_BODY, fontSize: 13.5, color: INK, padding: '6px 12px 6px 10px', borderRadius: 0, background: 'rgba(27,42,74,0.06)' }}>
+  <span key={texto} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_BODY, fontSize: 13.5, color: INK, padding: '6px 12px 6px 10px', borderRadius: 999, background: 'rgba(27,42,74,0.06)' }}>
     <span style={{ width: 9, height: 9, borderRadius: '50%', background: color }} />{texto}
   </span>
 );
@@ -80,7 +79,7 @@ export function Cierre7({ camino, personas, onFin }) {
             const tuya = s === semanaTuya;
             const titulo = curso1?.lecciones.find((l) => l.id === `1.${s}`)?.titulo;
             return (
-              <div key={s} style={{ display: 'flex', gap: 10, alignItems: 'baseline', padding: '7px 10px', borderRadius: 0, background: tuya ? 'rgba(197,165,90,0.16)' : s <= 1 ? 'rgba(27,42,74,0.05)' : 'transparent', border: tuya ? `1px solid ${GOLD_REF}` : '1px solid transparent' }}>
+              <div key={s} style={{ display: 'flex', gap: 10, alignItems: 'baseline', padding: '7px 10px', borderRadius: 10, background: tuya ? 'rgba(197,165,90,0.16)' : s <= 1 ? 'rgba(27,42,74,0.05)' : 'transparent', border: tuya ? `1px solid ${GOLD_REF}` : '1px solid transparent' }}>
                 <span style={{ fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 700, color: s === 0 ? NAVY : MUTED, minWidth: 70 }}>Semana {s}{s === 0 ? ' ✓' : ''}</span>
                 <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: INK }}>
                   {tuya ? <strong>Tu lección{temp?.primario ? `: ${nombres[temp.primario].toLowerCase()}` : ''}</strong> : titulo ?? ''}
@@ -92,7 +91,7 @@ export function Cierre7({ camino, personas, onFin }) {
       </Bloque>
 
       <Bloque titulo="Sobre sellado">
-        <div style={{ display: 'flex', gap: 14, alignItems: 'center', padding: 14, borderRadius: 0, background: NAVY, color: PAPER }}>
+        <div style={{ display: 'flex', gap: 14, alignItems: 'center', padding: 14, borderRadius: 14, background: NAVY, color: PAPER }}>
           <span aria-hidden style={{ fontSize: 30 }}>✉️</span>
           <span style={{ fontFamily: FONT_SLAB, fontSize: 19 }}>{CIERRE_7.sobre}</span>
         </div>
@@ -144,7 +143,7 @@ export function Cierre14({ camino, personas, onFin }) {
           <div className="vl-entra" style={{ marginTop: 12 }}>
             <label htmlFor="espejo-en-que" style={{ fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600, color: INK }}>{CIERRE_14.espejoEnQue} <span style={{ fontWeight: 400, color: MUTED }}>(opcional)</span></label>
             <textarea id="espejo-en-que" value={enQue} maxLength={280} rows={2} onChange={(e) => setEnQue(e.target.value)}
-                      style={{ width: '100%', marginTop: 6, fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
+                      style={{ width: '100%', marginTop: 6, fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
           </div>
         )}
       </Bloque>

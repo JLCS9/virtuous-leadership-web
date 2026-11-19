@@ -2,7 +2,7 @@
 // nunca la app. El valor es 'p:<id>' para una ficha, o la clave del grupo.
 import { CON_QUIEN } from '../../lib/camino.js';
 import { claveFicha, idDeClave } from '../../lib/personas.js';
-import { INK, LINE, NAVY, PAPER, FONT_BODY } from '../../theme';
+import { INK, LINE, NAVY, PAPER, FONT_BODY } from '../tokens';
 import { Opcion, Opciones } from '../camino/ui';
 import { Avatar } from './comun';
 
@@ -27,7 +27,7 @@ export default function EligeQuien({ personas = [], valor, onElegir, extra = [],
             return (
               <button key={p.id} type="button" aria-pressed={activa} onClick={() => elegir(v)}
                       style={{
-                        display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px 6px 6px', borderRadius: 0, cursor: 'pointer',
+                        display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 14px 6px 6px', borderRadius: 999, cursor: 'pointer',
                         border: `1px solid ${activa ? NAVY : LINE}`, background: activa ? NAVY : PAPER, color: activa ? PAPER : INK,
                         fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600,
                       }}>

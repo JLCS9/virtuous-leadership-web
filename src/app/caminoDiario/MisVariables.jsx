@@ -5,8 +5,7 @@ import { guardarVariable } from '../../account/caminoDiario';
 import biblioteca from '../../data/camino-biblioteca.json';
 import { useT } from '../../i18n';
 import { valoresDe } from '../../lib/retos.js';
-import { INK, LINE, MUTED, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta } from '../estilos';
+import { FONT_BODY, INK, LINE, MUTED, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta } from '../tokens';
 import CampoVariable from './CampoVariable';
 
 export default function MisVariables({ variables, personas, userId, onCambio }) {

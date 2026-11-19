@@ -4,8 +4,7 @@
 import { useState } from 'react';
 import { guardarExamen } from '../../account/camino';
 import { EXAMEN, PALABRAS, semanaDe } from '../../lib/camino.js';
-import { INK, LINE, NAVY, PAPER, FONT_BODY, FONT_SLAB } from '../../theme';
-import { botonContorno, botonSobreClaro, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, NAVY, PAPER, botonContorno, botonSobreClaro, parrafo } from '../tokens';
 import { IconoCheck } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 import { idDeClave } from '../../lib/personas.js';

@@ -2,8 +2,7 @@
 // observaciones se hacen aquí mismo, sin salir de la sesión.
 import { useState } from 'react';
 import { combinacion, idDeClave } from '../../lib/personas.js';
-import { INK, LINE, MUTED, FONT_SLAB, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, MUTED, botonContorno, botonSobreClaro, eyebrow, parrafo } from '../tokens';
 import { Continuar, useTemperamento } from '../camino/Juegos';
 import { Pantalla } from '../camino/ui';
 import CrearFicha from './CrearFicha';

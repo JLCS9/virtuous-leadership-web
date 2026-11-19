@@ -3,8 +3,7 @@
 // un «Estás al día». Qué falta y en qué orden lo decide lib/hoyGuiado.js; aquí solo se monta.
 import { useEffect, useRef, useState } from 'react';
 import { useT } from '../../i18n';
-import { INK, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK } from '../../theme';
-import { botonSobreClaro, eyebrow, tarjeta } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, GOLD_REF_DK, INK, MUTED, NAVY, botonSobreClaro, eyebrow, tarjeta } from '../tokens';
 import { EsqueletoTarjeta } from '../Esqueleto';
 import { IconoCheck } from '../Iconos';
 import CaminoHoy from './CaminoHoy';

@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { actualizarHabito, desmarcarHabito, marcarHabito } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
 import { avance, decision, fechasDe, tieneCasilla } from '../../lib/habitos.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta } from '../estilos';
+import { FONT_BODY, INK, LINE, MUTED, NAVY, PAPER, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta } from '../tokens';
 import { IconoCheck } from '../Iconos';
 
 /** «Activo · 3 esta semana», «En prueba · Prueba: 4 días más», «En revisión»… */
@@ -47,7 +46,7 @@ export default function HabitosHoy({ habitos, marcas, hoy, userId, config, onCam
                   type="button" role="checkbox" aria-checked={marcado} aria-label={t('camino.habitos.marcar', { texto: h.texto })}
                   onClick={() => alternar(h, marcado)}
                   style={{
-                    flex: '0 0 34px', width: 34, height: 34, borderRadius: 0, cursor: 'pointer', display: 'grid', placeItems: 'center',
+                    flex: '0 0 34px', width: 34, height: 34, borderRadius: 8, cursor: 'pointer', display: 'grid', placeItems: 'center',
                     border: `2px solid ${NAVY}`, background: marcado ? NAVY : PAPER, color: PAPER,
                   }}
                 >
@@ -69,7 +68,7 @@ export default function HabitosHoy({ habitos, marcas, hoy, userId, config, onCam
                       <input
                         type="text" maxLength={200} value={ajustando.texto} aria-label={t('camino.habitos.revision.texto')}
                         onChange={(e) => setAjustando({ id: h.id, texto: e.target.value })}
-                        style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48 }}
+                        style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, padding: '12px 14px', minHeight: 48 }}
                       />
                       <div>
                         <button type="button" disabled={!ajustando.texto.trim()} onClick={() => decidir(h, 'ajustar', ajustando.texto)} style={botonSobreClaro}>

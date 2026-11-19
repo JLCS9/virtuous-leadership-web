@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useT } from '../../i18n';
 import { FICHA, TEMPS, TEXTO_CONFIANZA, combinacion } from '../../lib/personas.js';
-import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF } from '../../theme';
-import { eyebrow, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, eyebrow, parrafo } from '../tokens';
 
 export function useNombresTemp() {
   const { t } = useT();

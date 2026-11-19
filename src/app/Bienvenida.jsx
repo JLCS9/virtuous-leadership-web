@@ -30,8 +30,7 @@ import curso1 from '../data/curso1.json';
 import { guardarPreferencias } from '../account/preferencias';
 import { DIAS_SEMANA, HORAS_SUGERIDAS, horaValida, normalizar, textoZona, zonaDelDispositivo } from '../lib/preferencias.js';
 import { PASOS_HORARIOS, usePreferencias } from './Horarios';
-import { GOLD_REF, GOLD_REF_DK, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../theme';
-import { botonPrimario, eyebrow } from './estilos';
+import { GOLD_REF, GOLD_REF_DK, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB, botonPrimario, eyebrow, RADIO_PILL, RADIO_BLOQUE, RADIO_CAMPO, ERROR_DK } from './tokens';
 
 // Escala tipográfica única del onboarding: solo dos pesos. Roboto Slab 700 para títulos (h2 34px,
 // títulos de caja y énfasis 20px) y Roboto 400 para todo lo demás (texto 20px, cajas 18px, notas
@@ -137,7 +136,7 @@ const fondoChip = 'rgba(27,42,74,0.06)';
 // Etiqueta pequeña de temperamento: «TEMPERAMENTO PRINCIPAL ● Colérico».
 function EtiquetaTemp({ temp, rol }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 17, fontWeight: 400, color: NAVY, padding: '8px 14px', background: fondoChip }}>
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 17, fontWeight: 400, color: NAVY, padding: '8px 14px', background: fondoChip, borderRadius: RADIO_PILL }}>
       <span style={mini}>{rol}</span>
       <span style={{ width: 10, height: 10, borderRadius: '50%', background: TEMP_COLORS[temp] }} />
       {TEMP_NOMBRE[temp]}
@@ -150,7 +149,7 @@ function Chips({ items, marca }) {
   return (
     <div className="vl-onb-serie" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10 }}>
       {items.map((t) => (
-        <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 17, fontWeight: 400, color: NAVY, padding: '8px 14px', background: fondoChip }}>
+        <span key={t} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: FONT_BODY, fontSize: 17, fontWeight: 400, color: NAVY, padding: '8px 14px', background: fondoChip, borderRadius: RADIO_PILL }}>
           {marca && <span style={{ ...tituloCaja, fontSize: 17, color: GOLD_REF_DK }}>{marca}</span>}
           {t}
         </span>
@@ -168,7 +167,7 @@ const Acento = ({ color = GOLD_REF, izquierda = false }) => (
 // Caja de un temperamento en «Los otros temperamentos»: nombre, foco y definición.
 function CajaTemperamento({ temp }) {
   return (
-    <div style={{ position: 'relative', background: PAPER, padding: '22px 20px 20px', minWidth: 0, textAlign: 'left' }}>
+    <div style={{ position: 'relative', background: PAPER, padding: '22px 20px 20px', minWidth: 0, textAlign: 'left', borderRadius: RADIO_BLOQUE }}>
       <Acento color={TEMP_COLORS[temp]} izquierda />
       <div style={tituloCaja}>{TEMP_NOMBRE[temp]}</div>
       <div style={nota}>Orientado a {TEMP_FOCO[temp].toLowerCase()}</div>
@@ -183,7 +182,7 @@ function FichaPropia({ temp }) {
   return (
     <>
       <div className="vl-onb-serie" style={{ display: 'flex', justifyContent: 'center', margin: '0 0 28px' }}>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, ...nota, color: NAVY, padding: '6px 12px', background: fondoChip }}>
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8, ...nota, color: NAVY, padding: '6px 12px', background: fondoChip, borderRadius: RADIO_PILL }}>
           <span style={{ width: 10, height: 10, borderRadius: '50%', background: TEMP_COLORS[temp] }} />
           Orientado a {TEMP_FOCO[temp].toLowerCase()}
         </span>
@@ -192,7 +191,7 @@ function FichaPropia({ temp }) {
       {fd && (
         <div className="vl-onb-serie vl-onb-rejilla" style={{ display: 'grid', gap: 18, maxWidth: 640, width: '100%', margin: '0 auto' }}>
           {[['+', 'Te resulta fácil', fd.facilita], ['−', 'Te cuesta', fd.dificulta]].map(([sg, t, v]) => (
-            <div key={t} style={{ position: 'relative', background: PAPER, padding: '20px 20px 16px' }}>
+            <div key={t} style={{ position: 'relative', background: PAPER, padding: '20px 20px 16px', borderRadius: RADIO_BLOQUE }}>
               <Acento />
               <div style={mini}>{sg} {t}</div>
               <div style={{ ...tituloCaja, marginTop: 4 }}>{v.charAt(0).toUpperCase() + v.slice(1)}</div>
@@ -205,7 +204,7 @@ function FichaPropia({ temp }) {
 }
 
 // Sí sin color (borde LINE) y No con el estilo de «Continuar» (dorado), los dos del mismo tamaño.
-const botonAnterior = { fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED, background: 'none', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 24px', cursor: 'pointer' };
+const botonAnterior = { fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: MUTED, background: 'none', border: `1px solid ${LINE}`, borderRadius: RADIO_PILL, padding: '14px 24px', cursor: 'pointer' };
 const botonSiguiente = { ...botonPrimario, fontSize: 19, padding: '18px 40px' };
 
 function BotonesSiNo({ responder }) {
@@ -221,7 +220,7 @@ function BotonesSiNo({ responder }) {
 function OpcionHorario({ activa, onClick, children }) {
   return (
     <button type="button" onClick={onClick} aria-pressed={activa} className="vl-onb-opcion" style={{
-      fontFamily: FONT_BODY, fontSize: 18, fontWeight: 400, minWidth: 92, padding: '12px 18px', cursor: 'pointer', borderRadius: 0,
+      fontFamily: FONT_BODY, fontSize: 18, fontWeight: 400, minWidth: 92, padding: '12px 18px', cursor: 'pointer', borderRadius: RADIO_PILL,
       color: activa ? '#fff' : NAVY, background: activa ? GOLD_REF : 'none', border: `1px solid ${activa ? GOLD_REF : LINE}`,
     }}>{children}</button>
   );
@@ -252,7 +251,7 @@ function PasoHorario({ paso, prefs, setPrefs }) {
       <div>
         <input id={`onb-${paso.campo}`} type="time" step={300} value={prefs[paso.campo]}
                onChange={(e) => { if (horaValida(e.target.value)) cambiar(paso.campo, e.target.value); }}
-               style={{ fontFamily: FONT_BODY, fontSize: 20, padding: '10px 14px', borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: PAPER, textAlign: 'center' }} />
+               style={{ fontFamily: FONT_BODY, fontSize: 20, padding: '10px 14px', borderRadius: RADIO_CAMPO, border: `1px solid ${LINE}`, color: INK, background: PAPER, textAlign: 'center' }} />
       </div>
       <p style={{ ...nota, margin: '24px 0 0' }}>Hora de {textoZona(prefs.zona_horaria)}. Podrás cambiarlo cuando quieras desde tu perfil.</p>
     </>
@@ -510,7 +509,7 @@ function pantallas(d, r, responder, h) {
             ['Practicar', 'Retos diarios en tu vida real.'],
             ['Convertirlo en hábito', 'La virtud crece con la repetición.'],
           ].map(([t, x], i) => (
-            <div key={t} style={{ position: 'relative', background: PAPER, padding: '20px 22px 16px' }}>
+            <div key={t} style={{ position: 'relative', background: PAPER, padding: '20px 22px 16px', borderRadius: RADIO_BLOQUE }}>
               <Acento />
               <div style={tituloCaja}><span style={{ color: GOLD_REF_DK }}>{i + 1}.</span> {t}</div>
               <p style={{ ...parrafoCaja, margin: '4px 0 0' }}>{x}</p>
@@ -626,7 +625,7 @@ export default function Bienvenida() {
           </div>
         )}
         {p.final && guardado === 'error' && (
-          <p role="alert" style={{ ...nota, color: '#9C3A3A', margin: '14px 0 0' }}>No he podido guardar tus horarios. Inténtalo de nuevo.</p>
+          <p role="alert" style={{ ...nota, color: ERROR_DK, margin: '14px 0 0' }}>No he podido guardar tus horarios. Inténtalo de nuevo.</p>
         )}
         {/* «← Anterior» debajo del botón de avanzar (o de Sí/No): pequeño y sin borde. */}
         {idx > 0 && (

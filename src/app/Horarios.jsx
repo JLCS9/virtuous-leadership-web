@@ -10,8 +10,7 @@ import { useLocalPath } from '../i18n';
 import { useSession } from '../account/useSession';
 import { guardarPreferencias, leerPreferencias } from '../account/preferencias';
 import { DIAS_SEMANA, HORAS_SUGERIDAS, horaValida, textoZona } from '../lib/preferencias.js';
-import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB } from '../theme';
-import { botonSobreClaro, parrafo, tarjeta } from './estilos';
+import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB, botonSobreClaro, parrafo, tarjeta } from './tokens';
 import { Opcion, Opciones, Pantalla, Puntos } from './camino/ui';
 
 const titular = { fontFamily: FONT_SLAB, fontSize: 26, lineHeight: 1.25, fontWeight: 700, color: INK, margin: '16px 0 8px' };
@@ -41,7 +40,7 @@ function ElegirHora({ id, valor, sugeridas, onChange }) {
       <label htmlFor={id} style={etiqueta}>O elige otra hora</label>
       <input id={id} type="time" value={valor} step={300}
              onChange={(e) => { if (horaValida(e.target.value)) onChange(e.target.value); }}
-             style={{ fontFamily: FONT_BODY, fontSize: 20, padding: '12px 14px', borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
+             style={{ fontFamily: FONT_BODY, fontSize: 20, padding: '12px 14px', borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
     </>
   );
 }

@@ -1,7 +1,7 @@
 // La rueda de los cuatro temperamentos con tu posición (C, CM, MC, M…): se ilumina tu cuadrante y
 // aparece tu punto. Se usa en el día 1.
 import { RUEDA } from '../../lib/camino.js';
-import { PAPER, TEMP_COLORS, FONT_BODY } from '../../theme';
+import { PAPER, TEMP_COLORS, FONT_BODY } from '../tokens';
 
 const T = 240;
 const C = T / 2;

@@ -3,8 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link } from '../i18n';
 import { fetchLatestCharacter, fetchLatestTemperament } from '../account/account';
 import { claveTemperamento, extremos, resultadoCaracter, VIRTUDES, etapa } from '../lib/virtudes.js';
-import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF } from '../theme';
-import { botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './estilos';
+import { INK, LINE, MUTED, NAVY, FONT_BODY, FONT_SLAB, GOLD_REF, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from './tokens';
 import { VirtudesRadar, VirtudesBarras } from './Radar';
 import { TEXTO_VIRTUD, notaTemperamento } from './MapaCaracter';
 
@@ -118,7 +117,7 @@ export default function ResultadoCaracter() {
                 <span style={{ fontFamily: FONT_BODY, fontSize: 14, color: MUTED }}>{e.texto} · {valor} %</span>
               </div>
 
-              <div style={{ height: 6, borderRadius: 0, background: 'rgba(27,42,74,0.09)', overflow: 'hidden', marginTop: 10 }}>
+              <div style={{ height: 6, borderRadius: 999, background: 'rgba(27,42,74,0.09)', overflow: 'hidden', marginTop: 10 }}>
                 <div style={{ width: `${valor}%`, height: '100%', background: v.color, transition: 'width 600ms ease' }} />
               </div>
 

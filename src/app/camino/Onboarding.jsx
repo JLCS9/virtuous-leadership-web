@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { guardarPerfil } from '../../account/camino';
 import { DIAS_SEMANA, ONBOARDING, calcularInicio, diaIso, fechaCorta, fechaLocal, textoCierreOnboarding } from '../../lib/camino.js';
-import { INK, LINE, FONT_BODY, FONT_SLAB } from '../../theme';
-import { botonPrimario, botonSobreClaro, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, INK, LINE, botonPrimario, botonSobreClaro, parrafo } from '../tokens';
 import { IconoFlecha } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 
@@ -127,7 +126,7 @@ export default function Onboarding({ user, perfil, onHecho, onSalir }) {
         <label htmlFor="hora-examen" style={{ display: 'block', fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, margin: '20px 0 8px' }}>Tu examen de la noche, a las…</label>
         <input id="hora-examen" type="time" value={r.hora_examen} step={300}
                onChange={(e) => setR((x) => ({ ...x, hora_examen: e.target.value || '21:30' }))}
-               style={{ fontFamily: FONT_BODY, fontSize: 18, padding: '10px 14px', borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
+               style={{ fontFamily: FONT_BODY, fontSize: 18, padding: '10px 14px', borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff' }} />
         {!perfil && (
           <p style={{ ...parrafo, fontSize: 14, marginTop: 16 }}>
             {r.dia_video === diaIso(fechaLocal()) ? 'Tu camino empieza hoy mismo.' : `Tu camino empezará el ${fechaCorta(calcularInicio(r.dia_video))}.`}

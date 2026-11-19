@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { NAVY, MUTED, LINE, GOLD_REF, GOLD_REF_DK, FONT_BODY, PAPER, SUCCESS_DK } from '../theme';
-import { tarjeta, eyebrow } from '../app/estilos';
+import { NAVY, MUTED, LINE, GOLD_REF, GOLD_REF_DK, FONT_BODY, PAPER, SUCCESS_DK, tarjeta, eyebrow } from '../app/tokens';
 import { notaAHtml } from './NotaTexto';
 
 function formatFecha(iso) {

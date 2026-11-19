@@ -6,8 +6,7 @@ import { fetchLatestTemperament } from '../../account/account';
 import {
   CIERRE_11, DESLIZA_2, DESLIZA_4, ESCENAS_11, ESCENAS_3, RASGOS_13, TEXTO_13, textoElige3,
 } from '../../lib/camino.js';
-import { GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../../theme';
-import { botonSobreClaro, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, botonSobreClaro, parrafo } from '../tokens';
 import { IconoFlecha } from '../Iconos';
 import { Opcion, Opciones, Pantalla, Puntos } from './ui';
 
@@ -89,7 +88,7 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
     <button key={d.clave} type="button" onClick={() => responder(d.clave)} disabled={respondida}
             style={{
               fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 700, color: PAPER, background: d.color,
-              border: 'none', borderRadius: 0, padding: '12px 8px', cursor: respondida ? 'default' : 'pointer',
+              border: 'none', borderRadius: 10, padding: '12px 8px', cursor: respondida ? 'default' : 'pointer',
               opacity: respondida && elegida !== d.clave && correcta !== d.clave ? 0.35 : 1,
               outline: apuntado === d.clave ? `3px solid ${GOLD_REF}` : 'none', outlineOffset: 2,
               transform: apuntado === d.clave ? 'scale(1.04)' : 'none', transition: 'transform 120ms ease, opacity 200ms ease',
@@ -118,7 +117,7 @@ function Desliza({ etiqueta, tarjetas, destinos, onFin }) {
             onPointerUp={soltar}
             onPointerCancel={() => setArrastre(null)}
             style={{
-              background: PAPER, border: `1px solid ${respondida ? (elegida === correcta ? VERDE : ROJO) : LINE}`, borderRadius: 0,
+              background: PAPER, border: `1px solid ${respondida ? (elegida === correcta ? VERDE : ROJO) : LINE}`, borderRadius: 14,
               padding: '28px 20px', minHeight: 150, display: 'grid', placeItems: 'center', textAlign: 'center',
               boxShadow: '0 10px 28px rgba(27,42,74,0.12)', touchAction: 'none', userSelect: 'none',
               cursor: respondida ? 'default' : 'grab',
@@ -293,7 +292,7 @@ export function Arrastra({ dia, onFin }) {
           {construidos.map(([r]) => {
             const destacado = destacados.includes(r);
             return (
-              <div key={r} style={{ padding: '12px 14px', borderRadius: 0, background: destacado ? 'rgba(197,165,90,0.16)' : 'transparent', border: `1px solid ${destacado ? GOLD_REF : LINE}` }}>
+              <div key={r} style={{ padding: '12px 14px', borderRadius: 10, background: destacado ? 'rgba(197,165,90,0.16)' : 'transparent', border: `1px solid ${destacado ? GOLD_REF : LINE}` }}>
                 <div style={{ fontFamily: FONT_BODY, fontSize: 15, fontWeight: destacado ? 700 : 500, color: INK }}>{r}</div>
                 {destacado && <div style={{ fontFamily: FONT_SLAB, fontSize: 17, fontStyle: 'italic', color: NAVY, marginTop: 4 }}>{TEXTO_13}</div>}
               </div>
@@ -322,7 +321,7 @@ export function Arrastra({ dia, onFin }) {
               {[['no_elegi', 'No lo elegí'], ['construido', 'Lo he construido']].map(([v, texto]) => (
                 <button key={v} type="button" aria-pressed={sitio[r] === v} onClick={() => poner(r, v)}
                         style={{
-                          fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 600, borderRadius: 0, padding: '8px 11px', cursor: 'pointer',
+                          fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 600, borderRadius: 999, padding: '8px 11px', cursor: 'pointer',
                           border: `1px solid ${sitio[r] === v ? NAVY : LINE}`, background: sitio[r] === v ? NAVY : PAPER, color: sitio[r] === v ? PAPER : INK,
                         }}>
                   {texto}

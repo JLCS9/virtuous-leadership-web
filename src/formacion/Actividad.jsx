@@ -2,8 +2,7 @@
 // Quiz, Define, Desliza, Identifica — todos comparten el mismo shell (título + barra progreso).
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS, SUCCESS_BG, SUCCESS, SUCCESS_DK, ERROR_BG, ERROR, ERROR_DK, WARNING_BG, WARNING, WARNING_DK } from '../theme';
-import { barraFondo, eyebrow, tarjeta, tarjetaCentrada } from '../app/estilos';
+import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, GOLD_REF_LT, LINE, PAPER, FONT_SLAB, FONT_BODY, BEIGE, TEMP_COLORS, SUCCESS_BG, SUCCESS, SUCCESS_DK, ERROR_BG, ERROR, ERROR_DK, WARNING_BG, WARNING, WARNING_DK, barraFondo, eyebrow, tarjeta, tarjetaCentrada } from '../app/tokens';
 import { IconoCheck } from '../app/Iconos';
 import { supabase } from '../account/supabase';
 import diagramaVirtudesImg from './diagrama-virtudes.png';

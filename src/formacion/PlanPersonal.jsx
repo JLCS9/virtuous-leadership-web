@@ -9,8 +9,7 @@ import curso2Data from '../data/curso2.json';
 import curso3Data from '../data/curso3.json';
 import curso4Data from '../data/curso4.json';
 import curso5Data from '../data/curso5.json';
-import { LINE, MUTED, NAVY, GOLD_REF_DK, FONT_SLAB, FONT_BODY } from '../theme';
-import { eyebrow, tarjeta, titulo, parrafo } from '../app/estilos';
+import { LINE, MUTED, NAVY, GOLD_REF_DK, FONT_SLAB, FONT_BODY, eyebrow, tarjeta, titulo, parrafo } from '../app/tokens';
 
 const CURSOS_CFG = [
   { label: 'Cuaderno 1', cursoId: 'curso1', cursoNum: 1, data: curso1Data },

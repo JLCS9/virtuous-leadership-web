@@ -5,8 +5,7 @@ import { useState } from 'react';
 import { crearHabito, guardarDia, guardarVariable } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
 import { CUMPLIDOS, camposDeNutrir, pasoDeNoche } from '../../lib/retos.js';
-import { INK, LINE, NAVY, PAPER, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, INK, LINE, NAVY, PAPER, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { IconoCheck } from '../Iconos';
 import CampoVariable from './CampoVariable';
 
@@ -120,7 +119,7 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
             {CUMPLIDOS.map((c) => (
               <button
                 key={c} type="button" disabled={guardando} onClick={() => elegirCumplido(c)}
-                style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: INK, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 12px', minHeight: 46, cursor: 'pointer' }}
+                style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: INK, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 12, padding: '12px 12px', minHeight: 46, cursor: 'pointer' }}
               >
                 {t(`camino.noche.cumplidos.${c}`)}
               </button>
@@ -136,7 +135,7 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
           <p style={{ ...parrafo, fontSize: 16, marginBottom: 12 }}>{t('camino.noche.reflexion_ayuda')}</p>
           <textarea
             value={reflexion} onChange={(e) => setReflexion(e.target.value)} maxLength={500} rows={4} aria-label={reto.noche.reflexion}
-            style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 16px', width: '100%', boxSizing: 'border-box', resize: 'vertical' }}
+            style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, padding: '14px 16px', width: '100%', boxSizing: 'border-box', resize: 'vertical' }}
           />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 18 }}>
             <button type="button" disabled={guardando || !reflexion.trim()} onClick={() => seguirReflexion(false)}

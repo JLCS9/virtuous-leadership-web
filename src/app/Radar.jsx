@@ -1,5 +1,5 @@
 // Gráfica de las seis virtudes a partir del test de carácter: radar + barras. SVG, sin librerías.
-import { GOLD_DEEP, INK, LINE, MUTED, FONT_BODY } from '../theme';
+import { GOLD_DEEP, INK, LINE, MUTED, FONT_BODY } from './tokens';
 import { VIRTUDES, etapa, geometriaRadar } from '../lib/virtudes.js';
 
 const TAMANO = 400;
@@ -90,8 +90,8 @@ export function VirtudesBarras({ valores }) {
               <span style={{ fontWeight: 600 }}>{v.nombre}</span>
               <span style={{ color: MUTED, fontSize: 13 }}>{e.texto} · {valor} %</span>
             </div>
-            <div style={{ height: 8, borderRadius: 0, background: 'rgba(27,42,74,0.09)', overflow: 'hidden' }} role="presentation">
-              <div style={{ width: `${valor}%`, height: '100%', borderRadius: 0, background: v.color, transition: 'width 600ms ease' }} />
+            <div style={{ height: 8, borderRadius: 999, background: 'rgba(27,42,74,0.09)', overflow: 'hidden' }} role="presentation">
+              <div style={{ width: `${valor}%`, height: '100%', borderRadius: 999, background: v.color, transition: 'width 600ms ease' }} />
             </div>
           </div>
         );

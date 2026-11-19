@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { LocalLink as Link, useT } from '../i18n';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
-import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF } from '../theme';
-import { botonContorno, eyebrow, parrafo, tarjeta, titulo } from './estilos';
+import { INK, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_SLAB, FONT_BODY, GOLD_REF, botonContorno, eyebrow, parrafo, tarjeta, titulo } from './tokens';
 import { IconoCheck } from './Iconos';
 import { EsqueletoTarjeta } from './Esqueleto';
 import MapaCaracter from './MapaCaracter';
@@ -37,13 +36,13 @@ function MiResultado({ fila, clave }) {
       <h2 style={{ ...titulo(30), margin: '10px 0 6px', letterSpacing: '-0.005em' }}>{perfil?.name ?? clave}</h2>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center', margin: '4px 0 16px', flexWrap: 'wrap' }}>
         {nombres.map((n, i) => (
-          <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, padding: '5px 12px 5px 10px', borderRadius: 0, background: 'rgba(27,42,74,0.06)' }}>
+          <span key={n} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, color: INK, padding: '5px 12px 5px 10px', borderRadius: 999, background: 'rgba(27,42,74,0.06)' }}>
             <span style={{ width: 9, height: 9, borderRadius: '50%', background: i === 0 ? color1 : color2 }} />
             {n}
           </span>
         ))}
       </div>
-      <div style={{ display: 'flex', height: 4, borderRadius: 0, overflow: 'hidden', maxWidth: 160, marginBottom: 20 }} aria-hidden>
+      <div style={{ display: 'flex', height: 4, borderRadius: 999, overflow: 'hidden', maxWidth: 160, marginBottom: 20 }} aria-hidden>
         <div style={{ flex: 1, background: color1 }} />{color2 && <div style={{ flex: 1, background: color2 }} />}
       </div>
 

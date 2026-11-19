@@ -4,11 +4,10 @@ import { useState } from 'react';
 import { actualizarHabito, crearHabito } from '../../account/caminoDiario';
 import { useT } from '../../i18n';
 import { VIRTUDES_HABITO, avance, decision, fechasDe, puedeAnadir, tieneCasilla } from '../../lib/habitos.js';
-import { INK, LINE, MUTED, FONT_BODY } from '../../theme';
-import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
+import { FONT_BODY, INK, LINE, MUTED, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { resumenDeHabito } from './HabitosHoy';
 
-const campo = { fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48, width: '100%', boxSizing: 'border-box' };
+const campo = { fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, padding: '12px 14px', minHeight: 48, width: '100%', boxSizing: 'border-box' };
 
 export default function ListaHabitos({ habitos, marcas, hoy, userId, config, onCambio }) {
   const { t } = useT();

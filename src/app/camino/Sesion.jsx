@@ -8,8 +8,7 @@ import { buscarLeccion } from '../../formacion/cursos.js';
 import {
   EJEMPLO_CUATRO, conPunto, LEMA, PUNTO_PARTIDA, RETO_PRESENTACION, VERDAD_MITO, infoDia, semanaDe, tieneExamen,
 } from '../../lib/camino.js';
-import { INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB, GOLD_REF } from '../../theme';
-import { botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo } from '../estilos';
+import { FONT_BODY, FONT_SLAB, GOLD_REF, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, botonContorno, botonPrimario, botonSobreClaro, eyebrow, heroFondo, parrafo } from '../tokens';
 import { IconoCheck, IconoFlecha } from '../Iconos';
 import { Reproductor } from '../../formacion/Formacion';
 import { useCatalogo, useProgreso } from '../../formacion/useFormacion';
@@ -236,7 +235,7 @@ function PuntoPartida({ dia, user, lineaBase, onFin }) {
       <h2 style={{ fontFamily: FONT_SLAB, fontSize: 26, fontWeight: 700, color: INK, margin: '16px 0 6px' }}>{PUNTO_PARTIDA.linea}</h2>
       <p style={{ ...parrafo, fontSize: 14, marginBottom: 14 }}>Es opcional. Solo lo ves tú; lo releerás al final de la semana 1.</p>
       <textarea value={r.linea} maxLength={280} rows={3} onChange={(e) => setR((x) => ({ ...x, linea: e.target.value }))}
-                style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 0, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
+                style={{ width: '100%', fontFamily: FONT_BODY, fontSize: 16, padding: 12, borderRadius: 12, border: `1px solid ${LINE}`, color: INK, background: '#fff', resize: 'vertical' }} />
     </Pantalla>
   );
 }
@@ -287,7 +286,7 @@ export default function Sesion({ dia, user, camino, personas, onCerrar, onExamen
 
   if (paso === 'recuerda') {
     return (
-      <section className="vl-entra" style={{ background: heroFondo, color: PAPER, borderRadius: 0, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' }}>
+      <section className="vl-entra" style={{ background: heroFondo, color: PAPER, borderRadius: 14, padding: '26px 22px 24px', boxShadow: '0 18px 40px rgba(15,29,56,0.28)' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ ...eyebrow, color: GOLD_REF }}>Día {dia} · Semana {semana.numero}</div>
           <button type="button" onClick={onCerrar} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: PAPER, opacity: 0.7 }}>Salir</button>

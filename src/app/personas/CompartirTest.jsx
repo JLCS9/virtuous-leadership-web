@@ -5,7 +5,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { invitacionDe } from '../../account/personas';
 import { enlaceInvitacion, mensajeInvitacion } from '../../lib/personas.js';
-import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY, FONT_SLAB, GOLD_REF } from '../../theme';
+import { INK, LINE, MUTED, NAVY, PAPER, FONT_BODY, FONT_SLAB, GOLD_REF } from '../tokens';
 
 // El enlace que se comparte es siempre el del sitio real, también al probar el portal en local:
 // quien lo recibe tiene que poder abrirlo. (VITE_SITE_URL solo para apuntarlo a otro dominio.)
@@ -14,7 +14,7 @@ const SITIO = (import.meta.env.VITE_SITE_URL || 'https://virtuousleadership.com'
 const boton = {
   display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 8, minHeight: 48,
   fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, textDecoration: 'none', cursor: 'pointer',
-  color: NAVY, background: PAPER, border: `1.5px solid ${NAVY}`, borderRadius: 0, padding: '11px 16px',
+  color: NAVY, background: PAPER, border: `1.5px solid ${NAVY}`, borderRadius: 999, padding: '11px 16px',
 };
 
 export default function CompartirTest({ user, persona }) {
@@ -86,7 +86,7 @@ export default function CompartirTest({ user, persona }) {
         <button type="button" onClick={copiar} style={{ ...boton, borderColor: copiado ? GOLD_REF : NAVY }}>{copiado ? 'Enlace copiado ✓' : 'Copiar enlace'}</button>
       </div>
       <input readOnly value={url('enlace')} aria-label={`Enlace del test para ${nombre}`} onFocus={(e) => e.target.select()}
-             style={{ width: '100%', marginTop: 12, fontFamily: FONT_BODY, fontSize: 18, color: MUTED, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '10px 12px' }} />
+             style={{ width: '100%', marginTop: 12, fontFamily: FONT_BODY, fontSize: 18, color: MUTED, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 12, padding: '10px 12px' }} />
       {urlLocal && (
         <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, margin: '8px 0 0' }}>
           Solo en desarrollo: <a href={urlLocal} style={{ color: NAVY }}>abrir el enlace en este servidor local</a>
