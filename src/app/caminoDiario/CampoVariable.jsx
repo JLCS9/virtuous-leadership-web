@@ -24,18 +24,18 @@ export default function CampoVariable({ variable, personas = [], valor, personaI
                   key={p.id} type="button" aria-pressed={activa}
                   onClick={() => onCambiar(activa ? { valor: '', personaId: null } : { valor: p.nombre, personaId: p.id })}
                   style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 10, padding: '8px 18px 8px 8px', borderRadius: 0, cursor: 'pointer',
+                    display: 'inline-flex', alignItems: 'center', gap: 10, padding: '6px 16px 6px 6px', borderRadius: 0, cursor: 'pointer',
                     border: `1px solid ${activa ? NAVY : LINE}`, background: activa ? NAVY : PAPER, color: activa ? PAPER : INK,
-                    fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, minHeight: 48,
+                    fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, minHeight: 42,
                   }}
                 >
-                  <Avatar persona={p} tam={34} />{p.nombre}
+                  <Avatar persona={p} tam={28} />{p.nombre}
                 </button>
               );
             })}
           </div>
         ) : (
-          <p style={{ fontFamily: FONT_BODY, fontSize: 18, lineHeight: 1.5, color: MUTED, margin: 0 }}>
+          <p style={{ fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.5, color: MUTED, margin: 0 }}>
             {variable.grupo ? t('camino.campo.sin_personas_grupo', { grupo: TEXTO_GRUPO[variable.grupo] ?? variable.grupo }) : t('camino.campo.sin_personas')}
           </p>
         )}
@@ -54,8 +54,8 @@ export default function CampoVariable({ variable, personas = [], valor, personaI
         id={`campo-${variable.id}`} type="text" maxLength={120} value={valor} aria-label={etiqueta}
         onChange={(e) => onCambiar({ valor: e.target.value, personaId: null })}
         style={{
-          fontFamily: FONT_BODY, fontSize: 18, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0,
-          padding: '14px 16px', minHeight: 52, width: '100%', boxSizing: 'border-box',
+          fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0,
+          padding: '11px 14px', minHeight: 44, width: '100%', boxSizing: 'border-box',
         }}
       />
       <span style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>{t('camino.campo.ejemplo', { ejemplo: variable.ejemplo })}</span>

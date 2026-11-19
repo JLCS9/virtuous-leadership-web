@@ -32,7 +32,7 @@ export default function MisVariables({ variables, personas, userId, onCambio }) 
   return (
     <section style={tarjeta} aria-label={t('camino.pagina.variables.titulo')}>
       <div style={eyebrow}>{t('camino.pagina.variables.titulo')}</div>
-      <p style={{ ...parrafo, fontSize: 18, margin: '10px 0 6px' }}>{t('camino.pagina.variables.intro')}</p>
+      <p style={{ ...parrafo, fontSize: 16, margin: '10px 0 6px' }}>{t('camino.pagina.variables.intro')}</p>
       <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
         {biblioteca.variables.map((v) => {
           const abierta = editando?.id === v.id;
@@ -41,7 +41,7 @@ export default function MisVariables({ variables, personas, userId, onCambio }) 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>{v.descripcion}</div>
-                  <div style={{ fontFamily: FONT_BODY, fontSize: 18, color: valores[v.id] ? INK : MUTED }}>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: valores[v.id] ? INK : MUTED }}>
                     {valores[v.id] ?? t('camino.pagina.variables.sin_respuesta')}
                   </div>
                 </div>

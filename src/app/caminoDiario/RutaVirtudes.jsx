@@ -191,7 +191,7 @@ export default function RutaVirtudes({ bloques, tira, racha, hoy }) {
       <div style={eyebrow}>{t('camino.ruta.eyebrow')}</div>
       <h2 style={{ ...titulo(28), margin: '10px 0 0' }}>{t('camino.ruta.titulo')}</h2>
       <TiraDeDias tira={tira} racha={racha} hoy={hoy} />
-      <p style={{ ...parrafo, fontSize: 18, marginBottom: 12 }}>{t('camino.ruta.intro')}</p>
+      <p style={{ ...parrafo, fontSize: 16, marginBottom: 12 }}>{t('camino.ruta.intro')}</p>
       <Senda bloques={bloques} t={t} nombre={nombre} />
 
       {/* Lo mismo para quien no ve el dibujo, sin desvelar las virtudes que aún no toca. */}

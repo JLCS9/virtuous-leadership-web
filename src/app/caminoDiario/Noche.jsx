@@ -40,8 +40,8 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
     return (
       <section style={seccion} aria-label={t('camino.noche.eyebrow')}>
         <div style={eyebrow}>{t('camino.noche.eyebrow')}</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, margin: '12px 0 10px' }}>
-          <span style={{ width: 44, height: 44, borderRadius: '50%', background: NAVY, color: PAPER, display: 'grid', placeItems: 'center' }}><IconoCheck width={24} height={24} /></span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '10px 0 8px' }}>
+          <span style={{ width: 32, height: 32, borderRadius: '50%', background: NAVY, color: PAPER, display: 'grid', placeItems: 'center' }}><IconoCheck width={18} height={18} /></span>
           <h2 style={{ ...titulo(26) }}>{t('camino.noche.hecho_titulo')}</h2>
         </div>
         <p style={parrafo}>{t(`camino.noche.hecho_mensaje.${diaDeHoy.cumplido}`)}</p>
@@ -119,7 +119,7 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
             {CUMPLIDOS.map((c) => (
               <button
                 key={c} type="button" disabled={guardando} onClick={() => elegirCumplido(c)}
-                style={{ fontFamily: FONT_BODY, fontSize: 20, fontWeight: 600, color: INK, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 0, padding: '16px 12px', minHeight: 56, cursor: 'pointer' }}
+                style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: INK, background: PAPER, border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 12px', minHeight: 46, cursor: 'pointer' }}
               >
                 {t(`camino.noche.cumplidos.${c}`)}
               </button>
@@ -135,7 +135,7 @@ export default function Noche({ reto, diaDeHoy, hoy, userId, variable, filaVaria
           <p style={{ ...parrafo, fontSize: 16, marginBottom: 12 }}>{t('camino.noche.reflexion_ayuda')}</p>
           <textarea
             value={reflexion} onChange={(e) => setReflexion(e.target.value)} maxLength={500} rows={4} aria-label={reto.noche.reflexion}
-            style={{ fontFamily: FONT_BODY, fontSize: 18, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 16px', width: '100%', boxSizing: 'border-box', resize: 'vertical' }}
+            style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '14px 16px', width: '100%', boxSizing: 'border-box', resize: 'vertical' }}
           />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 18 }}>
             <button type="button" disabled={guardando || !reflexion.trim()} onClick={() => seguirReflexion(false)}

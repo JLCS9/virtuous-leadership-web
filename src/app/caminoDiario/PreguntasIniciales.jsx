@@ -40,7 +40,7 @@ export default function PreguntasIniciales({ preguntas, variables, personas, use
 
   return (
     <Pantalla etiqueta={t('camino.iniciales.eyebrow')} pregunta={pregunta.pregunta}>
-      {i === 0 && <p style={{ ...parrafo, fontSize: 18, margin: '-6px 0 18px' }}>{t('camino.iniciales.intro')}</p>}
+      {i === 0 && <p style={{ ...parrafo, fontSize: 16, margin: '-6px 0 18px' }}>{t('camino.iniciales.intro')}</p>}
       <Puntos total={preguntas.length} actual={i} />
       <p style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, margin: '4px 0 18px' }}>
         {t('camino.iniciales.progreso', { n: i + 1, total: preguntas.length })}

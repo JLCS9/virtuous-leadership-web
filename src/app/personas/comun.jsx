@@ -145,7 +145,7 @@ export function MapaPersonas({ personas, nombreTu = 'Tú', miPrimario, hoverId: 
   };
 
   return (
-    <svg viewBox={`-80 -40 ${T + 160} ${T + 110}`} width="100%" style={{ maxWidth: 520, display: 'block', margin: '0 auto' }} role="img"
+    <svg viewBox={`-80 -40 ${T + 160} ${T + 110}`} width="100%" style={{ maxWidth: 620, display: 'block', margin: '0 auto' }} role="img"
          aria-label={`Mapa de tus personas: ${personas.map((p) => p.nombre).join(', ')}`}>
       <defs>
         <filter id="nodo-glow">

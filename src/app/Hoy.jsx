@@ -95,10 +95,10 @@ export default function Hoy() {
   return (
     <div className="vl-hoy">
       <style>{`
-        .vl-hoy { display: flex; flex-direction: column; gap: 18px; }
+        .vl-hoy { display: flex; flex-direction: column; gap: 14px; }
         @media (min-width: 860px) {
-          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
-          .vl-hoy-izq { display: flex; flex-direction: column; gap: 18px; }
+          .vl-hoy { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: stretch; }
+          .vl-hoy-izq { display: flex; flex-direction: column; gap: 14px; }
           .vl-hoy-der { display: flex; flex-direction: column; overflow: hidden; }
           .vl-hoy-der > section { flex: 1; display: flex; flex-direction: column; min-height: 0; }
           .vl-hoy-der .vl-mapa-personas-wrap { flex: 1; position: relative; min-height: 0; }

@@ -68,7 +68,7 @@ export default function AppShell({ user }) {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: `radial-gradient(1100px 520px at 50% -8%, #fff 0%, rgba(255,255,255,0) 70%), ${BEIGE}`, fontFamily: FONT_BODY, WebkitFontSmoothing: 'antialiased', paddingBottom: enBienvenida ? 0 : 132 }}>
+    <div style={{ minHeight: '100vh', background: `radial-gradient(1100px 520px at 50% -8%, #fff 0%, rgba(255,255,255,0) 70%), ${BEIGE}`, fontFamily: FONT_BODY, WebkitFontSmoothing: 'antialiased', paddingBottom: enBienvenida ? 0 : 108 }}>
       <style>{`
         .vl-app { --vl-pad: clamp(18px, 4vw, 56px); --vl-max: 1600px; }
         .vl-app * { box-sizing: border-box; }
@@ -78,11 +78,11 @@ export default function AppShell({ user }) {
            pantalla, esta capa lo afina desde un solo sitio: para cambiar radios, fuentes o sombras, aquí.
            (Lo que lleva su propio borderRadius ≠ 0 en el código no se toca.) */
         .vl-app {
-          --vl-r-boton: 999px; --vl-r-tarjeta: 24px; --vl-r-bloque: 18px; --vl-r-campo: 14px;
+          --vl-r-boton: 999px; --vl-r-tarjeta: 20px; --vl-r-bloque: 14px; --vl-r-campo: 12px;
           --vl-fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
           --vl-fuente-titulo: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
-          --vl-sombra: 0 1px 2px rgba(20,32,60,0.04), 0 10px 32px rgba(20,32,60,0.07);
-          --vl-sombra-alta: 0 2px 4px rgba(20,32,60,0.05), 0 16px 40px rgba(20,32,60,0.11);
+          --vl-sombra: 0 1px 2px rgba(20,32,60,0.03), 0 6px 24px rgba(20,32,60,0.05);
+          --vl-sombra-alta: 0 2px 4px rgba(20,32,60,0.04), 0 10px 30px rgba(20,32,60,0.08);
           font-family: var(--vl-fuente);
         }
         /* Fuentes: la serifa de los títulos pasa a una sans moderna, y el cuerpo a Inter. */
@@ -142,9 +142,9 @@ export default function AppShell({ user }) {
         body { overscroll-behavior-y: none; }
 
         /* Grid responsive */
-        .vl-cols { display: flex; flex-direction: column; gap: 18px; }
+        .vl-cols { display: flex; flex-direction: column; gap: 14px; }
         @media (min-width: 768px) {
-          .vl-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; align-items: start; }
+          .vl-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
           .vl-cols > .vl-ancho { grid-column: 1 / -1; }
         }
         @media (min-width: 1500px) { .vl-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
@@ -152,8 +152,8 @@ export default function AppShell({ user }) {
 
         /* Desktop: cabecera más espaciosa */
         @media (min-width: 960px) {
-          .vl-header { padding-top: 40px !important; padding-bottom: 12px !important; }
-          .vl-main   { padding-top: 32px !important; }
+          .vl-header { padding-top: 28px !important; padding-bottom: 6px !important; }
+          .vl-main   { padding-top: 20px !important; }
         }
         @media (min-width: 1920px) {
           .vl-app { --vl-max: 1700px; }
@@ -165,6 +165,7 @@ export default function AppShell({ user }) {
         }
 
         .vl-mi-cuenta:hover { background: rgba(165,139,38,0.12) !important; }
+        .vl-fila-persona:hover { background: rgba(27,42,74,0.04) !important; }
         /* En pantallas estrechas «Mi cuenta» queda solo en el círculo, para que quepa el nombre. */
         @media (max-width: 520px) {
           .vl-mi-cuenta { padding: 4px !important; }
@@ -191,25 +192,25 @@ export default function AppShell({ user }) {
         }
       `}</style>
       <div className="vl-app">
-        {!enBienvenida && <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '32px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 14 }}>
+        {!enBienvenida && <header className="vl-header" style={{ maxWidth: 'var(--vl-max)', margin: '0 auto', padding: '20px var(--vl-pad) 0', display: 'flex', alignItems: 'center', gap: 12 }}>
           <Link to="/app" aria-label="Virtuous Leadership" style={{ display: 'flex' }}>
-            <img src={logoUrl} alt="" width="40" height="40" style={{ display: 'block' }} />
+            <img src={logoUrl} alt="" width="34" height="34" style={{ display: 'block' }} />
           </Link>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={eyebrow}>{fechaLarga()}</div>
-            <div style={{ fontFamily: FONT_SLAB, fontSize: 21, fontWeight: 700, color: NAVY, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+            <div style={{ fontFamily: FONT_SLAB, fontSize: 18, fontWeight: 700, color: NAVY, lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {nombre ? `Hola, ${nombre}` : 'Hola'}
             </div>
           </div>
           <Link to="/app/perfil" className="vl-mi-cuenta" style={{
             display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none',
             color: pathname.startsWith(lp('/app/perfil')) ? NAVY : MUTED,
-            fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, padding: '6px 14px 6px 6px', borderRadius: 999,
+            fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, padding: '4px 12px 4px 4px', borderRadius: 999,
             background: pathname.startsWith(lp('/app/perfil')) ? 'rgba(165,139,38,0.14)' : 'rgba(27,42,74,0.05)',
             transition: 'background 200ms ease, color 200ms ease',
           }}>
             <span style={{
-              width: 34, height: 34, background: NAVY, borderRadius: '50%',
+              width: 30, height: 30, background: NAVY, borderRadius: '50%',
               display: 'grid', placeItems: 'center', color: '#fff', fontSize: 14, fontWeight: 700,
               flexShrink: 0,
             }}>
@@ -301,8 +302,8 @@ function NavBurbuja({ pathname, lp }) {
           }
           return (
             <Link key={ruta} to={ruta} data-tab aria-current={activa ? 'page' : undefined} style={{
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3, minWidth: 84,
-              padding: '9px 14px 8px', textDecoration: 'none', borderRadius: 999,
+              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, minWidth: 72,
+              padding: '7px 12px 6px', textDecoration: 'none', borderRadius: 999,
               fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.01em',
               position: 'relative', zIndex: 1,
               color: activa ? NAVY : MUTED, background: 'transparent',

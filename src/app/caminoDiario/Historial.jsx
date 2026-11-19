@@ -21,8 +21,8 @@ export default function Historial({ dias }) {
         {vividos.map((d) => (
           <li key={d.fecha} style={{ borderTop: `1px solid ${LINE}`, padding: '14px 0' }}>
             <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>{primeraMayuscula(fechaCorta(d.fecha))}</div>
-            <div style={{ fontFamily: FONT_BODY, fontSize: 18, fontWeight: 600, color: INK, margin: '2px 0 4px' }}>{RETOS[d.reto_id]?.consigna ?? d.reto_id}</div>
-            <div style={{ fontFamily: FONT_BODY, fontSize: 18, lineHeight: 1.5, color: INK }}>{d.texto ?? t('camino.pagina.historial.sin_opcion')}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 16, fontWeight: 600, color: INK, margin: '2px 0 4px' }}>{RETOS[d.reto_id]?.consigna ?? d.reto_id}</div>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.5, color: INK }}>{d.texto ?? t('camino.pagina.historial.sin_opcion')}</div>
             <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED, marginTop: 4 }}>
               {d.cumplido ? t(`camino.noche.cumplidos.${d.cumplido}`) : t('camino.pagina.historial.sin_examen')}
             </div>

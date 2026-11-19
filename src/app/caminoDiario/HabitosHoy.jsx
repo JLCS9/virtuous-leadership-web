@@ -42,19 +42,19 @@ export default function HabitosHoy({ habitos, marcas, hoy, userId, config, onCam
           const marcado = fechas.has(hoy);
           return (
             <li key={h.id} style={{ borderTop: `1px solid ${LINE}`, paddingTop: 12 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                 <button
                   type="button" role="checkbox" aria-checked={marcado} aria-label={t('camino.habitos.marcar', { texto: h.texto })}
                   onClick={() => alternar(h, marcado)}
                   style={{
-                    flex: '0 0 48px', width: 48, height: 48, borderRadius: 0, cursor: 'pointer', display: 'grid', placeItems: 'center',
+                    flex: '0 0 34px', width: 34, height: 34, borderRadius: 0, cursor: 'pointer', display: 'grid', placeItems: 'center',
                     border: `2px solid ${NAVY}`, background: marcado ? NAVY : PAPER, color: PAPER,
                   }}
                 >
-                  {marcado && <IconoCheck width={26} height={26} />}
+                  {marcado && <IconoCheck width={20} height={20} />}
                 </button>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontFamily: FONT_BODY, fontSize: 18, lineHeight: 1.45, color: INK }}>{h.texto}</div>
+                  <div style={{ fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.45, color: INK }}>{h.texto}</div>
                   <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>
                     {t(`camino.habitos.virtudes.${h.virtud}`)} · {resumenDeHabito(t, h, avance(h, fechas, hoy, config))}
                   </div>
@@ -62,14 +62,14 @@ export default function HabitosHoy({ habitos, marcas, hoy, userId, config, onCam
               </div>
 
               {h.estado === 'en_revision' && (
-                <div style={{ marginTop: 12, paddingLeft: 62 }}>
-                  <p style={{ ...parrafo, fontSize: 18, color: INK, marginBottom: 10 }}>{t('camino.habitos.revision.pregunta')}</p>
+                <div style={{ marginTop: 10, paddingLeft: 46 }}>
+                  <p style={{ ...parrafo, fontSize: 16, color: INK, marginBottom: 10 }}>{t('camino.habitos.revision.pregunta')}</p>
                   {ajustando?.id === h.id ? (
                     <div style={{ display: 'grid', gap: 10 }}>
                       <input
                         type="text" maxLength={200} value={ajustando.texto} aria-label={t('camino.habitos.revision.texto')}
                         onChange={(e) => setAjustando({ id: h.id, texto: e.target.value })}
-                        style={{ fontFamily: FONT_BODY, fontSize: 18, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48 }}
+                        style={{ fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48 }}
                       />
                       <div>
                         <button type="button" disabled={!ajustando.texto.trim()} onClick={() => decidir(h, 'ajustar', ajustando.texto)} style={botonSobreClaro}>

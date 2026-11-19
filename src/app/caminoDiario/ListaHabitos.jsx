@@ -8,7 +8,7 @@ import { INK, LINE, MUTED, FONT_BODY } from '../../theme';
 import { botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../estilos';
 import { resumenDeHabito } from './HabitosHoy';
 
-const campo = { fontFamily: FONT_BODY, fontSize: 18, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48, width: '100%', boxSizing: 'border-box' };
+const campo = { fontFamily: FONT_BODY, fontSize: 16, color: INK, background: '#fff', border: `1px solid ${LINE}`, borderRadius: 0, padding: '12px 14px', minHeight: 48, width: '100%', boxSizing: 'border-box' };
 
 export default function ListaHabitos({ habitos, marcas, hoy, userId, config, onCambio }) {
   const { t } = useT();
@@ -33,7 +33,7 @@ export default function ListaHabitos({ habitos, marcas, hoy, userId, config, onC
   const fila = (h, boton) => (
     <li key={h.id} style={{ borderTop: `1px solid ${LINE}`, padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
       <div style={{ minWidth: 0 }}>
-        <div style={{ fontFamily: FONT_BODY, fontSize: 18, lineHeight: 1.45, color: INK }}>{h.texto}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.45, color: INK }}>{h.texto}</div>
         <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>
           {t(`camino.habitos.virtudes.${h.virtud}`)} · {resumenDeHabito(t, h, avance(h, fechasDe(marcas, h.id), hoy, config))}
         </div>
