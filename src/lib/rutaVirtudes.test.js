@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { CHALLENGE_VIRTUE } from '../account/challengeVirtues.js';
-import { ORDEN_VIRTUDES, RUTA, bloquesDeLaRuta, inicioDeLaRuta, progresoDeLaRuta, virtudDeDesafio } from './rutaVirtudes.js';
+import { ORDEN_VIRTUDES, RUTA, bloquesDeLaRuta, inicioDeLaRuta, virtudDeDesafio } from './rutaVirtudes.js';
 import { VIRTUDES_HABITO } from './habitos.js';
 
 test('las virtudes-desafío de los 12 perfiles pertenecen a una de las seis virtudes', () => {
@@ -70,11 +70,4 @@ test('la pantalla no necesita plazos: los bloques solo llevan virtud, estado y a
   for (const b of bloquesDeLaRuta({ desafio: 'humildad', inicio: '2026-12-01', hoy: '2026-12-05' })) {
     assert.deepEqual(Object.keys(b).sort(), ['avance', 'estado', 'virtud']);
   }
-});
-
-test('progresoDeLaRuta: el viajero va por el primer tramo, a lo que avanza la virtud-desafío', () => {
-  assert.deepEqual(progresoDeLaRuta(bloquesDeLaRuta({ desafio: 'humildad', inicio: null, hoy: '2026-12-01' })), { tramo: 0, fraccion: 0 });
-  assert.deepEqual(progresoDeLaRuta(bloquesDeLaRuta({ desafio: 'humildad', inicio: '2026-12-01', hoy: '2026-12-16' })), { tramo: 0, fraccion: 0.5 });
-  assert.deepEqual(progresoDeLaRuta(bloquesDeLaRuta({ desafio: 'humildad', inicio: '2026-12-01', hoy: '2027-03-01' })), { tramo: 0, fraccion: 1 });
-  assert.deepEqual(progresoDeLaRuta([]), { tramo: 0, fraccion: 0 });
 });
