@@ -1,18 +1,32 @@
-// Tarjeta «Tu entorno»: el mapa de las personas y las fichas, con el acceso a añadir más.
-// Se usa en Hoy y en la pestaña Camino. Rediseñado: lista compacta a 2 columnas en desktop.
+// Tarjeta «Tu entorno»: mapa de personas + lista con temperamento, grupo y verificación.
+// Se usa en Hoy y en la pestaña Camino.
 import { useNavigate } from 'react-router-dom';
 import { useLocalPath } from '../../i18n';
+import { TEXTO_GRUPO } from '../../lib/personas.js';
 import { FONT_BODY, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { usePersonas } from '../usePersonas';
 import { EsqueletoTarjeta } from '../Esqueleto';
-import { MapaPersonas } from './comun';
+import { MapaPersonas, Verificado, estaVerificada, useNombresTemp } from './comun';
 
-function PersonaFila({ persona, onClick }) {
+function IconoSinVerificar({ tam = 14 }) {
+  return (
+    <svg width={tam} height={tam} viewBox="0 0 24 24" aria-hidden style={{ flex: `0 0 ${tam}px`, opacity: 0.25 }}>
+      <path fill="none" stroke={MUTED} strokeWidth="1.8" d="M12 1.5l2.6 1.9 3.2-.2 1 3 2.7 1.8-1 3 1 3-2.7 1.8-1 3-3.2-.2L12 22.5l-2.6-1.9-3.2.2-1-3-2.7-1.8 1-3-1-3 2.7-1.8 1-3 3.2.2z" />
+    </svg>
+  );
+}
+
+function PersonaFila({ persona, nombres, onClick }) {
   const color = TEMP_COLORS[persona.primario] ?? 'rgba(27,42,74,0.25)';
   const inicial = persona.avatar || persona.nombre.trim().charAt(0).toUpperCase();
+  const verificada = estaVerificada(persona);
+  const grupo = TEXTO_GRUPO[persona.grupo];
+  const temp1 = persona.primario ? nombres[persona.primario] : null;
+  const temp2 = persona.secundario ? nombres[persona.secundario] : null;
+
   return (
     <button type="button" onClick={onClick} style={{
-      display: 'flex', alignItems: 'center', gap: 10, padding: '7px 10px',
+      display: 'flex', alignItems: 'center', gap: 10, padding: '8px 10px',
       background: 'none', border: 'none', borderRadius: 10,
       cursor: 'pointer', textAlign: 'left', width: '100%',
     }}>
@@ -22,8 +36,23 @@ function PersonaFila({ persona, onClick }) {
         fontFamily: FONT_BODY, fontWeight: 700, color: persona.primario ? PAPER : MUTED,
         fontSize: persona.avatar ? 15 : 13,
       }}>{inicial}</span>
-      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FONT_BODY, fontSize: 14, fontWeight: 500, color: INK }}>
-        {persona.nombre}
+
+      <span style={{ flex: 1, minWidth: 0 }}>
+        <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <span style={{ fontFamily: FONT_BODY, fontSize: 14, fontWeight: 600, color: INK, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {persona.nombre}
+          </span>
+          {verificada ? <Verificado tam={14} /> : <IconoSinVerificar />}
+        </span>
+        <span style={{ display: 'flex', gap: 4, alignItems: 'baseline', fontFamily: FONT_BODY, fontSize: 12, color: MUTED, marginTop: 1 }}>
+          {temp1 && (
+            <span>
+              <span style={{ color: TEMP_COLORS[persona.primario], fontWeight: 600 }}>{temp1}</span>
+              {temp2 && <span style={{ color: TEMP_COLORS[persona.secundario] }}>{' · '}{temp2}</span>}
+            </span>
+          )}
+          {grupo && <span style={{ opacity: 0.7 }}>{temp1 ? ' · ' : ''}{grupo}</span>}
+        </span>
       </span>
     </button>
   );
@@ -31,6 +60,7 @@ function PersonaFila({ persona, onClick }) {
 
 export default function TuEntorno({ miPrimario }) {
   const { cargando, lista } = usePersonas();
+  const nombres = useNombresTemp();
   const navigate = useNavigate();
   const lp = useLocalPath();
 
@@ -66,12 +96,12 @@ export default function TuEntorno({ miPrimario }) {
       </div>
 
       <style>{`
-        .vl-entorno-lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1px; margin-top: 8px; }
-        @media (min-width: 520px) { .vl-entorno-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+        .vl-entorno-lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; margin-top: 8px; }
+        @media (min-width: 580px) { .vl-entorno-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
       `}</style>
       <div className="vl-entorno-lista">
         {lista.map((p) => (
-          <PersonaFila key={p.id} persona={p} onClick={() => irAPersona(p)} />
+          <PersonaFila key={p.id} persona={p} nombres={nombres} onClick={() => irAPersona(p)} />
         ))}
       </div>
 
