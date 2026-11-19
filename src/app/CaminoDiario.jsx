@@ -46,6 +46,7 @@ export default function CaminoDiario() {
       <CicloDeVirtud
         virtud={virtud} estado={estado} resultado={caracter.resultado}
         tira={tiraDeDias(camino.dias, camino.hoy)} racha={rachaDeCompromisos(camino.dias, camino.hoy)} hoy={camino.hoy}
+        dias={camino.dias} habitos={camino.habitos} marcas={camino.marcas}
       />
       <div className="vl-camino-abajo">
         <TuEntorno miPrimario={clave} />

@@ -1,13 +1,15 @@
 // Lo primero de la pestaña Camino: en qué ciclo de virtud estás («Ciclo de humildad»), tu racha y los días
 // (dos anteriores, hoy y cinco siguientes), y tu gráfica de carácter con la virtud que estás trabajando
-// resaltada y en movimiento. Sin plazos en pantalla. Solo pinta: los datos y la virtud ya vienen calculados.
+// resaltada y en movimiento. Al pulsar un día pasado se muestra su resumen debajo.
+import { useState } from 'react';
 import { LocalLink as Link, useT } from '../../i18n';
 import { FONT_BODY, GOLD_REF, GOLD_REF_DK, INK, MUTED, NAVY, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { TEXTO_VIRTUD } from '../MapaCaracter';
 import { VirtudesRadar } from '../Radar';
 import TiraDeDias from './TiraDeDias';
+import DetalleDia from './DetalleDia';
 
-export default function CicloDeVirtud({ virtud, estado, resultado, tira, racha, hoy }) {
+export default function CicloDeVirtud({ virtud, estado, resultado, tira, racha, hoy, dias, habitos, marcas }) {
   const { t } = useT();
 
   if (!virtud) {
@@ -19,6 +21,9 @@ export default function CicloDeVirtud({ virtud, estado, resultado, tira, racha, 
       </section>
     );
   }
+
+  const [diaSeleccionado, setDiaSeleccionado] = useState(null);
+  const diaDetalle = diaSeleccionado ? dias?.find((d) => d.fecha === diaSeleccionado) : null;
 
   const clave = virtud === 'dominio_de_si' ? 'dominio' : virtud; // la gráfica llama «dominio» a dominio de sí
   const nombre = t(`camino.habitos.virtudes.${virtud}`);
@@ -41,7 +46,8 @@ export default function CicloDeVirtud({ virtud, estado, resultado, tira, racha, 
       </h2>
       <p style={{ ...parrafo, fontSize: 15 }}>{t('camino.ciclo.subtitulo')}</p>
 
-      <TiraDeDias tira={tira} racha={racha} hoy={hoy} />
+      <TiraDeDias tira={tira} racha={racha} hoy={hoy} diaSeleccionado={diaSeleccionado} onSelectDia={setDiaSeleccionado} />
+      {diaDetalle && <DetalleDia dia={diaDetalle} habitos={habitos} marcas={marcas} />}
 
       <div className="vl-ciclo">
         <VirtudesRadar valores={valores} destacada={clave} sinDatos={!valores} ancho={400} letra={17} />

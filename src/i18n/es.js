@@ -1781,10 +1781,11 @@ export default {
         maximo: 'Tienes {max} hábitos en marcha, que es el máximo. Para añadir otro, deja uno o espera a que se consolide.',
       },
       historial: {
-        titulo: 'Tu historial',
+        titulo: 'Tu historial de retos',
         vacio: 'Aún no hay días. Tu primer reto aparece en Hoy.',
         sin_opcion: 'Ese día no elegiste cómo hacerlo.',
         sin_examen: 'Sin examen',
+        ver_mas: 'Ver más',
       },
       variables: {
         titulo: 'Lo que Virtus sabe de ti',

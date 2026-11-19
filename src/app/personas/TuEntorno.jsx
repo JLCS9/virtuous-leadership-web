@@ -1,11 +1,33 @@
-// Tarjeta «Tu entorno»: el mapa de las personas y las primeras fichas, con el acceso a añadir más.
-// Se usa en Hoy y en la pestaña Camino.
+// Tarjeta «Tu entorno»: el mapa de las personas y las fichas, con el acceso a añadir más.
+// Se usa en Hoy y en la pestaña Camino. Rediseñado: lista compacta a 2 columnas en desktop.
 import { useNavigate } from 'react-router-dom';
 import { useLocalPath } from '../../i18n';
-import { FONT_BODY, NAVY, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
+import { FONT_BODY, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, botonContorno, botonSobreClaro, eyebrow, parrafo, tarjeta, titulo } from '../tokens';
 import { usePersonas } from '../usePersonas';
 import { EsqueletoTarjeta } from '../Esqueleto';
-import { Avatar, EtiquetaEstado, MapaPersonas } from './comun';
+import { MapaPersonas } from './comun';
+
+function PersonaFila({ persona, onClick }) {
+  const color = TEMP_COLORS[persona.primario] ?? 'rgba(27,42,74,0.25)';
+  const inicial = persona.avatar || persona.nombre.trim().charAt(0).toUpperCase();
+  return (
+    <button type="button" onClick={onClick} style={{
+      display: 'flex', alignItems: 'center', gap: 10, padding: '7px 10px',
+      background: 'none', border: 'none', borderRadius: 10,
+      cursor: 'pointer', textAlign: 'left', width: '100%',
+    }}>
+      <span aria-hidden style={{
+        width: 32, height: 32, flex: '0 0 32px', borderRadius: '50%', display: 'grid', placeItems: 'center',
+        background: persona.primario ? color : 'rgba(27,42,74,0.08)',
+        fontFamily: FONT_BODY, fontWeight: 700, color: persona.primario ? PAPER : MUTED,
+        fontSize: persona.avatar ? 15 : 13,
+      }}>{inicial}</span>
+      <span style={{ flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: FONT_BODY, fontSize: 14, fontWeight: 500, color: INK }}>
+        {persona.nombre}
+      </span>
+    </button>
+  );
+}
 
 export default function TuEntorno({ miPrimario }) {
   const { cargando, lista } = usePersonas();
@@ -17,9 +39,6 @@ export default function TuEntorno({ miPrimario }) {
   const irANueva = () => navigate(lp('/app/personas/nueva'));
 
   if (cargando) return <EsqueletoTarjeta alto={420} />;
-
-  const MAX_VISIBLES = 5;
-  const visibles = lista.slice(0, MAX_VISIBLES);
 
   if (!lista.length) {
     return (
@@ -37,31 +56,28 @@ export default function TuEntorno({ miPrimario }) {
 
   return (
     <section style={tarjeta} aria-label="Tu entorno">
-      <div style={eyebrow}>Tu entorno</div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12 }}>
+        <div style={eyebrow}>Tu entorno</div>
+        <span style={{ fontFamily: FONT_BODY, fontSize: 13, color: MUTED }}>{lista.length} {lista.length === 1 ? 'persona' : 'personas'}</span>
+      </div>
 
       <div className="vl-mapa-personas-wrap" style={{ margin: '8px 0 0' }}>
         <MapaPersonas personas={lista} miPrimario={miPrimario} onElegirPersona={irAPersona} />
       </div>
 
-      <div style={{ marginTop: 10, display: 'grid', gap: 2 }}>
-        {visibles.map((p) => (
-          <button key={p.id} type="button" className="vl-fila-persona" onClick={() => irAPersona(p)} style={{
-            display: 'flex', alignItems: 'center', gap: 12, padding: '8px 10px',
-            background: 'none', border: 'none', borderRadius: 12,
-            cursor: 'pointer', textAlign: 'left', width: '100%',
-          }}>
-            <Avatar persona={p} tam={36} />
-            <span style={{ flex: 1, minWidth: 0 }}>
-              <span style={{ display: 'block', fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600, color: NAVY }}>{p.nombre}</span>
-              <EtiquetaEstado persona={p} />
-            </span>
-          </button>
+      <style>{`
+        .vl-entorno-lista { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1px; margin-top: 8px; }
+        @media (min-width: 520px) { .vl-entorno-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+      `}</style>
+      <div className="vl-entorno-lista">
+        {lista.map((p) => (
+          <PersonaFila key={p.id} persona={p} onClick={() => irAPersona(p)} />
         ))}
       </div>
 
-      <div style={{ marginTop: 14, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+      <div style={{ marginTop: 12, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
         <button type="button" onClick={irANueva} style={{ ...botonContorno, fontSize: 13.5 }}>+ Añadir persona</button>
-        <button type="button" onClick={irAPersonas} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: NAVY, fontWeight: 600, padding: 0 }}>Ver más →</button>
+        <button type="button" onClick={irAPersonas} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5, color: NAVY, fontWeight: 600, padding: 0 }}>Ver todas →</button>
       </div>
     </section>
   );

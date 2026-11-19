@@ -30,14 +30,14 @@ export default function ListaHabitos({ habitos, marcas, hoy, userId, config, onC
   });
 
   const fila = (h, boton) => (
-    <li key={h.id} style={{ borderTop: `1px solid ${LINE}`, padding: '12px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-      <div style={{ minWidth: 0 }}>
-        <div style={{ fontFamily: FONT_BODY, fontSize: 16, lineHeight: 1.45, color: INK }}>{h.texto}</div>
-        <div style={{ fontFamily: FONT_BODY, fontSize: 16, color: MUTED }}>
+    <li key={h.id} style={{ borderTop: `1px solid ${LINE}`, padding: '10px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+      <div style={{ minWidth: 0, flex: 1 }}>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 15, lineHeight: 1.4, color: INK }}>{h.texto}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: MUTED }}>
           {t(`camino.habitos.virtudes.${h.virtud}`)} · {resumenDeHabito(t, h, avance(h, fechasDe(marcas, h.id), hoy, config))}
         </div>
       </div>
-      {boton}
+      {boton && <div style={{ flexShrink: 0 }}>{boton}</div>}
     </li>
   );
   const lista = (items, boton) => (
