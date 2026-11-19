@@ -1,7 +1,8 @@
 // Onboarding del portal («Bienvenida», /app/bienvenida): una sucesión de pantallas que presentan al
 // usuario su resultado, los temperamentos, su virtud-desafío, el carácter, el liderazgo virtuoso y el
 // portal. Va «súper limpio»: AppShell oculta la cabecera y la burbuja en esta ruta; aquí solo hay
-// barra de progreso, contenido y botones. Será obligatorio la primera vez (pendiente: marca en BD);
+// barra de progreso, contenido y botones. Es obligatorio: PortalGuard manda aquí a quien no tiene
+// `profiles.onboarded_at`, y «Guardar y entrar al portal» lo rellena (account/onboarding.js);
 // desde Perfil → Configuración se vuelve a abrir para pruebas.
 //
 // Orden: Bienvenida → Eres… → Tu punto fuerte → Tu punto débil → «¿Conoces los temperamentos?»
@@ -28,6 +29,7 @@ import { CHALLENGE_VIRTUE } from '../account/challengeVirtues';
 import { claveTemperamento, VIRTUDES } from '../lib/virtudes.js';
 import curso1 from '../data/curso1.json';
 import { guardarPreferencias } from '../account/preferencias';
+import { marcarOnboardingHecho } from '../account/onboarding';
 import { DIAS_SEMANA, HORAS_SUGERIDAS, horaValida, normalizar, textoZona, zonaDelDispositivo } from '../lib/preferencias.js';
 import { PASOS_HORARIOS, usePreferencias } from './Horarios';
 import { GOLD_REF, GOLD_REF_DK, INK, LINE, MUTED, NAVY, PAPER, TEMP_COLORS, FONT_BODY, FONT_SLAB } from '../theme';
@@ -572,12 +574,17 @@ export default function Bienvenida() {
 
   useEffect(() => { window.scrollTo(0, 0); }, [idx]);
 
-  // Al terminar se guardan los horarios y se entra al portal.
-  // Pendiente: guardar también en BD que ya ha hecho el onboarding.
+  // Al terminar se guardan los horarios, se marca el onboarding como hecho (profiles.onboarded_at) y se
+  // entra al portal. Si no se puede marcar, no se sale: el portal le volvería a mandar aquí.
   async function terminar() {
-    if (prefs && session?.user) {
-      setGuardado('guardando');
-      try { await guardarPreferencias(session.user.id, prefs); } catch { setGuardado('error'); return; }
+    if (!session?.user) return;
+    setGuardado('guardando');
+    try {
+      if (prefs) await guardarPreferencias(session.user.id, prefs);
+      await marcarOnboardingHecho(session.user.id);
+    } catch {
+      setGuardado('error');
+      return;
     }
     navigate(lp('/app'), { replace: true });
   }
@@ -626,7 +633,7 @@ export default function Bienvenida() {
           </div>
         )}
         {p.final && guardado === 'error' && (
-          <p role="alert" style={{ ...nota, color: '#9C3A3A', margin: '14px 0 0' }}>No he podido guardar tus horarios. Inténtalo de nuevo.</p>
+          <p role="alert" style={{ ...nota, color: '#9C3A3A', margin: '14px 0 0' }}>No he podido guardar. Inténtalo de nuevo.</p>
         )}
         {/* «← Anterior» debajo del botón de avanzar (o de Sí/No): pequeño y sin borde. */}
         {idx > 0 && (
