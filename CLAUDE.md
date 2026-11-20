@@ -581,6 +581,14 @@ Definidas en `src/App.jsx` (bloque «Portal /app»), slug en `routes.js` (`app: 
   (`useAcceso` → `suscripciones_retos`) → `/tests/temperamento/gracias`. Si pasa, pinta
   `AppShell` (cabecera + burbuja inferior Hoy · Camino · Formación + `<Outlet/>`). Perfil se abre
   desde la cabecera.
+- **Onboarding obligatorio** (`account/onboarding.js`): mientras `profiles.onboarded_at` sea null,
+  `PortalGuard` manda a `/app/bienvenida` entre por donde entre; «Guardar y entrar al portal» (último
+  paso de `Bienvenida.jsx`) guarda los horarios y rellena `onboarded_at` (solo la primera vez).
+  `profiles.first_portal_access_at` se rellena sola la primera vez que entra al portal. Si la
+  comprobación falla, no se bloquea el portal. El estado se guarda en memoria y el guardia lo lee
+  al instante en cada cambio de pantalla (si no, tras terminar le devolvía a la bienvenida en bucle).
+  Perfil → Configuración → «Comenzar onboarding» lo repite sin cambiar la fecha. SQL:
+  `supabase-migraciones/20261119_onboarding_portal.sql`.
 - Enlaces internos: siempre `LocalLink` / `useLocalPath()` (`lp('/app/personas')`), nunca rutas con
   idioma a mano. **No uses rutas `/mi-panel/...`** para navegar dentro del portal: redirigen y, en el
   caso de `camino`, acaban en Hoy (este fue el bug de «Añadir persona», nov-2026).

@@ -8,6 +8,7 @@ import NotaTexto from '../formacion/NotaTexto';
 import { supabase } from '../account/supabase';
 import { olvidarAcceso } from '../account/useAcceso';
 import { olvidarCatalogo } from '../formacion/useFormacion';
+import { olvidarOnboarding } from '../account/onboarding';
 import { NAVY, MUTED, GOLD_REF, GOLD_REF_DK, FONT_SLAB, FONT_BODY, LINE, PAPER, BEIGE, ERROR_BG, ERROR, ERROR_DK, SUCCESS_DK } from '../theme';
 import { tarjeta, eyebrow, parrafo } from './estilos';
 import { usePreferencias } from './Horarios';
@@ -222,6 +223,7 @@ function TabConfig({ user, profile, consents, onRefresh }) {
   async function salir() {
     olvidarAcceso();
     olvidarCatalogo();
+    olvidarOnboarding();
     await supabase.auth.signOut({ scope: 'local' });
   }
 
