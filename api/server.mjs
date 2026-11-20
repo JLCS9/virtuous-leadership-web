@@ -32,11 +32,11 @@
 
 import http from 'http';
 import {
-  withTx, upsertSchool, upsertParent, upsertChild, insertSubmission, ping,
+  withTx, upsertSchool, upsertParent, upsertChild, insertSubmission, ping, getPool,
 } from './db.mjs';
 import {
   accountsEnabled, createAccount, rateLimited, isUnder14, recordConsents, userFromToken,
-  guardianEmailEnabled, requestGuardianConsent, confirmGuardianConsent, saveResultAsServer, deleteAccount,
+  guardianEmailEnabled, requestGuardianConsent, confirmGuardianConsent, saveResultAsServer, deleteAccount, rest,
 } from './auth.mjs';
 import { infoInvitacion, aceptarInvitacion } from './invitaciones.mjs';
 
@@ -607,7 +607,14 @@ async function handleAccount(req, res) {
 
   if (!minor) {
     console.log(`[account] created lang=${language}`);
-    return sendJson(res, 201, { ok: true, account: 'created' });
+    sendJson(res, 201, { ok: true, account: 'created' });
+    lookupGeo(clientIp(req)).then(geo => {
+      if (geo.ok && geo.country) {
+        rest('PATCH', `profiles?id=eq.${r.userId}`, { country: geo.country })
+          .catch(e => console.error('[account] country update error:', e.message));
+      }
+    }).catch(() => {});
+    return;
   }
 
   // Menor: queda registrado su propio consentimiento (pendiente del tutor) y el
@@ -1191,7 +1198,17 @@ async function handleSubmitColegios(req, res) {
     }
 
     console.log(`[colegios] notification sent → ${COLEGIOS_NOTIFY_EMAILS.join(',')} inst=${institucion} email=${email}`);
-    return sendJson(res, 200, { ok: true });
+    sendJson(res, 200, { ok: true });
+
+    const pool = getPool();
+    if (pool) {
+      const geo = await lookupGeo(clientIp(req));
+      pool.query(
+        `INSERT INTO public.formularios_web (tipo, nombre, email, telefono, organizacion, cargo, mensaje, locale, ip_country, ip_city) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        ['colegios', nombre, email, telefono || null, institucion, cargo || null, null, null, geo.ok ? geo.country : null, geo.ok ? geo.city : null]
+      ).catch(e => console.error('[colegios] db persist error:', e.message));
+    }
+    return;
   } catch (e) {
     console.error('[colegios] fetch error:', e);
     return sendJson(res, 500, { error: 'Internal error' });
@@ -1259,7 +1276,17 @@ async function handleSubmitContact(req, res) {
     }
 
     console.log(`[contacto] notification sent → ${CONTACT_NOTIFY_EMAILS.join(',')} name=${nombre} email=${email}`);
-    return sendJson(res, 200, { ok: true });
+    sendJson(res, 200, { ok: true });
+
+    const pool = getPool();
+    if (pool) {
+      const geo = await lookupGeo(clientIp(req));
+      pool.query(
+        `INSERT INTO public.formularios_web (tipo, nombre, email, telefono, organizacion, cargo, mensaje, locale, ip_country, ip_city) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
+        ['contacto', [nombre, apellidos].filter(Boolean).join(' '), email, tel || null, centro || null, cargo || null, mensaje || null, null, geo.ok ? geo.country : null, geo.ok ? geo.city : null]
+      ).catch(e => console.error('[contacto] db persist error:', e.message));
+    }
+    return;
   } catch (e) {
     console.error('[contacto] fetch error:', e);
     return sendJson(res, 500, { error: 'Internal error' });
